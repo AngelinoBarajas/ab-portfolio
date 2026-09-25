@@ -1,4 +1,4 @@
-# Session handoff (2026-09-25)
+# Session handoff (2026-09-25, end of the custom-code session)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -47,18 +47,29 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 - `box-shadow` with a variable color collapses; keep those in `ab-core.css`.
 - Tag styles writable only after they exist; the API can't touch classes on the Body element.
 
-## Deferred to step 7 (`code/src/ab-core.css` + `ab-core.js`)
+## Custom code: how it's wired (details in `code/README.md`)
 
-Listed in `docs/webflow-build-notes.md` → "To ab-core.css". Scripts read the `[data-site-data]` block for Site Settings + Quotes.
+- Source `code/src/` (`core/` site-wide, `home/` Home, `ab-core.css`) → `cd code && npm run build` → `dist/*.prod.js|css` + `dist/sri.json`. ES5 syntax is checked at build.
+- Deploy: bump `code/package.json` version, build, commit, `git tag -a vX.Y.Z`, push main + tag, **curl the jsDelivr copy and compare sha384 to `sri.json`** (purge if a new tag 404s), then Webflow MCP `data_scripts_tool`: `register_hosted_script` with the **same display name** (`ABCore` / `ABHome`) and the new version (`update_registered_script` 404s), `add_site_script` / `add_page_script` with that version, `set_site_freeform_code` head `<link>` for the CSS. Publish **webflow.io only** (`publishToWebflowSubdomain: true, customDomains: []`).
+- Never name builds `*.min.js`: jsDelivr served its own minified copy for one and the SRI failed.
+- Current live versions: all **v0.1.4**. Site scripts (footer, in order): gsap, gsapscrolltrigger, gsapdraggable, gsapinertia, gsapsplittext, gsapscrambletext, gsapflip, lenis, abcore. Home page script: abhome.
+- Testing: the in-app browser pane is usually hidden, which freezes rAF, IntersectionObserver and screenshots. Shim rAF onto setTimeout + `gsap.ticker.sleep(); gsap.ticker.wake();` and verify with DOM checks; for reduced motion serve a copy of the staging HTML with a `matchMedia` override (worked via a `code-test` python http.server entry in the session launch.json). Don't submit the planner for real in tests (stub `form.requestSubmit`); the launch button stays disabled until Webflow's Turnstile finishes.
 
 ## Next session
 
-- If Angelino OK'd Home: build **Work** (Mission archive) per the build order, then `ab-work` bundle (`code/src/work/`, add it to `build.mjs`), same deploy steps.
-- If he flagged Home issues: fix in `code/src/`, bump the version, rebuild, tag, re-register (same display name, new version), publish webflow.io only.
-- `/work/<slug>` 404s until the Mission template is built; board frames already link there.
+1. **Metrics (Statement section) — waiting on Angelino.** He wants more meaningful numbers than 11 / 14 / 2 (ideas he floated: characters of custom code, number of Unicorn Studio scenes; others offered: CMS items powering the interactive pieces, sites shipped). **Don't invent figures**: ask for the three numbers + labels, then update each `.ab_metric_number` text **and** its `data-count` attribute (the count-up animates to `data-count`) plus `.ab_metric_label`, via `data_element_tool` on page `6ab5fe4b5ee75f9c981dc0cb`. Publish webflow.io only.
+2. Then his **OK for Home**, then build **Work** (Mission archive) per the build order, with a new `ab-work` bundle (`code/src/work/`, add `await bundle('work', 'ab-work', '__abWorkInit')` to `build.mjs`), same deploy steps.
+3. `/work/<slug>` 404s until the Mission template is built; board frames already link there.
+
+## Home review edits already done (v0.1.4, from `ab-portfolio-hp-edits.docx`)
+
+Hero drag cue · altitude meter readable on light sections · planner readout under the visual · tool brand logos + new Photoshop/Illustrator/Lightroom Tools items · mobile: giant planet higher, work deck swipes, footer planets scattered, selection tags hidden (cursor under the word) · dot field tighter · less map-focused copy (hero lede, WebGL bento card, footer line + service link) · board frame colors fixed (Designer bindings) and new hidden `brand-accent` node drives preview pin colors. Full list: `docs/webflow-build-notes.md` › v0.1.4.
+
+Possible follow-ups he may raise: Tools list order (the 3 new Adobe items sort first and take the inner ring; set a sort in the Designer or a script order), the Services CMS item `webgl-data` still named "Globes, maps + 3D" (update with the Services template), and the heading-span effect classes / `#plRead` position that the script patches (cleaner in the Designer).
 
 ## Open items for Angelino
 
+- **Metrics numbers** for the Statement section (see Next session).
 - **Home OK** (stop point, now with the custom code live on staging). Please look at it in a real browser: the starfield, lazy planets and animation feel couldn't be checked from the hidden browser pane. The 3 Designer steps are done (reload, color bindings, form renamed "Mission Planner"; ID restored to `planner`). Still confirm the Forms notification email in Site settings.
 
 - Placeholders in `docs/placeholders.md` (email, socials, 4 pin images, testimonials, headshot, `[X–Y weeks]`).
