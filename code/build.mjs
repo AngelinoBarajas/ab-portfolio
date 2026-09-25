@@ -4,6 +4,7 @@
 // own on-the-fly minified build instead of the committed file, which breaks the SRI hash.
 // src/core/*.js  → dist/ab-core.js + .prod.js   (site-wide, Site settings › Custom code › Footer)
 // src/home/*.js  → dist/ab-home.js + .prod.js   (Home page › Custom code › Before </body>)
+// src/work/*.js  → dist/ab-work.js + .prod.js   (Work page › Custom code › Before </body>)
 // src/ab-core.css → dist/ab-core.css + .prod.css (aliases mapped to Webflow variable names)
 // Every bundle is one Webflow.push with one __ab<Name>Init guard, and must parse as ES5.
 import { readFileSync, writeFileSync, readdirSync, mkdirSync } from 'node:fs';
@@ -64,6 +65,7 @@ function css() {
 
 await bundle('core', 'ab-core', '__abCoreInit');
 await bundle('home', 'ab-home', '__abHomeInit');
+await bundle('work', 'ab-work', '__abWorkInit');
 css();
 writeFileSync(join(DIST, 'sri.json'), JSON.stringify(sri, null, 2) + '\n');
 console.log('SRI hashes → dist/sri.json');

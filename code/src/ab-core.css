@@ -496,10 +496,141 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 section:hover > .ab_frame-label{color:var(--select)}
 .theme-light .ab_frame-label{color:rgba(11,12,20,.4);top:clamp(46px,6vw,80px);left:50%;transform:translateX(-50%)}
 
+/* ---------- debrief hero (Work archive + Mission template) ---------- */
+.ab_dbh_eyebrow::before{content:"";width:8px;height:8px;background:var(--signal);animation:ab-blink 1.4s infinite}
+.ab_meta_live::before{content:"";width:7px;height:7px;background:#3BE38A;box-shadow:0 0 10px #3BE38A;animation:ab-blink 2s infinite}
+.ab_meta_item:last-child{border-right:0}
+@media (max-width:991px){.ab_meta_item:nth-child(3n){border-right:0}.ab_meta_item:nth-child(-n+3){border-bottom:1px solid var(--hair)}}
+@media (max-width:479px){.ab_meta_item{border-right:1px solid var(--hair)!important;border-bottom:1px solid var(--hair)}.ab_meta_item:nth-child(2n){border-right:0!important}}
+@media (max-width:767px){.ab_dbh_title{max-width:none}}
+
+/* ---------- mission archive: filter bar, switch ---------- */
+.ab_arc_bar::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:120px;background:rgba(7,8,13,.94);opacity:0;pointer-events:none;transition:opacity .3s}
+.ab_arc_bar.is-stuck::before{opacity:1}
+.ab_arc_bar.is-stuck{background-color:var(--glass);border-color:var(--hair);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.ab_arc_bar.is-stuck.nav-on{transform:translateY(64px)}
+.arc-sent{height:1px;margin-bottom:-1px}
+.ab_arc_chip[aria-pressed="true"]{color:var(--on-signal);background:var(--signal);border-color:var(--signal)}
+.ab_arc_chip[aria-pressed="true"] .ab_arc_chip-count{background:rgba(7,8,13,.2);color:var(--on-signal)}
+.ab_arc_chip:focus-visible,.ab_switch_btn:focus-visible{outline:2px solid var(--select);outline-offset:2px}
+.ab_switch_btn[aria-pressed="true"]{color:var(--on-signal)}
+.ab_arc_filters::-webkit-scrollbar{display:none}
+@media (max-width:767px){.ab_arc_filters{scrollbar-width:none}.ab_arc_bar.is-stuck.nav-on{transform:translateY(52px)}}
+@media (max-width:991px){@media (max-width:767px){
+/* ---------- mission card (.ab_mission-card) ---------- */
+.ab_mission-card{--mx:50%;--my:50%;min-width:0;will-change:transform}
+.ab_mission-card.is-out{display:none}
+.ab_mission-card:hover,.ab_mission-card:focus-within{box-shadow:0 30px 60px -30px rgba(0,0,0,.8);z-index:6}
+.ab_mission-card::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;opacity:0;transition:opacity .35s;background:radial-gradient(300px circle at var(--mx) var(--my),rgba(255,106,61,.12),transparent 70%)}
+.ab_mission-card:hover::before{opacity:1}
+.ab_mission-card_link:focus-visible{outline:2px solid var(--select);outline-offset:3px}
+.ab_mission-card_cv{background:var(--cbg,#161a2e);color:var(--cfg,#F2F0EA)}
+.ab_mission-card:hover .ab_mission-card_cv{transform:scale(1.05)}
+.ab_mission-card:hover .ab_planet.is-card{bottom:-8%}
+.ab_mission-card:hover .ab_mission-card_arrow{transform:translateX(5px)}
+.ab_mission-card.is-ph .ab_mission-card_ph{display:block}
+.ab_mission-card.is-ph .ab_mission-card_go{color:var(--dust)}
+.ab_mission-card_cv.is-img img{width:100%;height:100%;object-fit:cover;object-position:top left;display:block}
+.ab_mission-card_cv.is-mark{display:grid;place-items:center;background:#07080D}
+.ab_mission-card_cv.is-mark svg{width:58%;height:auto;overflow:visible}
+.ab_mission-card_cv .lg-g{fill:none;stroke:#4C8DFF;stroke-width:.6;opacity:.5}
+.ab_mission-card_cv .lg-m{fill:none;stroke:#F2F0EA;stroke-width:20}
+.ab_mission-card_cv .lg-s{fill:#FF6A3D}
+.ab_mission-card_cv .lg-orbit{transform-origin:0 0;transition:transform 1.4s cubic-bezier(.2,.9,.2,1)}
+.ab_mission-card:hover .lg-orbit{transform:rotate(-90deg)}
+.ab_mission-card_cv.is-brand{display:flex;align-items:center;justify-content:center;gap:6%;background:radial-gradient(80% 90% at 30% 20%,#3a281c,var(--cbg))}
+.cb-bag{width:30%;aspect-ratio:3/4.2;background:var(--cfg);color:var(--cbg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6%;padding:6%;box-shadow:0 18px 30px -12px rgba(0,0,0,.6);transform:rotate(-5deg);transition:transform .6s cubic-bezier(.2,.9,.2,1.2)}
+.cb-bag.two{background:var(--cac);transform:rotate(6deg) translateY(8%)}
+.cb-bag i{width:34%;aspect-ratio:1;border:3px solid currentColor;border-radius:50% 50% 50% 0}
+.cb-bag b{font-family:var(--display);font-weight:900;font-stretch:118%;font-size:clamp(8px,1vw,13px);letter-spacing:.04em}
+.cb-bag span{font-family:var(--mono);font-size:clamp(5px,.55vw,8px);letter-spacing:.1em;text-transform:uppercase;opacity:.7;text-align:center}
+.ab_mission-card:hover .cb-bag{transform:rotate(-9deg) translateY(-4%)}.ab_mission-card:hover .cb-bag.two{transform:rotate(10deg) translateY(2%)}
+.ab_mission-card_cv.is-app{display:flex;align-items:flex-end;justify-content:center;gap:5%;padding-top:8%;background:radial-gradient(70% 80% at 50% 0%,#153a4a,var(--cbg))}
+.ca-ph{width:30%;aspect-ratio:9/17;background:#0a1220;border:2px solid #2a3a55;border-bottom:0;border-radius:14px 14px 0 0;padding:8% 7%;display:flex;flex-direction:column;gap:7%;transition:transform .6s cubic-bezier(.2,.9,.2,1.2)}
+.ca-ph.back{transform:translateY(14%) scale(.92);opacity:.75}
+.ab_mission-card:hover .ca-ph{transform:translateY(-6%)}.ab_mission-card:hover .ca-ph.back{transform:translateY(8%) scale(.92)}
+.ca-top{display:flex;justify-content:space-between;align-items:center;font:600 clamp(6px,.7vw,10px) var(--body);color:var(--cfg)}
+.ca-top i{width:14%;aspect-ratio:1;border-radius:50%;background:var(--cac)}
+.ca-ring{position:relative;display:grid;place-items:center}
+.ca-ring svg{width:70%;transform:rotate(-90deg)}
+.ca-ring circle{fill:none;stroke:#1d2b44;stroke-width:4}
+.ca-ring circle.v{stroke:var(--cac);stroke-dasharray:100;stroke-dashoffset:30;stroke-linecap:round;transition:stroke-dashoffset 1s cubic-bezier(.2,.9,.2,1)}
+.ab_mission-card:hover .ca-ring circle.v{stroke-dashoffset:8}
+.ca-ring span{position:absolute;display:flex;flex-direction:column;align-items:center;font:700 clamp(8px,1vw,14px) var(--body);color:var(--cfg);line-height:1}
+.ca-ring small{font-size:.45em;font-weight:500;opacity:.6;margin-top:2px}
+.ca-row{display:flex;gap:6%}.ca-row i{flex:1;height:clamp(6px,.8vw,12px);background:#16233a;border-radius:3px}.ca-row i:first-child{flex:.35;background:var(--cac);opacity:.8}
+.ab_mission-card_cv.is-site{padding:5% 6%;display:flex;flex-direction:column;gap:6%}
+.cs-nav{display:flex;align-items:center;gap:6%;font:800 clamp(7px,.8vw,11px) var(--body);letter-spacing:.2em}
+.cs-nav i{width:9%;height:3px;background:currentColor;opacity:.4}.cs-nav i:first-of-type{margin-left:auto}
+.cs-grid{flex:1;display:grid;grid-template-columns:1.1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:4%}
+.cs-h{grid-row:1/3;font:600 clamp(10px,1.35vw,20px)/1.05 Lora,Georgia,serif;align-self:end}
+.cs-img{background:linear-gradient(135deg,#b9ab93,#6f6452);transition:transform .6s cubic-bezier(.2,.9,.2,1.2)}
+.cs-img.b{background:linear-gradient(160deg,var(--cac),#6a1e14)}.cs-img.c{grid-column:2/4;background:linear-gradient(120deg,#3d4a4f,#9aa5a2)}
+.ab_mission-card:hover .cs-img{transform:translateY(-4%)}.ab_mission-card:hover .cs-img.c{transform:translateY(4%)}
+/* status chip */
+.ab_status[data-state="live"]{color:#3BE38A}.ab_status[data-state="live"] .ab_status_dot{background:#3BE38A;box-shadow:0 0 10px #3BE38A;animation:ab-blink 2s infinite}
+.ab_status[data-state="ship"]{color:#7cc4ff}.ab_status[data-state="ship"] .ab_status_dot{background:#7cc4ff}
+.ab_status[data-state="phd"] .ab_status_dot{background:repeating-linear-gradient(-45deg,#FF6A3D 0 2px,transparent 2px 4px)}
+
+/* ---------- mission archive: list view (script-built rows) + cursor preview ---------- */
+.al-head,.al-row{display:grid;grid-template-columns:60px minmax(0,1.3fr) minmax(0,1.2fr) minmax(0,1.3fr) 70px 150px 30px;gap:16px;align-items:center;padding:0 12px}
+.al-head{height:40px;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust);border-bottom:1px solid var(--hair)}
+.al-row{position:relative;min-height:86px;border-bottom:1px solid var(--hair);color:var(--star);text-decoration:none;transition:background .25s,padding .35s cubic-bezier(.2,.9,.2,1)}
+.al-row.is-out{display:none}
+.al-row::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--signal);transform:scaleY(0);transition:transform .3s}
+.al-row:hover{background:rgba(255,255,255,.03);padding-left:24px}
+.al-row:hover::before{transform:none}
+.al-row:focus-visible{outline:2px solid var(--select);outline-offset:-2px}
+.al-no{color:var(--dust);font-family:var(--mono);font-size:12px}
+.al-name{font-family:var(--display);font-weight:900;font-stretch:118%;font-size:clamp(22px,2.4vw,36px);text-transform:uppercase;line-height:1;letter-spacing:-.01em;transition:color .25s}
+.al-row:hover .al-name{color:var(--signal)}
+.al-client{color:var(--soft);font-size:14px}
+.al-types,.al-year{color:var(--dust);font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.al-arr{color:var(--dust);transition:transform .3s,color .3s}
+.al-row:hover .al-arr{color:var(--signal);transform:translate(3px,-3px)}
+.ab_arc_peek{transform-origin:0 50%;box-shadow:0 30px 60px -20px rgba(0,0,0,.8)}
+.ab_arc_peek.on{opacity:1}
+.ab_arc_peek .ab_mission-card_cv{position:relative;inset:auto;aspect-ratio:16/10;overflow:hidden}
+.ab_arc_peek > span{display:block;padding:8px 10px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dust)}
+@media (max-width:991px){.al-head,.al-row{grid-template-columns:50px minmax(0,1.4fr) minmax(0,1fr) 60px 140px 24px}.al-types,.al-head span:nth-child(4){display:none}}
+@media (max-width:767px){
+  .al-head{display:none}
+  .al-row{grid-template-columns:40px minmax(0,1fr) 24px;grid-template-areas:"no name arr" "no client arr" "no st arr";row-gap:4px;padding-block:16px}
+  .al-no{grid-area:no}.al-name{grid-area:name}.al-client{grid-area:client;font-size:13px}.al-st{grid-area:st}.al-arr{grid-area:arr}.al-year{display:none}
+}
+
+/* ---------- next card (.ab_next-card): HUD, streaks, ship ---------- */
+.ab_next-card{--mx:50%;--my:50%;will-change:transform}
+.ab_next-card .ab_planet{z-index:3}
+.ab_next-card::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(420px circle at var(--mx) var(--my),rgba(255,106,61,.14),transparent 70%)}
+.ab_next-card:hover::before{opacity:1}
+.ab_next-card:hover .ab_next-card_title{transform:translateX(14px)}
+.ab_next-card:hover .ab_next-card_go{background:var(--signal);color:var(--on-signal);border-color:var(--signal);gap:16px}
+.nx-grid{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.5;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:48px 48px;-webkit-mask:radial-gradient(80% 90% at 70% 50%,#000,transparent);mask:radial-gradient(80% 90% at 70% 50%,#000,transparent)}
+.nx-c{position:absolute;width:18px;height:18px;z-index:2;pointer-events:none;border:0 solid var(--signal);transition:transform .45s cubic-bezier(.2,.9,.2,1.3),border-color .3s;opacity:.8}
+.nx-c.tl{left:12px;top:12px;border-width:2px 0 0 2px}.nx-c.tr{right:12px;top:12px;border-width:2px 2px 0 0}
+.nx-c.bl{left:12px;bottom:12px;border-width:0 0 2px 2px}.nx-c.br{right:12px;bottom:12px;border-width:0 2px 2px 0}
+.ab_next-card:hover .nx-c.tl{transform:translate(-5px,-5px)}.ab_next-card:hover .nx-c.tr{transform:translate(5px,-5px)}
+.ab_next-card:hover .nx-c.bl{transform:translate(-5px,5px)}.ab_next-card:hover .nx-c.br{transform:translate(5px,5px)}
+.nx-hud{position:absolute;right:clamp(28px,5vw,60px);top:clamp(22px,3vw,34px);z-index:3;display:flex;gap:16px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust)}
+.nx-hud b{color:var(--signal);font-weight:500}
+.nx-streaks{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.nx-streaks i{position:absolute;right:-30%;height:1px;width:22%;background:linear-gradient(90deg,transparent,rgba(242,240,234,.7));opacity:0}
+.ab_next-card:hover .nx-streaks i{animation:ab-nxstreak var(--d,1.1s) linear infinite;animation-delay:var(--dl,0s)}
+@keyframes ab-nxstreak{0%{transform:translateX(0);opacity:0}15%{opacity:.8}100%{transform:translateX(-620%);opacity:0}}
+.nx-svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;overflow:visible}
+.nx-svg .nx-path{fill:none;stroke:rgba(242,240,234,.25);stroke-width:1.2;stroke-dasharray:3 6}
+.nx-svg .nx-done{fill:none;stroke:var(--signal);stroke-width:1.6;filter:drop-shadow(0 0 4px rgba(255,106,61,.7))}
+.nx-ship{opacity:0}
+.nx-ship .fl{fill:#ffb36b;transform-box:fill-box;transform-origin:right center;animation:ab-flame .12s steps(2) infinite alternate}
+@media (max-width:767px){.nx-hud{display:none}}
+
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion:reduce){
   .bh-lens i,.bh-disk i,.ab_planet .tex{animation:none}
   .button.is-nav,.button.is-nav .ab_button-shine::after{animation:none}
   .t-outline,.t-stars,.orb b,.ab_nebula,.ab_nav_status-dot,.ab_transmission_live::before,.ab_planner_led,.v-pipe .line i,.v-term .cur{animation:none}
   .button.is-primary::before{transition:none}
+  .ab_dbh_eyebrow::before,.ab_meta_live::before,.ab_status_dot,.nx-streaks i,.nx-ship .fl{animation:none}
+  .ab_mission-card_cv,.cb-bag,.ca-ph,.cs-img,.ab_planet.is-card,.lg-orbit{transition:none}
 }

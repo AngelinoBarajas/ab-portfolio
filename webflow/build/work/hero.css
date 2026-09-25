@@ -1,0 +1,21 @@
+/* work: archive hero (ab_dbh_* is shared with the Mission template hero) */
+.section_arc-hero{position:relative}
+.ab_dbh{position:relative;padding-top:clamp(120px,14vw,170px);padding-bottom:clamp(30px,4vw,50px)}
+.ab_planet.is-dbh{right:clamp(10px,6vw,110px);top:clamp(150px,16vw,210px);width:clamp(120px,19vw,290px);z-index:2}
+.ab_dbh_top{position:relative;z-index:4;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px 24px}
+.ab_crumb{color:var(--dust)}
+.ab_crumb_link{color:var(--dust);text-decoration:none}
+.ab_crumb_link:hover{color:var(--star)}
+.ab_crumb_current{color:var(--star);font-weight:500}
+.ab_dbh_eyebrow{position:relative;z-index:4;display:flex;align-items:center;gap:12px;margin-top:clamp(40px,6vw,80px);color:var(--signal);text-transform:uppercase;letter-spacing:0.14em}
+.ab_dbh_title{position:relative;z-index:4;margin-top:18px;font-family:var(--display);font-weight:900;font-size:clamp(52px,10.5vw,180px);line-height:0.86;letter-spacing:-0.03em;text-transform:uppercase}
+.ab_dbh_word{display:block;width:max-content;max-width:100%}
+.ab_dbh_sum{position:relative;z-index:4;max-width:52ch;margin-top:26px;font-size:clamp(18px,1.7vw,22px);color:var(--soft)}
+.ab_meta{position:relative;z-index:4;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));margin-top:clamp(36px,5vw,64px);border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);background-color:rgba(7,8,13,0.5)}
+.ab_meta_item{display:flex;flex-direction:column;gap:6px;min-width:0;padding:16px 18px 18px;border-right:1px solid var(--hair)}
+.ab_meta_label{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dust)}
+.ab_meta_value{font-size:15px;color:var(--star);overflow-wrap:anywhere}
+.ab_meta_live{display:inline-flex;align-items:center;gap:8px;color:#3BE38A}
+@media screen and (max-width: 991px){.ab_meta{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media screen and (max-width: 767px){.ab_planet.is-dbh{top:96px;right:14px;width:120px;opacity:0.9}}
+@media screen and (max-width: 479px){.ab_meta{grid-template-columns:repeat(2,minmax(0,1fr))}}

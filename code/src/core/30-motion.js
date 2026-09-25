@@ -118,9 +118,11 @@
 
     /* ---------- metrics ([data-count]) ---------- */
     $$('[data-count]').forEach(function(el){
-      var target = +el.getAttribute('data-count'), o = { v: 0 };
+      var o = { v: 0 };
       if (reduce) return;
+      // target read on enter: page bundles may update data-count after this runs (Work sets it from the CMS list)
       ScrollTrigger.create({ trigger: el, start: 'top 90%', once: true, onEnter: function(){
+        var target = +el.getAttribute('data-count');
         gsap.fromTo(o, { v: 0 }, { v: target, duration: 1.6, ease: 'power3.out', onUpdate: function(){ el.textContent = Math.round(o.v); } });
       } });
     });

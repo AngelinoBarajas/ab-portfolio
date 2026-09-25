@@ -7,8 +7,8 @@
 - [x] 4. CMS collections created (13): 173 fields, slugs match `cms/schema.json`; display names renamed after creation (the API derives slugs from display names). Missions collection slug `work`.
 - [x] 4b. Seed content imported (149 items), references resolved (types, stack, services, next-mission, pairs-with, FAQ, mission links). Items are staged (not draft), not published. 8 images copied to the Webflow CDN. UK spellings in seed copy converted to US.
 - [~] 5. Components: ✅ Nav, ✅ Footer (+ page-level site-data block), ✅ Frame label, ✅ Bento card (Light/Dark), ✅ FAQ item (built on Home). Planet + buttons are classes, not components. Still to build with their first page: mission card (Work), next card (Work/Mission), code block (Services), crew dock (Mission)
-- [~] 6a. Home: all 10 sections built in `main-wrapper` 2026-09-25 (see `docs/webflow-build-notes.md` › Home). Waiting on Angelino's OK + 3 Designer steps
-- [ ] 6b. Work (Mission archive)
+- [x] 6a. Home: all 10 sections built in `main-wrapper` 2026-09-25 (see `docs/webflow-build-notes.md` › Home). **Approved by Angelino 2026-09-25** (no bugs found). Statement metrics deferred: he'll supply the numbers later
+- [~] 6b. Work (Mission archive): in progress 2026-09-25
 - [ ] 6c. Mission template
 - [ ] 6d. Services template
 - [ ] 6e. About
