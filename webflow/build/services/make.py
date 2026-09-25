@@ -160,7 +160,7 @@ w('faq.css', '''
 
 # ---------- next service ----------
 w('next.html', '<section class="section_sv-next" data-frame="next-service" aria-label="Next service">' + FL('next-service') +
-  wrap('<div class="ab_arc-cta" id="nextSlot"></div>') + '</section>')
+  '<div class="padding-global"><div class="container-large"><div><div class="ab_arc-cta" id="nextSlot"></div></div></div></div></section>')  # ab_arc-cta carries its own 64/92px padding (same as Mission); no padding-section wrapper
 w('next.css', '.section_sv-next{position:relative}')
 
 for s in ('hero', 'solve', 'included', 'plan', 'missions', 'hood', 'faq', 'next'):
