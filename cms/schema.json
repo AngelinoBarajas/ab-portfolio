@@ -16,7 +16,8 @@
       "Mission Stats",
       "Globe Pins"
     ],
-    "post_create": "After Services exists, add the Missions -> Services multi-reference ('services') and set each Mission's 'next-mission' reference."
+    "post_create": "After Services exists, add the Missions -> Services multi-reference ('services') and set each Mission's 'next-mission' reference.",
+    "webflow": "Created in Webflow 2026-09-25. Field slugs match this file exactly. IDs in docs/webflow-cms-ids.json."
   },
   "collections": [
     {
@@ -224,7 +225,7 @@
     {
       "displayName": "Missions",
       "singularName": "Mission",
-      "slug": "missions",
+      "slug": "work",
       "purpose": "Case studies. Template page = Mission debrief (/work/[slug]). Index = Mission archive (/work).",
       "fields": [
         {
@@ -417,8 +418,16 @@
           "slug": "sort",
           "displayName": "Sort order",
           "type": "Number"
+        },
+        {
+          "slug": "services",
+          "displayName": "Services",
+          "type": "MultiReference",
+          "collection": "services",
+          "note": "Added per $meta.post_create"
         }
-      ]
+      ],
+      "slugNote": "Collection slug is 'work' so the template URL is /work/[slug] (build-spec). Seed and code still call the collection 'missions'."
     },
     {
       "displayName": "Services",
@@ -879,8 +888,10 @@
             "dark",
             "light",
             "grid",
-            "plain"
-          ]
+            "plain",
+            "build"
+          ],
+          "note": "'build' added: the ab-identity 'The mark' channel uses it"
         },
         {
           "slug": "sort",
@@ -1074,14 +1085,14 @@
         {
           "slug": "lat",
           "displayName": "Latitude",
-          "type": "Number",
-          "decimals": 4
+          "type": "PlainText",
+          "note": "PlainText, not Number: API-created Number fields are integer-only and would round coordinates. parseFloat in JS."
         },
         {
           "slug": "lng",
           "displayName": "Longitude",
-          "type": "Number",
-          "decimals": 4
+          "type": "PlainText",
+          "note": "PlainText, not Number: API-created Number fields are integer-only and would round coordinates. parseFloat in JS."
         },
         {
           "slug": "image",

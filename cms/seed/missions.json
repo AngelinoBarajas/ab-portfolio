@@ -141,8 +141,8 @@
     "planet-glow": "rgba(255,106,61,.35)",
     "objective-cadet": "A portfolio for someone who builds interactive websites needed its own look: confident, a little playful, and clearly \"space\". Everything had to work as a tiny icon and as a giant headline.",
     "objective-engineer": "A mark built on a golden-ratio grid, a token set (void, deep, panel, starlight, signal), square components with zero radius, and type roles for display, body and mono, all mapped to CMS-editable variables.",
-    "params": "Readable at 16px (favicon) and at 200px\nOne accent colour, used sparingly\nSquare corners everywhere\nWorks on dark and light sections",
-    "manifest-pages": "Orbit mark, Construction grid, Light + dark lockups, Colour tokens, Type roles, Favicon, Avatar, Cards + stickers",
+    "params": "Readable at 16px (favicon) and at 200px\nOne accent color, used sparingly\nSquare corners everywhere\nWorks on dark and light sections",
+    "manifest-pages": "Orbit mark, Construction grid, Light + dark lockups, Color tokens, Type roles, Favicon, Avatar, Cards + stickers",
     "manifest-collections": "Tokens, Type scale, Components",
     "handoff": "One Figma library and matching Webflow variables, so every new page starts on-brand.",
     "stack": [

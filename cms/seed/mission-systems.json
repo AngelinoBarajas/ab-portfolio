@@ -61,7 +61,7 @@
     "channel": "",
     "cadet": "Soft, moving light effects sit behind the footer and gallery, like light spill from a screen.",
     "why": "The site feels lit, the way their installations are.",
-    "engineer": "Five [[Unicorn Studio]] scenes, initialised once globally. A second init call would break every embed, so it is guarded.",
+    "engineer": "Five [[Unicorn Studio]] scenes, initialized once globally. A second init call would break every embed, so it is guarded.",
     "snippet": "<!-- Site-wide footer: the ONLY init call for all five scenes -->\n<script src=\"https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.5/dist/unicornStudio.umd.js\"></script>\n<script>\n  if (!window.__usInit) { window.__usInit = true; UnicornStudio.init(); }\n</script>\n<div class=\"cta29_unicorn-embed\" data-us-project=\"0VoU8jauP3hhujHUDbXf\"></div>",
     "sort": 6
   },
