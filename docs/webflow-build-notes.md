@@ -42,9 +42,7 @@ div.ab_cms-source[data-site-data][aria-hidden]
 - **Component-specific sizes** (nav link 13px, button 14px, menu links `clamp(40px,12vw,76px)`, black-hole `clamp(320px,46vw,720px)` math) are raw values on the component classes. The token scale covers type roles and layout, not every one-off.
 - **To `ab-core.css` (step 7)** because the Designer can't express them: button shine/sweep `::before`, primary button offset shadow (`box-shadow` with a variable color gets flattened by the MCP), `-webkit-backdrop-filter`, nav link hover diamond/underline, footer link bullet, feed-console corner ticks + `::before` label, `.ab_menu_component` clip-path reveal + gradient, blink/keyframe animations, `::selection`, `:focus-visible`, `text-wrap: balance`, the 1100px clock rule, wordmark letter styling.
 
-## Designer steps for Angelino (the MCP can't reach tag styles)
+## Tag styles (done 2026-09-25)
 
-Select **Body (All Pages)** in the Style selector and set:
-- Background: `Neutral / Void` · Text color: `Text / Primary` · Font: `Font / Body` · Size: `Text / Body` · Line height 1.6
-
-Then **All H1–H6 Headings**: margin top/bottom 0 · **All Paragraphs**: margin 0 · **All Links**: color inherit.
+Body (All Pages): Void background, Text / Primary, Font / Body, Text / Body, line height 1.6 (set by Angelino + MCP). H1–H6 and paragraph margins 0. All Links not created (every link class sets its own color).
+Note: the MCP can edit tag styles (`style_name: "body"`, `"h2"`…) only after they exist; it can't change classes on the Body element.
