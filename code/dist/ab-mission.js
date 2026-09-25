@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission v0.3.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission v0.3.1 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abMissionInit) return;
@@ -13,8 +13,11 @@ window.Webflow.push(function(){
   // only on the Missions template (the hero planet carries the mission's slug)
   var HERO_PLANET = $('#hero .ab_planet[data-slug]');
   if (!HERO_PLANET) return;
-  // vendor scripts (510 globe, Aguirre case map) ship from this repo at the same tag as this bundle
-  var VENDOR = 'https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.3.0/code/vendor/';
+  // vendor scripts (510 globe, Aguirre case map) ship from this repo at the same tag as this bundle: derive the base from our own <script src>
+  var VENDOR = (function(){
+    var s = $('script[src*="/code/dist/ab-mission"]');
+    return s ? s.src.replace(/code\/dist\/[^\/]*$/, 'code/vendor/') : 'https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@main/code/vendor/';
+  })();
   function txt(sel, root){ var n = $(sel, root); return n ? n.textContent.trim() : ''; }
   function loadScript(src){ return new Promise(function(res, rej){ var s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.body.appendChild(s); }); }
 
@@ -701,6 +704,7 @@ window.Webflow.push(function(){
   LIST.forEach(function(m, i){
     var no = $('[data-field="no"]', m.el); if (no) no.textContent = pad2(i + 1);
     if (m.slug === SLUG) m.el.setAttribute('aria-current', 'page');
+    if (m.slug) m.el.setAttribute('href', '/work/' + m.slug);
   });
   var NO = pad2(MI + 1), TOTAL = pad2(Math.max(1, LIST.length));
   var NEXT = LIST.length > 1 ? LIST[(MI + 1) % LIST.length] : null;
@@ -1032,7 +1036,13 @@ window.Webflow.push(function(){
       '<i class="brk tl"></i><i class="brk tr"></i><i class="brk bl"></i><i class="brk br"></i><div class="osd" id="osd">CH 1</div>';
     chans.innerHTML = CH.map(function(c, i){ return '<button type="button" role="tab" data-ch="' + esc(c.id) + '" aria-selected="' + (i ? 'false' : 'true') + '"><span class="k">' + (i + 1) + '</span><span>' + esc(c.label) + '</span><span class="t">' + (TYPE[c.kind] || '') + '</span></button>'; }).join('');
     var views = $$('.view', screen), chBtns = $$('button', chans), osd = $('#osd'), monLabel = $('#monLabel'), monCap = $('#monCap'), monKind = $('#monKind');
-    views.forEach(function(v, k){ var c = CH[k]; if (/^(figma|phone|flow|exploded|cms)$/.test(c.kind) && M.mock) SCENE.mount(v, c, M); });
+    // coded scenes need this mission's mockup spec for that kind; one broken scene never stops the monitor
+    var NEED = { figma: 'els', phone: 'mobile', flow: 'flow', exploded: 'explode', cms: 'cms' };
+    views.forEach(function(v, k){
+      var c = CH[k], key = NEED[c.kind]; if (!key) return;
+      if (!(M.mock && M.mock[key])){ v.innerHTML = '<div class="boot">Mockup coming soon</div>'; return; }
+      try { SCENE.mount(v, c, M); } catch(err){ if (window.console) console.warn('[ab-mission] scene', c.id, err); v.innerHTML = '<div class="boot">Mockup unavailable</div>'; }
+    });
     var noise = $('#noise'), nctx = noise.getContext('2d'), curCh = 0, booted = {}, monVisible = false;
     function staticBurst(){
       if (reduce || !hasGsap) return;

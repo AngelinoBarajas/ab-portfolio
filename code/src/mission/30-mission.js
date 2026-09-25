@@ -23,6 +23,7 @@
   LIST.forEach(function(m, i){
     var no = $('[data-field="no"]', m.el); if (no) no.textContent = pad2(i + 1);
     if (m.slug === SLUG) m.el.setAttribute('aria-current', 'page');
+    if (m.slug) m.el.setAttribute('href', '/work/' + m.slug);
   });
   var NO = pad2(MI + 1), TOTAL = pad2(Math.max(1, LIST.length));
   var NEXT = LIST.length > 1 ? LIST[(MI + 1) % LIST.length] : null;
