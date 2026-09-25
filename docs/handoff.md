@@ -1,4 +1,4 @@
-# Session handoff (2026-09-25, end of the Services template + brand session)
+# Session handoff (2026-09-25, end of the Knowledge System + Services approval session)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -12,8 +12,8 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 | 4. CMS | ✅ 13 collections, all references resolved. IDs in `docs/webflow-cms-ids.json`. Added this session: Tools › **Pen + paper**, Mission Channels › Aguirre **Site plan**, AB Identity **Sketches** + **Illustrator** |
 | 3b. Global styles | ✅ 29 classes + tag styles (Body, H1–H6, p) |
 | 5. Components | 🟡 Nav, Footer, Frame label, Bento card, FAQ item, **Next card** (no props yet) done (group "Global"). Mission card is a page-level Collection item (nested Types list rules out a component). Remaining: code block, crew dock |
-| 6. Pages | 🟡 Home ✅, Work ✅, Mission template ✅ approved. **Services template** (`/services/[slug]`, page `6ab602e4e41add8af5e28b6c`) built + on staging, waiting on 1 Designer step (rail source) + his OK. Remaining: About, 404 |
-| 7. Custom code | 🟡 Live on staging: `ab-core` JS **v0.4.6** + CSS v0.4.4 · `ab-mission` JS v0.4.5 + CSS v0.4.4 · `ab-home` v0.4.2 · `ab-work` + `ab-services` (+ CSS) v0.4.0 · head inline script `abwarpin` 0.3.2. Build/deploy steps in `code/README.md`; per-version notes in `docs/webflow-build-notes.md` (v0.3.2 → v0.4.6) |
+| 6. Pages | 🟡 Home ✅, Work ✅, Mission template ✅, **Services template ✅** (`/services/[slug]`, page `6ab602e4e41add8af5e28b6c`), **Knowledge System mission ✅** — all approved 2026-09-25. Remaining: **About** (next), 404 |
+| 7. Custom code | 🟡 Live on staging: `ab-core` JS + CSS **v0.5.2** · `ab-home` + `ab-mission` JS v0.5.1 · `ab-mission.css` v0.5.0 · `ab-work` + `ab-services` (+ CSS) v0.4.0 · head inline script `abwarpin` 0.3.2. Build/deploy steps in `code/README.md`; per-version notes in `docs/webflow-build-notes.md` (v0.3.2 → v0.5.2) |
 | 8. Brand | ✅ New **AB planet monogram** (`logo/ab-logo.svg`, asset `6ab6bba8167f1da71a4bf9a8`) in Nav + Footer; inlined + animated by `core/22-logo.js` (warp spin-in, fill; black-hole hover; no glow). One geometry source: `AB.markSVG` / `AB.MARK` in `core/21-mark.js`. Favicon/webclip PNGs in `logo/` (upload pending) |
 
 Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top"> (hero · work · statement · services · process · transmission · stack · testimonials · faq · contact) · [Footer] · Site data (hidden CMS sources)`. Section-by-section notes: `docs/webflow-build-notes.md` › Home; prototype → Webflow hook map for the step 7 scripts: `webflow/build/home/class-map.md`.
@@ -71,10 +71,18 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 - **Next cards** split multi-word names onto two balanced lines (site-wide).
 - Services › WebGL title → "Interactive / 3D + data".
 
+## This session (2026-09-25, second half) in one list
+
+- **Knowledge System mission** built + approved (`/work/knowledge-system`, #04; placeholders now 05–07): 7 coded monitor scenes (`code/src/mission/21-knowledge.js`), system-style manifest tiles, 7 systems, 5 problems, 4 stats, generic client throughout. Featured on the Home board with a knowledge-graph preview. Plan: `docs/knowledge-system-plan.md`.
+- **Home metrics** (his numbers): 4,365 lines of custom code · 12 hours/month saved · 39 caffeinated drinks, with line icons (`data-metric-icon`).
+- **Hero toys site-wide** (`core/39-herodrag.js`): title words + hero planet draggable on Work/Services/Mission, "Drag me" cue (key `ab:toys`). Mission titles stay solid (no outline word) — his call.
+- **Orbit logos**: Webflow CMS, Claude (new Tools item), Finsweet (hand-drawn {F).
+- **Services template approved**: rail now = all 8 services (new Designer list + MCP move); Navigator section names fixed.
+
 ## Next session
 
-1. **Knowledge System mission approved** (2026-09-25) at `/work/knowledge-system`. Also shipped with it: site-wide draggable hero words/planets and the new Home metrics + icons. Notes: build notes › v0.5.0; plan + decisions: `docs/knowledge-system-plan.md`.
-2. Still open from before (don't block on them): Services rail Designer step + his OK on the Services template → then **About**, **404**; favicon/webclip upload; Metrics numbers.
+1. **About page** (`/about`, static) — prototype `prototypes/about.html`; sections per `docs/build-spec.md`: pilot-dossier hero (crew badge) · mission-statement · flight-log · off-duty (light bento) · next-mission. Same build method as Work/Services (`webflow/build/<page>/`, prep.py, WHTML, rebind, `ab-about` bundle if needed). Headshot is a placeholder. Stop for his OK on staging.
+2. Then **404**. Still open (don't block): favicon/webclip upload, placeholders, Lincoln Center / ON NYC pin coordinates, Forms notification email, full QA pass.
 
 ### Brief: Knowledge System mission (Angelino's words, keep every point)
 - built for Webflow CMS natively, but can be adapted to any platform
