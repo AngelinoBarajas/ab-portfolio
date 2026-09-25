@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Webflow",
+    "color": "#146EF5",
+    "icon": "layout",
+    "use": "Site build, CMS and hosting"
+  },
+  {
+    "name": "Client-First",
+    "color": "#4353FF",
+    "icon": "tag",
+    "use": "Class naming the team can follow"
+  },
+  {
+    "name": "GSAP",
+    "color": "#0AE448",
+    "icon": "motion",
+    "use": "Scroll systems and every animation"
+  },
+  {
+    "name": "Three.js",
+    "color": "#FFFFFF",
+    "icon": "cube",
+    "use": "The WebGL globe and 3D shapes"
+  },
+  {
+    "name": "Lenis",
+    "color": "#FF98A2",
+    "icon": "scroll",
+    "use": "Smooth scroll kept in sync with animation"
+  },
+  {
+    "name": "Unicorn Studio",
+    "color": "#7C5CFF",
+    "icon": "spark",
+    "use": "Shader and WebGL backgrounds"
+  },
+  {
+    "name": "GitHub",
+    "color": "#F0F6FC",
+    "icon": "branch",
+    "use": "Versioned hosting for custom code"
+  },
+  {
+    "name": "D3",
+    "color": "#F9A03C",
+    "icon": "chart",
+    "use": "The case-results map engine"
+  },
+  {
+    "name": "Figma",
+    "color": "#A259FF",
+    "icon": "pen",
+    "use": "Design, construction grids and prototypes"
+  },
+  {
+    "name": "APIs",
+    "color": "#8A8FA3",
+    "icon": "code",
+    "use": ""
+  },
+  {
+    "name": "Airtable",
+    "color": "#8A8FA3",
+    "icon": "code",
+    "use": ""
+  },
+  {
+    "name": "Astro",
+    "color": "#8A8FA3",
+    "icon": "code",
+    "use": ""
+  },
+  {
+    "name": "Brand guidelines",
+    "color": "#8A8FA3",
+    "icon": "code",
+    "use": ""
+  },
+  {
+    "name": "Finsweet",
+    "color": "#8A8FA3",
+    "icon": "code",
+    "use": ""
+  },
+  {
+    "name": "Lighthouse",
+    "color": "#8A8FA3",
+    "icon": "code",
+    "use": ""
+  },
+  {
+    "name": "Next.js",
+    "color": "#8A8FA3",
+    "icon": "code",
+    "use": ""
+  },
+  {
+    "name": "Vercel",
+    "color": "#8A8FA3",
+    "icon": "code",
+    "use": ""
+  },
+  {
+    "name": "WebPageTest",
+    "color": "#8A8FA3",
+    "icon": "code",
+    "use": ""
+  },
+  {
+    "name": "Webflow CMS",
+    "color": "#8A8FA3",
+    "icon": "code",
+    "use": ""
+  },
+  {
+    "name": "Webflow variables",
+    "color": "#8A8FA3",
+    "icon": "code",
+    "use": ""
+  }
+]

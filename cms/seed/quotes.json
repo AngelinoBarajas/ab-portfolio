@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Earth is the cradle of humanity, but one cannot live in the cradle forever.",
+    "author": "Konstantin Tsiolkovsky",
+    "context": "Letter, 1911"
+  },
+  {
+    "name": "We choose to go to the Moon in this decade and do the other things, not because they are easy, but because they are hard.",
+    "author": "John F. Kennedy",
+    "context": "Rice University, 1962"
+  },
+  {
+    "name": "That's one small step for man, one giant leap for mankind.",
+    "author": "Neil Armstrong",
+    "context": "Apollo 11, 1969"
+  },
+  {
+    "name": "Poyekhali! Let's go!",
+    "author": "Yuri Gagarin",
+    "context": "Vostok 1 liftoff, 1961"
+  },
+  {
+    "name": "Houston, Tranquility Base here. The Eagle has landed.",
+    "author": "Neil Armstrong",
+    "context": "Apollo 11, 1969"
+  }
+]

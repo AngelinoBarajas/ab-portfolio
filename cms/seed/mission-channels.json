@@ -1,0 +1,145 @@
+[
+  {
+    "name": "Live globe",
+    "mission": "510-visuals",
+    "kind": "live-globe",
+    "caption": "The production globe script, running right now. Drag to spin, click a pin to preview a project.",
+    "image": "",
+    "image-2": "",
+    "mode": "",
+    "sort": 1,
+    "_id": "live"
+  },
+  {
+    "name": "Design → build",
+    "mission": "510-visuals",
+    "kind": "figma",
+    "caption": "The BNY Space section in Figma: wireframe, styled design, client review, then the Webflow build going live. Use the chips to jump between steps.",
+    "image": "",
+    "image-2": "",
+    "mode": "",
+    "sort": 2,
+    "_id": "design"
+  },
+  {
+    "name": "Mobile",
+    "mission": "510-visuals",
+    "kind": "phone",
+    "caption": "The same section on a phone, with the decisions that shaped the mobile layout.",
+    "image": "",
+    "image-2": "",
+    "mode": "",
+    "sort": 3,
+    "_id": "mobile"
+  },
+  {
+    "name": "Service map",
+    "mission": "510-visuals",
+    "kind": "flow",
+    "caption": "The service map, from a FigJam board to the designed process: consulting → engineering → execution. Use the chips to open each stage.",
+    "image": "",
+    "image-2": "",
+    "mode": "",
+    "sort": 4,
+    "_id": "plan"
+  },
+  {
+    "name": "Globe render",
+    "mission": "510-visuals",
+    "kind": "exploded",
+    "caption": "The globe hero pulled apart into its layers, then put back together with the hover card live.",
+    "image": "",
+    "image-2": "",
+    "mode": "",
+    "sort": 5,
+    "_id": "shot"
+  },
+  {
+    "name": "Live map",
+    "mission": "daniel-aguirre-law",
+    "kind": "live-map",
+    "caption": "The production map engine, running right now with sample case data. Filter by case type, hover a pin, click for the case.",
+    "image": "",
+    "image-2": "",
+    "mode": "",
+    "sort": 1,
+    "_id": "live"
+  },
+  {
+    "name": "Design → build",
+    "mission": "daniel-aguirre-law",
+    "kind": "figma",
+    "caption": "The hero in Figma: wireframe, styled design, client review, then the Webflow build going live. Use the chips to jump between steps.",
+    "image": "",
+    "image-2": "",
+    "mode": "",
+    "sort": 2,
+    "_id": "design"
+  },
+  {
+    "name": "Mobile",
+    "mission": "daniel-aguirre-law",
+    "kind": "phone",
+    "caption": "The hero on a phone: tap through the language toggle and the case map.",
+    "image": "",
+    "image-2": "",
+    "mode": "",
+    "sort": 3,
+    "_id": "mobile"
+  },
+  {
+    "name": "Case results",
+    "mission": "daniel-aguirre-law",
+    "kind": "cms",
+    "caption": "How a new win reaches the site: staff add a case in the Webflow CMS, publish, and the homepage hero map and stats update on their own. Sample data.",
+    "image": "",
+    "image-2": "",
+    "mode": "",
+    "sort": 4,
+    "_id": "page"
+  },
+  {
+    "name": "The mark",
+    "mission": "ab-identity",
+    "kind": "logo",
+    "caption": "The orbit mark, drawing itself on its construction grid.",
+    "image": "",
+    "image-2": "",
+    "mode": "build",
+    "sort": 1,
+    "_id": "mark"
+  },
+  {
+    "name": "Construction",
+    "mission": "ab-identity",
+    "kind": "logo",
+    "caption": "Circles at 1 : 0.618 : 0.382. The square orbits on the golden circle.",
+    "image": "",
+    "image-2": "",
+    "mode": "grid",
+    "sort": 2,
+    "_id": "grid"
+  },
+  {
+    "name": "On light",
+    "mission": "ab-identity",
+    "kind": "logo",
+    "caption": "The mark on a light surface, the way it appears on light sections.",
+    "image": "",
+    "image-2": "",
+    "mode": "light",
+    "sort": 3,
+    "_id": "invert"
+  },
+  {
+    "name": "Applications",
+    "mission": "ab-identity",
+    "kind": "apps",
+    "caption": "Favicon, avatar, card and sticker: the system at every size.",
+    "image": "",
+    "image-2": "",
+    "mode": "",
+    "sort": 4,
+    "_id": "apps"
+  }
+]

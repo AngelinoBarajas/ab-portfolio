@@ -1,0 +1,30 @@
+[
+  {
+    "name": "CMS",
+    "definition": "Content Management System: where the client edits text, images and projects without touching code."
+  },
+  {
+    "name": "Three.js",
+    "definition": "A JavaScript library for drawing 3D graphics in the browser with WebGL."
+  },
+  {
+    "name": "SVG",
+    "definition": "A vector image format: sharp at any size and light to load."
+  },
+  {
+    "name": "ScrollTrigger",
+    "definition": "A GSAP plugin that ties animations to the scroll position."
+  },
+  {
+    "name": "Unicorn Studio",
+    "definition": "A tool for designing WebGL visual effects and embedding them in a site."
+  },
+  {
+    "name": "D3",
+    "definition": "A JavaScript library for drawing data: charts, maps and diagrams."
+  },
+  {
+    "name": "TopoJSON",
+    "definition": "A compact file format for map shapes, like the outline of every U.S. state."
+  }
+]

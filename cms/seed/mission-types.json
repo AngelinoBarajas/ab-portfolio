@@ -1,0 +1,50 @@
+[
+  {
+    "name": "App",
+    "sort": 1
+  },
+  {
+    "name": "Branding",
+    "sort": 2
+  },
+  {
+    "name": "CMS",
+    "sort": 3
+  },
+  {
+    "name": "Content system",
+    "sort": 4
+  },
+  {
+    "name": "Design",
+    "sort": 5
+  },
+  {
+    "name": "Design system",
+    "sort": 6
+  },
+  {
+    "name": "Development",
+    "sort": 7
+  },
+  {
+    "name": "Logo",
+    "sort": 8
+  },
+  {
+    "name": "Packaging",
+    "sort": 9
+  },
+  {
+    "name": "UI/UX",
+    "sort": 10
+  },
+  {
+    "name": "WebGL",
+    "sort": 11
+  },
+  {
+    "name": "Website",
+    "sort": 12
+  }
+]

@@ -1,0 +1,30 @@
+/* Mirror of the Webflow Color variables, for custom-code embeds only. Webflow variables are the source of truth. */
+:root{
+  --void:#07080D;
+  --deep:#0E1020;
+  --panel:#161A2E;
+  --hair:rgba(255,255,255,0.10);
+  --hair2:rgba(255,255,255,0.22);
+  --star:#F2F0EA;
+  --soft:#C9C7C0;
+  --dust:#8A8FA3;
+  --signal:#FF6A3D;
+  --on-signal:#07080D;
+  --select:#4C8DFF;
+  --nebula:#7C5CFF;
+  --live:#3BE38A;
+  --alert:#FF5A5A;
+}
+.theme-light{
+  --void:#F2F0EA;
+  --deep:#FBFAF6;
+  --panel:#FFFFFF;
+  --hair:rgba(11,12,20,0.12);
+  --hair2:rgba(11,12,20,0.28);
+  --star:#0B0C14;
+  --soft:#3B3E4B;
+  --dust:#6B6F80;
+  --select:#2F6BFF;
+  --live:#1FA463;
+  --alert:#D93636;
+}

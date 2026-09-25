@@ -1,0 +1,198 @@
+[
+  {
+    "name": "Do you only build in Webflow?",
+    "answer": "Webflow is home base, because clients can edit it after launch. The custom pieces (globes, maps, scroll systems) are plain JavaScript hosted on GitHub, so they aren't locked to one platform.",
+    "scope": "Homepage",
+    "sort": 1,
+    "_key": "home-1"
+  },
+  {
+    "name": "Can my team edit the site after launch?",
+    "answer": "Yes. Content lives in the CMS and the build follows Client-First naming. Animations read from CMS fields and stable classes, so editing content won't break them. You get a handoff guide and a walkthrough video.",
+    "scope": "Homepage",
+    "sort": 2,
+    "_key": "home-2"
+  },
+  {
+    "name": "Will all this motion slow the site down?",
+    "answer": "Heavy pieces load only when they scroll into view and pause when they leave. Every interaction has a reduced-motion fallback, and each page gets a Lighthouse pass before launch.",
+    "scope": "Homepage",
+    "sort": 3,
+    "_key": "home-3"
+  },
+  {
+    "name": "How long does a project take?",
+    "answer": "It depends on scope. A marketing site with one custom interactive centerpiece usually runs [X–Y weeks] from brief to launch.",
+    "scope": "Homepage",
+    "sort": 4,
+    "_key": "home-4"
+  },
+  {
+    "name": "Can my team really edit it?",
+    "answer": "Yes. Text, images and CMS items are all editable in the Webflow Editor, and the handoff guide shows exactly where everything lives.",
+    "scope": "Service",
+    "sort": 1,
+    "_key": "webflow-development-1"
+  },
+  {
+    "name": "Do you use templates?",
+    "answer": "No. Every site is planned and designed for you, then built from scratch in Webflow.",
+    "scope": "Service",
+    "sort": 2,
+    "_key": "webflow-development-2"
+  },
+  {
+    "name": "Who hosts it?",
+    "answer": "Webflow hosts the site. You own the account; I set it up and hand it over.",
+    "scope": "Service",
+    "sort": 3,
+    "_key": "webflow-development-3"
+  },
+  {
+    "name": "Can I add points myself?",
+    "answer": "Yes. Points come from CMS items, so adding a project or result is the same as adding any other item.",
+    "scope": "Service",
+    "sort": 1,
+    "_key": "webgl-data-1"
+  },
+  {
+    "name": "Will it work on phones?",
+    "answer": "Yes. Touch gestures are tuned separately, and lower-power devices get a lighter version.",
+    "scope": "Service",
+    "sort": 2,
+    "_key": "webgl-data-2"
+  },
+  {
+    "name": "Is it locked to Webflow?",
+    "answer": "No. The code is plain JavaScript on GitHub, so it can move with you.",
+    "scope": "Service",
+    "sort": 3,
+    "_key": "webgl-data-3"
+  },
+  {
+    "name": "Will it slow the site down?",
+    "answer": "No. Animations use transforms, pause off-screen and are tested on mid-range phones.",
+    "scope": "Service",
+    "sort": 1,
+    "_key": "motion-1"
+  },
+  {
+    "name": "Can you add motion to an existing Webflow site?",
+    "answer": "Yes, as long as the structure is clean. I review the build first and flag anything that needs tidying.",
+    "scope": "Service",
+    "sort": 2,
+    "_key": "motion-2"
+  },
+  {
+    "name": "What about accessibility?",
+    "answer": "Every effect respects the reduced-motion setting and never hides content behind an animation.",
+    "scope": "Service",
+    "sort": 3,
+    "_key": "motion-3"
+  },
+  {
+    "name": "Can you design the website too?",
+    "answer": "Yes. Brand and website together is the best way to make both feel like one thing.",
+    "scope": "Service",
+    "sort": 1,
+    "_key": "branding-1"
+  },
+  {
+    "name": "How many concepts do I see?",
+    "answer": "Usually two or three distinct directions before we pick one to refine.",
+    "scope": "Service",
+    "sort": 2,
+    "_key": "branding-2"
+  },
+  {
+    "name": "Do I own the files?",
+    "answer": "Yes. You get every source and export file at the end.",
+    "scope": "Service",
+    "sort": 3,
+    "_key": "branding-3"
+  },
+  {
+    "name": "When should I skip Webflow?",
+    "answer": "When you need logins, heavy data, custom backends or things the Editor cannot model. For most marketing sites, Webflow is still the better choice.",
+    "scope": "Service",
+    "sort": 1,
+    "_key": "custom-deploys-1"
+  },
+  {
+    "name": "Can non-developers edit it?",
+    "answer": "Yes, with a headless CMS set up for your team.",
+    "scope": "Service",
+    "sort": 2,
+    "_key": "custom-deploys-2"
+  },
+  {
+    "name": "Who maintains it?",
+    "answer": "You can, another developer can, or I can on a retainer.",
+    "scope": "Service",
+    "sort": 3,
+    "_key": "custom-deploys-3"
+  },
+  {
+    "name": "What sources can you connect?",
+    "answer": "Airtable, Google Sheets and most tools with an API.",
+    "scope": "Service",
+    "sort": 1,
+    "_key": "cms-integrations-1"
+  },
+  {
+    "name": "What about CMS limits?",
+    "answer": "I plan around Webflow item and reference limits from day one, so you do not hit a wall later.",
+    "scope": "Service",
+    "sort": 2,
+    "_key": "cms-integrations-2"
+  },
+  {
+    "name": "Does it update automatically?",
+    "answer": "Yes, on a schedule or on change, depending on the source.",
+    "scope": "Service",
+    "sort": 3,
+    "_key": "cms-integrations-3"
+  },
+  {
+    "name": "Do I need a design system?",
+    "answer": "If your site has more than a handful of pages or more than one person editing it, it pays for itself quickly.",
+    "scope": "Service",
+    "sort": 1,
+    "_key": "design-systems-1"
+  },
+  {
+    "name": "Can you systemise an existing site?",
+    "answer": "Yes. We audit it first, then move it onto tokens step by step.",
+    "scope": "Service",
+    "sort": 2,
+    "_key": "design-systems-2"
+  },
+  {
+    "name": "Figma or Webflow first?",
+    "answer": "Figma, then mirrored in Webflow with matching names.",
+    "scope": "Service",
+    "sort": 3,
+    "_key": "design-systems-3"
+  },
+  {
+    "name": "Can you speed up a site you did not build?",
+    "answer": "Yes. Most gains come from images, scripts and loading order, which can be fixed without a rebuild.",
+    "scope": "Service",
+    "sort": 1,
+    "_key": "performance-1"
+  },
+  {
+    "name": "What score will I get?",
+    "answer": "It depends on the site. The goal is a fast first screen and smooth scrolling on real phones, not a vanity number.",
+    "scope": "Service",
+    "sort": 2,
+    "_key": "performance-2"
+  },
+  {
+    "name": "Will I lose the animations?",
+    "answer": "No. They stay, they just load smarter.",
+    "scope": "Service",
+    "sort": 3,
+    "_key": "performance-3"
+  }
+]

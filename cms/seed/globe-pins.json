@@ -1,0 +1,92 @@
+[
+  {
+    "name": "AMANT — Brooklyn, NY",
+    "mission": "510-visuals",
+    "city": "Brooklyn, New York",
+    "lat": 40.6925,
+    "lng": -73.991,
+    "image": "[placeholder: add from 510 Visuals CMS]",
+    "link": ""
+  },
+  {
+    "name": "Esports World Cup 2024 — Closing Ceremony",
+    "mission": "510-visuals",
+    "city": "Riyadh, Saudi Arabia",
+    "lat": 24.7136,
+    "lng": 46.6753,
+    "image": "[placeholder: add from 510 Visuals CMS]",
+    "link": ""
+  },
+  {
+    "name": "Virginia Capitol — Interactive LED Table",
+    "mission": "510-visuals",
+    "city": "Richmond, Virginia",
+    "lat": 37.5407,
+    "lng": -77.436,
+    "image": "img/510-p-va-capitol.webp",
+    "link": ""
+  },
+  {
+    "name": "Awakening — Las Vegas",
+    "mission": "510-visuals",
+    "city": "Awakening Theater — Wynn Las Vegas",
+    "lat": 36.1699,
+    "lng": -115.1398,
+    "image": "img/510-p-awakening.webp",
+    "link": ""
+  },
+  {
+    "name": "Lincoln Center — Kenneth C. Griffin Sidewalk Studio",
+    "mission": "510-visuals",
+    "city": "Lincoln Center — David Geffen Hall, New York City",
+    "lat": 40.7128,
+    "lng": -74.006,
+    "image": "img/510-p-lincoln.webp",
+    "link": ""
+  },
+  {
+    "name": "The Strauch Hypercube — Narduli Studio",
+    "mission": "510-visuals",
+    "city": "UC Berkeley — Bechtel Engineering Center",
+    "lat": 37.8719,
+    "lng": -122.2585,
+    "image": "img/510-p-hypercube.webp",
+    "link": ""
+  },
+  {
+    "name": "Patriot Act with Hasan Minhaj — NETFLIX",
+    "mission": "510-visuals",
+    "city": "Netflix Original",
+    "lat": 40.7637,
+    "lng": -73.9754,
+    "image": "[placeholder: add from 510 Visuals CMS]",
+    "link": ""
+  },
+  {
+    "name": "ON NYC — Flagship Store",
+    "mission": "510-visuals",
+    "city": "New York, NY",
+    "lat": 40.7128,
+    "lng": -74.006,
+    "image": "[placeholder: add from 510 Visuals CMS]",
+    "link": ""
+  },
+  {
+    "name": "Hard Rock Hotel & Casino — Oculus",
+    "mission": "510-visuals",
+    "city": "Hollywood, FL",
+    "lat": 26.0112,
+    "lng": -80.1495,
+    "image": "img/510-p-oculus.webp",
+    "link": ""
+  },
+  {
+    "name": "Virtual Sky — Narduli Studio",
+    "mission": "510-visuals",
+    "city": "Oklahoma City Convention Center",
+    "lat": 35.4676,
+    "lng": -97.5164,
+    "image": "img/510-p-virtual-sky.webp",
+    "link": ""
+  }
+]

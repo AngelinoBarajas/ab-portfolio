@@ -1,0 +1,156 @@
+[
+  {
+    "name": "Interactive project globe",
+    "mission": "510-visuals",
+    "tag": "Three.js · CMS",
+    "channel": "live",
+    "cadet": "A 3D globe shows every project where it was built. Spin it, tap a glowing pin, and a card pops up with the photo and a link to the case study.",
+    "why": "Visitors see the studio's reach in one second, before reading a word.",
+    "engineer": "A factory function creates an independent [[Three.js]] globe per wrapper, so the hero and the teaser can coexist. Pins are read from hidden [[CMS]] items via data attributes (lat, lng, city, slug). Raycasting on invisible hitboxes handles hover and tap; nearby pins group into clusters.",
+    "snippet": "var items = document.querySelectorAll('.globe_cms-item');\nitems.forEach(function (el) {\n  pins.push({ lat: +el.dataset.globeLat, lng: +el.dataset.globeLng,\n    title: el.dataset.globeTitle, hasCaseStudy: el.dataset.globeHasCaseStudy !== 'false' });\n});",
+    "sort": 1
+  },
+  {
+    "name": "Process as geometry",
+    "mission": "510-visuals",
+    "tag": "Three.js · IntersectionObserver",
+    "channel": "",
+    "cadet": "Each step of their process gets its own slowly rotating wireframe shape. On phones, they swap to lightweight flat drawings.",
+    "why": "It explains a technical process visually and signals precision without a paragraph of copy.",
+    "engineer": "Wireframe platonic solids rendered in Three.js, animated only while on screen. Below the mobile breakpoint the canvas is hidden and a 150px [[SVG]] takes its place.",
+    "snippet": "// v3 — only the on-screen observer starts the render loop\nvar io = new IntersectionObserver(function (entries) {\n  entries.forEach(function (e) {\n    if (e.isIntersecting && !running) { running = true; animate(); }\n    if (!e.isIntersecting) running = false;\n  });\n});\nio.observe(wrapper);\n// below 768px the canvas is hidden and a 150px SVG takes its place",
+    "sort": 2
+  },
+  {
+    "name": "Breakout split-text",
+    "mission": "510-visuals",
+    "tag": "SplitType · ScrollTrigger",
+    "channel": "",
+    "cadet": "A big statement breaks apart and reassembles line by line as you scroll.",
+    "why": "It slows the reader down on the one sentence that matters.",
+    "engineer": "One master controller owns the split-text, scroll-section and fade-up behaviors, so they share a single [[ScrollTrigger]] setup instead of fighting each other.",
+    "snippet": "window.Webflow = window.Webflow || [];\nwindow.Webflow.push(function () {\n  if (window.__TEN_MASTER_V5) return;   // one controller, one ScrollTrigger setup\n  window.__TEN_MASTER_V5 = true;\n  initLayout484Split();   // .layout484_text — SplitType words, scrubbed\n  initScrollSection();    // .scroll-section_component\n  initFadeUps();          // .gsap-fade-up\n});",
+    "sort": 3
+  },
+  {
+    "name": "Pinned video gallery",
+    "mission": "510-visuals",
+    "tag": "HLS · Webflow Interactions",
+    "channel": "",
+    "cadet": "The page holds still while a gallery of installation videos plays through, then lets go.",
+    "why": "Video is their strongest proof, so it gets the whole screen.",
+    "engineer": "HLS video loads eagerly and autoplays muted. The scroll distance lives in the Designer on a runway element per breakpoint, so the animation and the pin end at the same moment.",
+    "snippet": "/* Scroll distance is set in the Designer, per breakpoint */\n.header83_scroll-runway { height: 160vh; }\n@media (max-width: 991px) { .header83_scroll-runway { height: 150vh; } }\n@media (max-width: 767px) { .header83_scroll-runway { height: 135vh; } }\n@media (max-width: 478px) { .header83_scroll-runway { height: 120vh; } }\n/* ancestors of a sticky pin: clip, never hidden */\n.header83_component { overflow: hidden; overflow: clip; }",
+    "sort": 4
+  },
+  {
+    "name": "Dot-field text mask",
+    "mission": "510-visuals",
+    "tag": "Canvas · data attributes",
+    "channel": "",
+    "cadet": "A field of dots reacts to your cursor, and the headline is cut out of it.",
+    "why": "It turns the call to action into something people play with.",
+    "engineer": "The dot spacing is set per breakpoint with data attributes (desktop, tablet, mobile), read by a helper that rebuilds the grid when the window crosses a breakpoint.",
+    "snippet": "function getResponsiveSpacing(el, fallback) {\n  var w = window.innerWidth;\n  var bp = w >= 992 ? 'desktop' : w >= 768 ? 'tablet' : 'mobile';\n  var v = el.getAttribute('data-dot-spacing-' + bp) ||\n          el.getAttribute('data-dot-spacing');\n  return v ? parseFloat(v) : fallback;\n}\n// ResizeObserver + resize rebuild the grid when a breakpoint is crossed",
+    "sort": 5
+  },
+  {
+    "name": "WebGL atmosphere",
+    "mission": "510-visuals",
+    "tag": "Unicorn Studio",
+    "channel": "",
+    "cadet": "Soft, moving light effects sit behind the footer and gallery, like light spill from a screen.",
+    "why": "The site feels lit, the way their installations are.",
+    "engineer": "Five [[Unicorn Studio]] scenes, initialised once globally. A second init call would break every embed, so it is guarded.",
+    "snippet": "<!-- Site-wide footer: the ONLY init call for all five scenes -->\n<script src=\"https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.5/dist/unicornStudio.umd.js\"></script>\n<script>\n  if (!window.__usInit) { window.__usInit = true; UnicornStudio.init(); }\n</script>\n<div class=\"cta29_unicorn-embed\" data-us-project=\"0VoU8jauP3hhujHUDbXf\"></div>",
+    "sort": 6
+  },
+  {
+    "name": "Case-results map",
+    "mission": "daniel-aguirre-law",
+    "tag": "D3 · CMS",
+    "channel": "live",
+    "cadet": "A dotted map of the U.S. shows real case wins. Filter by type, hover a pin for a quick summary, click it for the whole story. The firm adds a case in the CMS and a new pin appears.",
+    "why": "Instead of claiming \"we serve families nationwide\", the page shows it.",
+    "engineer": "A [[D3]] orthographic projection draws the map from us-atlas [[TopoJSON]]. Pins are read from a hidden CMS list; nearby pins cluster. Popups use cream glass and are portaled to a fixed layer so the map's clipping can't cut them off.",
+    "snippet": "// the dot grid: rasterize the nation once, then read pixels\nctx.fill(nationPath);\nvar px = ctx.getImageData(0, 0, w, h).data;\ndots = grid.filter(function (d) { return px[(d.y * w + d.x) * 4 + 3] > 0; });",
+    "sort": 1
+  },
+  {
+    "name": "Cream-glass design language",
+    "mission": "daniel-aguirre-law",
+    "tag": "CSS · backdrop-filter",
+    "channel": "",
+    "cadet": "Cards, menus and popups look like frosted glass tinted warm cream, with a thin gold line on top.",
+    "why": "It feels calm and premium, and gives the firm a look nobody else in their market has.",
+    "engineer": "Cream at 55–96% opacity with backdrop-filter blur(20px) saturate(1.6), a white hairline, layered navy shadows and a tan accent rule. Every rule ships the -webkit- prefix, or Safari shows a solid slab.",
+    "snippet": ".case-map .popup {\n  background: rgba(252,246,236,0.55);\n  -webkit-backdrop-filter: blur(20px) saturate(1.6);\n  backdrop-filter: blur(20px) saturate(1.6);\n  border: 1px solid rgba(255,255,255,0.55);\n  border-radius: 14px;\n  box-shadow: 0 18px 48px rgba(26,40,64,0.22),\n              inset 0 1px 0 rgba(255,255,255,0.85);\n}",
+    "sort": 2
+  },
+  {
+    "name": "Morphing navigation",
+    "mission": "daniel-aguirre-law",
+    "tag": "GSAP · two tiers",
+    "channel": "",
+    "cadet": "The menu starts full width over the hero, then shrinks into a floating pill as you scroll, and hides while you read.",
+    "why": "Twenty-plus pages stay one click away without the menu getting in the way.",
+    "engineer": "A scroll observer toggles condensed and hidden states. Pages without a hero start as the pill. The two-tier structure was approved by the attorney before build.",
+    "snippet": "/* init.js adds .nav-condensed past the hero and .nav-hidden while scrolling */\n.navbar8_component.w-nav.nav-condensed { padding-top: 1rem; }\n.navbar8_component.w-nav.nav-hidden { transform: translateY(-180%); }\n@media (prefers-reduced-motion: reduce) {\n  .navbar8_component.w-nav.nav-hidden { transform: none; }   /* never hide */\n}",
+    "sort": 3
+  },
+  {
+    "name": "English / Spanish",
+    "mission": "daniel-aguirre-law",
+    "tag": "Bilingual",
+    "channel": "",
+    "cadet": "The whole team is bilingual, so the site is too. One toggle switches the language.",
+    "why": "Many clients are Spanish-speaking families. Neither language is an afterthought.",
+    "engineer": "Copy ships in both languages and a toggle swaps them in place, remembering the choice.",
+    "snippet": "function tr(text, toEs) {\n  var t = (text || '').replace(/\\s+/g, ' ').trim();\n  var map = toEs ? DICT : REV;            // keyed on the English string\n  return Object.prototype.hasOwnProperty.call(map, t) ? map[t] : text;\n}\ndocument.documentElement.lang = toEs ? 'es' : 'en';\n// form <option> values are frozen in English so the inbox stays consistent",
+    "sort": 4
+  },
+  {
+    "name": "Connected content system",
+    "mission": "daniel-aguirre-law",
+    "tag": "CMS · SEO",
+    "channel": "",
+    "cadet": "A 58-term vocabulary, practice-area pages and articles all link to each other, so both people and search engines can follow a topic.",
+    "why": "The firm shows up for the questions clients actually ask.",
+    "engineer": "Topics, Insights and Practice Areas are cross-referenced collections. Category hubs and a vocabulary hub are generated from the same references, so a new term is linked everywhere automatically.",
+    "snippet": "",
+    "sort": 5
+  },
+  {
+    "name": "The orbit mark",
+    "mission": "ab-identity",
+    "tag": "Logo",
+    "channel": "mark",
+    "cadet": "A ring with a gap and a small square in orbit around it. The gap is where the square is \"launching\" from.",
+    "why": "It says gravity and motion without drawing a rocket.",
+    "engineer": "Three circles on a 1 : 0.618 : 0.382 ratio set the ring, the square's orbit and the gap. Stroke width is 12 on a 200 grid, so it survives down to 16px.",
+    "snippet": "<svg viewBox=\"-120 -120 240 240\">\n  <!-- a 3/4 ring on the golden circle (r 61.8) -->\n  <path d=\"M 0 -61.8 A 61.8 61.8 0 1 0 61.8 0\" fill=\"none\" stroke-width=\"20\"/>\n  <!-- the square that orbits it -->\n  <rect x=\"47\" y=\"-15\" width=\"30\" height=\"30\" fill=\"#FF6A3D\"/>\n</svg>",
+    "sort": 1
+  },
+  {
+    "name": "Square-first components",
+    "mission": "ab-identity",
+    "tag": "UI system",
+    "channel": "",
+    "cadet": "Every button and card has sharp corners. When you press a button, its shadow collapses like a key being pushed.",
+    "why": "Sharp corners feel precise and technical, the opposite of soft template sites.",
+    "engineer": "Radius token fixed at 0. Primary buttons carry a 4px offset shadow that collapses to 0 on press, with the label shifting 4px to match.",
+    "snippet": ":root { --radius: 0; }\n.btn, .card, .chip, input { border-radius: var(--radius); }\n.btn-primary { background: var(--signal); color: var(--on-signal); }\n/* offset shadow instead of rounded softness */\n.btn-primary::after { content: \"\"; position: absolute; inset: 4px -4px -4px 4px;\n  border: 1px solid var(--star); z-index: -1; }",
+    "sort": 2
+  },
+  {
+    "name": "Type in three roles",
+    "mission": "ab-identity",
+    "tag": "Typography",
+    "channel": "",
+    "cadet": "A wide, heavy font for big headlines, a clean one for reading, and a \"computer\" font for small labels.",
+    "why": "Each job gets the right voice, and the page reads like a design tool.",
+    "engineer": "Archivo Expanded 900 (display), Geist (body), JetBrains Mono (labels, coordinates, sizes). Mono is reserved for things a design tool would print.",
+    "snippet": "",
+    "sort": 3
+  }
+]

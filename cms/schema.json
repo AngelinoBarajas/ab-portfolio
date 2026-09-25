@@ -1,0 +1,1099 @@
+{
+  "$meta": {
+    "note": "Create collections in the order listed (references must point at collections that already exist). Types use Webflow CMS field types. Fields marked required:true are required in the Designer. Singular/plural names are the Webflow collection names.",
+    "order": [
+      "Mission Types",
+      "Tools",
+      "Site Settings",
+      "Quotes",
+      "Glossary",
+      "FAQ",
+      "Missions",
+      "Services",
+      "Mission Channels",
+      "Mission Systems",
+      "Problems Solved",
+      "Mission Stats",
+      "Globe Pins"
+    ],
+    "post_create": "After Services exists, add the Missions -> Services multi-reference ('services') and set each Mission's 'next-mission' reference."
+  },
+  "collections": [
+    {
+      "displayName": "Mission Types",
+      "singularName": "Mission Type",
+      "slug": "mission-types",
+      "purpose": "Filter chips on the work index and tags on cards",
+      "fields": [
+        {
+          "slug": "name",
+          "displayName": "Name",
+          "type": "PlainText",
+          "required": true
+        },
+        {
+          "slug": "sort",
+          "displayName": "Sort order",
+          "type": "Number"
+        }
+      ]
+    },
+    {
+      "displayName": "Tools",
+      "singularName": "Tool",
+      "slug": "tools",
+      "purpose": "Stack orbit on case studies, tool chips on services",
+      "fields": [
+        {
+          "slug": "name",
+          "displayName": "Name",
+          "type": "PlainText",
+          "required": true
+        },
+        {
+          "slug": "color",
+          "displayName": "Brand color",
+          "type": "Color"
+        },
+        {
+          "slug": "icon",
+          "displayName": "Icon",
+          "type": "Option",
+          "options": [
+            "layout",
+            "tag",
+            "motion",
+            "cube",
+            "scroll",
+            "spark",
+            "branch",
+            "chart",
+            "pen",
+            "code"
+          ]
+        },
+        {
+          "slug": "use",
+          "displayName": "What it did",
+          "type": "PlainText"
+        }
+      ]
+    },
+    {
+      "displayName": "Site Settings",
+      "singularName": "Site Setting",
+      "slug": "site-settings",
+      "purpose": "One item. Bound site-wide (nav status, footer, clock, email)",
+      "fields": [
+        {
+          "slug": "name",
+          "displayName": "Name",
+          "type": "PlainText",
+          "required": true
+        },
+        {
+          "slug": "availability",
+          "displayName": "Availability",
+          "type": "PlainText"
+        },
+        {
+          "slug": "timezone",
+          "displayName": "Timezone (IANA)",
+          "type": "PlainText"
+        },
+        {
+          "slug": "tz-label",
+          "displayName": "Timezone label",
+          "type": "PlainText"
+        },
+        {
+          "slug": "email",
+          "displayName": "Email",
+          "type": "Email"
+        },
+        {
+          "slug": "headline",
+          "displayName": "Hero headline",
+          "type": "PlainText",
+          "help": "~word~ = strike, *word* = star fill"
+        },
+        {
+          "slug": "space-events",
+          "displayName": "Space events",
+          "type": "PlainText",
+          "help": "comma list: shooting,meteors,comets,satellites,flares,ufo"
+        },
+        {
+          "slug": "linkedin",
+          "displayName": "LinkedIn",
+          "type": "Link"
+        },
+        {
+          "slug": "behance",
+          "displayName": "Behance",
+          "type": "Link"
+        },
+        {
+          "slug": "github",
+          "displayName": "GitHub",
+          "type": "Link"
+        },
+        {
+          "slug": "dribbble",
+          "displayName": "Dribbble",
+          "type": "Link"
+        }
+      ]
+    },
+    {
+      "displayName": "Quotes",
+      "singularName": "Quote",
+      "slug": "quotes",
+      "purpose": "Footer 'Transmission' rotator",
+      "fields": [
+        {
+          "slug": "name",
+          "displayName": "Quote",
+          "type": "PlainText",
+          "required": true
+        },
+        {
+          "slug": "author",
+          "displayName": "Author",
+          "type": "PlainText"
+        },
+        {
+          "slug": "context",
+          "displayName": "Context",
+          "type": "PlainText"
+        }
+      ]
+    },
+    {
+      "displayName": "Glossary",
+      "singularName": "Term",
+      "slug": "glossary",
+      "purpose": "Cadet-mode tooltips on case studies",
+      "fields": [
+        {
+          "slug": "name",
+          "displayName": "Term",
+          "type": "PlainText",
+          "required": true
+        },
+        {
+          "slug": "definition",
+          "displayName": "Definition",
+          "type": "PlainText"
+        }
+      ]
+    },
+    {
+      "displayName": "FAQ",
+      "singularName": "Question",
+      "slug": "faq",
+      "purpose": "Homepage FAQ and per-service FAQ",
+      "fields": [
+        {
+          "slug": "name",
+          "displayName": "Question",
+          "type": "PlainText",
+          "required": true
+        },
+        {
+          "slug": "answer",
+          "displayName": "Answer",
+          "type": "PlainText"
+        },
+        {
+          "slug": "scope",
+          "displayName": "Scope",
+          "type": "Option",
+          "options": [
+            "Homepage",
+            "Service"
+          ]
+        },
+        {
+          "slug": "sort",
+          "displayName": "Sort order",
+          "type": "Number"
+        }
+      ]
+    },
+    {
+      "displayName": "Missions",
+      "singularName": "Mission",
+      "slug": "missions",
+      "purpose": "Case studies. Template page = Mission debrief (/work/[slug]). Index = Mission archive (/work).",
+      "fields": [
+        {
+          "slug": "name",
+          "displayName": "Name",
+          "type": "PlainText",
+          "required": true
+        },
+        {
+          "slug": "number",
+          "displayName": "Mission number",
+          "type": "Number"
+        },
+        {
+          "slug": "client",
+          "displayName": "Client line",
+          "type": "PlainText"
+        },
+        {
+          "slug": "types",
+          "displayName": "Types",
+          "type": "MultiReference",
+          "collection": "mission-types"
+        },
+        {
+          "slug": "role",
+          "displayName": "Role",
+          "type": "PlainText"
+        },
+        {
+          "slug": "year",
+          "displayName": "Year",
+          "type": "PlainText"
+        },
+        {
+          "slug": "platform",
+          "displayName": "Platform",
+          "type": "PlainText"
+        },
+        {
+          "slug": "status",
+          "displayName": "Status",
+          "type": "Option",
+          "options": [
+            "Live",
+            "Shipped",
+            "In orbit",
+            "Placeholder"
+          ]
+        },
+        {
+          "slug": "live-url",
+          "displayName": "Live URL",
+          "type": "Link"
+        },
+        {
+          "slug": "summary",
+          "displayName": "Summary",
+          "type": "PlainText"
+        },
+        {
+          "slug": "cover",
+          "displayName": "Cover image",
+          "type": "Image"
+        },
+        {
+          "slug": "cover-kind",
+          "displayName": "Cover style",
+          "type": "Option",
+          "options": [
+            "Image",
+            "Mark",
+            "Brand",
+            "App",
+            "Site"
+          ]
+        },
+        {
+          "slug": "brand-bg",
+          "displayName": "Brand background",
+          "type": "Color"
+        },
+        {
+          "slug": "brand-fg",
+          "displayName": "Brand foreground",
+          "type": "Color"
+        },
+        {
+          "slug": "brand-accent",
+          "displayName": "Brand accent",
+          "type": "Color"
+        },
+        {
+          "slug": "brand-accent-2",
+          "displayName": "Brand accent 2",
+          "type": "Color"
+        },
+        {
+          "slug": "brand-font",
+          "displayName": "Brand font",
+          "type": "PlainText"
+        },
+        {
+          "slug": "planet-type",
+          "displayName": "Planet type",
+          "type": "Option",
+          "options": [
+            "gas",
+            "rocky",
+            "ice",
+            "terra"
+          ]
+        },
+        {
+          "slug": "planet-colors",
+          "displayName": "Planet colors",
+          "type": "PlainText",
+          "help": "comma list of hex, terra needs 5"
+        },
+        {
+          "slug": "planet-ring",
+          "displayName": "Planet ring colors",
+          "type": "PlainText"
+        },
+        {
+          "slug": "planet-glow",
+          "displayName": "Planet glow",
+          "type": "PlainText"
+        },
+        {
+          "slug": "objective-cadet",
+          "displayName": "Objective (cadet)",
+          "type": "PlainText"
+        },
+        {
+          "slug": "objective-engineer",
+          "displayName": "Objective (engineer)",
+          "type": "PlainText"
+        },
+        {
+          "slug": "params",
+          "displayName": "Mission parameters",
+          "type": "PlainText",
+          "help": "one per line"
+        },
+        {
+          "slug": "manifest-pages",
+          "displayName": "Pages shipped",
+          "type": "PlainText",
+          "help": "comma list"
+        },
+        {
+          "slug": "manifest-collections",
+          "displayName": "Collections shipped",
+          "type": "PlainText"
+        },
+        {
+          "slug": "handoff",
+          "displayName": "Handoff note",
+          "type": "PlainText"
+        },
+        {
+          "slug": "stack",
+          "displayName": "Stack",
+          "type": "MultiReference",
+          "collection": "tools"
+        },
+        {
+          "slug": "quote",
+          "displayName": "Client quote",
+          "type": "PlainText"
+        },
+        {
+          "slug": "quote-by",
+          "displayName": "Quote by",
+          "type": "PlainText"
+        },
+        {
+          "slug": "next-mission",
+          "displayName": "Next mission",
+          "type": "Reference",
+          "collection": "missions"
+        },
+        {
+          "slug": "featured",
+          "displayName": "Featured on homepage",
+          "type": "Switch"
+        },
+        {
+          "slug": "sort",
+          "displayName": "Sort order",
+          "type": "Number"
+        }
+      ]
+    },
+    {
+      "displayName": "Services",
+      "singularName": "Service",
+      "slug": "services",
+      "purpose": "Service template (/services/[slug])",
+      "fields": [
+        {
+          "slug": "name",
+          "displayName": "Name",
+          "type": "PlainText",
+          "required": true
+        },
+        {
+          "slug": "title-1",
+          "displayName": "Title line 1",
+          "type": "PlainText"
+        },
+        {
+          "slug": "title-2",
+          "displayName": "Title line 2 (outline)",
+          "type": "PlainText"
+        },
+        {
+          "slug": "summary",
+          "displayName": "Summary",
+          "type": "PlainText"
+        },
+        {
+          "slug": "best-for",
+          "displayName": "Best for",
+          "type": "PlainText"
+        },
+        {
+          "slug": "planet-type",
+          "displayName": "Planet type",
+          "type": "Option",
+          "options": [
+            "gas",
+            "rocky",
+            "ice",
+            "terra"
+          ]
+        },
+        {
+          "slug": "planet-colors",
+          "displayName": "Planet colors",
+          "type": "PlainText"
+        },
+        {
+          "slug": "planet-ring",
+          "displayName": "Planet ring colors",
+          "type": "PlainText"
+        },
+        {
+          "slug": "planet-glow",
+          "displayName": "Planet glow",
+          "type": "PlainText"
+        },
+        {
+          "slug": "dot",
+          "displayName": "Rail dot color",
+          "type": "Color"
+        },
+        {
+          "slug": "tools",
+          "displayName": "Tools",
+          "type": "MultiReference",
+          "collection": "tools"
+        },
+        {
+          "slug": "pairs-with",
+          "displayName": "Pairs with",
+          "type": "MultiReference",
+          "collection": "services"
+        },
+        {
+          "slug": "missions",
+          "displayName": "Related missions",
+          "type": "MultiReference",
+          "collection": "missions"
+        },
+        {
+          "slug": "faq",
+          "displayName": "FAQ",
+          "type": "MultiReference",
+          "collection": "faq"
+        },
+        {
+          "slug": "solve-1-problem",
+          "displayName": "Solve 1 problem",
+          "type": "PlainText"
+        },
+        {
+          "slug": "solve-1-heading",
+          "displayName": "Solve 1 heading",
+          "type": "PlainText"
+        },
+        {
+          "slug": "solve-1-answer",
+          "displayName": "Solve 1 answer",
+          "type": "PlainText"
+        },
+        {
+          "slug": "solve-2-problem",
+          "displayName": "Solve 2 problem",
+          "type": "PlainText"
+        },
+        {
+          "slug": "solve-2-heading",
+          "displayName": "Solve 2 heading",
+          "type": "PlainText"
+        },
+        {
+          "slug": "solve-2-answer",
+          "displayName": "Solve 2 answer",
+          "type": "PlainText"
+        },
+        {
+          "slug": "solve-3-problem",
+          "displayName": "Solve 3 problem",
+          "type": "PlainText"
+        },
+        {
+          "slug": "solve-3-heading",
+          "displayName": "Solve 3 heading",
+          "type": "PlainText"
+        },
+        {
+          "slug": "solve-3-answer",
+          "displayName": "Solve 3 answer",
+          "type": "PlainText"
+        },
+        {
+          "slug": "deliverable-1",
+          "displayName": "Deliverable 1",
+          "type": "PlainText"
+        },
+        {
+          "slug": "deliverable-1-desc",
+          "displayName": "Deliverable 1 description",
+          "type": "PlainText"
+        },
+        {
+          "slug": "deliverable-1-icon",
+          "displayName": "Deliverable 1 icon",
+          "type": "Option",
+          "options": [
+            "map",
+            "pen",
+            "layout",
+            "db",
+            "motion",
+            "book",
+            "globe",
+            "sync",
+            "cursor",
+            "gauge",
+            "branch",
+            "spark",
+            "hand",
+            "eye",
+            "code",
+            "palette",
+            "grid",
+            "type"
+          ]
+        },
+        {
+          "slug": "deliverable-2",
+          "displayName": "Deliverable 2",
+          "type": "PlainText"
+        },
+        {
+          "slug": "deliverable-2-desc",
+          "displayName": "Deliverable 2 description",
+          "type": "PlainText"
+        },
+        {
+          "slug": "deliverable-2-icon",
+          "displayName": "Deliverable 2 icon",
+          "type": "Option",
+          "options": [
+            "map",
+            "pen",
+            "layout",
+            "db",
+            "motion",
+            "book",
+            "globe",
+            "sync",
+            "cursor",
+            "gauge",
+            "branch",
+            "spark",
+            "hand",
+            "eye",
+            "code",
+            "palette",
+            "grid",
+            "type"
+          ]
+        },
+        {
+          "slug": "deliverable-3",
+          "displayName": "Deliverable 3",
+          "type": "PlainText"
+        },
+        {
+          "slug": "deliverable-3-desc",
+          "displayName": "Deliverable 3 description",
+          "type": "PlainText"
+        },
+        {
+          "slug": "deliverable-3-icon",
+          "displayName": "Deliverable 3 icon",
+          "type": "Option",
+          "options": [
+            "map",
+            "pen",
+            "layout",
+            "db",
+            "motion",
+            "book",
+            "globe",
+            "sync",
+            "cursor",
+            "gauge",
+            "branch",
+            "spark",
+            "hand",
+            "eye",
+            "code",
+            "palette",
+            "grid",
+            "type"
+          ]
+        },
+        {
+          "slug": "deliverable-4",
+          "displayName": "Deliverable 4",
+          "type": "PlainText"
+        },
+        {
+          "slug": "deliverable-4-desc",
+          "displayName": "Deliverable 4 description",
+          "type": "PlainText"
+        },
+        {
+          "slug": "deliverable-4-icon",
+          "displayName": "Deliverable 4 icon",
+          "type": "Option",
+          "options": [
+            "map",
+            "pen",
+            "layout",
+            "db",
+            "motion",
+            "book",
+            "globe",
+            "sync",
+            "cursor",
+            "gauge",
+            "branch",
+            "spark",
+            "hand",
+            "eye",
+            "code",
+            "palette",
+            "grid",
+            "type"
+          ]
+        },
+        {
+          "slug": "deliverable-5",
+          "displayName": "Deliverable 5",
+          "type": "PlainText"
+        },
+        {
+          "slug": "deliverable-5-desc",
+          "displayName": "Deliverable 5 description",
+          "type": "PlainText"
+        },
+        {
+          "slug": "deliverable-5-icon",
+          "displayName": "Deliverable 5 icon",
+          "type": "Option",
+          "options": [
+            "map",
+            "pen",
+            "layout",
+            "db",
+            "motion",
+            "book",
+            "globe",
+            "sync",
+            "cursor",
+            "gauge",
+            "branch",
+            "spark",
+            "hand",
+            "eye",
+            "code",
+            "palette",
+            "grid",
+            "type"
+          ]
+        },
+        {
+          "slug": "deliverable-6",
+          "displayName": "Deliverable 6",
+          "type": "PlainText"
+        },
+        {
+          "slug": "deliverable-6-desc",
+          "displayName": "Deliverable 6 description",
+          "type": "PlainText"
+        },
+        {
+          "slug": "deliverable-6-icon",
+          "displayName": "Deliverable 6 icon",
+          "type": "Option",
+          "options": [
+            "map",
+            "pen",
+            "layout",
+            "db",
+            "motion",
+            "book",
+            "globe",
+            "sync",
+            "cursor",
+            "gauge",
+            "branch",
+            "spark",
+            "hand",
+            "eye",
+            "code",
+            "palette",
+            "grid",
+            "type"
+          ]
+        },
+        {
+          "slug": "stage-1",
+          "displayName": "Stage 1",
+          "type": "PlainText"
+        },
+        {
+          "slug": "stage-1-desc",
+          "displayName": "Stage 1 description",
+          "type": "PlainText"
+        },
+        {
+          "slug": "stage-2",
+          "displayName": "Stage 2",
+          "type": "PlainText"
+        },
+        {
+          "slug": "stage-2-desc",
+          "displayName": "Stage 2 description",
+          "type": "PlainText"
+        },
+        {
+          "slug": "stage-3",
+          "displayName": "Stage 3",
+          "type": "PlainText"
+        },
+        {
+          "slug": "stage-3-desc",
+          "displayName": "Stage 3 description",
+          "type": "PlainText"
+        },
+        {
+          "slug": "stage-4",
+          "displayName": "Stage 4",
+          "type": "PlainText"
+        },
+        {
+          "slug": "stage-4-desc",
+          "displayName": "Stage 4 description",
+          "type": "PlainText"
+        },
+        {
+          "slug": "code-label",
+          "displayName": "Code label",
+          "type": "PlainText"
+        },
+        {
+          "slug": "code",
+          "displayName": "Code snippet",
+          "type": "PlainText"
+        },
+        {
+          "slug": "sort",
+          "displayName": "Sort order",
+          "type": "Number"
+        }
+      ]
+    },
+    {
+      "displayName": "Mission Channels",
+      "singularName": "Channel",
+      "slug": "mission-channels",
+      "purpose": "Mission control monitor tabs",
+      "fields": [
+        {
+          "slug": "name",
+          "displayName": "Label",
+          "type": "PlainText",
+          "required": true
+        },
+        {
+          "slug": "mission",
+          "displayName": "Mission",
+          "type": "Reference",
+          "collection": "missions"
+        },
+        {
+          "slug": "kind",
+          "displayName": "Kind",
+          "type": "Option",
+          "options": [
+            "live-globe",
+            "live-map",
+            "figma",
+            "phone",
+            "flow",
+            "exploded",
+            "cms",
+            "img",
+            "mobile",
+            "wipe",
+            "logo",
+            "apps"
+          ]
+        },
+        {
+          "slug": "caption",
+          "displayName": "Caption",
+          "type": "PlainText"
+        },
+        {
+          "slug": "image",
+          "displayName": "Image",
+          "type": "Image"
+        },
+        {
+          "slug": "image-2",
+          "displayName": "Second image",
+          "type": "Image"
+        },
+        {
+          "slug": "mode",
+          "displayName": "Mode",
+          "type": "Option",
+          "options": [
+            "dark",
+            "light",
+            "grid",
+            "plain"
+          ]
+        },
+        {
+          "slug": "sort",
+          "displayName": "Sort order",
+          "type": "Number"
+        }
+      ]
+    },
+    {
+      "displayName": "Mission Systems",
+      "singularName": "System",
+      "slug": "mission-systems",
+      "purpose": "Systems deployed accordion",
+      "fields": [
+        {
+          "slug": "name",
+          "displayName": "Name",
+          "type": "PlainText",
+          "required": true
+        },
+        {
+          "slug": "mission",
+          "displayName": "Mission",
+          "type": "Reference",
+          "collection": "missions"
+        },
+        {
+          "slug": "tag",
+          "displayName": "Tag",
+          "type": "PlainText"
+        },
+        {
+          "slug": "channel",
+          "displayName": "Linked channel id",
+          "type": "PlainText"
+        },
+        {
+          "slug": "cadet",
+          "displayName": "Cadet copy",
+          "type": "PlainText"
+        },
+        {
+          "slug": "why",
+          "displayName": "Why it matters",
+          "type": "PlainText"
+        },
+        {
+          "slug": "engineer",
+          "displayName": "Engineer copy",
+          "type": "PlainText"
+        },
+        {
+          "slug": "snippet",
+          "displayName": "Code snippet",
+          "type": "PlainText"
+        },
+        {
+          "slug": "sort",
+          "displayName": "Sort order",
+          "type": "Number"
+        }
+      ]
+    },
+    {
+      "displayName": "Problems Solved",
+      "singularName": "Problem",
+      "slug": "problems-solved",
+      "purpose": "Problems solved cards on case studies",
+      "fields": [
+        {
+          "slug": "name",
+          "displayName": "Title",
+          "type": "PlainText",
+          "required": true
+        },
+        {
+          "slug": "mission",
+          "displayName": "Mission",
+          "type": "Reference",
+          "collection": "missions"
+        },
+        {
+          "slug": "code",
+          "displayName": "Code",
+          "type": "PlainText"
+        },
+        {
+          "slug": "who",
+          "displayName": "For",
+          "type": "Option",
+          "options": [
+            "client",
+            "visitors"
+          ]
+        },
+        {
+          "slug": "problem",
+          "displayName": "Problem",
+          "type": "PlainText"
+        },
+        {
+          "slug": "fix",
+          "displayName": "Fix",
+          "type": "PlainText"
+        },
+        {
+          "slug": "result",
+          "displayName": "Result",
+          "type": "PlainText"
+        },
+        {
+          "slug": "engineer",
+          "displayName": "Engineer note",
+          "type": "PlainText"
+        },
+        {
+          "slug": "snippet",
+          "displayName": "Snippet",
+          "type": "PlainText"
+        },
+        {
+          "slug": "demo",
+          "displayName": "Linked channel id",
+          "type": "PlainText"
+        },
+        {
+          "slug": "sort",
+          "displayName": "Sort order",
+          "type": "Number"
+        }
+      ]
+    },
+    {
+      "displayName": "Mission Stats",
+      "singularName": "Stat",
+      "slug": "mission-stats",
+      "purpose": "Telemetry counters",
+      "fields": [
+        {
+          "slug": "name",
+          "displayName": "Label",
+          "type": "PlainText",
+          "required": true
+        },
+        {
+          "slug": "mission",
+          "displayName": "Mission",
+          "type": "Reference",
+          "collection": "missions"
+        },
+        {
+          "slug": "value",
+          "displayName": "Value",
+          "type": "Number"
+        },
+        {
+          "slug": "suffix",
+          "displayName": "Suffix",
+          "type": "PlainText"
+        },
+        {
+          "slug": "sort",
+          "displayName": "Sort order",
+          "type": "Number"
+        }
+      ]
+    },
+    {
+      "displayName": "Globe Pins",
+      "singularName": "Pin",
+      "slug": "globe-pins",
+      "purpose": "510 Visuals live globe pins (mirrors the live 510 CMS)",
+      "fields": [
+        {
+          "slug": "name",
+          "displayName": "Title",
+          "type": "PlainText",
+          "required": true
+        },
+        {
+          "slug": "mission",
+          "displayName": "Mission",
+          "type": "Reference",
+          "collection": "missions"
+        },
+        {
+          "slug": "city",
+          "displayName": "City",
+          "type": "PlainText"
+        },
+        {
+          "slug": "lat",
+          "displayName": "Latitude",
+          "type": "Number",
+          "decimals": 4
+        },
+        {
+          "slug": "lng",
+          "displayName": "Longitude",
+          "type": "Number",
+          "decimals": 4
+        },
+        {
+          "slug": "image",
+          "displayName": "Image",
+          "type": "Image"
+        },
+        {
+          "slug": "link",
+          "displayName": "Project link",
+          "type": "Link"
+        }
+      ]
+    }
+  ]
+}
