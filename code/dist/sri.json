@@ -1,8 +1,8 @@
 {
-  "ab-core.js": "sha384-yrYj9ATH/r96NFnZiJZFAJJ07x17XFLokGUHT/TRBrD4Kbge2DSLDBogVqzWYVzg",
-  "ab-core.min.js": "sha384-BhRIHOKOG5hC/Bwa69IRTHTy+YJd6mu3fs4iGHB+DCBuSKEK/SLQpaB4/2Kb0UJN",
-  "ab-home.js": "sha384-6ecxC+KE4GAaIpQUkQK4B0UPA0HeiWBiRNugWjYTHv35bnbm2CZvRjgwgshRCSod",
-  "ab-home.min.js": "sha384-HZyXIoV5T2ejQGoj4tW7aFG3v11vREjJ0lC9zxBuClzk42IWGu3fLJmDrYaty99A",
-  "ab-core.css": "sha384-FCYtBlO8nN8cfTXfXKmnAaHBGS6/XoNOKJ+H3jRedaXfWuhqP2zSqEEzFuzKDXMi",
-  "ab-core.min.css": "sha384-r31spVMzFZVJMkQoRRK/ju4hqEITvko95R/iFfWVIYrNZbdPrU4VBPx0sPPMehYn"
+  "ab-core.js": "sha384-pewn23kTDmc/agvBrw81SaPbMvaKzPLPcQnsbEJv2lSWPMdohQVhmr0iNZSJ8eRZ",
+  "ab-core.prod.js": "sha384-nWxeSiuPd//jUa3FFLgkX3PxYYVoko0GJ8dbexEN4aZgd3I/0o6VON4m+dqSvCzg",
+  "ab-home.js": "sha384-VwAYF048SvpdDtbLt2vkJtY1YpaZqHoxe8bmESyPmArtO5aO+XA7oqwmiOrQ569N",
+  "ab-home.prod.js": "sha384-5fwbbykuR+NzPcCr1bOXGfWs9oH9dmUj0gMIv2ix7Uuc8EvRim4Raykqcn8LD/Lh",
+  "ab-core.css": "sha384-DdHR5x08LQ2H8vik83KTKwWFdKyNoXe7vwrT5SqKZ/MaeE+nhj5ZsSghynIRVjtv",
+  "ab-core.prod.css": "sha384-bpEQs4Jk1AUGfV8oCGtvobbCwQJ9pGYVejTgoa/S4Yh92n3Nir/82pLMZSkxzspg"
 }

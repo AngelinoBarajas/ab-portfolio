@@ -1,8 +1,10 @@
 // Build the Webflow custom code bundles.
 //   cd code && npm install && npm run build
-// src/core/*.js  → dist/ab-core.js + .min.js   (site-wide, Site settings › Custom code › Footer)
-// src/home/*.js  → dist/ab-home.js + .min.js   (Home page › Custom code › Before </body>)
-// src/ab-core.css → dist/ab-core.css + .min.css (aliases mapped to Webflow variable names)
+// Minified files are *.prod.js / *.prod.css, not *.min.*: for a .min.js path jsDelivr may serve its
+// own on-the-fly minified build instead of the committed file, which breaks the SRI hash.
+// src/core/*.js  → dist/ab-core.js + .prod.js   (site-wide, Site settings › Custom code › Footer)
+// src/home/*.js  → dist/ab-home.js + .prod.js   (Home page › Custom code › Before </body>)
+// src/ab-core.css → dist/ab-core.css + .prod.css (aliases mapped to Webflow variable names)
 // Every bundle is one Webflow.push with one __ab<Name>Init guard, and must parse as ES5.
 import { readFileSync, writeFileSync, readdirSync, mkdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -45,8 +47,8 @@ async function bundle(dir, out, guard) {
   }
   write(out + '.js', code);
   const min = await minify(code, { ecma: 5, compress: { passes: 2 }, mangle: true, format: { comments: /^!/ } });
-  write(out + '.min.js', min.code + '\n');
-  console.log(`${out}.js ${(code.length / 1024).toFixed(1)} KB → .min.js ${(min.code.length / 1024).toFixed(1)} KB`);
+  write(out + '.prod.js', min.code + '\n');
+  console.log(`${out}.js ${(code.length / 1024).toFixed(1)} KB → .prod.js ${(min.code.length / 1024).toFixed(1)} KB`);
 }
 
 function css() {
@@ -56,8 +58,8 @@ function css() {
   write('ab-core.css', full);
   const min = s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ')
     .replace(/\s*([{};])\s*/g, '$1').replace(/;}/g, '}').trim();
-  write('ab-core.min.css', banner('ab-core.css') + min + '\n');
-  console.log(`ab-core.css ${(full.length / 1024).toFixed(1)} KB → .min.css ${(min.length / 1024).toFixed(1)} KB`);
+  write('ab-core.prod.css', banner('ab-core.css') + min + '\n');
+  console.log(`ab-core.css ${(full.length / 1024).toFixed(1)} KB → .prod.css ${(min.length / 1024).toFixed(1)} KB`);
 }
 
 await bundle('core', 'ab-core', '__abCoreInit');
