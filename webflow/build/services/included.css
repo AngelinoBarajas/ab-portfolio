@@ -1,0 +1,6 @@
+.section_sv-included{position:relative}
+.ab_bento_grid.is-included{grid-auto-rows:minmax(190px,auto)}
+.ab_bento-card.is-sv{justify-content:space-between}
+.ab_sv_dl_n{display:flex;justify-content:space-between;align-items:center;color:var(--dust);font-size:11px;letter-spacing:0.12em;text-transform:uppercase}
+.ab_sv_dl_ck{display:grid;place-items:center;width:20px;height:20px;border:1.5px solid var(--hair2)}
+.ab_sv_dl_ic{width:44px;height:44px;color:var(--star);opacity:0.8}

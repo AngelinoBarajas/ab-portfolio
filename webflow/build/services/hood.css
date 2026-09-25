@@ -1,0 +1,6 @@
+.section_sv-hood{position:relative}
+.ab_sv_code{position:relative;z-index:3;display:grid;grid-template-columns:minmax(0,0.8fr) minmax(0,1.2fr);gap:clamp(24px,4vw,56px);align-items:start}
+.ab_sv_code_copy{display:flex;flex-direction:column;gap:18px}
+.heading-style-h2.is-hood{font-size:clamp(36px,4.4vw,64px)}
+.ab_sv_code_slot{min-width:0}
+@media screen and (max-width: 991px){.ab_sv_code{grid-template-columns:minmax(0,1fr)}}

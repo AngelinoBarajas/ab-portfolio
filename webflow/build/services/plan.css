@@ -1,0 +1,10 @@
+.section_sv-plan{position:relative}
+.ab_sv_plan{position:relative;z-index:3;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;padding-top:34px}
+.ab_sv_plan_line{position:absolute;left:0;right:0;top:8px;height:2px;background-color:var(--hair)}
+.ab_sv_plan_fill{position:absolute;left:0;top:8px;width:100%;height:2px;background-image:linear-gradient(90deg,#FF6A3D,#ffb08f)}
+.ab_sv_plan_item{position:relative;padding:20px 20px 22px;border:1px solid var(--hair);background-color:rgba(14,16,32,0.62)}
+.ab_sv_plan_k{color:var(--signal);font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase}
+.ab_sv_plan_h{margin-top:10px;margin-bottom:0;font-family:var(--display);font-weight:800;font-stretch:112%;font-size:clamp(19px,1.6vw,23px);line-height:1.06;text-transform:uppercase}
+.ab_sv_plan_p{margin-top:8px;margin-bottom:0;color:var(--soft);font-size:15px;line-height:1.5}
+@media screen and (max-width: 991px){.ab_sv_plan{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:52px}.ab_sv_plan_line{display:none}.ab_sv_plan_fill{display:none}}
+@media screen and (max-width: 479px){.ab_sv_plan{grid-template-columns:minmax(0,1fr)}}

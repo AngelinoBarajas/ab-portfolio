@@ -1,0 +1,4 @@
+{
+ "html": "<section class=\"section_sv-faq\" id=\"faq\" data-frame=\"faq\" aria-labelledby=\"svfaq-h\"><span class=\"ab_frame-label\" data-frame-label=\"\" aria-hidden=\"true\">▢ faq</span><div class=\"padding-global\"><div class=\"container-large\"><div class=\"padding-section-medium\"><div class=\"ab_sec-h\"><div class=\"ab_section-head is-flush\"><div class=\"text-style-eyebrow\">/faq · <span data-sv=\"faq-count\">3</span> questions</div><h2 class=\"heading-style-h2\" id=\"svfaq-h\" data-split=\"\">Before we <span class=\"t-outline\">launch</span></h2></div></div><div class=\"ab_sv_faq\" id=\"svFaq\"></div></div></div></div></section>",
+ "css": ".section_sv-faq{position:relative}\n.ab_sv_faq{position:relative;z-index:3}\n"
+}

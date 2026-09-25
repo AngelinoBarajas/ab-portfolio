@@ -6,6 +6,7 @@
 // src/home/*.js  → dist/ab-home.js + .prod.js   (Home page › Custom code › Before </body>)
 // src/work/*.js  → dist/ab-work.js + .prod.js   (Work page › Custom code › Before </body>)
 // src/mission/*.js → dist/ab-mission.js + .prod.js (Missions template › Before </body>); src/ab-mission.css → template <head> <link>
+// src/services/*.js → dist/ab-services.js + .prod.js (Services template › Before </body>); src/ab-services.css → template <head> <link>
 // vendor/*.js (510 globe, Aguirre case map): served as-is from the repo, loaded lazily by ab-mission
 // src/ab-core.css → dist/ab-core.css + .prod.css (aliases mapped to Webflow variable names)
 // Every bundle is one Webflow.push with one __ab<Name>Init guard, and must parse as ES5.
@@ -76,7 +77,9 @@ await bundle('core', 'ab-core', '__abCoreInit');
 await bundle('home', 'ab-home', '__abHomeInit');
 await bundle('work', 'ab-work', '__abWorkInit');
 await bundle('mission', 'ab-mission', '__abMissionInit');
+await bundle('services', 'ab-services', '__abServicesInit');
 css('ab-core');
 css('ab-mission');
+css('ab-services');
 writeFileSync(join(DIST, 'sri.json'), JSON.stringify(sri, null, 2) + '\n');
 console.log('SRI hashes → dist/sri.json');
