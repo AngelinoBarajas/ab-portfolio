@@ -154,7 +154,7 @@ Optional: Page settings › SEO title bound to *Name* (the script sets the tab t
 
 ## Custom code, part 1 (2026-09-25): site-wide + Home
 
-Source `code/src/` → `code/dist/` (`code/README.md` has the build/deploy steps). Live on staging: **v0.3.1** (core JS + CSS, home, work, mission + mission CSS).
+Source `code/src/` → `code/dist/` (`code/README.md` has the build/deploy steps). Live on staging: **v0.3.2** (core JS + CSS, home, work, mission + mission CSS).
 
 | What | Where in Webflow |
 |---|---|
@@ -213,3 +213,11 @@ Board previews draw pins in the mission's Brand accent: 510 Visuals teal `#5eead
 - Core: orbit system moved from `ab-home` to `core/35-orbit.js` (`AB.orbit(orbitEl, readoutEl)`, ≤3 chips ride one ring); next-card effect is `AB.nextCard(el)`.
 - v0.3.1: scene mounting guarded (a channel without a mockup for this mission shows a note instead of throwing), switcher hrefs set to `/work/<slug>` (the list's page link rendered `/work`).
 - jsDelivr sometimes 404s a brand-new tag for a few files; purge + re-check before registering (`purge.jsdelivr.net/gh/...`).
+
+### v0.3.2 (2026-09-25): Mission review round 1 (Angelino)
+- **Designer filters** (Mission = Current Mission) set by Angelino on all 5 lists, verified on staging: 510 5/6/5/4 + 10 pins, Aguirre 4→5/5/5/4 + 0 pins, AB Identity 4/3/4/3 + 0 pins. The MCP reads these filters back as `filters: []`; check the rendered page, not the settings.
+- **Website missions share one monitor order:** Live · Design → build · Mobile · FigJam ideation (`flow`, channel id `plan`) · layered globe (`exploded`) or CMS input (`cms`). New Mission Channels item **Aguirre › Site plan** (sort 4, Case results moved to 5); its board is `MOCKS['daniel-aguirre-law'].flow` (Plan / Design / Build, copy from the mission's own brief). A new website mission needs the same five channels + the matching mocks.
+- **Globe render** now uses `prototypes/img/510-globe-mesh.webp`: the current vendor globe shot headless at 1600 × 955 on its default view (pins/arcs off); overlay pins/arcs are the CMS pins projected with the same camera. Mock images load from the `v0.3.2` tag.
+- **Manifest selection box**: `.ab_bento-card.is-mf > *{position:relative}` also caught `.sel` (collapsed to a 2px line); now `> :not(.sel)`.
+- **Crew dock** hides once the last section with cadet/engineer copy (Problems solved) has scrolled past, returns on the way up; the level toast sits above the dock (`body.dock-on .ab_toast`).
+- **Page transitions:** every same-site link to another page warps out (the Return-to-orbit effect) via a delegated click in `core/30-motion.js` → `AB.go(href)`; the next page arrives out of the warp (`sessionStorage ab:warp-in`). First-paint cover: registered inline head script `abwarpin` sets `html.ab-warp-in` (1.5 s failsafe) + `html.ab-warp-in body::after` in `ab-core.css`. Opt a link out with `data-no-warp`. Skips new-tab, modifier clicks, mailto/tel, downloads, same-page anchors (those keep their own warp).
