@@ -11,7 +11,7 @@
 - [x] 6b. Work (Mission archive): **approved by Angelino 2026-09-25**. Built + on staging 2026-09-25 (page `6ab6853da89bdfd5de03324d`, `/work`), code v0.2.1. Designer steps (Types tags, brand colors) done by Angelino + verified; waiting on his OK
 - [x] 6c. Mission template: **approved by Angelino 2026-09-25** (code v0.3.4; 5 Designer filters set + verified; review round 1 fixes in build notes › v0.3.2–v0.3.4)
 - [~] 6d. Services template: built + on staging 2026-09-25 (code v0.4.0; next-card spacing fixed). Waiting on 1 Designer step (rail source = Services) + Angelino's OK
-- [ ] 6d+. New mission: **Knowledge System add-on** debrief (brief in `docs/handoff.md` › Next session)
+- [~] 6d+. New mission: **Knowledge System** debrief built + on staging 2026-09-25 (code v0.5.0; `/work/knowledge-system`). Waiting on Angelino's OK
 - [x] Brand: AB planet monogram logo in Nav + Footer (animated, v0.4.1–0.4.6); AB Identity mission rebuilt around it (2026-09-25)
 - [ ] 6e. About
 - [ ] 6f. 404

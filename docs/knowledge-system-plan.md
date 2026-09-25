@@ -1,4 +1,6 @@
-# Knowledge System mission: plan (draft for Angelino's OK, 2026-09-25)
+# Knowledge System mission: plan (approved with edits 2026-09-25; built v0.5.0)
+
+Decisions from Angelino: stats about time saved + SEO/AEO (used his real 12 hours/month; the rest are properties of the system), #04 with placeholders at 05–07, Claude added as a tool, no client credit (the copy says it grew out of what clients kept asking), 7th Portable scene yes.
 
 A new Missions item on the Mission template. Sources read: the Aguirre client portal (`aguirre-content-system-portal_8.html`), `5TEN_next-phase.html`, `5TEN_build-map.md`, the Aguirre resources build spec + handoff, the `connected-content-system` skill.
 

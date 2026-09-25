@@ -73,7 +73,7 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 
 ## Next session
 
-1. **New mission debrief: the Knowledge System add-on** (brief below, from Angelino 2026-09-25). A new Missions item + its channels, systems, problems, stats, manifest, coded monitor scenes; then publish webflow.io only and stop for his OK.
+1. **Knowledge System mission is on staging (v0.5.0)** at `/work/knowledge-system`, waiting on Angelino's OK. Also shipped with it: site-wide draggable hero words/planets and the new Home metrics + icons. Notes: build notes › v0.5.0; plan + decisions: `docs/knowledge-system-plan.md`.
 2. Still open from before (don't block on them): Services rail Designer step + his OK on the Services template → then **About**, **404**; favicon/webclip upload; Metrics numbers.
 
 ### Brief: Knowledge System mission (Angelino's words, keep every point)
