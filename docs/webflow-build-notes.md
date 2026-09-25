@@ -119,9 +119,42 @@ Steps 1–2 **done by Angelino 2026-09-25**, verified on staging: all 18 color n
 - Card link binds to the Missions template; the script sets `/work/<slug>` (placeholders get `#` + a toast).
 - Prototype opened debriefs/home in a new tab; Webflow keeps the same tab (warp, then navigate).
 
+## Mission template (built 2026-09-25, awaiting Designer filters + Angelino's OK)
+
+Template page `6ab602e48e2fa6779570a308` (`/work/[slug]`). `main-wrapper` › hero (`section_dbh`) · monitor · briefing · palette (identity missions only) · systems · problems solved · manifest (light bento) · telemetry + stack · crew-debrief quote · next mission, then Footer + site-data (+ Glossary and Globe Pins sources). Build files: `webflow/build/mission/`. Code: `ab-mission` bundle + `ab-mission.css` (template head `<link>`), vendor scripts in `code/vendor/`.
+
+| Section | CMS | Notes |
+|---|---|---|
+| Hero | current item: name, summary, slug, client, role, year, platform, status, live URL, planet fields, number | switcher = Missions list (Hide from site off, Status ≠ Placeholder, sort asc); Types chips = Mission Types list, which **rendered only the current mission's types without a Designer step** (same for the Tools stack list). Hidden marker `[data-mission-hidden]` visible when *Hide from site* is on → script redirects to `/work` |
+| Monitor | Mission Channels (hidden source list, `data-id/kind/mode/label/caption` + 2 images) | views, channel buttons, scenes (mockup specs keyed by slug in `code/src/mission/10-mocks.js`), live globe/map load `code/vendor/*` on first view |
+| Briefing | objective (cadet/engineer), params (one per line) | `[[term]]` → glossary tips from the Glossary list |
+| Systems / Problems / Stats | Mission Systems / Problems Solved / Mission Stats lists (sort asc) | snippets become code blocks; channel/demo ids add "Show on the monitor" buttons |
+| Manifest | manifest pages / collections (comma lists), handoff, role, types, params, status | script-built tiles, collections, tags, checks, radar |
+| Telemetry + stack | Stats list + Tools list | shared `AB.orbit` (moved to core) |
+| Quote / Next | quote + quote-by; next = next mission in the switcher order | next card built by script, HUD via `AB.nextCard` |
+
+New CMS fields: **Missions › Hide from site** (`hide-from-site`, Switch; Work grid + Home board filter it out) and **Mission Channels › Channel ID** (`channel-id`: live, design, mobile, plan, shot, page, mark, grid, invert, apps).
+
+### Designer steps for Angelino (Mission template)
+The MCP can't write "Mission **equals Current Mission**" filters (probed: rejects every current-item value). In each list's settings › Filter › **Mission** · **Equals** · **Current Mission**:
+1. Monitor › hidden `[data-channels-source]` list (Mission Channels)
+2. Systems list (Mission Systems)
+3. Problems solved list (Problems Solved)
+4. Telemetry numbers list (Mission Stats)
+5. Site data › `[data-pins-source]` list (Globe Pins)
+Until these are set every mission page shows all missions' channels/systems/problems/stats.
+Optional: Page settings › SEO title bound to *Name* (the script sets the tab title, crawlers see the static one); chip color binding for the stack (`[data-field=color]`, BG = Tools › Color); a fallback color map covers today's tools.
+
+### Deviations (Mission)
+- Next mission comes from the switcher order (510 → Aguirre → AB Identity → 510), not the *Next mission* reference field (same chain today).
+- Crew dock is script-injected (build spec listed it as a component; it's body-level UI).
+- Palette + type specimens are static Designer content shown only for `ab-identity`.
+- Live demos: patched vendor copies (globe links use `data-globe-link` or the mission's live URL; the case map drops "Read full case" links via `window.__daMapNoLinks`).
+- Coded scene mockups (figma/phone/flow/exploded/cms) are data in the bundle keyed by slug, not CMS; a channel whose mockup is missing shows "Mockup coming soon".
+
 ## Custom code, part 1 (2026-09-25): site-wide + Home
 
-Source `code/src/` → `code/dist/` (`code/README.md` has the build/deploy steps). Live on staging: **v0.2.1** (core JS + CSS, home, work).
+Source `code/src/` → `code/dist/` (`code/README.md` has the build/deploy steps). Live on staging: **v0.3.1** (core JS + CSS, home, work, mission + mission CSS).
 
 | What | Where in Webflow |
 |---|---|
@@ -174,3 +207,9 @@ Board previews draw pins in the mission's Brand accent: 510 Visuals teal `#5eead
 - `ab-core.css`: debrief hero, archive bar states, mission card covers + status chip, list rows, next-card internals.
 - **v0.2.0 shipped a broken `ab-core.css`**: a cleanup regex left an unclosed `@media (max-width:991px){@media (max-width:767px){`, which silently swallowed every rule after it (Work covers unstyled, and the reduced-motion block on every page). Fixed in v0.2.1, and `build.mjs` now fails the build on unbalanced braces.
 - Tested on staging (1024 + 390): no console errors, no horizontal scroll, 6 cards with covers/numbers/links, placeholders toast, list/grid switch, sticky bar, Home unchanged (board, bento, metrics).
+
+### v0.3.0 / v0.3.1 (2026-09-25): Mission template
+- New bundle `ab-mission` (`code/src/mission/`: base, mocks, scenes, mission, monitor) + `ab-mission.css` (built by the generalized `css(name)` in `build.mjs`); vendor copies `code/vendor/510-globe.js`, `code/vendor/aguirre-case-map.js`, loaded from the same tag as the bundle (base derived from the bundle's own `<script src>`).
+- Core: orbit system moved from `ab-home` to `core/35-orbit.js` (`AB.orbit(orbitEl, readoutEl)`, ≤3 chips ride one ring); next-card effect is `AB.nextCard(el)`.
+- v0.3.1: scene mounting guarded (a channel without a mockup for this mission shows a note instead of throwing), switcher hrefs set to `/work/<slug>` (the list's page link rendered `/work`).
+- jsDelivr sometimes 404s a brand-new tag for a few files; purge + re-check before registering (`purge.jsdelivr.net/gh/...`).

@@ -9,7 +9,7 @@
 - [~] 5. Components: ✅ Nav, ✅ Footer (+ page-level site-data block), ✅ Frame label, ✅ Bento card (Light/Dark), ✅ FAQ item (built on Home). Planet + buttons are classes, not components. ✅ Next card (component, built on Work; props added with the Mission template). Mission card is a page-level Collection List item (it holds a nested Types list, so it can't be a component). Still to build with their first page:, code block (Services), crew dock (Mission)
 - [x] 6a. Home: all 10 sections built in `main-wrapper` 2026-09-25 (see `docs/webflow-build-notes.md` › Home). **Approved by Angelino 2026-09-25** (no bugs found). Statement metrics deferred: he'll supply the numbers later
 - [x] 6b. Work (Mission archive): **approved by Angelino 2026-09-25**. Built + on staging 2026-09-25 (page `6ab6853da89bdfd5de03324d`, `/work`), code v0.2.1. Designer steps (Types tags, brand colors) done by Angelino + verified; waiting on his OK
-- [~] 6c. Mission template: in progress 2026-09-25
+- [~] 6c. Mission template: built + on staging 2026-09-25 (code v0.3.1). Waiting on 5 Designer filters (Mission = Current Mission) + Angelino's OK
 - [ ] 6d. Services template
 - [ ] 6e. About
 - [ ] 6f. 404

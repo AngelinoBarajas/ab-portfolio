@@ -1,4 +1,4 @@
-# Session handoff (2026-09-25, end of the Work page session)
+# Session handoff (2026-09-25, end of the Mission template session)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -12,8 +12,8 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 | 4. CMS | ✅ 13 collections, 149 items, all references resolved. IDs in `docs/webflow-cms-ids.json` |
 | 3b. Global styles | ✅ 29 classes + tag styles (Body, H1–H6, p) |
 | 5. Components | 🟡 Nav, Footer, Frame label, Bento card, FAQ item, **Next card** (no props yet) done (group "Global"). Mission card is a page-level Collection item (nested Types list rules out a component). Remaining: code block, crew dock |
-| 6. Pages | 🟡 Home ✅ **approved** by Angelino. **Work** (`/work`, page `6ab6853da89bdfd5de03324d`) built + on staging; Designer steps 1–2 done + verified, waiting on his OK. Remaining: Mission template, Services template, About, 404 |
-| 7. Custom code | 🟡 `ab-core` (JS + CSS), `ab-home`, `ab-work` all on staging at **v0.2.1**. Build/deploy steps in `code/README.md`; notes in `docs/webflow-build-notes.md` (Custom code part 1, v0.2.x) |
+| 6. Pages | 🟡 Home ✅, Work ✅ approved. **Mission template** (`/work/[slug]`, page `6ab602e48e2fa6779570a308`) built + on staging, waiting on 5 Designer filters + his OK. Remaining: Services template, About, 404 |
+| 7. Custom code | 🟡 `ab-core` (JS + CSS), `ab-home`, `ab-work`, `ab-mission` (+ CSS, vendor globe/map) all on staging at **v0.3.1**. Build/deploy steps in `code/README.md`; notes in `docs/webflow-build-notes.md` (Custom code part 1, v0.2.x) |
 
 Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top"> (hero · work · statement · services · process · transmission · stack · testimonials · faq · contact) · [Footer] · Site data (hidden CMS sources)`. Section-by-section notes: `docs/webflow-build-notes.md` › Home; prototype → Webflow hook map for the step 7 scripts: `webflow/build/home/class-map.md`.
 
@@ -59,9 +59,9 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 
 ## Next session
 
-1. **Work: Angelino's OK.** Designer steps 1 (Types tags) and 2 (brand colors) are done and verified; step 3 (cover visibility) is optional.
-2. Then the **Mission template** (`/work/[slug]`, template page `6ab602e48e2fa6779570a308`): reuse `ab_dbh_*` / `ab_meta_*` for the hero, add props to the **Next card** component (eyebrow, title lines, link, planet attributes bound to *Next mission*), crew dock component, new `ab-mission` bundle (`code/src/mission/`, add it to `build.mjs`). Board frames and Work cards already link to `/work/<slug>` (404 until then).
-3. **Metrics (Home Statement)**: Angelino will send the three numbers + labels later. Don't invent them; when they arrive, update `.ab_metric_number` text + `data-count` and `.ab_metric_label` on page `6ab5fe4b5ee75f9c981dc0cb`, publish webflow.io only.
+1. **Mission template: Angelino's 5 Designer filters** (Mission = Current Mission on Channels, Systems, Problems, Stats, Globe Pins; list in `docs/webflow-build-notes.md` › Mission template). Then re-check `/work/510-visuals`, `/work/daniel-aguirre-law`, `/work/ab-identity` on staging (channel counts 5 / 4 / 4; live globe + map boot; scenes play; no console errors), in a visible browser pane.
+2. His **OK on the Mission template**, then the **Services template** (`/services/[slug]`, page `6ab602e4e41add8af5e28b6c`): reuse `ab_sec-h`, systems/FAQ patterns, code block, Next card; update the Services item `webgl-data` title ("Globes, maps + 3D").
+3. **Metrics (Home Statement)**: still waiting on Angelino's numbers.
 
 ## Home review edits already done (v0.1.4, from `ab-portfolio-hp-edits.docx`)
 
@@ -71,7 +71,7 @@ Possible follow-ups he may raise: Tools list order (the 3 new Adobe items sort f
 
 ## Open items for Angelino
 
-- His **OK on Work** (optional: cover image visibility binding).
+- **Mission template**: 5 Designer filters, then his OK.
 - **Metrics numbers** for the Statement section (deferred by him, 2026-09-25).
 - Confirm the Forms notification email in Site settings.
 
