@@ -1,7 +1,7 @@
 # Build progress
 
 - [x] 1. Webflow site "AB Portfolio" found and site ID confirmed — `6ab5fe4a5ee75f9c981dc0be` (ab-portfolio-723a30.webflow.io), 2026-09-25
-- [~] 2. Variables: Color (Dark/Light modes), Typography, Size, Spacing — 37 created (IDs in `docs/webflow-ids.md`). ⚠️ 9 fluid sizes hold their desktop fallback: the MCP rejects every `custom_value` (clamp/calc) with an internal error. Also the Color base mode still reads "Base mode" (no rename action) → rename to "Dark (base)" in the Designer.
+- [~] 2. Variables: Color (Dark/Light modes), Typography, Size, Spacing — 37 created (IDs in `docs/webflow-ids.md`). ⚠️ 9 fluid sizes hold their desktop fallback: the MCP rejects every `custom_value` (clamp/calc) with an internal error, bridge connected or not → Angelino pastes the clamp() values in the Variables panel. Color base mode renamed to "Dark" in the Designer (verified).
 - [x] 2b. Fonts loaded as custom variable fonts (Archivo wght+wdth, Geist, JetBrains Mono, Caveat), not the Google Fonts setting, so Archivo keeps its width axis
 - [ ] 3. Global styles + Client-First utilities
 - [ ] 4. CMS collections created (13)
