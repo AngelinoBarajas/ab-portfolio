@@ -10,7 +10,9 @@
 - [x] 6a. Home: all 10 sections built in `main-wrapper` 2026-09-25 (see `docs/webflow-build-notes.md` › Home). **Approved by Angelino 2026-09-25** (no bugs found). Statement metrics deferred: he'll supply the numbers later
 - [x] 6b. Work (Mission archive): **approved by Angelino 2026-09-25**. Built + on staging 2026-09-25 (page `6ab6853da89bdfd5de03324d`, `/work`), code v0.2.1. Designer steps (Types tags, brand colors) done by Angelino + verified; waiting on his OK
 - [x] 6c. Mission template: **approved by Angelino 2026-09-25** (code v0.3.4; 5 Designer filters set + verified; review round 1 fixes in build notes › v0.3.2–v0.3.4)
-- [~] 6d. Services template: built + on staging 2026-09-25 (code v0.4.0). Waiting on 1 Designer step (rail source = Services) + Angelino's OK
+- [~] 6d. Services template: built + on staging 2026-09-25 (code v0.4.0; next-card spacing fixed). Waiting on 1 Designer step (rail source = Services) + Angelino's OK
+- [ ] 6d+. New mission: **Knowledge System add-on** debrief (brief in `docs/handoff.md` › Next session)
+- [x] Brand: AB planet monogram logo in Nav + Footer (animated, v0.4.1–0.4.6); AB Identity mission rebuilt around it (2026-09-25)
 - [ ] 6e. About
 - [ ] 6f. 404
 - [~] 7. Custom code: ✅ part 1 (2026-09-25) site-wide `ab-core` JS + CSS and Home `ab-home`, tag **v0.1.2**, loaded via jsDelivr (registered hosted scripts + SRI), staging published and tested at 1440/1024/390 + reduced motion. Waiting on Angelino's OK. Other pages' bundles as each page is built
