@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.1.3 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.1.4 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -595,7 +595,7 @@ window.Webflow.push(function(){
           for (var q = 0; q < ripples.length; q++){ var rp = ripples[q], age = now - rp.t, RR = age * .8, rdx = d.x - rp.x, rdy = d.y - rp.y, dd = Math.sqrt(rdx * rdx + rdy * rdy), del = dd - RR;
             if (del > -70 && del < 70){ var kk = (1 - Math.abs(del) / 70) * (1 - age / 1600); tx += rdx / (dd || 1) * kk * 18; ty += rdy / (dd || 1) * kk * 18; if (kk > ts) ts = kk; } }
           if (d.s > .001 || ts){
-            d.ox += (tx - d.ox) * .14; d.oy += (ty - d.oy) * .14; d.s += (ts - d.s) * .14;
+            d.ox += (tx - d.ox) * .32; d.oy += (ty - d.oy) * .32; d.s += (ts - d.s) * .32; // .14 trailed the cursor
             if (Math.abs(d.ox - tx) > .05 || Math.abs(d.s - ts) > .005) moving = true;
           }
           var r = 1.2 + d.s * 2.6;

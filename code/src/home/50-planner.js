@@ -14,6 +14,9 @@
     var wrap = form.parentNode, doneEl = $('.w-form-done', wrap);
     var path = $('#plPath'), done = $('#plDone'), rocket = $('#plRocket'), ringsB = $('#plRingsB'), ringsF = $('#plRingsF'), moons = $('#plMoons'), read = $('#plRead');
     var destEl = $('#plDestEl'), dps = $$('.ab_planet[data-k]', destEl);
+    // the flight-plan readout lives under the visual (full width, wraps), not inside it next to Earth
+    var viz = $('.ab_planner_viz', form);
+    if (read && viz && viz.contains(read)){ viz.parentNode.insertBefore(read, viz.nextSibling); read.classList.add('is-below'); read.setAttribute('aria-live', 'polite'); }
     var chips = $$('.ab_planner_chip', form), bud = $('#plBud'), budOut = $('#plBudOut');
     var BUD = ['<$5k', '$5–10k', '$10–25k', '$25k+'], WIN = ['ASAP', '1–2 months', '3+ months', 'Flexible'];
     var fType = $('#plTypesField'), fBud = $('#plBudField'), fBrief = $('#plBriefField');

@@ -1,6 +1,6 @@
 {
   "name": "ab-portfolio-code",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "description": "Custom code bundles the AB Portfolio Webflow site loads from jsDelivr",
   "type": "module",

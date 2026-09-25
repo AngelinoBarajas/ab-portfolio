@@ -15,18 +15,27 @@
       branch: '<circle cx="4" cy="3.5" r="1.5"/><circle cx="4" cy="12.5" r="1.5"/><circle cx="12" cy="5.5" r="1.5"/><path d="M4 5v6M12 7c0 2.5-3 3-7.5 4"/>'
     };
     function lum(hx){ var c = hex(hx); return (c[0] * .299 + c[1] * .587 + c[2] * .114) / 255; }
-    function iconTile(key, color, extra){ var t = document.createElement('span'); t.className = 'ci' + (extra ? ' ' + extra : ''); t.setAttribute('aria-hidden', 'true'); t.style.setProperty('--tc', color); t.style.setProperty('--ti', lum(color) > .6 ? '#07080D' : '#ffffff'); t.innerHTML = '<svg viewBox="0 0 16 16">' + (ICONS[key] || ICONS.spark) + '</svg>'; return t; }
-    // first 4 chips ride the inner ring, the rest the outer (the CMS has no ring field)
+    // real brand logo when we have one (LOGOS, by tool name), else the generic Icon option
+    function iconTile(c, extra){
+      var color = c.__color, logo = LOGOS[c.__name.toLowerCase()], t = document.createElement('span');
+      t.className = 'ci' + (logo ? ' is-logo' : '') + (extra ? ' ' + extra : ''); t.setAttribute('aria-hidden', 'true');
+      t.style.setProperty('--tc', color); t.style.setProperty('--ti', lum(color) > .6 ? '#07080D' : '#ffffff');
+      t.innerHTML = logo ? '<svg viewBox="0 0 24 24"><path d="' + logo + '"/></svg>' : '<svg viewBox="0 0 16 16">' + (ICONS[c.getAttribute('data-icon')] || ICONS.spark) + '</svg>';
+      return t;
+    }
+    // the first ~40% (at least 4) ride the inner ring, the rest the outer (the CMS has no ring field)
+    var nInner = Math.max(4, Math.round(chips.length * .4));
     chips.forEach(function(c, i){
       var cn = $('[data-field="color"]', c);
       c.__color = (cn && cn.style.backgroundColor && rgbToHex(getComputedStyle(cn).backgroundColor)) || '#FF6A3D';
-      c.__ring = i < 4 ? 'inner' : 'outer';
+      c.__ring = i < nInner ? 'inner' : 'outer';
       c.__name = c.getAttribute('data-name') || c.textContent.trim();
     });
     var readout = $('#toolReadout');
+    var rt = readout && $('.ab_stack_readout-text', readout); if (rt) rt.textContent = chips.length + ' tools · 2 orbits';
     function showTool(c){
       if (!readout) return;
-      var old = $('.ci, .ab_stack_ci', readout), t = iconTile(c.getAttribute('data-icon'), c.__color, 'ab_stack_ci');
+      var old = $('.ci, .ab_stack_ci', readout), t = iconTile(c, 'ab_stack_ci');
       if (old) old.parentNode.replaceChild(t, old);
       $('.ab_stack_readout-title', readout).textContent = c.__name;
       $('.ab_stack_readout-text', readout).textContent = (c.getAttribute('data-use') || '') + ' · ' + c.__ring + ' orbit';
@@ -34,7 +43,7 @@
     }
     chips.forEach(function(c){
       c.style.setProperty('--tc', c.__color);
-      c.insertBefore(iconTile(c.getAttribute('data-icon'), c.__color), c.firstChild);
+      c.insertBefore(iconTile(c), c.firstChild);
       c.setAttribute('aria-label', c.__name + ': ' + (c.getAttribute('data-use') || ''));
       ['pointerenter', 'focus', 'pointerdown'].forEach(function(ev){ c.addEventListener(ev, function(){ showTool(c); }); });
     });

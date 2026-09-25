@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.1.3 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.1.4 · github.com/AngelinoBarajas/ab-portfolio */
 /* =========================================================
    AB Portfolio · ab-core.css (site-wide)
    Only what the Webflow Designer can't express: pseudo-elements, state
@@ -142,7 +142,7 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 .ab_hero_sat:hover .ab_hero_sat-label,.ab_hero_sat:focus-visible .ab_hero_sat-label{color:var(--_color---brand--signal);opacity:1}
 @media (max-width:767px){
   .ab_hero_component{min-height:0;padding-top:clamp(215px,56vw,250px);padding-bottom:56px}
-  .ab_planet.is-hero-giant{width:190px;right:22px;top:118px}
+  .ab_planet.is-hero-giant{width:190px;right:22px;top:44px}
   .ab_hero_sat{left:18px!important;right:auto!important;top:150px!important}
   .ab_hero_sat-body{width:78px;height:44px}
   .ab_planet.is-hero-moon{right:26px;top:292px;width:34px}
@@ -150,6 +150,9 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
   .ab_hero_cta .button{flex:1 1 auto}
 }
 @media (min-width:768px) and (max-width:1100px){.ab_planet.is-hero-moon{top:330px}}
+.ab_drag-hint{position:absolute;z-index:6;display:flex;align-items:center;gap:6px;padding:5px 9px 5px 6px;background:var(--_color---brand--signal);color:var(--_color---brand--on-signal);font-family:var(--_typography---font--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;pointer-events:none;opacity:0;transform:translateY(-100%)}
+.ab_drag-hint svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ab_drag-hint::after{content:"";position:absolute;left:10px;top:100%;border:5px solid transparent;border-top-color:var(--_color---brand--signal)}
 
 /* ---------- selection UI ([data-selectable]) ---------- */
 :where([data-selectable]){position:relative}
@@ -186,7 +189,7 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
   .is-deck .ab_board_world{position:relative!important;transform:none!important;width:auto!important;height:auto!important;display:flex;gap:14px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;padding:34px var(--_spacing---layout--gutter) 30px;margin-inline:calc(var(--_spacing---layout--gutter) * -1);scrollbar-width:none;perspective:900px}
   .is-deck .ab_board_world::-webkit-scrollbar{display:none}
   .is-deck .ab_board_world .w-dyn-list,.is-deck .ab_board_world .w-dyn-items,.is-deck .ab_board_world .w-dyn-item{display:contents}
-  .is-deck .ab_board_frame{position:relative!important;left:auto!important;top:auto!important;width:auto!important;height:auto!important;flex:0 0 84%;aspect-ratio:4/5;scroll-snap-align:center;transform-origin:center;will-change:transform}
+  .is-deck .ab_board_frame{touch-action:pan-x pan-y;position:relative!important;left:auto!important;top:auto!important;width:auto!important;height:auto!important;flex:0 0 84%;aspect-ratio:4/5;scroll-snap-align:center;transform-origin:center;will-change:transform}
   .is-deck .ab_board_fname{display:none}
   .is-deck .ab_board_frame canvas.pv{left:50%;right:auto;top:18%;transform:translateX(-50%)}
   .is-deck .ab_board_fopen{opacity:.85}
@@ -363,6 +366,7 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 .ab_stack_chip:hover,.ab_stack_chip:focus-visible,.ab_stack_chip.is-held{border-color:var(--tc);box-shadow:0 0 22px -4px var(--tc)}
 .ci{flex:none;width:26px;height:26px;display:grid;place-items:center;background:var(--tc,#333);color:var(--ti,#07080D)}
 .ci svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:square}
+.ci.is-logo svg{fill:currentColor;stroke:none}
 .ab_stack_readout .ci{width:40px;height:40px}.ab_stack_readout .ci svg{width:20px;height:20px}
 @media (max-width:600px){.ab_stack_chip{font-size:0;padding:5px;gap:0}.ab_stack_chip .ci{width:30px;height:30px}}
 
@@ -388,6 +392,7 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 .ab_planner.is-flying .pl-flame{opacity:1;transform:scaleX(1.5)}
 .ab_planet.is-planner-dest.on{opacity:1}
 .ab_planner_read b{color:var(--_color---text--primary);font-weight:500}
+.ab_planner_read.is-below{position:static;margin-top:-8px;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.6}
 .ab_planner_chips.is-shake{animation:ab-shake .4s}
 @keyframes ab-shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
 .button.is-launch{overflow:visible}
@@ -423,8 +428,13 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
   .ab_footer_feed{bottom:calc(clamp(320px,46vw,720px) * .5 + 100px)}
   .ab_footer_feed::before{display:none}
   .ab_footer_feed-orbit .ab_planet.is-feed:nth-child(7){display:none}
-  .ab_footer_feed-orbit .ab_planet.is-feed:nth-child(2){left:6%}
-  .ab_footer_feed-orbit .ab_planet.is-feed:nth-child(4){right:8%;bottom:70%}
+  /* scattered at different heights so they don't read as one neat arc around the black hole */
+  .ab_footer_feed-orbit .ab_planet.is-feed:nth-child(1){left:4%;right:auto;bottom:24%}
+  .ab_footer_feed-orbit .ab_planet.is-feed:nth-child(2){left:9%;right:auto;bottom:64%}
+  .ab_footer_feed-orbit .ab_planet.is-feed:nth-child(3){left:28%;right:auto;bottom:51%}
+  .ab_footer_feed-orbit .ab_planet.is-feed:nth-child(4){left:46%;right:auto;bottom:69%}
+  .ab_footer_feed-orbit .ab_planet.is-feed:nth-child(5){left:auto;right:23%;bottom:56%}
+  .ab_footer_feed-orbit .ab_planet.is-feed:nth-child(6){left:auto;right:5%;bottom:33%}
 }
 /* phones: the Mission control column (email button) takes the full row, as in the prototype */
 @media (max-width:767px){.ab_footer_grid > .ab_footer_col:last-child{grid-column:1/-1}}
@@ -450,7 +460,8 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 @media (pointer:coarse),(max-width:767px){.ab_hud{display:none}}
 .ab_alt{position:fixed;right:18px;top:50%;height:36vh;transform:translateY(-50%);width:2px;background:var(--_color---neutral--hair);z-index:40;pointer-events:none}
 .ab_alt-fill{position:absolute;left:0;bottom:0;width:2px;height:0;background:var(--_color---brand--signal)}
-.ab_alt-lab{position:absolute;right:10px;bottom:0;font-family:var(--_typography---font--mono);font-size:11px;color:#d8d6cf;mix-blend-mode:difference;white-space:nowrap;transform:translateY(50%)}
+.ab_alt{background:rgba(138,143,163,.35);box-shadow:0 0 0 1px rgba(7,8,13,.25)}
+.ab_alt-lab{position:absolute;right:10px;bottom:0;padding:3px 7px;background:rgba(7,8,13,.82);border:1px solid rgba(255,255,255,.12);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);font-family:var(--_typography---font--mono);font-size:11px;color:#F2F0EA;white-space:nowrap;transform:translateY(50%)}
 @media (max-width:900px){.ab_alt{display:none}}
 .ab_lgrid{position:fixed;inset:0;z-index:55;pointer-events:none;opacity:0;transition:opacity .3s}
 .ab_lgrid.on{opacity:1}
@@ -470,6 +481,11 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 .t-select .sel-size{display:none}
 .sel-cur{position:absolute;right:-70px;top:-44px;display:flex;align-items:flex-start;gap:2px}
 .sel-cur span{margin-top:16px;font-family:var(--_typography---font--mono);font-size:11px;padding:3px 7px;background:var(--_color---brand--signal);color:var(--_color---brand--on-signal);letter-spacing:0;text-transform:none;font-weight:400;font-stretch:100%}
+@media (max-width:767px){
+  .t-select .sel-tag{display:none}
+  .sel-cur{right:-4px;top:calc(100% - 2px);flex-direction:row-reverse}
+  .sel-cur span{margin-top:14px}
+}
 .t-orbit{position:relative;display:inline-block}
 .orb{position:absolute;left:-12%;width:124%;top:50%;aspect-ratio:1;border:1px dashed rgba(255,255,255,.35);border-radius:50%;transform:translateY(-50%) rotate(-10deg) scaleY(.26);pointer-events:none}
 .orb b{position:absolute;inset:0;border-radius:50%;animation:ab-orbspin 5s linear infinite}
