@@ -154,7 +154,7 @@ Optional: Page settings › SEO title bound to *Name* (the script sets the tab t
 
 ## Custom code, part 1 (2026-09-25): site-wide + Home
 
-Source `code/src/` → `code/dist/` (`code/README.md` has the build/deploy steps). Live on staging: **v0.3.2** (core JS + CSS, home, work, mission + mission CSS).
+Source `code/src/` → `code/dist/` (`code/README.md` has the build/deploy steps). Live on staging: **v0.3.4** core + mission CSS, v0.3.2 page bundles (core JS + CSS, home, work, mission + mission CSS).
 
 | What | Where in Webflow |
 |---|---|
@@ -221,3 +221,5 @@ Board previews draw pins in the mission's Brand accent: 510 Visuals teal `#5eead
 - **Manifest selection box**: `.ab_bento-card.is-mf > *{position:relative}` also caught `.sel` (collapsed to a 2px line); now `> :not(.sel)`.
 - **Crew dock** hides once the last section with cadet/engineer copy (Problems solved) has scrolled past, returns on the way up; the level toast sits above the dock (`body.dock-on .ab_toast`).
 - **Page transitions:** every same-site link to another page warps out (the Return-to-orbit effect) via a delegated click in `core/30-motion.js` → `AB.go(href)`; the next page arrives out of the warp (`sessionStorage ab:warp-in`). First-paint cover: registered inline head script `abwarpin` sets `html.ab-warp-in` (1.5 s failsafe) + `html.ab-warp-in body::after` in `ab-core.css`. Opt a link out with `data-no-warp`. Skips new-tab, modifier clicks, mailto/tel, downloads, same-page anchors (those keep their own warp).
+- **v0.3.3:** status card (`.ab_mf_status`) was `overflow:hidden` to crop the radar, which clipped its selection box; the radar now crops itself (`clip-path`) and the card overflows.
+- **v0.3.4:** page links no longer use `warp()` (it fades back out, so the old page showed again while the next one loaded). `AB.go` warps to a full cover (`#warpFlash` opacity 1) and holds; the next page starts fully covered (head cover + flash at 1) and fades in. Live: `ab-core` JS/CSS + `ab-mission.css` v0.3.4; `ab-home`/`ab-work`/`ab-mission` JS v0.3.2; `abwarpin` 0.3.2.
