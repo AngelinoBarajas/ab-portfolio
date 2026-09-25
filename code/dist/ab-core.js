@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.6.2 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.7.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -24,27 +24,46 @@ window.Webflow.push(function(){
   }
 
   /* ---------- site settings (CMS · Site Settings, hidden [data-settings-source] list) ---------- */
-  var S0 = {};
-  $$('[data-settings-source] [data-field]').forEach(function(f){ var v = f.textContent.trim(); if (v) S0[f.getAttribute('data-field')] = v; });
+  // Webflow utility pages (404) can't hold Collection Lists, so every page with the site-data block caches it
+  // (localStorage ab:site) and a page without it reads the cache, or fetches the Home page's block once.
+  var SITE_KEY = 'ab:site', hasSiteData = !!$('[data-settings-source]');
+  function readSettings(root){ var s = {}; $$('[data-settings-source] [data-field]', root).forEach(function(f){ var v = f.textContent.trim(); if (v) s[f.getAttribute('data-field')] = v; }); return s; }
+  function readQuotes(root){
+    return $$('[data-quote-source] .w-dyn-item', root).map(function(it){
+      var g = function(k){ var n = $('[data-field="' + k + '"]', it); return n ? n.textContent.trim() : ''; };
+      return { t: g('quote'), a: g('author'), c: g('context') };
+    }).filter(function(q){ return q.t; });
+  }
+  var S0 = readSettings(), QUOTES = readQuotes(), siteCache = null;
+  try { siteCache = JSON.parse(localStorage.getItem(SITE_KEY) || 'null'); } catch (e){}
+  if (hasSiteData){ try { localStorage.setItem(SITE_KEY, JSON.stringify({ s: S0, q: QUOTES })); } catch (e){} }
+  else if (siteCache){ S0 = siteCache.s || {}; QUOTES = siteCache.q || []; }
   function bind(key, val){ if (!val) return; $$('[data-bind="' + key + '"]').forEach(function(e){ e.textContent = val; }); }
-  bind('availability', S0.availability);
-  if (S0.availability) bind('availability-short', S0.availability.replace(/^Available\s*/i, ''));
-  bind('tz-label', S0['tz-label']);
-  bind('email', S0.email);
-  if (!S0.email){ var eb = $('[data-bind="email"]'); if (eb) S0.email = eb.textContent.trim(); }
+  function applySettings(){
+    bind('availability', S0.availability);
+    if (S0.availability) bind('availability-short', S0.availability.replace(/^Available\s*/i, ''));
+    bind('tz-label', S0['tz-label']);
+    bind('email', S0.email);
+    $$('[data-social]').forEach(function(a){ var url = S0[a.getAttribute('data-social')]; if (url){ a.href = url; a.target = '_blank'; a.rel = 'noopener'; } });
+  }
+  applySettings();
+  var designerEmail = $('[data-bind="email"]');
+  if (!S0.email && designerEmail) S0.email = designerEmail.textContent.trim();
   var events = (S0['space-events'] || 'shooting,meteors,comets,satellites,flares,ufo').split(',').map(function(s){ return s.trim(); });
-  // social links: real URLs from Site Settings, else a hint
+  // social links without a Site Settings URL: a hint (checked on click, so a late fetch can still fill them)
   $$('[data-social]').forEach(function(a){
-    var url = S0[a.getAttribute('data-social')];
-    if (url){ a.href = url; a.target = '_blank'; a.rel = 'noopener'; }
-    else a.addEventListener('click', function(e){ e.preventDefault(); toast('Add your profile links in Site Settings.'); });
+    a.addEventListener('click', function(e){ if (S0[a.getAttribute('data-social')]) return; e.preventDefault(); toast('Add your profile links in Site Settings.'); });
   });
-
-  /* ---------- quotes (CMS · Quotes, hidden [data-quote-source] list) ---------- */
-  var QUOTES = $$('[data-quote-source] .w-dyn-item').map(function(it){
-    var g = function(k){ var n = $('[data-field="' + k + '"]', it); return n ? n.textContent.trim() : ''; };
-    return { t: g('quote'), a: g('author'), c: g('context') };
-  }).filter(function(q){ return q.t; });
+  if (!hasSiteData && !siteCache && window.fetch && window.DOMParser){
+    fetch('/', { credentials: 'same-origin' }).then(function(r){ return r.ok ? r.text() : ''; }).then(function(html){
+      if (!html) return;
+      var doc = new DOMParser().parseFromString(html, 'text/html'), s = readSettings(doc), q = readQuotes(doc);
+      Object.keys(s).forEach(function(k){ S0[k] = s[k]; });
+      QUOTES.push.apply(QUOTES, q);
+      try { localStorage.setItem(SITE_KEY, JSON.stringify({ s: s, q: q })); } catch (e){}
+      applySettings();
+    })['catch'](function(){});
+  }
 
   Object.assign(AB, { hasGsap: hasGsap, reduce: reduce, coarse: coarse, $: $, $$: $$, num: num, esc: esc, pad2: pad2, hex: hex, rgbToHex: rgbToHex, onView: onView, settings: S0, quotes: QUOTES });
 
@@ -1017,41 +1036,57 @@ window.Webflow.push(function(){
           onDragEnd: schedule, onThrowComplete: schedule });
         nudge(el, schedule);
       });
-      cue(hero, title, items);
+      AB.dragCue({ host: title.parentNode, first: items[0], items: items });
     }, 0);
-    // same cue as Home: until someone drags something (its own localStorage key ab:toys, so it still shows after Home was dragged), the first word
-    // tugs and a "Drag me" hand chip points at it, 3 times, 10 s apart
-    function cue(hero, title, items){
-      var KEY = 'ab:toys', done = false, first = items[0], host = title.parentNode;
-      try { if (localStorage.getItem(KEY)) return; } catch (e){}
-      if (!first || !host) return;
-      if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
-      var hint = document.createElement('div'); hint.className = 'ab_drag-hint'; hint.setAttribute('aria-hidden', 'true'); hint.style.opacity = 0;
-      hint.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V12m0-6.5v-1a1.5 1.5 0 0 1 3 0V12m0-6a1.5 1.5 0 0 1 3 0v6m0-3.5a1.5 1.5 0 0 1 3 0V16a6 6 0 0 1-6 6h-2a6 6 0 0 1-5-2.7L3.4 15a1.6 1.6 0 0 1 2.6-1.9L8 15.5"/></svg><span>Drag me</span>';
-      host.appendChild(hint);
-      function stop(){
-        if (done) return; done = true;
-        try { localStorage.setItem(KEY, '1'); } catch (e){}
-        gsap.killTweensOf(hint); gsap.to(hint, { opacity: 0, duration: .3, onComplete: function(){ hint.remove(); } });
-      }
-      items.forEach(function(el){ el.addEventListener('pointerdown', stop, { once: true }); });
-      function place(){ var c = host.getBoundingClientRect(), r = first.getBoundingClientRect(); hint.style.left = (r.left - c.left + Math.min(r.width * .6, 220)) + 'px'; hint.style.top = (r.top - c.top - 30) + 'px'; }
-      var shown = 0;
-      function go(){
-        if (done || shown++ >= 3) return;
-        place();
-        if (reduce){ gsap.set(hint, { opacity: 1 }); gsap.delayedCall(4, function(){ if (!done) gsap.to(hint, { opacity: 0, duration: .3 }); }); return; }
-        gsap.timeline()
-          .fromTo(hint, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .35, ease: 'power2.out' })
-          .to(hint, { x: -6, duration: .35, ease: 'sine.inOut', yoyo: true, repeat: 3 }, '<.1')
-          .to(first, { rotation: -4, duration: .35, ease: 'sine.inOut', yoyo: true, repeat: 3, onComplete: function(){ gsap.set(first, { rotation: 0 }); } }, '<')
-          .to(hint, { opacity: 0, duration: .4 }, '+=1.6');
-        gsap.delayedCall(10, go);
-      }
-      gsap.delayedCall(2.6, go);
-      addEventListener('resize', function(){ if (!done) place(); });
-    }
   })();
+
+  /* ---------- drag cue (every hero with draggables): until something on THIS hero is dragged, the first draggable
+     tugs and a "Drag me" hand chip points at it, 3 times, 10 s apart. One localStorage key per hero type
+     (ab:toys:work|services|mission|about|404, Home keeps ab:dragged), so dragging on one page doesn't hide it on the others.
+     opts: host (positioned box the chip sits in), first (element it points at), items (presses that end it),
+     key (optional), at ('mid' default = over the first item, 'end' = at its right edge), tug (degrees). ---------- */
+  function heroKind(){
+    if ($('.section_lost')) return '404';
+    var p = location.pathname.split('/').filter(Boolean);
+    if (!p.length) return 'home';
+    return p.length > 1 ? (p[0] === 'work' ? 'mission' : p[0]) : p[0];
+  }
+  AB.dragCue = function(o){
+    var KEY = o.key || 'ab:toys:' + heroKind(), done = false, first = o.first, host = o.host;
+    if (!hasGsap || !first || !host) return;
+    try { if (localStorage.getItem(KEY)) return; } catch (e){}
+    if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
+    var hint = document.createElement('div'); hint.className = 'ab_drag-hint'; hint.setAttribute('aria-hidden', 'true'); hint.style.opacity = 0;
+    hint.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V12m0-6.5v-1a1.5 1.5 0 0 1 3 0V12m0-6a1.5 1.5 0 0 1 3 0v6m0-3.5a1.5 1.5 0 0 1 3 0V16a6 6 0 0 1-6 6h-2a6 6 0 0 1-5-2.7L3.4 15a1.6 1.6 0 0 1 2.6-1.9L8 15.5"/></svg><span>Drag me</span>';
+    host.appendChild(hint);
+    function stop(){
+      if (done) return; done = true;
+      try { localStorage.setItem(KEY, '1'); } catch (e){}
+      gsap.killTweensOf(first, 'rotation'); gsap.killTweensOf(hint); gsap.set(first, { rotation: 0 });
+      gsap.to(hint, { opacity: 0, duration: .3, onComplete: function(){ hint.remove(); } });
+    }
+    (o.items || [first]).forEach(function(el){ el.addEventListener('pointerdown', stop, { once: true }); });
+    function place(){
+      var c = host.getBoundingClientRect(), r = first.getBoundingClientRect();
+      hint.style.left = (o.at === 'end' ? r.right - c.left - 10 : r.left - c.left + Math.min(r.width * .6, 220)) + 'px';
+      hint.style.top = (r.top - c.top - (o.at === 'end' ? 6 : 30)) + 'px';
+    }
+    var shown = 0;
+    function go(){
+      if (done || shown++ >= 3) return;
+      place();
+      if (reduce){ gsap.set(hint, { opacity: 1 }); gsap.delayedCall(4, function(){ if (!done) gsap.to(hint, { opacity: 0, duration: .3 }); }); return; }
+      gsap.timeline()
+        .fromTo(hint, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .35, ease: 'power2.out' })
+        .to(hint, { x: -6, duration: .35, ease: 'sine.inOut', yoyo: true, repeat: 3 }, '<.1')
+        .to(first, { rotation: o.tug || -4, duration: .35, ease: 'sine.inOut', yoyo: true, repeat: 3, onComplete: function(){ if (!done) gsap.set(first, { rotation: 0 }); } }, '<')
+        .to(hint, { opacity: 0, duration: .4 }, '+=1.6');
+      gsap.delayedCall(10, go);
+    }
+    gsap.delayedCall(o.delay || 2.6, go);
+    addEventListener('resize', function(){ if (!done) place(); });
+    return { stop: stop };
+  };
 
   /* ===== core/40-footer.js ===== */
 

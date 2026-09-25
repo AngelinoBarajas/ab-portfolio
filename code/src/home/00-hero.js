@@ -103,36 +103,10 @@
     nudge(sat);
   }
 
-  /* ---------- drag cue: until someone drags something, a word tugs and a "drag me" hand appears ---------- */
+  /* ---------- drag cue: until someone drags something, a word tugs and a "drag me" hand appears (AB.dragCue in core) ---------- */
   (function(){
     var comp = $('.ab_hero_component'), first = $('#heroTitle .w');
-    if (!comp || !first || !canDrag) return;
-    var KEY = 'ab:dragged', done = false;
-    try { if (localStorage.getItem(KEY)) return; } catch (e){}
-    var hint = document.createElement('div'); hint.className = 'ab_drag-hint'; hint.setAttribute('aria-hidden', 'true');
-    hint.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V12m0-6.5v-1a1.5 1.5 0 0 1 3 0V12m0-6a1.5 1.5 0 0 1 3 0v6m0-3.5a1.5 1.5 0 0 1 3 0V16a6 6 0 0 1-6 6h-2a6 6 0 0 1-5-2.7L3.4 15a1.6 1.6 0 0 1 2.6-1.9L8 15.5"/></svg><span>Drag me</span>';
-    comp.appendChild(hint);
-    function stop(){
-      if (done) return; done = true;
-      try { localStorage.setItem(KEY, '1'); } catch (e){}
-      gsap.killTweensOf(first, 'rotation'); gsap.killTweensOf(hint); gsap.set(first, { rotation: 0 });
-      gsap.to(hint, { opacity: 0, duration: .3, onComplete: function(){ hint.remove(); } });
-    }
+    if (!comp || !first || !canDrag || !AB.dragCue) return;
     // any press on a draggable hero thing counts as "found it"
-    $$('[data-drag], #sat', hero).forEach(function(el){ el.addEventListener('pointerdown', stop, { once: true }); });
-    function place(){ var c = comp.getBoundingClientRect(), r = first.getBoundingClientRect(); hint.style.left = (r.right - c.left - 10) + 'px'; hint.style.top = (r.top - c.top - 6) + 'px'; }
-    var shown = 0;
-    function cue(){
-      if (done || shown++ >= 3) return;
-      place();
-      if (reduce){ gsap.set(hint, { opacity: 1 }); gsap.delayedCall(4, function(){ if (!done) gsap.to(hint, { opacity: 0, duration: .3 }); }); return; }
-      gsap.timeline()
-        .fromTo(hint, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .35, ease: 'power2.out' })
-        .to(hint, { x: -6, duration: .35, ease: 'sine.inOut', yoyo: true, repeat: 3 }, '<.1')
-        .to(first, { rotation: -5, duration: .35, ease: 'sine.inOut', yoyo: true, repeat: 3 }, '<')
-        .to(hint, { opacity: 0, duration: .4 }, '+=1.6');
-      gsap.delayedCall(10, cue);
-    }
-    gsap.delayedCall(2.6, cue);
-    addEventListener('resize', function(){ if (!done) place(); });
+    AB.dragCue({ host: comp, first: first, items: $$('[data-drag], #sat', hero), key: 'ab:dragged', at: 'end', tug: -5 });
   })();

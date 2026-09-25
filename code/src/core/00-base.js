@@ -18,26 +18,45 @@
   }
 
   /* ---------- site settings (CMS · Site Settings, hidden [data-settings-source] list) ---------- */
-  var S0 = {};
-  $$('[data-settings-source] [data-field]').forEach(function(f){ var v = f.textContent.trim(); if (v) S0[f.getAttribute('data-field')] = v; });
+  // Webflow utility pages (404) can't hold Collection Lists, so every page with the site-data block caches it
+  // (localStorage ab:site) and a page without it reads the cache, or fetches the Home page's block once.
+  var SITE_KEY = 'ab:site', hasSiteData = !!$('[data-settings-source]');
+  function readSettings(root){ var s = {}; $$('[data-settings-source] [data-field]', root).forEach(function(f){ var v = f.textContent.trim(); if (v) s[f.getAttribute('data-field')] = v; }); return s; }
+  function readQuotes(root){
+    return $$('[data-quote-source] .w-dyn-item', root).map(function(it){
+      var g = function(k){ var n = $('[data-field="' + k + '"]', it); return n ? n.textContent.trim() : ''; };
+      return { t: g('quote'), a: g('author'), c: g('context') };
+    }).filter(function(q){ return q.t; });
+  }
+  var S0 = readSettings(), QUOTES = readQuotes(), siteCache = null;
+  try { siteCache = JSON.parse(localStorage.getItem(SITE_KEY) || 'null'); } catch (e){}
+  if (hasSiteData){ try { localStorage.setItem(SITE_KEY, JSON.stringify({ s: S0, q: QUOTES })); } catch (e){} }
+  else if (siteCache){ S0 = siteCache.s || {}; QUOTES = siteCache.q || []; }
   function bind(key, val){ if (!val) return; $$('[data-bind="' + key + '"]').forEach(function(e){ e.textContent = val; }); }
-  bind('availability', S0.availability);
-  if (S0.availability) bind('availability-short', S0.availability.replace(/^Available\s*/i, ''));
-  bind('tz-label', S0['tz-label']);
-  bind('email', S0.email);
-  if (!S0.email){ var eb = $('[data-bind="email"]'); if (eb) S0.email = eb.textContent.trim(); }
+  function applySettings(){
+    bind('availability', S0.availability);
+    if (S0.availability) bind('availability-short', S0.availability.replace(/^Available\s*/i, ''));
+    bind('tz-label', S0['tz-label']);
+    bind('email', S0.email);
+    $$('[data-social]').forEach(function(a){ var url = S0[a.getAttribute('data-social')]; if (url){ a.href = url; a.target = '_blank'; a.rel = 'noopener'; } });
+  }
+  applySettings();
+  var designerEmail = $('[data-bind="email"]');
+  if (!S0.email && designerEmail) S0.email = designerEmail.textContent.trim();
   var events = (S0['space-events'] || 'shooting,meteors,comets,satellites,flares,ufo').split(',').map(function(s){ return s.trim(); });
-  // social links: real URLs from Site Settings, else a hint
+  // social links without a Site Settings URL: a hint (checked on click, so a late fetch can still fill them)
   $$('[data-social]').forEach(function(a){
-    var url = S0[a.getAttribute('data-social')];
-    if (url){ a.href = url; a.target = '_blank'; a.rel = 'noopener'; }
-    else a.addEventListener('click', function(e){ e.preventDefault(); toast('Add your profile links in Site Settings.'); });
+    a.addEventListener('click', function(e){ if (S0[a.getAttribute('data-social')]) return; e.preventDefault(); toast('Add your profile links in Site Settings.'); });
   });
-
-  /* ---------- quotes (CMS · Quotes, hidden [data-quote-source] list) ---------- */
-  var QUOTES = $$('[data-quote-source] .w-dyn-item').map(function(it){
-    var g = function(k){ var n = $('[data-field="' + k + '"]', it); return n ? n.textContent.trim() : ''; };
-    return { t: g('quote'), a: g('author'), c: g('context') };
-  }).filter(function(q){ return q.t; });
+  if (!hasSiteData && !siteCache && window.fetch && window.DOMParser){
+    fetch('/', { credentials: 'same-origin' }).then(function(r){ return r.ok ? r.text() : ''; }).then(function(html){
+      if (!html) return;
+      var doc = new DOMParser().parseFromString(html, 'text/html'), s = readSettings(doc), q = readQuotes(doc);
+      Object.keys(s).forEach(function(k){ S0[k] = s[k]; });
+      QUOTES.push.apply(QUOTES, q);
+      try { localStorage.setItem(SITE_KEY, JSON.stringify({ s: s, q: q })); } catch (e){}
+      applySettings();
+    })['catch'](function(){});
+  }
 
   Object.assign(AB, { hasGsap: hasGsap, reduce: reduce, coarse: coarse, $: $, $$: $$, num: num, esc: esc, pad2: pad2, hex: hex, rgbToHex: rgbToHex, onView: onView, settings: S0, quotes: QUOTES });
