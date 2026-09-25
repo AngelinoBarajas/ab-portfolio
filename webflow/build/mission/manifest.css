@@ -1,0 +1,20 @@
+/* mission: manifest (light bento, same grid + card classes as the Home services bento) */
+.section_manifest{position:relative}
+.ab_bento_grid.is-manifest{grid-auto-rows:minmax(200px,auto)}
+.ab_bento_cell.is-wide{grid-column:span 4}
+.ab_bento-card.is-dark{background-color:var(--deep);color:var(--star)}
+.ab_mf_site{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));align-content:start;gap:28px 10px;padding:28px 14px 16px;overflow:visible}
+.ab_mf_planet-viz{display:grid;place-items:center}
+.ab_planet.is-mf{position:relative;left:auto;top:auto;width:48%}
+.ab_mf_ptag{position:absolute;left:14px;bottom:12px;color:var(--dust);font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase}
+.ab_mf_count{font-weight:500;color:var(--signal)}
+.ab_mf_big{position:absolute;right:16px;bottom:6px;font-family:var(--display);font-weight:900;font-stretch:125%;font-size:88px;line-height:1;color:transparent;pointer-events:none}
+.ab_mf_db{display:grid;gap:6px;margin-top:auto;margin-bottom:0;padding-left:0;list-style-type:none}
+.ab_mf_hint{color:var(--dust);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase}
+.ab_mf_tags{position:relative;display:flex;flex-wrap:wrap;align-content:flex-end;gap:6px;min-height:80px;margin-top:auto}
+.ab_mf_chk{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;margin-top:0;margin-bottom:0;padding-left:0;list-style-type:none}
+.ab_mf_status{overflow:hidden}
+.ab_mf_status-title{display:flex;align-items:center;gap:10px}
+.ab_mf_dot{width:10px;height:10px;background-color:#3BE38A}
+@media screen and (max-width: 991px){.ab_bento_cell.is-wide{grid-column:span 2}}
+@media screen and (max-width: 479px){.ab_bento_cell.is-wide{grid-column:span 1}.ab_mf_chk{grid-template-columns:minmax(0,1fr)}.ab_mf_site{grid-template-columns:repeat(2,minmax(0,1fr))}}

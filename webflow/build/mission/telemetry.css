@@ -1,0 +1,10 @@
+/* mission: telemetry numbers + stack orbit (orbit classes from the Home stack) */
+.section_telemetry{position:relative}
+.ab_tel{position:relative;z-index:3}
+.ab_tel-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--hair)}
+.ab_tel_item{padding:24px 20px 6px;border-right:1px solid var(--hair)}
+.ab_tel_n{font-family:var(--display);font-weight:900;font-stretch:118%;font-size:clamp(46px,6vw,92px);line-height:1}
+.ab_tel_l{max-width:24ch;margin-top:10px;color:var(--soft)}
+.ab_stack_grid.is-mission{margin-top:56px}
+.ab_stk_h{margin-top:12px;margin-bottom:14px;font-family:var(--display);font-weight:900;font-stretch:118%;font-size:clamp(30px,4vw,56px);line-height:0.95;text-transform:uppercase}
+@media screen and (max-width: 991px){.ab_tel-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ab_tel_item{border-bottom:1px solid var(--hair)}}

@@ -1,0 +1,8 @@
+/* mission: briefing */
+.section_briefing{position:relative}
+.ab_brief{position:relative;z-index:3;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(24px,4vw,60px)}
+.ab_brief_obj{font-size:clamp(20px,2.1vw,28px);line-height:1.4;font-weight:500;color:var(--star)}
+.ab_brief_eng{margin-top:18px;padding-left:16px;border-left:2px solid var(--signal);font-family:var(--mono);font-size:14px;line-height:1.7;color:var(--soft)}
+.ab_brief_params-h{margin-bottom:14px}
+.ab_params{margin-top:0;margin-bottom:0;padding-left:0;list-style-type:none;border-top:1px solid var(--hair)}
+@media screen and (max-width: 991px){.ab_brief{grid-template-columns:minmax(0,1fr)}}

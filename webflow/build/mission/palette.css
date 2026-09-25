@@ -1,0 +1,15 @@
+/* mission: palette + type specimens (identity missions; shown by ab-mission) */
+.section_palette{position:relative}
+.ab_pal{position:relative;z-index:3;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.ab_swatch{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:0;border:0;background-color:transparent;color:var(--star);text-align:left;cursor:pointer}
+.ab_swatch_chip{display:block;width:100%;aspect-ratio:1/1.1;border:1px solid var(--hair2);transition:transform 350ms cubic-bezier(.2,.9,.2,1.3)}
+.ab_swatch_name{font-weight:600}
+.ab_swatch_meta{font-family:var(--mono);font-size:11.5px;color:var(--dust)}
+.ab_typespec{position:relative;z-index:3;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:20px}
+.ab_typespec_card{display:flex;flex-direction:column;gap:12px;padding:22px;border:1px solid var(--hair);background-color:var(--deep)}
+.ab_typespec_k{color:var(--dust);text-transform:uppercase}
+.ab_typespec_display{font-family:var(--display);font-weight:900;font-stretch:125%;font-size:56px;line-height:0.9;text-transform:uppercase}
+.ab_typespec_body{font-size:22px;line-height:1.35;font-weight:500}
+.ab_typespec_mono{font-family:var(--mono);font-size:15px;line-height:1.8;color:var(--star)}
+@media screen and (max-width: 991px){.ab_typespec{grid-template-columns:minmax(0,1fr)}}
+@media screen and (max-width: 767px){.ab_pal{grid-template-columns:repeat(3,minmax(0,1fr))}}

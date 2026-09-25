@@ -1,0 +1,27 @@
+/* mission: section head row (heading left, lede right) — shared by every Mission section */
+.ab_sec-h{position:relative;z-index:3;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px 40px;margin-bottom:clamp(28px,4vw,48px)}
+.ab_section-head.is-flush{margin-bottom:0}
+.ab_sec-h_lede{max-width:44ch;color:var(--soft)}
+/* mission control monitor */
+.section_monitor{position:relative}
+.ab_mc{position:relative;z-index:3;display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:18px}
+.ab_mon{position:relative;min-width:0;padding:12px;border:1px solid var(--hair2);background-image:linear-gradient(#171a28,#0c0e17);box-shadow:0 40px 90px -40px rgba(0,0,0,0.9),inset 0 1px 0 rgba(255,255,255,0.06)}
+.ab_mon_bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:2px 10px 10px;color:var(--dust)}
+.ab_mon_rec{display:inline-flex;align-items:center;gap:7px;color:#ff4b3a}
+.ab_mon_tc{color:var(--soft)}
+.ab_screen{position:relative;aspect-ratio:16/10;overflow:hidden;isolation:isolate;background-color:#05060a}
+.ab_mon_cap{display:flex;justify-content:space-between;gap:16px;min-height:46px;padding:12px 10px 2px;color:var(--soft);font-size:14px}
+.ab_mon_kind{color:var(--dust);white-space:nowrap}
+.ab_console{display:flex;flex-direction:column;gap:14px;min-width:0}
+.ab_panel{padding:14px;border:1px solid var(--hair);background-color:rgba(14,16,32,0.88)}
+.ab_panel_h{display:flex;justify-content:space-between;margin-bottom:10px;color:var(--dust);text-transform:uppercase;letter-spacing:0.12em}
+.ab_chans{display:flex;flex-direction:column;gap:4px}
+.ab_tele{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ab_tele_item{display:flex;flex-direction:column;gap:3px}
+.ab_tele_k{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dust)}
+.ab_tele_v{font-family:var(--mono);font-size:15px;font-weight:500;color:var(--star)}
+.ab_tele_v.is-ok{color:#3BE38A}
+.ab_tele_ok{color:#3BE38A}
+.button.is-ghost.is-full{width:100%}
+@media screen and (max-width: 991px){.ab_mc{grid-template-columns:minmax(0,1fr)}.ab_console{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media screen and (max-width: 479px){.ab_console{grid-template-columns:minmax(0,1fr)}.ab_screen{aspect-ratio:4/5}.ab_mon_cap{flex-direction:column;gap:4px}}

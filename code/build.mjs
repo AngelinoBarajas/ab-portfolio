@@ -5,6 +5,8 @@
 // src/core/*.js  → dist/ab-core.js + .prod.js   (site-wide, Site settings › Custom code › Footer)
 // src/home/*.js  → dist/ab-home.js + .prod.js   (Home page › Custom code › Before </body>)
 // src/work/*.js  → dist/ab-work.js + .prod.js   (Work page › Custom code › Before </body>)
+// src/mission/*.js → dist/ab-mission.js + .prod.js (Missions template › Before </body>); src/ab-mission.css → template <head> <link>
+// vendor/*.js (510 globe, Aguirre case map): served as-is from the repo, loaded lazily by ab-mission
 // src/ab-core.css → dist/ab-core.css + .prod.css (aliases mapped to Webflow variable names)
 // Every bundle is one Webflow.push with one __ab<Name>Init guard, and must parse as ES5.
 import { readFileSync, writeFileSync, readdirSync, mkdirSync } from 'node:fs';
@@ -52,27 +54,29 @@ async function bundle(dir, out, guard) {
   console.log(`${out}.js ${(code.length / 1024).toFixed(1)} KB → .prod.js ${(min.code.length / 1024).toFixed(1)} KB`);
 }
 
-function css() {
-  let s = readFileSync(join(SRC, 'ab-core.css'), 'utf8');
+function css(name) {
+  let s = readFileSync(join(SRC, name + '.css'), 'utf8');
   // an unclosed block swallows every rule after it without any browser error: fail the build instead
   let depth = 0;
   for (const ch of s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/"[^"]*"/g, '')) {
     depth += ch === '{' ? 1 : ch === '}' ? -1 : 0;
-    if (depth < 0) throw new Error('ab-core.css: unbalanced "}"');
+    if (depth < 0) throw new Error(name + '.css: unbalanced "}"');
   }
-  if (depth) throw new Error(`ab-core.css: ${depth} unclosed "{"`);
+  if (depth) throw new Error(`${name}.css: ${depth} unclosed "{"`);
   s = s.replace(/var\(--([\w-]+)\)/g, (m, k) => (ALIAS[k] ? `var(${ALIAS[k]})` : m));
-  const full = banner('ab-core.css') + s;
-  write('ab-core.css', full);
+  const full = banner(name + '.css') + s;
+  write(name + '.css', full);
   const min = s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ')
     .replace(/\s*([{};])\s*/g, '$1').replace(/;}/g, '}').trim();
-  write('ab-core.prod.css', banner('ab-core.css') + min + '\n');
-  console.log(`ab-core.css ${(full.length / 1024).toFixed(1)} KB → .prod.css ${(min.length / 1024).toFixed(1)} KB`);
+  write(name + '.prod.css', banner(name + '.css') + min + '\n');
+  console.log(`${name}.css ${(full.length / 1024).toFixed(1)} KB → .prod.css ${(min.length / 1024).toFixed(1)} KB`);
 }
 
 await bundle('core', 'ab-core', '__abCoreInit');
 await bundle('home', 'ab-home', '__abHomeInit');
 await bundle('work', 'ab-work', '__abWorkInit');
-css();
+await bundle('mission', 'ab-mission', '__abMissionInit');
+css('ab-core');
+css('ab-mission');
 writeFileSync(join(DIST, 'sri.json'), JSON.stringify(sri, null, 2) + '\n');
 console.log('SRI hashes → dist/sri.json');

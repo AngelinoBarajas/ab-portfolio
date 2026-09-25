@@ -1,0 +1,6 @@
+/* mission: crew-debrief quote + next mission */
+.section_debrief-quote{position:relative}
+.ab_dbq-wrap{padding-top:60px}
+.ab_dbq{position:relative;z-index:3;margin:0;padding:clamp(24px,4vw,48px);border:1px solid var(--hair);background-color:rgba(14,16,32,0.88)}
+.ab_dbq_text{max-width:36ch;margin-top:18px;margin-bottom:0;padding:0;border-left-style:none;font-size:clamp(22px,2.4vw,32px);line-height:1.35;font-weight:500}
+.ab_dbq_by{margin-top:20px;color:var(--dust)}

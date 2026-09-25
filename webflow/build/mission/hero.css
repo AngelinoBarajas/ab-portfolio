@@ -1,0 +1,14 @@
+/* mission: debrief hero (shares ab_dbh_* / ab_meta_* / ab_switch with Work) */
+.section_dbh{position:relative}
+.ab_crumb{display:flex;align-items:center;gap:6px}
+.ab_crumb_sep{color:var(--dust)}
+.ab_mswitch{display:flex;flex-wrap:wrap;gap:6px}
+.ab_dbh_title.is-debrief{max-width:12ch}
+.ab_crew{position:relative;z-index:4;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:26px}
+.ab_crew_label{color:var(--dust);text-transform:uppercase;letter-spacing:0.1em}
+.ab_crew_hint{color:var(--dust);font-size:14px}
+.ab_meta_chips{display:flex;flex-wrap:wrap;gap:5px}
+.ab_meta_chip{padding:3px 7px;border:1px solid var(--hair2);color:var(--soft);font-family:var(--mono);font-size:10.5px;letter-spacing:0.05em;text-transform:uppercase}
+.ab_meta_live{display:inline-flex;align-items:center;gap:8px;color:#3BE38A;text-decoration:none}
+.ab_meta_live:hover{text-decoration:underline}
+@media screen and (max-width: 767px){.ab_dbh_title.is-debrief{max-width:none}}

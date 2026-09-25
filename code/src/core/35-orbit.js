@@ -12,3 +12,82 @@
     'illustrator': 'M10.53 10.73c-.1-.31-.19-.61-.29-.92-.1-.31-.19-.6-.27-.89-.08-.28-.15-.54-.22-.78h-.02c-.09.43-.2.86-.34 1.29-.15.48-.3.98-.46 1.48-.14.51-.29.98-.44 1.4h2.54c-.06-.211-.14-.46-.23-.721-.09-.269-.18-.559-.27-.859zM19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zM14.7 16.83h-2.091c-.069.01-.139-.04-.159-.11l-.82-2.38H7.91l-.76 2.35c-.02.09-.1.15-.19.141H5.08c-.11 0-.14-.061-.11-.18L8.19 7.38c.03-.1.06-.21.1-.33.04-.21.06-.43.06-.65-.01-.05.03-.1.08-.11h2.59c.08 0 .12.03.13.08l3.65 10.3c.03.109 0 .16-.1.16zm3.4-.15c0 .11-.039.16-.129.16H16.01c-.1 0-.15-.061-.15-.16v-7.7c0-.1.041-.14.131-.14h1.98c.09 0 .129.05.129.14v7.7zm-.209-9.03c-.231.24-.571.37-.911.35-.33.01-.65-.12-.891-.35-.23-.25-.35-.58-.34-.92-.01-.34.12-.66.359-.89.242-.23.562-.35.892-.35.391 0 .689.12.91.35.22.24.34.56.33.89.01.34-.11.67-.349.92z',
     'lightroom': 'M19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zm-6.99 16.389c0 .051-.029.09-.06.121-.03.02-.06.029-.101.029H6.26c-.11 0-.16-.061-.16-.18V6.44c-.01-.07.04-.13.11-.14h2c.05-.01.11.03.11.08v8.43h4.62c.101 0 .131.049.11.14l-.29 1.739zm6.25-7.859v1.95c0 .08-.05.11-.16.11-.649-.04-1.3.08-1.89.34-.2.09-.39.21-.54.37v5.1c0 .1-.04.14-.13.14h-1.95c-.08.01-.15-.04-.16-.119V11.14c0-.24 0-.49-.01-.75s-.01-.52-.02-.78c-.01-.22-.03-.44-.061-.66-.01-.05.02-.1.07-.11.01-.01.02-.01.04 0h1.75c.1 0 .18.07.21.16.04.07.07.15.08.23.02.1.039.21.05.31.01.11.021.23.021.36.299-.35.66-.64 1.069-.86.46-.25.97-.37 1.49-.36.069-.01.13.04.14.11.001.01.001.02.001.04z'
   };
+
+  /* ---------- orbit: chips (.ab_stack_chip) on two rings around a planet; Home tools + Mission stack ---------- */
+  function orbitSystem(orbit, readout){
+    if (!orbit) return;
+    var chips = $$('.ab_stack_chip', orbit); if (!chips.length) return;
+    var ICONS = {
+      layout: '<rect x="2" y="3" width="12" height="10"/><path d="M2 6h12M6 6v7"/>',
+      motion: '<path d="M2 12c3 0 3-8 6-8s3 8 6 8"/>',
+      scroll: '<rect x="5" y="2" width="6" height="12"/><path d="M8 5v3"/>',
+      pen: '<path d="M3 13l2-6 5-4 3 3-4 5-6 2z"/><path d="M8.5 4.5l3 3"/>',
+      cube: '<path d="M8 2l5 3v6l-5 3-5-3V5z"/><path d="M8 8l5-3M8 8L3 5M8 8v6"/>',
+      chart: '<circle cx="4" cy="11" r="1.5"/><circle cx="8" cy="5" r="1.5"/><circle cx="12" cy="9" r="1.5"/><path d="M4.8 9.7l2.4-3.4M9.2 6l1.7 1.8"/>',
+      tag: '<path d="M5 4L2 8l3 4M11 4l3 4-3 4M9.5 3L6.5 13"/>',
+      spark: '<path d="M8 2v4M8 10v4M2 8h4M10 8h4M4 4l2 2M10 10l2 2M12 4l-2 2M6 10l-2 2"/>',
+      branch: '<circle cx="4" cy="3.5" r="1.5"/><circle cx="4" cy="12.5" r="1.5"/><circle cx="12" cy="5.5" r="1.5"/><path d="M4 5v6M12 7c0 2.5-3 3-7.5 4"/>'
+    };
+    function lum(hx){ var c = hex(hx); return (c[0] * .299 + c[1] * .587 + c[2] * .114) / 255; }
+    // real brand logo when we have one (LOGOS, by tool name), else the generic Icon option
+    function iconTile(c, extra){
+      var color = c.__color, logo = LOGOS[c.__name.toLowerCase()], t = document.createElement('span');
+      t.className = 'ci' + (logo ? ' is-logo' : '') + (extra ? ' ' + extra : ''); t.setAttribute('aria-hidden', 'true');
+      t.style.setProperty('--tc', color); t.style.setProperty('--ti', lum(color) > .6 ? '#07080D' : '#ffffff');
+      t.innerHTML = logo ? '<svg viewBox="0 0 24 24"><path d="' + logo + '"/></svg>' : '<svg viewBox="0 0 16 16">' + (ICONS[c.getAttribute('data-icon')] || ICONS.spark) + '</svg>';
+      return t;
+    }
+    // the first ~40% (at least 4) ride the inner ring, the rest the outer (the CMS has no ring field)
+    var nInner = chips.length <= 3 ? chips.length : Math.max(Math.min(4, chips.length), Math.round(chips.length * .4)), nRings = nInner < chips.length ? 2 : 1;
+    chips.forEach(function(c, i){
+      var cn = $('[data-field="color"]', c);
+      c.__color = (cn && cn.style.backgroundColor && rgbToHex(getComputedStyle(cn).backgroundColor)) || '#FF6A3D';
+      c.__ring = i < nInner ? 'inner' : 'outer';
+      c.__name = c.getAttribute('data-name') || c.textContent.trim();
+    });
+    var rt = readout && $('.ab_stack_readout-text', readout); if (rt) rt.textContent = chips.length + ' tools · ' + nRings + ' orbit' + (nRings > 1 ? 's' : '');
+    function showTool(c){
+      if (!readout) return;
+      var old = $('.ci, .ab_stack_ci', readout), t = iconTile(c, 'ab_stack_ci');
+      if (old) old.parentNode.replaceChild(t, old);
+      $('.ab_stack_readout-title', readout).textContent = c.__name;
+      $('.ab_stack_readout-text', readout).textContent = (c.getAttribute('data-use') || '') + ' · ' + c.__ring + ' orbit';
+      readout.style.borderColor = c.__color;
+    }
+    chips.forEach(function(c){
+      c.style.setProperty('--tc', c.__color);
+      c.insertBefore(iconTile(c), c.firstChild);
+      c.setAttribute('aria-label', c.__name + ': ' + (c.getAttribute('data-use') || ''));
+      ['pointerenter', 'focus', 'pointerdown'].forEach(function(ev){ c.addEventListener(ev, function(){ showTool(c); }); });
+    });
+    if (!hasGsap) return;
+    var inner = chips.filter(function(c){ return c.__ring === 'inner'; }), outer = chips.filter(function(c){ return c.__ring === 'outer'; });
+    var bodies = [];
+    [inner, outer].forEach(function(set, ri){ set.forEach(function(c, i){ bodies.push({ el: c, ring: ri, a: (i / set.length) * Math.PI * 2 + ri * .4, sp: ri ? -0.00012 : 0.0002, mode: 'orbit' }); }); });
+    function orbitPos(b){ var s = orbit.offsetWidth, rx = b.ring ? s * .46 : s * .30, ry = b.ring ? s * .415 : s * .27; return { x: Math.cos(b.a) * rx, y: Math.sin(b.a) * ry }; }
+    bodies.forEach(function(b){
+      gsap.set(b.el, { xPercent: -50, yPercent: -50 });
+      var p = orbitPos(b); gsap.set(b.el, { x: p.x, y: p.y });
+      if (window.Draggable) Draggable.create(b.el, { type: 'x,y', inertia: true, zIndexBoost: true,
+        onPress: function(){ b.mode = 'held'; b.el.classList.add('is-held'); },
+        onRelease: function(){ b.el.classList.remove('is-held'); if (!this.tween || !this.tween.isActive()) b.mode = 'return'; },
+        onThrowComplete: function(){ b.mode = 'return'; } });
+    });
+    var orbitVisible = false;
+    onView(orbit, function(x){ orbitVisible = x; });
+    gsap.ticker.add(function(time, dt){
+      if (!orbitVisible) return;
+      bodies.forEach(function(b){
+        if (!reduce) b.a += b.sp * dt;
+        if (b.mode === 'held') return;
+        var p = orbitPos(b);
+        if (b.mode === 'return'){
+          var cx = gsap.getProperty(b.el, 'x'), cy = gsap.getProperty(b.el, 'y'), nx = cx + (p.x - cx) * .06, ny = cy + (p.y - cy) * .06;
+          gsap.set(b.el, { x: nx, y: ny });
+          if (Math.abs(nx - p.x) < .8 && Math.abs(ny - p.y) < .8) b.mode = 'orbit';
+        } else gsap.set(b.el, { x: p.x, y: p.y });
+      });
+    });
+  }
+  AB.orbit = orbitSystem;
+
