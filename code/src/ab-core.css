@@ -516,7 +516,6 @@ section:hover > .ab_frame-label{color:var(--select)}
 .ab_switch_btn[aria-pressed="true"]{color:var(--on-signal)}
 .ab_arc_filters::-webkit-scrollbar{display:none}
 @media (max-width:767px){.ab_arc_filters{scrollbar-width:none}.ab_arc_bar.is-stuck.nav-on{transform:translateY(52px)}}
-@media (max-width:991px){@media (max-width:767px){
 /* ---------- mission card (.ab_mission-card) ---------- */
 .ab_mission-card{--mx:50%;--my:50%;min-width:0;will-change:transform}
 .ab_mission-card.is-out{display:none}

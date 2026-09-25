@@ -54,6 +54,13 @@ async function bundle(dir, out, guard) {
 
 function css() {
   let s = readFileSync(join(SRC, 'ab-core.css'), 'utf8');
+  // an unclosed block swallows every rule after it without any browser error: fail the build instead
+  let depth = 0;
+  for (const ch of s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/"[^"]*"/g, '')) {
+    depth += ch === '{' ? 1 : ch === '}' ? -1 : 0;
+    if (depth < 0) throw new Error('ab-core.css: unbalanced "}"');
+  }
+  if (depth) throw new Error(`ab-core.css: ${depth} unclosed "{"`);
   s = s.replace(/var\(--([\w-]+)\)/g, (m, k) => (ALIAS[k] ? `var(${ALIAS[k]})` : m));
   const full = banner('ab-core.css') + s;
   write('ab-core.css', full);
