@@ -196,7 +196,7 @@
     var n = $('.ab_tel_n', t), v = n && n.getAttribute('data-count'), suf = txt('[data-field="suffix"]', t);
     if (!n || v == null) return;
     n.setAttribute('data-suffix', suf || '');
-    if (v === '' || isNaN(+v)){ n.removeAttribute('data-count'); n.textContent = suf || '∞'; t.classList.add('is-symbol'); }
+    if (v === '' || isNaN(+v)){ n.removeAttribute('data-count'); n.textContent = suf || '∞'; n.classList.remove('w-dyn-bind-empty'); t.classList.add('is-symbol'); }
     else n.textContent = v + (suf || '');
   });
 

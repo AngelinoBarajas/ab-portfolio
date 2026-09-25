@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission v0.4.4 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission v0.4.5 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abMissionInit) return;
@@ -1064,7 +1064,7 @@ window.Webflow.push(function(){
     var n = $('.ab_tel_n', t), v = n && n.getAttribute('data-count'), suf = txt('[data-field="suffix"]', t);
     if (!n || v == null) return;
     n.setAttribute('data-suffix', suf || '');
-    if (v === '' || isNaN(+v)){ n.removeAttribute('data-count'); n.textContent = suf || '∞'; t.classList.add('is-symbol'); }
+    if (v === '' || isNaN(+v)){ n.removeAttribute('data-count'); n.textContent = suf || '∞'; n.classList.remove('w-dyn-bind-empty'); t.classList.add('is-symbol'); }
     else n.textContent = v + (suf || '');
   });
 
