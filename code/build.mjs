@@ -1,0 +1,67 @@
+// Build the Webflow custom code bundles.
+//   cd code && npm install && npm run build
+// src/core/*.js  → dist/ab-core.js + .min.js   (site-wide, Site settings › Custom code › Footer)
+// src/home/*.js  → dist/ab-home.js + .min.js   (Home page › Custom code › Before </body>)
+// src/ab-core.css → dist/ab-core.css + .min.css (aliases mapped to Webflow variable names)
+// Every bundle is one Webflow.push with one __ab<Name>Init guard, and must parse as ES5.
+import { readFileSync, writeFileSync, readdirSync, mkdirSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { parse } from 'acorn';
+import { minify } from 'terser';
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const SRC = join(HERE, 'src'), DIST = join(HERE, 'dist');
+const pkg = JSON.parse(readFileSync(join(HERE, 'package.json'), 'utf8'));
+mkdirSync(DIST, { recursive: true });
+
+// same alias table as webflow/build/prep.py
+const ALIAS = {
+  void: '--_color---neutral--void', deep: '--_color---neutral--deep', panel: '--_color---neutral--panel',
+  hair: '--_color---neutral--hair', hair2: '--_color---neutral--hair-strong', glass: '--_color---neutral--glass',
+  star: '--_color---text--primary', soft: '--_color---text--secondary', dust: '--_color---text--tertiary',
+  signal: '--_color---brand--signal', 'on-signal': '--_color---brand--on-signal', nebula: '--_color---brand--nebula',
+  select: '--_color---ui--select', live: '--_color---status--live', alert: '--_color---status--alert',
+  display: '--_typography---font--display', body: '--_typography---font--body', mono: '--_typography---font--mono',
+  script: '--_typography---font--script', gutter: '--_spacing---layout--gutter', max: '--_spacing---layout--max-width',
+};
+
+const sri = {};
+const banner = (name) => `/*! AB Portfolio · ${name} v${pkg.version} · github.com/AngelinoBarajas/ab-portfolio */\n`;
+function hash(buf) { return 'sha384-' + createHash('sha384').update(buf).digest('base64'); }
+function write(file, text) { writeFileSync(join(DIST, file), text); sri[file] = hash(Buffer.from(text)); }
+
+async function bundle(dir, out, guard) {
+  const parts = readdirSync(join(SRC, dir)).filter((f) => f.endsWith('.js')).sort()
+    .map((f) => `  /* ===== ${dir}/${f} ===== */\n` + readFileSync(join(SRC, dir, f), 'utf8'));
+  const code = banner(out) +
+    `window.Webflow = window.Webflow || [];\nwindow.Webflow.push(function(){\n  if (window.${guard}) return;\n  window.${guard} = true;\n` +
+    parts.join('\n') + `\n});\n`;
+  try { parse(code, { ecmaVersion: 5 }); }
+  catch (e) {
+    const line = code.split('\n')[e.loc.line - 1];
+    throw new Error(`${out}: not ES5 at ${e.loc.line}:${e.loc.column}: ${e.message}\n  ${line.trim()}`);
+  }
+  write(out + '.js', code);
+  const min = await minify(code, { ecma: 5, compress: { passes: 2 }, mangle: true, format: { comments: /^!/ } });
+  write(out + '.min.js', min.code + '\n');
+  console.log(`${out}.js ${(code.length / 1024).toFixed(1)} KB → .min.js ${(min.code.length / 1024).toFixed(1)} KB`);
+}
+
+function css() {
+  let s = readFileSync(join(SRC, 'ab-core.css'), 'utf8');
+  s = s.replace(/var\(--([\w-]+)\)/g, (m, k) => (ALIAS[k] ? `var(${ALIAS[k]})` : m));
+  const full = banner('ab-core.css') + s;
+  write('ab-core.css', full);
+  const min = s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ')
+    .replace(/\s*([{};])\s*/g, '$1').replace(/;}/g, '}').trim();
+  write('ab-core.min.css', banner('ab-core.css') + min + '\n');
+  console.log(`ab-core.css ${(full.length / 1024).toFixed(1)} KB → .min.css ${(min.length / 1024).toFixed(1)} KB`);
+}
+
+await bundle('core', 'ab-core', '__abCoreInit');
+await bundle('home', 'ab-home', '__abHomeInit');
+css();
+writeFileSync(join(DIST, 'sri.json'), JSON.stringify(sri, null, 2) + '\n');
+console.log('SRI hashes → dist/sri.json');
