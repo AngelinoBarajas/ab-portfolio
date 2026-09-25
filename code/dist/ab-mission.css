@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission.css v0.3.2 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission.css v0.3.3 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · ab-mission.css · Mission template (/work/[slug]) only. Script-built parts + states the Designer cannot express. */
 /* ---------- glossary chips + tip ---------- */
 .gl{all:unset;cursor:help;border-bottom:1px dashed var(--_color---brand--signal);color:inherit;position:relative;white-space:nowrap}
@@ -536,6 +536,9 @@ body.eng .crew-dock .dot{background:#7cc4ff;box-shadow:0 0 10px #7cc4ff}
 .ab_mf_chk li:hover{color:var(--_color---text--primary)}
 .ab_mf_dot{box-shadow:0 0 12px #3BE38A;animation:ab-blink 1.6s steps(1) infinite}
 .ab_mf_status > .mf-radar{position:absolute;right:-40px;bottom:-40px;width:200px;height:200px;z-index:0;opacity:.55;pointer-events:none}
+/* the radar crops itself, so the card can stay overflow:visible and show its selection box (it sits 1px outside) */
+.ab_mf_status > .mf-radar{clip-path:inset(0 40px 40px 0)}
+.ab_bento-card.is-mf.ab_mf_status{overflow:visible!important}
 .mf-radar circle,.mf-radar > path{fill:none;stroke:rgba(59,227,138,.25);stroke-width:1}
 .mf-radar .sweep{transform-origin:100px 100px;animation:ab-mfsweep 4s linear infinite}
 .mf-radar .sweep path{fill:rgba(59,227,138,.18)}
