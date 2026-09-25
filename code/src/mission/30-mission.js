@@ -36,7 +36,8 @@
   var CH = $$('[data-channels-source] .w-dyn-item').map(function(item, i){
     var it = $('[data-channel]', item) || item;
     var imgs = $$('img', it).filter(function(im){ return !im.classList.contains('w-dyn-bind-empty'); }).map(function(im){ return im.getAttribute('src') || ''; }).filter(function(s){ return s && !/placeholder/i.test(s); });
-    return { id: it.getAttribute('data-id') || ('ch' + i), kind: (it.getAttribute('data-kind') || 'img').toLowerCase(), mode: (it.getAttribute('data-mode') || '').toLowerCase(),
+    var cid = it.getAttribute('data-id') || ('ch' + i);
+    return { id: cid, kind: ({ sketch: 'sketch', vector: 'vector' })[cid] || (it.getAttribute('data-kind') || 'img').toLowerCase(), mode: (it.getAttribute('data-mode') || '').toLowerCase(),
       label: it.getAttribute('data-label') || ('Channel ' + (i + 1)), caption: it.getAttribute('data-caption') || '', src: imgs[0] || '', before: imgs[0] || '', after: imgs[1] || imgs[0] || '' };
   });
   var PINS = $$('[data-pins-source] .w-dyn-item').map(function(item){
@@ -193,7 +194,10 @@
   /* ---------- telemetry numbers (Mission Stats) ---------- */
   $$('#tel .ab_tel_item').forEach(function(t){
     var n = $('.ab_tel_n', t), v = n && n.getAttribute('data-count'), suf = txt('[data-field="suffix"]', t);
-    if (n && v != null) n.textContent = v + (suf || '');
+    if (!n || v == null) return;
+    n.setAttribute('data-suffix', suf || '');
+    if (v === '' || isNaN(+v)){ n.removeAttribute('data-count'); n.textContent = suf || '∞'; t.classList.add('is-symbol'); }
+    else n.textContent = v + (suf || '');
   });
 
   /* ---------- stack orbit (Tools the mission ran on) ---------- */
@@ -218,8 +222,28 @@
     function set(k, v){ var e = $('[data-mf="' + k + '"]', sec); if (e) e.textContent = v; return e; }
     set('pages-total', pages.length); set('pages-label', pl); set('pages-title', isLogo ? 'A full identity kit' : 'Every page, designed then built');
     var cnt = $('[data-mf="count"]', sec); if (cnt) cnt.setAttribute('data-to', pages.length);
+    // identity missions: each asset tile shows a small piece of the site's design language instead of a page wireframe
+    var MK = AB.markSVG ? AB.markSVG() : '';
+    var ART = [
+      [/sketch/i, '<span class="vx-sketch"><svg viewBox="0 0 110 50"><path d="M8 40L20 10 32 40M13 29H27M40 10V40M40 10H50C60 10 60 24 50 25H40M50 25C62 26 62 40 50 40H40"/><path class="x" d="M70 12L100 38M100 12L70 38"/></svg><b>v25</b></span>'],
+      [/construction|grid/i, '<span class="vx-mark is-grid">' + (AB.markSVG ? AB.markSVG({ grid: true }) : '') + '</span>'],
+      [/monogram|planet mono|^mark/i, '<span class="vx-mark">' + MK + '</span>'],
+      [/lockup/i, '<span class="vx-lock"><i>' + MK + '</i><i class="lt">' + MK + '</i></span>'],
+      [/color|token/i, '<span class="vx-sw"><i style="background:#07080D"></i><i style="background:#0E1020"></i><i style="background:#161A2E"></i><i style="background:#F2F0EA"></i><i style="background:#FF6A3D"></i><i style="background:#4C8DFF"></i></span>'],
+      [/type/i, '<span class="vx-type"><b>Aa</b><em>Geist</em><code>01</code></span>'],
+      [/button/i, '<span class="vx-btn"><b>Launch →</b></span>'],
+      [/selection/i, '<span class="vx-sel"><i></i><b>Frame</b></span>'],
+      [/frame label/i, '<span class="vx-fl"><b>▢ hero</b><i>1440 × 900</i></span>'],
+      [/star|nebula/i, '<span class="vx-stars"></span>'],
+      [/planet/i, '<span class="vx-planet"><i></i><b></b></span>'],
+      [/warp/i, '<span class="vx-warp"><i></i><i></i><i></i><i></i><i></i></span>'],
+      [/black hole/i, '<span class="vx-bh"><i></i></span>'],
+      [/favicon|avatar/i, '<span class="vx-fav"><i>' + MK + '</i><b>' + MK + '</b></span>'],
+      [/card|sticker/i, '<span class="vx-card"><i>' + MK + '</i><b>' + MK + '</b></span>']
+    ];
+    function art(p){ for (var i = 0; i < ART.length; i++) if (ART[i][0].test(p)) return ART[i][1]; return ''; }
     if (site){
-      site.innerHTML = pages.map(function(p, i){ return '<div class="vs-t" style="--d:' + (i * .12) + 's" data-p="' + esc(p) + '"><div class="vs-w"><i></i><i></i><i class="s"></i><b></b></div><span>' + esc(p) + '</span><em>✓</em></div>'; }).join('') +
+      site.innerHTML = pages.map(function(p, i){ var ax = isLogo ? art(p) : ''; return '<div class="vs-t' + (ax ? ' is-art' : '') + '" style="--d:' + (i * .12) + 's" data-p="' + esc(p) + '">' + (ax ? '<div class="vs-w is-art">' + ax + '</div>' : '<div class="vs-w"><i></i><i></i><i class="s"></i><b></b></div>') + '<span>' + esc(p) + '</span><em>✓</em></div>'; }).join('') +
         '<span class="vs-cur" aria-hidden="true"><svg viewBox="0 0 16 20"><path d="M1.5 1.5v15.5l4.4-4.1 2.9 6.3 2.6-1.2-2.9-6.2 6-.3z"/></svg></span>';
     }
     var plEl = $('[data-mf="planet"]', sec), ptype = HERO_PLANET.getAttribute('data-planet') || 'planet';

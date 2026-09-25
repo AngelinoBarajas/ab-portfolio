@@ -151,6 +151,8 @@
       { name: 'Build', steps: ['Webflow build', 'English / Spanish'], solid: '<path d="M22 18L10 31l12 13M38 18l12 13-12 13M34 12l-8 38"/>',
         copy: ['Built custom in Webflow on Client-First, with the D3 case map as the hero.', 'Everything works in English and Spanish, and the firm updates content without a developer.'] }
     ] };
+  // AB Identity: the sketch + Illustrator scenes are fully coded (geometry from AB.MARK), they only need to exist
+  MOCKS['ab-identity'] = { accent: '#FF6A3D', sketch: true, vector: true };
   MOCKS['daniel-aguirre-law'].cms = {
     site: 'Daniel Aguirre Law', collection: 'Case Results', url: 'danielaguirre.law',
     eyebrow: 'PROVEN NATIONWIDE', title: 'Immigration cases won, family by family.',

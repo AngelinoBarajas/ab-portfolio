@@ -2,6 +2,8 @@
      MISSION CONTROL SCENES
      figma : a coded Figma file that goes wireframe → design → review → build → live
      phone : a coded phone running the mobile layout, with the decisions behind it
+     sketch: AB Identity, pen + paper iterations (v01 → v25), rejects crossed out, the winner circled
+     vector: AB Identity, the mark traced in a coded Illustrator (pen tool, Pathfinder, token colors, export)
      Both are drawn on a fixed stage (1200×750, or 640×800 on phones) and scaled to fit.
      ========================================================= */
   var SCENE = (function(){
@@ -34,7 +36,7 @@
       sc.stg.style.width = sc.SW + 'px'; sc.stg.style.height = sc.SH + 'px';
       sc.stg.style.setProperty('--acc', sc.M.mock.accent || '#FF6A3D');
       w.appendChild(sc.stg); v.appendChild(w);
-      ({ figma: buildFigma, phone: buildPhone, flow: buildFlow, exploded: buildExplode, cms: buildCms })[sc.kind](sc);
+      ({ figma: buildFigma, phone: buildPhone, flow: buildFlow, exploded: buildExplode, cms: buildCms, sketch: buildSketch, vector: buildVector })[sc.kind](sc);
       fit(sc);
     }
     function fit(sc){
@@ -488,6 +490,175 @@
       tl.set({}, {}, t + 5.5);
       sc.tl = tl; sc.restAt = t + 2.5; tl.progress(0).pause();
       controls(sc, [{ t: 'New item', at: 'add' }, { t: 'Fill', at: 'fill' }, { t: 'Publish', at: 'publish' }, { t: 'Live', at: 'live' }]);
+    }
+
+    /* ---------------- SKETCHES (AB Identity · pen + paper iterations) ---------------- */
+    var PENCIL = '<svg viewBox="0 0 40 40"><path d="M6 34l4-12L28 4l8 8-18 18z" fill="#f2c14e" stroke="#2b2b2b" stroke-width="1.5" stroke-linejoin="round"/><path d="M6 34l4-12 8 8z" fill="#ead7b5" stroke="#2b2b2b" stroke-width="1.5" stroke-linejoin="round"/><path d="M6 34l2-6 4 4z" fill="#2b2b2b"/><path d="M24 8l8 8" stroke="#2b2b2b" stroke-width="1.5"/></svg>';
+    var SK_A = 'M28 122L58 28L88 122M40 88H76', SK_B = 'M108 28V122M108 28H138C168 28 168 72 138 74H108M138 74C176 76 176 122 138 122H108';
+    var SKETCHES = [
+      { v: 'v01', note: 'too plain', no: true, d: [SK_A, SK_B] },
+      { v: 'v04', note: 'orbit = cliché?', no: true, d: [SK_A, SK_B, 'M14 104C30 50 172 18 188 44C200 66 140 112 36 116C18 117 12 110 14 104'] },
+      { v: 'v09', note: 'planet floats, disconnected', no: true, d: ['M20 110L38 50L56 110M28 88H48', 'M100 42C120 42 132 58 132 76S118 108 100 108 68 94 68 76 80 42 100 42', 'M58 92C80 70 150 48 146 60S104 96 62 98', 'M150 50V110M150 50H166C184 50 184 78 166 80H150M166 80C188 82 188 110 166 110H150'] },
+      { v: 'v13', note: 'planet as the A. closer!', d: ['M40 126L84 24L128 126', 'M84 52C100 52 110 64 110 78S100 104 84 104 58 92 58 78 68 52 84 52', 'M34 100C60 84 150 56 154 66S116 96 48 104', 'M140 60V126M140 60H156C172 60 172 90 156 92H140M156 92C176 94 176 126 156 126H140'] },
+      { v: 'v19', note: 'ring through both letters', d: ['M22 124L56 28L90 124', 'M108 28V124M108 28H138C166 28 166 72 138 74H108M138 74C174 76 174 124 138 124H108', 'M96 50C110 50 122 62 122 76S110 102 96 102 70 90 70 76 82 50 96 50', 'M40 108C70 88 170 50 176 60S130 96 50 112'] },
+      { v: 'v25', note: 'this one ✓', win: true, mark: true }
+    ];
+    function buildSketch(sc){
+      var P = sc.portrait, st = sc.stg, M = AB.MARK, fid = 'skr-' + sc.id;
+      var cols = P ? 2 : 3, cw = P ? 270 : 320, ch = P ? 202 : 240, gx = P ? 20 : 34, gy = P ? 64 : 58, x0 = P ? 40 : 72, y0 = P ? 118 : 128, k = cw / 200;
+      var cells = SKETCHES.map(function(s, i){ return { s: s, x: x0 + (i % cols) * (cw + gx), y: y0 + Math.floor(i / cols) * (ch + gy) }; });
+      st.innerHTML = '<div class="sk-paper"></div><svg class="sk-defs" width="0" height="0" aria-hidden="true"><filter id="' + fid + '"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter></svg>' +
+        '<div class="sk-title">AB mark · explorations</div><div class="sk-count">iterations: <b>1</b></div>' +
+        cells.map(function(c, i){
+          var s = c.s, inner = s.mark ? '<g transform="translate(10 30) scale(.367)"><path class="sk-l" d="' + M.a + '"/><path class="sk-l" d="' + M.planet + '"/><path class="sk-l" d="' + M.b + '"/></g>' :
+            s.d.map(function(d){ return '<path class="sk-l" d="' + d + '"/>'; }).join('');
+          return '<div class="sk-cell" data-i="' + i + '" style="left:' + c.x + 'px;top:' + c.y + 'px;width:' + cw + 'px;height:' + ch + 'px">' +
+            '<svg viewBox="0 0 200 150" preserveAspectRatio="xMidYMid meet"><g filter="url(#' + fid + ')">' + inner +
+            (s.no ? '<path class="sk-x" d="M16 16L184 134M184 16L16 134"/>' : '') + '</g></svg>' +
+            '<span class="sk-v">' + s.v + '</span><span class="sk-note">' + esc(s.note) + '</span></div>';
+        }).join('') +
+        '<svg class="sk-hi" viewBox="0 0 ' + sc.SW + ' ' + sc.SH + '" aria-hidden="true"><path class="sk-ring" filter="url(#' + fid + ')" d=""/></svg>' +
+        '<div class="sk-pen">' + PENCIL + '</div><div class="fg-fade"></div>';
+      var pen = q(st, '.sk-pen'), fade = q(st, '.fg-fade'), cnt = q(st, '.sk-count b'), ring = q(st, '.sk-ring'), cellEls = qa(st, '.sk-cell');
+      // the orange circle around the winner, drawn around its cell
+      var wc = cells[cells.length - 1], rx = cw * .56, ry = ch * .52, cx = wc.x + cw / 2, cy = wc.y + ch / 2;
+      ring.setAttribute('d', 'M' + (cx - rx) + ' ' + (cy + 6) + 'C' + (cx - rx) + ' ' + (cy - ry) + ' ' + (cx + rx) + ' ' + (cy - ry - 8) + ' ' + (cx + rx) + ' ' + cy + 'S' + (cx - rx * .4) + ' ' + (cy + ry + 10) + ' ' + (cx - rx - 6) + ' ' + (cy - 4));
+      var lines = [];
+      cellEls.forEach(function(el, i){
+        var c = cells[i], sk = c.s;
+        qa(el, '.sk-l').forEach(function(p){
+          var L = p.getTotalLength ? p.getTotalLength() : 300; p.style.strokeDasharray = L; p.style.strokeDashoffset = L;
+          var sx = sk.mark ? .367 * k : k, ox = c.x + (sk.mark ? 10 * k : 0) + (cw - 200 * k) / 2, oy = c.y + (sk.mark ? 30 * k : 0) + (ch - 150 * k) / 2;
+          lines.push({ p: p, L: L, cell: i, map: function(pt){ return { x: ox + pt.x * sx, y: oy + pt.y * sx }; } });
+        });
+      });
+      var xs = qa(st, '.sk-x'); xs.forEach(function(p){ var L = p.getTotalLength ? p.getTotalLength() : 420; p.style.strokeDasharray = L; p.style.strokeDashoffset = L; p.dataset.len = L; });
+      var RL = ring.getTotalLength ? ring.getTotalLength() : 1200; ring.style.strokeDasharray = RL; ring.style.strokeDashoffset = RL;
+      var tl = gsap.timeline({ paused: true, repeat: -1 }), calls = [];
+      function at(t, fn){ tl.call(fn, null, t); calls.push({ t: t, fn: fn }); }
+      function setN(n){ cnt.textContent = n; }
+      sc.onSeek = function(){ var now = tl.time(); setN(1); calls.forEach(function(c){ if (c.t <= now + .001) c.fn(); }); };
+      tl.addLabel('sketch', 0); at(.01, function(){ setN(1); });
+      tl.set(lines.map(function(l){ return l.p; }), { strokeDashoffset: function(i){ return lines[i].L; } }, 0).set(xs, { strokeDashoffset: function(i, el){ return el.dataset.len; } }, 0)
+        .set(ring, { strokeDashoffset: RL }, 0).set(qa(st, '.sk-note,.sk-v'), { autoAlpha: 0 }, 0).set(fade, { autoAlpha: 0 }, 0).set(pen, { autoAlpha: 1, x: sc.SW * .5, y: sc.SH + 40 }, 0);
+      var t = .3, NUM = [1, 4, 9, 13, 19, 25];
+      cellEls.forEach(function(el, i){
+        if (i === 3) tl.addLabel('iterate', t);
+        lines.filter(function(l){ return l.cell === i; }).forEach(function(l){
+          var d = Math.max(.35, Math.min(1.1, l.L / 320)), o = { v: 0 };
+          var p0 = l.map(l.p.getPointAtLength ? l.p.getPointAtLength(0) : { x: 0, y: 0 });
+          tl.to(pen, { x: p0.x - 6, y: p0.y - 34, duration: .25, ease: 'power2.inOut' }, t);
+          tl.to(l.p, { strokeDashoffset: 0, duration: d, ease: 'none' }, t + .25);
+          tl.fromTo(o, { v: 0 }, { v: 1, duration: d, ease: 'none', immediateRender: false, onUpdate: function(){ if (!l.p.getPointAtLength) return; var pt = l.map(l.p.getPointAtLength(o.v * l.L)); gsap.set(pen, { x: pt.x - 6, y: pt.y - 34 }); } }, t + .25);
+          t += d + .3;
+        });
+        (function(n){ at(t, function(){ setN(n); }); })(NUM[i]);
+        tl.to(qa(el, '.sk-v,.sk-note'), { autoAlpha: 1, duration: .3 }, t);
+        t += .25;
+      });
+      // pick: cross out the rejects, circle the winner
+      tl.addLabel('pick', t);
+      tl.to(pen, { autoAlpha: 0, duration: .3 }, t);
+      tl.to(xs, { strokeDashoffset: 0, duration: .45, stagger: .25, ease: 'power2.in' }, t + .2);
+      tl.to(ring, { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut' }, t + 1.2);
+      at(t + 2.3, function(){ cellEls[cellEls.length - 1].classList.add('is-win'); });
+      tl.to(fade, { autoAlpha: 1, duration: .45 }, t + 5.2);
+      tl.set({}, {}, t + 5.7);
+      sc.tl = tl; sc.restAt = t + 3; tl.progress(0).pause();
+      controls(sc, [{ t: 'Sketch', at: 'sketch' }, { t: 'Iterate', at: 'iterate' }, { t: 'Pick', at: 'pick' }]);
+    }
+
+    /* ---------------- ILLUSTRATOR (AB Identity · trace, pathfinder, color, export) ---------------- */
+    var PEN_NIB = '<svg viewBox="0 0 24 24"><path d="M3 21l3-9 9-9 6 6-9 9z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round"/><circle cx="9.5" cy="14.5" r="1.6" fill="#111"/><path d="M3 21l5.5-5.5" stroke="#111" stroke-width="1.2"/></svg>';
+    var AI_TOOLS = ['<path d="M5 3l12 7-5 1.5L9 17z"/>', '<path d="M5 3l12 7-5 1.5L9 17z" fill="none"/>', '<path d="M4 20l3-9 9-9 5 5-9 9z"/>', '<path d="M4 16c4-10 12-10 16 0"/>', '<path d="M5 5h14M12 5v14"/>', '<rect x="4" y="5" width="16" height="14"/>', '<ellipse cx="12" cy="12" rx="8" ry="6"/>', '<path d="M4 18L20 6M9 6h11v11"/>', '<circle cx="9" cy="10" r="5"/><circle cx="15" cy="14" r="5"/>'];
+    function buildVector(sc){
+      var P = sc.portrait, st = sc.stg, M = AB.MARK, SW = sc.SW, SH = sc.SH, fid = 'aiR-' + sc.id;
+      var panelW = P ? 0 : 250, cvX = 44, cvW = SW - cvX - panelW, top = 62 + 26;
+      var artW = P ? 540 : 700, artH = P ? 330 : 430, artX = cvX + (cvW - artW) / 2, artY = P ? 250 : top + 70;
+      var s = (artW * (P ? .88 : .8)) / 490.16, mx = artX + (artW - 490.16 * s) / 2, my = artY + (artH - 241.75 * s) / 2;
+      var names = ['A stroke', 'Planet + ring', 'B'], keys = ['a', 'planet', 'b'];
+      st.innerHTML = '<div class="ai-bar"><b>Ai</b><span>File</span><span>Edit</span><span>Object</span><span>Type</span><span>Select</span><span>Effect</span><span>View</span><span>Window</span></div>' +
+        '<div class="ai-ctl"><span class="ai-ctl-k">Path</span><span>Stroke <i>1 pt</i></span><span>Opacity <i>100%</i></span><span class="ai-mode">Pen tool</span></div>' +
+        '<div class="ai-tools">' + AI_TOOLS.map(function(p, i){ return '<i class="ai-t' + (i === 2 ? ' pen' : i === 0 ? ' sel' : '') + '"><svg viewBox="0 0 24 24">' + p + '</svg></i>'; }).join('') + '<i class="ai-fs"><b class="f"></b><b class="s"></b></i></div>' +
+        '<div class="ai-canvas" style="left:' + cvX + 'px;top:' + top + 'px;width:' + cvW + 'px"><div class="ai-doc">ab-logo.ai @ 100% (RGB/Preview)</div></div>' +
+        '<div class="ai-art" style="left:' + artX + 'px;top:' + artY + 'px;width:' + artW + 'px;height:' + artH + 'px"><span>ab-logo</span></div>' +
+        (P ? '' : '<div class="ai-panels"><div class="ai-p"><div class="ai-ph">Layers</div>' + names.slice().reverse().map(function(n){ return '<div class="ai-l"><i></i><b></b>' + n + '</div>'; }).join('') + '<div class="ai-l is-tpl"><i></i><b></b>Sketch v25 (template)</div></div>' +
+          '<div class="ai-p"><div class="ai-ph">Pathfinder</div><div class="ai-pf"><i></i><i class="minus"></i><i></i><i></i></div></div>' +
+          '<div class="ai-p"><div class="ai-ph">Swatches · tokens</div><div class="ai-sw"><i style="background:#07080D"></i><i style="background:#0E1020"></i><i style="background:#161A2E"></i><i class="star" style="background:#F2F0EA"></i><i style="background:#FF6A3D"></i><i style="background:#4C8DFF"></i></div></div></div>') +
+        '<svg class="ai-svg" viewBox="0 0 ' + SW + ' ' + SH + '" aria-hidden="true"><defs><filter id="' + fid + '"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="4"/></filter></defs>' +
+        '<g transform="translate(' + mx + ' ' + my + ') scale(' + s + ')"><g class="ai-tpl" filter="url(#' + fid + ')">' + keys.map(function(k){ return '<path d="' + M[k] + '"/>'; }).join('') + '</g>' +
+        '<g class="ai-mark">' + keys.map(function(k){ return '<path class="ai-p-' + k + '" d="' + M[k] + '"/>'; }).join('') + '</g></g>' +
+        '<g class="ai-anch"></g><rect class="ai-bbox" x="' + (mx - 6) + '" y="' + (my - 6) + '" width="' + (490.16 * s + 12) + '" height="' + (241.75 * s + 12) + '"/></svg>' +
+        '<div class="ai-dlg"><div class="ai-dlg-h">Export for Screens</div><div class="ai-dlg-r"><span>ab-logo.svg</span><em>SVG · 5.4 KB</em></div><div class="ai-dlg-r"><span>favicon-32.png</span><em>PNG · 32 px</em></div><div class="ai-dlg-b"><b>Export Artboard</b></div></div>' +
+        '<div class="ai-toast">Exported ✓</div>' +
+        '<div class="ai-pen">' + PEN_NIB + '</div><div class="cur a">' + CURSOR + '</div><div class="fg-fade"></div>';
+      var svg = q(st, '.ai-svg'), anch = q(st, '.ai-anch'), paths = qa(st, '.ai-mark path'), tpl = q(st, '.ai-tpl'), bbox = q(st, '.ai-bbox'), art = q(st, '.ai-art');
+      var pen = q(st, '.ai-pen'), curA = q(st, '.cur.a'), fade = q(st, '.fg-fade'), dlg = q(st, '.ai-dlg'), toast = q(st, '.ai-toast'), mode = q(st, '.ai-mode');
+      var layers = qa(st, '.ai-l'), minus = q(st, '.ai-pf .minus'), star = q(st, '.ai-sw .star'), dlgBtn = q(st, '.ai-dlg-b b');
+      function toStage(pt){ return { x: mx + pt.x * s, y: my + pt.y * s }; }
+      // anchor points + a few bezier handles along each path
+      var PATHS = paths.map(function(p, i){
+        var L = p.getTotalLength ? p.getTotalLength() : 800, n = i === 1 ? 16 : 10, pts = [];
+        for (var j = 0; j <= n; j++){ var a = p.getPointAtLength ? p.getPointAtLength(L * j / n) : { x: 0, y: 0 }; pts.push(toStage(a)); }
+        var g = document.createElementNS('http://www.w3.org/2000/svg', 'g'); g.setAttribute('class', 'ai-an'); anch.appendChild(g);
+        g.innerHTML = pts.map(function(pt, j){
+          var h = '';
+          if (i === 1 && j % 4 === 2 && pts[j + 1]){ var dx = pts[j + 1].x - pts[j - 1].x, dy = pts[j + 1].y - pts[j - 1].y, dl = Math.sqrt(dx * dx + dy * dy) || 1, ux = dx / dl * 22, uy = dy / dl * 22;
+            h = '<g class="ai-h"><path d="M' + (pt.x - ux) + ' ' + (pt.y - uy) + 'L' + (pt.x + ux) + ' ' + (pt.y + uy) + '"/><circle cx="' + (pt.x - ux) + '" cy="' + (pt.y - uy) + '" r="2.6"/><circle cx="' + (pt.x + ux) + '" cy="' + (pt.y + uy) + '" r="2.6"/></g>'; }
+          return '<g class="ai-a" data-j="' + j + '">' + h + '<rect x="' + (pt.x - 3.5) + '" y="' + (pt.y - 3.5) + '" width="7" height="7"/></g>';
+        }).join('');
+        p.style.strokeDasharray = L; p.style.strokeDashoffset = L;
+        return { p: p, L: L, pts: pts, dots: qa(g, '.ai-a') };
+      });
+      function center(el){ var r = 0, t = 0, n = el; while (n && n !== st){ r += n.offsetLeft; t += n.offsetTop; n = n.offsetParent; } return { x: r + el.offsetWidth * .5, y: t + el.offsetHeight * .55 }; }
+      var tl = gsap.timeline({ paused: true, repeat: -1 }), calls = [];
+      function at(t, fn){ tl.call(fn, null, t); calls.push({ t: t, fn: fn }); }
+      function reset(){ st.classList.remove('is-filled', 'is-color', 'is-sel'); if (minus) minus.classList.remove('hit'); if (star) star.classList.remove('hit'); if (dlgBtn) dlgBtn.classList.remove('hit'); layers.forEach(function(l){ l.classList.remove('on'); }); if (mode) mode.textContent = 'Pen tool'; }
+      sc.onSeek = function(){ var now = tl.time(); reset(); calls.forEach(function(c){ if (c.t <= now + .001) c.fn(); }); };
+      tl.addLabel('trace', 0); at(.01, reset);
+      tl.set(paths, { strokeDashoffset: function(i){ return PATHS[i].L; }, fillOpacity: 0, strokeOpacity: 1 }, 0).set(qa(anch, '.ai-a'), { autoAlpha: 0 }, 0).set(anch, { autoAlpha: 1 }, 0)
+        .set(tpl, { autoAlpha: 0 }, 0).set(bbox, { autoAlpha: 0 }, 0).set([dlg, toast], { autoAlpha: 0 }, 0).set(fade, { autoAlpha: 0 }, 0)
+        .set(pen, { autoAlpha: 0 }, 0).set(curA, { autoAlpha: 1, x: SW * .5, y: SH * .9 }, 0);
+      tl.to(tpl, { autoAlpha: .45, duration: .6 }, .2);
+      if (layers.length) at(.3, function(){ layers[layers.length - 1].classList.add('on'); });
+      tl.to(curA, { autoAlpha: 0, duration: .2 }, .6).to(pen, { autoAlpha: 1, duration: .2 }, .6);
+      var t = .8;
+      PATHS.forEach(function(o, i){
+        var d = i === 1 ? 2.6 : 1.5, prog = { v: 0 };
+        tl.to(o.p, { strokeDashoffset: 0, duration: d, ease: 'none' }, t);
+        tl.fromTo(prog, { v: 0 }, { v: 1, duration: d, ease: 'none', immediateRender: false, onUpdate: function(){ if (!o.p.getPointAtLength) return; var pt = toStage(o.p.getPointAtLength(prog.v * o.L)); gsap.set(pen, { x: pt.x - 3, y: pt.y - 21 }); } }, t);
+        tl.fromTo(o.dots, { autoAlpha: 0, scale: 0, transformOrigin: '50% 50%' }, { autoAlpha: 1, scale: 1, duration: .18, stagger: d / o.dots.length, ease: 'back.out(3)', immediateRender: false }, t);
+        (function(li){ if (layers[li]) at(t + d, function(){ layers[li].classList.add('on'); }); })(layers.length - 2 - i);
+        t += d + .25;
+      });
+      // pathfinder: select all, Minus Front → solid shapes with real cuts
+      tl.addLabel('pathfinder', t);
+      tl.to(pen, { autoAlpha: 0, duration: .2 }, t).to(curA, { autoAlpha: 1, duration: .2 }, t);
+      at(t + .1, function(){ st.classList.add('is-sel'); if (mode) mode.textContent = 'Selection · 3 paths'; });
+      tl.to(bbox, { autoAlpha: 1, duration: .25 }, t + .1);
+      if (minus){ var mp = center(minus); tl.to(curA, { x: mp.x, y: mp.y, duration: .7, ease: 'power2.inOut' }, t + .3); at(t + 1.05, function(){ minus.classList.add('hit'); }); }
+      tl.to(paths, { fillOpacity: 1, strokeOpacity: 0, duration: .6, stagger: .12 }, t + 1.15);
+      tl.to(anch, { autoAlpha: 0, duration: .4 }, t + 1.3);
+      tl.to(tpl, { autoAlpha: 0, duration: .4 }, t + 1.3);
+      at(t + 1.15, function(){ st.classList.add('is-filled'); });
+      t += 2.2;
+      // color: the site's tokens, artboard to Void, mark to Starlight
+      tl.addLabel('color', t);
+      if (star){ var sp = center(star); tl.to(curA, { x: sp.x, y: sp.y, duration: .7, ease: 'power2.inOut' }, t); }
+      at(t + .75, function(){ if (star) star.classList.add('hit'); st.classList.add('is-color'); if (mode) mode.textContent = 'Fill · Starlight #F2F0EA'; });
+      tl.to(bbox, { autoAlpha: 0, duration: .3 }, t + 1.6);
+      t += 2.2;
+      // export
+      tl.addLabel('export', t);
+      tl.fromTo(dlg, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: .35, ease: 'power3.out', immediateRender: false }, t);
+      if (dlgBtn){ var bp = center(dlgBtn); tl.to(curA, { x: bp.x, y: bp.y, duration: .7, ease: 'power2.inOut' }, t + .5); at(t + 1.25, function(){ dlgBtn.classList.add('hit'); }); }
+      tl.to(dlg, { autoAlpha: 0, duration: .3 }, t + 1.5);
+      tl.fromTo(toast, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .3, immediateRender: false }, t + 1.6);
+      tl.to(curA, { autoAlpha: 0, duration: .3 }, t + 2);
+      tl.to(fade, { autoAlpha: 1, duration: .45 }, t + 4.4);
+      tl.set({}, {}, t + 4.9);
+      sc.tl = tl; sc.restAt = t - .5; tl.progress(0).pause();
+      controls(sc, [{ t: 'Trace', at: 'trace' }, { t: 'Pathfinder', at: 'pathfinder' }, { t: 'Color', at: 'color' }, { t: 'Export', at: 'export' }]);
     }
 
     return { mount: mount, activate: activate };

@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.4.2 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.4.3 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -624,8 +624,9 @@ window.Webflow.push(function(){
       if (reduce) return;
       // target read on enter: page bundles may update data-count after this runs (Work sets it from the CMS list)
       ScrollTrigger.create({ trigger: el, start: 'top 90%', once: true, onEnter: function(){
-        var target = +el.getAttribute('data-count');
-        gsap.fromTo(o, { v: 0 }, { v: target, duration: 1.6, ease: 'power3.out', onUpdate: function(){ el.textContent = Math.round(o.v); } });
+        var raw = el.getAttribute('data-count'); if (raw == null || raw === '' || isNaN(+raw)) return;
+        var target = +raw, suf = el.getAttribute('data-suffix') || '';
+        gsap.fromTo(o, { v: 0 }, { v: target, duration: 1.6, ease: 'power3.out', onUpdate: function(){ el.textContent = Math.round(o.v) + suf; } });
       } });
     });
 
