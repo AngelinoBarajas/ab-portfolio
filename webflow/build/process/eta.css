@@ -1,0 +1,20 @@
+.section_process-eta{position:relative}
+.ab_eta_grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr);align-items:start;gap:clamp(24px,4vw,64px)}
+.ab_eta_factors{display:flex;flex-direction:column;border-top:1px solid var(--hair)}
+.ab_eta_factor{display:grid;grid-template-columns:minmax(0,0.8fr) minmax(0,1.6fr);align-items:center;gap:12px 20px;padding-top:14px;padding-bottom:14px;border-bottom:1px solid var(--hair)}
+.ab_eta_factor-name{font-family:var(--mono);font-size:11.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dust)}
+.ab_eta_factor-q{margin-top:2px;font-family:var(--body);font-size:16px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--star)}
+.ab_eta_seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--hair2)}
+.ab_eta_opt{display:block;padding:10px 8px;border-right:1px solid var(--hair2);font-family:var(--mono);font-size:11px;line-height:1.25;letter-spacing:0.04em;text-align:center;color:var(--dust);cursor:pointer}
+.ab_eta_gauge{position:sticky;top:110px;padding:clamp(18px,2.4vw,28px);border:1px solid var(--hair);background-color:var(--glass)}
+.ab_eta_dial{position:relative;width:100%;aspect-ratio:300 / 170}
+.ab_eta_out{margin-top:10px;text-align:center}
+.ab_eta_title{font-family:var(--display);font-weight:900;font-size:clamp(26px,2.6vw,38px);line-height:1;text-transform:uppercase}
+.ab_eta_text{max-width:38ch;margin-top:10px;margin-left:auto;margin-right:auto;font-size:15px;color:var(--soft)}
+.ab_eta_adds{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;min-height:26px;margin-top:14px}
+.ab_eta_note{margin-top:14px;font-family:var(--mono);font-size:11px;letter-spacing:0.06em;text-align:center;color:var(--dust)}
+.ab_eta_bucket{position:relative}
+.ab_eta_bucket-t{position:relative}
+.ab_eta_bucket-p{position:relative}
+@media screen and (max-width: 991px){.ab_eta_grid{grid-template-columns:minmax(0,1fr)}.ab_eta_gauge{position:relative;top:auto}}
+@media screen and (max-width: 479px){.ab_eta_factor{grid-template-columns:minmax(0,1fr)}}

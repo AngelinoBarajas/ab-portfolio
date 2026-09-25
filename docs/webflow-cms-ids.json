@@ -145,7 +145,16 @@
    "stage-4-desc": "b8064e9f5ee982f99571a571303c5e7e",
    "code-label": "172f80cbc87db4455cd3304388ce20f9",
    "code": "421889acf77bf28bda7d44427eaee555",
-   "sort": "05b705c4f436a624818dc3451a6ea0eb"
+   "sort": "05b705c4f436a624818dc3451a6ea0eb",
+   "short-name": "e47e20b8a40a1d7c65635a13cef20efe",
+   "process-leg-1": "b805b126d63ac4b59b8d2e39a44d85d0",
+   "process-leg-2": "7fea0205add2c3b1d05295522ad35e66",
+   "process-leg-3": "2775bc030a171223d0658b3d05d8c346",
+   "process-leg-4": "4fca3354006c3ff938c966a5c018c351",
+   "process-leg-5": "14418adfdd306d388c4b250bbd3eafd6",
+   "process-leg-6": "8d46f27b09e76349248d737df395bfa2",
+   "timeline-preset": "7c50e9547f0ced0b52b58153c69aec52",
+   "process-example": "ff86754e00e9fb23a24bf177a0634faa"
   },
   "mission-channels": {
    "mission": "2f3cac981e35a253daf08e439b27c912",
@@ -269,7 +278,8 @@
    "ab-identity": "6ab605962eeae1c3ec9950ae",
    "northwind-roasters": "6ab605962eeae1c3ec9950b0",
    "pulse-fitness": "6ab605962eeae1c3ec9950b2",
-   "halcyon-architects": "6ab605962eeae1c3ec9950b4"
+   "halcyon-architects": "6ab605962eeae1c3ec9950b4",
+   "knowledge-system": "6ab6ce448ea175d5fb39dc34"
   },
   "services": {
    "webflow-development": "6ab605e276fdd25d636a598b",
