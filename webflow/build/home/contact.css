@@ -1,0 +1,11 @@
+.section_contact{position:relative}
+.ab_contact_grid{position:relative;z-index:3;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);align-items:start;gap:clamp(32px,5vw,80px)}
+.ab_contact_copy{position:sticky;top:110px;min-width:0;container-type:inline-size}
+.ab_contact_title.heading-style-h2{position:relative;z-index:3;margin-top:22px;font-size:clamp(40px,12.5cqw,112px)}
+.ab_contact_lede{max-width:40ch;margin-top:26px;color:var(--soft)}
+.ab_contact_steps{display:grid;max-width:420px;margin:30px 0 0 0;padding:0;border-top:1px solid var(--hair);list-style-type:none}
+.ab_contact_step{display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--hair);color:var(--soft);font-size:13px;letter-spacing:0.04em}
+.ab_contact_step-num{color:var(--signal);font-weight:500}
+.ab_contact_row{position:relative;z-index:3;display:flex;flex-wrap:wrap;align-items:center;gap:18px;margin-top:28px}
+.ab_contact_form-slot{min-width:0}
+@media screen and (max-width: 991px){.ab_contact_grid{grid-template-columns:minmax(0,1fr)}.ab_contact_copy{position:static}}

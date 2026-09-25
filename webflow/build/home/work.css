@@ -1,0 +1,37 @@
+/* shared: every section */
+.ab_frame-label{position:absolute;top:22px;left:var(--gutter);z-index:3;font-family:var(--mono);font-size:11px;letter-spacing:0.04em;color:rgba(138,143,163,0.55);white-space:nowrap;pointer-events:none;transition:color 200ms ease}
+.ab_section-head{position:relative;z-index:3;display:flex;flex-direction:column;gap:18px;margin-bottom:clamp(32px,5vw,56px)}
+.ab_section-lede{max-width:58ch;color:var(--soft)}
+/* work */
+.section_work{position:relative}
+.ab_board_component{position:relative;z-index:3;height:clamp(480px,72vh,700px);border:1px solid var(--hair);overflow:hidden;background-color:var(--void);background-image:radial-gradient(circle,rgba(255,255,255,0.09) 1px,transparent 1.3px);background-size:24px 24px;user-select:none}
+.ab_board_top{position:absolute;left:0;right:0;top:0;z-index:8;height:40px;display:flex;align-items:center;justify-content:space-between;padding-left:14px;padding-right:14px;border-bottom:1px solid var(--hair);background-color:var(--deep);color:var(--dust)}
+.ab_board_file{color:var(--star)}
+.ab_board_layers{position:absolute;left:0;top:40px;bottom:0;z-index:8;width:210px;display:flex;flex-direction:column;gap:4px;padding:14px 10px;background-color:var(--deep);border-right:1px solid var(--hair)}
+.ab_board_layers-title{padding:4px 8px 10px;color:var(--dust);text-transform:uppercase;letter-spacing:0.1em;font-size:11px}
+.ab_board_viewport{position:absolute;left:210px;right:0;top:40px;bottom:0;cursor:grab;touch-action:pan-y}
+.ab_board_world{position:absolute;left:0;top:0;transform-origin:0% 0%}
+.ab_board_frame{position:absolute;display:block;text-decoration:none;cursor:pointer;touch-action:none}
+.ab_board_frame.is-slot{width:420px;height:230px}
+.ab_board_fname{position:absolute;left:0;top:-22px;font-family:var(--mono);font-size:11px;color:var(--dust)}
+.ab_board_frame-inner{position:absolute;inset:0;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:24px;transition:box-shadow 300ms ease}
+.ab_board_frame-inner.is-slot{justify-content:center;align-items:flex-start;gap:8px;border:1px dashed var(--hair2);background-color:rgba(14,16,32,0.6);color:var(--star)}
+.ab_board_slot-tag{color:var(--signal)}
+.ab_board_ftitle{position:relative;font-family:var(--display);font-weight:800;font-stretch:112%;font-size:26px;line-height:1.1;text-transform:uppercase}
+.ab_board_fsub{position:relative;margin-top:4px;font-size:13px;opacity:0.7}
+.ab_board_cursor{position:absolute;left:0;top:0;z-index:7;display:flex;align-items:flex-start;gap:2px;pointer-events:none}
+.ab_board_cursor.is-you{opacity:0;transition:opacity 200ms ease}
+.ab_board_cursor-name{margin-top:16px;padding:3px 7px;font-family:var(--mono);font-size:11px;white-space:nowrap;background-color:var(--signal);color:var(--on-signal)}
+.ab_board_cursor-name.is-you{background-color:var(--select);color:#fff}
+.ab_board_ui{position:absolute;right:14px;bottom:14px;z-index:8;display:flex;align-items:flex-end;gap:8px}
+.ab_board_minimap{position:relative;width:150px;height:90px;overflow:hidden;background-color:var(--deep);border:1px solid var(--hair)}
+.ab_board_mv{position:absolute;border:1px solid var(--signal)}
+.ab_board_zoom{display:flex;background-color:var(--deep);border:1px solid var(--hair)}
+.ab_board_zoom-btn{display:grid;place-items:center;min-width:34px;height:34px;padding:0;border:0;background-color:transparent;color:var(--star);font-family:var(--mono);font-size:13px;cursor:pointer}
+.ab_board_zoom-btn:hover{background-color:rgba(255,255,255,0.06)}
+.ab_board_zoom-btn.is-fit{padding-left:10px;padding-right:10px;font-size:12px;letter-spacing:0.06em}
+.ab_board_zoom-pct{display:grid;place-items:center;min-width:52px;border-left:1px solid var(--hair);border-right:1px solid var(--hair);font-family:var(--mono);font-size:12px}
+.ab_board_help{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-top:14px;color:var(--dust)}
+.ab_work-all{position:relative;z-index:3;display:flex;align-items:center;flex-wrap:wrap;gap:16px;margin-top:28px}
+.ab_work-all-note{color:var(--dust)}
+@media screen and (max-width: 767px){.ab_board_layers{display:none}.ab_board_viewport{left:0}.ab_board_minimap{display:none}}

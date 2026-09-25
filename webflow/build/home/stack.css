@@ -1,0 +1,14 @@
+.section_stack{position:relative}
+.ab_stack_grid{position:relative;z-index:3;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:center;gap:clamp(24px,5vw,80px)}
+.ab_stack_readout{display:flex;align-items:center;gap:14px;width:min(420px,100%);min-height:92px;margin-top:10px;padding:14px 16px;border:1px solid var(--hair);background-color:rgba(14,16,32,0.7);transition:border-color 300ms ease}
+.ab_stack_ci{display:grid;place-items:center;flex:none;width:40px;height:40px;background-color:var(--hair2);color:var(--void)}
+.ab_stack_readout-body{flex:1;min-width:0}
+.ab_stack_readout-title{font-family:var(--display);font-weight:800;font-stretch:112%;font-size:18px;line-height:1.1;text-transform:uppercase}
+.ab_stack_readout-text{min-height:2.9em;margin-top:4px;line-height:1.45;letter-spacing:0.02em;color:var(--soft)}
+.ab_stack_orbit{position:relative;width:min(620px,100%);aspect-ratio:1;margin-left:auto;margin-right:auto}
+.ab_stack_ring{position:absolute;left:50%;top:50%;border:1px dashed var(--hair2);border-radius:50%;transform:translate(-50%,-50%)}
+.ab_stack_ring.is-inner{width:60%;height:54%}
+.ab_stack_ring.is-outer{width:92%;height:83%}
+.ab_planet.is-orbit{left:36%;top:36%;width:28%}
+.ab_stack_chip{position:absolute;left:50%;top:50%;z-index:4;display:flex;align-items:center;gap:9px;padding:6px 12px 6px 6px;border:1px solid var(--hair2);border-radius:0;background-color:var(--panel);color:var(--star);font-family:var(--mono);font-size:12px;letter-spacing:0.04em;white-space:nowrap;cursor:grab;touch-action:none;transition:border-color 250ms ease,box-shadow 250ms ease}
+@media screen and (max-width: 991px){.ab_stack_grid{grid-template-columns:minmax(0,1fr)}}

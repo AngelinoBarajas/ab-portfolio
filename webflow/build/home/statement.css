@@ -1,0 +1,11 @@
+.section_statement{position:relative}
+.ab_planet.is-statement{width:clamp(150px,24vw,360px);right:calc(clamp(150px,24vw,360px) * 0.7);top:8%}
+.ab_statement_heading{position:relative;z-index:3;max-width:17ch;margin-top:22px;letter-spacing:-0.02em;text-transform:uppercase}
+.ab_statement_accent{font-style:normal;color:var(--signal)}
+.ab_metrics{position:relative;z-index:3;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);margin-top:clamp(40px,6vw,80px);border-top:1px solid var(--hair)}
+.ab_metric{padding:28px 24px 8px 24px;border-right:1px solid var(--hair)}
+.ab_metric:first-child{padding-left:0}
+.ab_metric:last-child{border-right-style:none}
+.ab_metric_number{font-family:var(--display);font-weight:900;font-stretch:118%;font-size:clamp(48px,7vw,104px);line-height:1}
+.ab_metric_label{max-width:26ch;margin-top:10px;color:var(--soft)}
+@media screen and (max-width: 767px){.ab_metrics{grid-template-columns:minmax(0,1fr)}.ab_metric{padding-left:0;border-right-style:none;border-bottom:1px solid var(--hair)}}

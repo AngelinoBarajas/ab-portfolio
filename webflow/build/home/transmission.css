@@ -1,0 +1,8 @@
+.section_transmission{position:relative}
+.ab_transmission_inner{padding-top:clamp(90px,12vw,170px);padding-bottom:clamp(90px,12vw,170px)}
+.ab_transmission_top{position:relative;z-index:3;display:flex;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid var(--hair);color:var(--dust);text-transform:uppercase;letter-spacing:0.12em}
+.ab_transmission_live{display:flex;align-items:center;gap:8px;color:var(--signal)}
+.ab_transmission_quote{position:relative;z-index:3;margin:clamp(28px,4vw,48px) 0 32px 0;padding:0;border-left-style:none;font-size:inherit;line-height:inherit}
+.ab_transmission_text{max-width:20ch;font-family:var(--display);font-weight:800;font-stretch:108%;font-size:clamp(32px,5.2vw,78px);line-height:1.02;letter-spacing:-0.02em;text-transform:uppercase}
+.ab_transmission_by{display:flex;align-items:center;gap:10px;margin-top:22px;color:var(--dust);letter-spacing:0.08em;text-transform:uppercase}
+.ab_transmission_action{position:relative;z-index:3}

@@ -1,0 +1,6 @@
+.section_faq{position:relative}
+.ab_faq_list{position:relative;z-index:3;display:flex;flex-direction:column;max-width:980px;border-top:1px solid var(--hair)}
+.ab_faq_item{border-bottom:1px solid var(--hair)}
+.ab_faq_summary{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px 0;list-style-type:none;cursor:pointer;font-size:clamp(18px,1.8vw,22px);font-weight:500}
+.ab_faq_icon{display:grid;place-items:center;flex:none;width:34px;height:34px;border:1px solid var(--hair2);font-family:var(--mono);transition:transform 300ms ease,background-color 300ms ease,color 300ms ease,border-color 300ms ease}
+.ab_faq_answer{max-width:70ch;padding:0 60px 26px 0;overflow:hidden;color:var(--soft)}

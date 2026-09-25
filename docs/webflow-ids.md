@@ -70,3 +70,38 @@ Reference for MCP writes. Site: **AB Portfolio** `6ab5fe4a5ee75f9c981dc0be` (ab-
 |---|---|
 | Nav | `2a7d17af-8058-c7e5-40b8-743eb5d45bac` |
 | Footer | `b6135eba-84f0-865b-6ee0-af875233bbb3` |
+| Frame label | `5d641863-5988-1bae-9f2b-70af591564ae` |
+| Bento card | `d012e1f2-818c-a09d-53d6-c1f113664fc0` (variant Dark `4c88462f-0129-7616-8398-32bb00e59270`; variant prop `c4d5e890-4ce7-df82-846e-28cd16cd9f17`) |
+| FAQ item | `fb86f6fa-74e4-ed04-8f8c-2753ef458549` |
+
+### Component props
+
+| Component | Prop | ID |
+|---|---|---|
+| Bento card | Label | `e70e0caa-e00b-2b43-dc20-836ea53d6965` |
+| Bento card | Title | `b5cdd295-9e62-fff9-bd65-824e6930ba90` |
+| Bento card | Text | `fdbc6d5a-3ac6-9536-e730-7bbdcd2ab21b` |
+| Bento card | Tools | `8a3632a3-ca20-bf02-f033-c08e927867e5` |
+| Bento card | Show tools | `17f8970c-4a4a-cfa8-a1a1-bc5217c38213` |
+| Bento card | Link | `9c20d5ed-7961-e291-5dd9-9895f107bba2` |
+| Bento card | Link label | `02a498c5-dc29-4771-2c6e-204e07c8168a` |
+| Bento card | Visual | `41995aaa-3dc2-0538-3eb1-f78aedca8764` |
+| Bento card | Card name | `25d259b6-52c6-a50b-43cc-d67f220ee860` |
+| FAQ item | Question | `87cc7e28-1e63-48fb-c1d9-954d74b63487` |
+| FAQ item | Answer | `68d0e90f-8f5b-ea2c-6568-1eb5dab1ae92` |
+
+## Pages
+
+| Page | ID |
+|---|---|
+| Home | `6ab5fe4b5ee75f9c981dc0cb` |
+| Missions Template (`/work/[slug]`) | `6ab602e48e2fa6779570a308` |
+| Services Template (`/services/[slug]`) | `6ab602e4e41add8af5e28b6c` |
+
+## CMS option IDs used in filters
+
+| Field | Option | ID |
+|---|---|---|
+| FAQ › Scope | Homepage | `2d6793f4fd72ee14f7d19e8a443ebdbf` |
+| FAQ › Scope | Service | `883e6dee242615ea16e7f8d381a9473a` |
+| Tools › Icon | code | `232f8a1db7303dab4c8a7d49c75d852d` |
