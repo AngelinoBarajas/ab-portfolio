@@ -99,8 +99,6 @@
 .ab_crew_orbit.is-b{animation-duration:12s}
 .ab_crew_moon{animation:ab-about-orb 3s linear infinite}
 .ab_crew_body.is-kid{box-shadow:0 0 10px #4cf2a0}
-.ab_bento-card:hover .ab_crew_orbit{animation-duration:3.2s}
-.ab_bento-card:hover .ab_crew_orbit.is-b{animation-duration:5.4s}
 @keyframes ab-about-orb{to{transform:rotate(360deg)}}
 .ab_crew_dot{display:inline-block}
 .ab_bento-card_viz.is-ph{background:var(--void)}

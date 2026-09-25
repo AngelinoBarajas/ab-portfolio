@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.6.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.6.1 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -290,6 +290,19 @@ window.Webflow.push(function(){
     }
     if (reduce){ elH.textContent = '01:00:00'; elE.textContent = '7y 000d 00h'; return; }
     new IntersectionObserver(function(es){ var was = vis; vis = es[0].isIntersecting; if (vis && !was) requestAnimationFrame(tick); }).observe(td);
+  })();
+
+  /* ---------- crew of three: hover speeds the orbits up smoothly (playbackRate, so nobody jumps to a new spot;
+     changing animation-duration on hover re-computes the progress and the planets snap) ---------- */
+  (function(){
+    var sys = $('.ab_crew_sys'); if (!sys || reduce) return;
+    var card = sys.closest('.ab_bento-card'), els = $$('.ab_crew_orbit, .ab_crew_moon', sys);
+    if (!card || !els.length || !els[0].getAnimations) return;
+    var sp = { r: 1 };
+    function apply(){ els.forEach(function(el){ el.getAnimations().forEach(function(a){ a.playbackRate = sp.r; }); }); }
+    function to(r){ if (hasGsap) gsap.to(sp, { r: r, duration: .8, ease: 'power2.out', overwrite: true, onUpdate: apply }); else { sp.r = r; apply(); } }
+    card.addEventListener('pointerenter', function(){ to(2.2); });
+    card.addEventListener('pointerleave', function(){ to(1); });
   })();
 
   /* ---------- space facts (Designer list [data-about-facts]) + drag-to-spin planet ---------- */
