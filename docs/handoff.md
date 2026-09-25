@@ -7,13 +7,13 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 | Step | Status |
 |---|---|
 | 1. GitHub repo | ✅ Public: github.com/AngelinoBarajas/ab-portfolio (`main`) |
-| 2. Site | ✅ AB Portfolio `6ab5fe4a5ee75f9c981dc0be` (ab-portfolio-723a30.webflow.io). Home page `6ab5fe4b5ee75f9c981dc0cb`. **Never published.** |
+| 2. Site | ✅ AB Portfolio `6ab5fe4a5ee75f9c981dc0be` (ab-portfolio-723a30.webflow.io). Home page `6ab5fe4b5ee75f9c981dc0cb`. Published to **webflow.io only** (no custom domain). |
 | 3. Variables + fonts | ✅ 38 variables (37 from tokens + `Neutral / Glass`); 4 custom variable fonts (Archivo with wdth axis). IDs in `docs/webflow-ids.md` |
 | 4. CMS | ✅ 13 collections, 149 items, all references resolved. IDs in `docs/webflow-cms-ids.json` |
 | 3b. Global styles | ✅ 29 classes + tag styles (Body, H1–H6, p) |
 | 5. Components | 🟡 Nav, Footer, Frame label, Bento card, FAQ item done (group "Global"). Remaining: mission card, next card, code block, crew dock, built on the first page that uses each |
 | 6. Pages | 🟡 Home built + on staging (ab-portfolio-723a30.webflow.io, 2026-09-25). Remaining: Work, Mission template, Services template, About, 404 |
-| 7. Custom code | ⏭️ **Pulled forward (Angelino, 2026-09-25): next session builds the site-wide scripts + Home page scripts** so Home is fully working on staging before the other pages. Then pages resume with Work |
+| 7. Custom code | 🟡 Part 1 done 2026-09-25: site-wide `ab-core` (JS + CSS) + Home `ab-home`, tag **v0.1.2**, on staging. Build/deploy steps in `code/README.md`; what was re-pointed and the deviations in `docs/webflow-build-notes.md` › Custom code, part 1. **Waiting on Angelino's OK for Home**, then pages resume with Work (each page gets its own bundle) |
 
 Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top"> (hero · work · statement · services · process · transmission · stack · testimonials · faq · contact) · [Footer] · Site data (hidden CMS sources)`. Section-by-section notes: `docs/webflow-build-notes.md` › Home; prototype → Webflow hook map for the step 7 scripts: `webflow/build/home/class-map.md`.
 
@@ -51,17 +51,15 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 
 Listed in `docs/webflow-build-notes.md` → "To ab-core.css". Scripts read the `[data-site-data]` block for Site Settings + Quotes.
 
-## Next session: step 7 part 1 (site-wide + Home code)
+## Next session
 
-- Split `prototypes/home.html` scripts per `docs/code-map.md` into `code/src/` (site-wide modules vs Home page modules) and write `ab-core.css` from the "To ab-core.css" list + `webflow/build/home/class-map.md` › "Still for ab-core.css".
-- Re-point every hook using `webflow/build/home/class-map.md` (attribute hooks, `ab_` classes, menu `is-open`, planner native submit, `data-sel-name`, board frames from CMS `data-*` + computed colors, tools from CMS).
-- Board frames: the MCP can't link to "current item page" (`collectionPage` and `page` modes both publish a wrong href). Either the script sets `href="/work/" + data-slug`, or Angelino sets Link settings → Current Missions in the Designer.
-- `/work/<slug>` returns 404 on staging although items are published; revisit when the Mission template is built.
-- Build → `code/dist/`, push, tag, load via jsDelivr `@<tag>` (site-wide in site footer, Home scripts in the Home page footer), publish to **webflow.io only**, test Home at 1440/1024/390 + reduced motion.
+- If Angelino OK'd Home: build **Work** (Mission archive) per the build order, then `ab-work` bundle (`code/src/work/`, add it to `build.mjs`), same deploy steps.
+- If he flagged Home issues: fix in `code/src/`, bump the version, rebuild, tag, re-register (same display name, new version), publish webflow.io only.
+- `/work/<slug>` 404s until the Mission template is built; board frames already link there.
 
 ## Open items for Angelino
 
-- **Home OK** (stop point). The 3 Designer steps are done (reload, color bindings, form renamed "Mission Planner"; ID restored to `planner`). Still confirm the Forms notification email in Site settings.
+- **Home OK** (stop point, now with the custom code live on staging). Please look at it in a real browser: the starfield, lazy planets and animation feel couldn't be checked from the hidden browser pane. The 3 Designer steps are done (reload, color bindings, form renamed "Mission Planner"; ID restored to `planner`). Still confirm the Forms notification email in Site settings.
 
 - Placeholders in `docs/placeholders.md` (email, socials, 4 pin images, testimonials, headshot, `[X–Y weeks]`).
 - Check the Lincoln Center / ON NYC pin coordinates (both on the generic NYC point).

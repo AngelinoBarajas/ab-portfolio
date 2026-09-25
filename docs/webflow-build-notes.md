@@ -92,3 +92,36 @@ Checked the published HTML: all 10 sections, 3 board frames with CMS `data-*`, 9
 3. ~~Form settings: rename the form~~ ✅ done 2026-09-25 ("Mission Planner"). ⚠️ Renaming a form makes Webflow reset its ID to `wf-form-<Name>`; the ID was set back to `planner` (the script's hook). Re-check the ID after any future rename.
 
 Steps 1–2 also done by Angelino 2026-09-25 (Designer reloaded, 3 dynamic color bindings set via Element settings › Dynamic style settings › Get BG/Text Color from <Collection>). The MCP can't read dynamic style bindings back; verify on staging.
+
+## Custom code, part 1 (2026-09-25): site-wide + Home
+
+Source `code/src/` → `code/dist/` (`code/README.md` has the build/deploy steps). Live on staging at tag **v0.1.2**.
+
+| What | Where in Webflow |
+|---|---|
+| `ab-core.prod.css` `<link>` + integrity | Site settings › Custom code › Head (freeform) |
+| GSAP 3.13 + ScrollTrigger, Draggable, InertiaPlugin, SplitText, ScrambleText, Flip; Lenis 1.3.26; `ab-core.prod.js` | Registered hosted scripts, applied site-wide, footer, in that order (IDs `gsap`, `gsapscrolltrigger`, `gsapdraggable`, `gsapinertia`, `gsapsplittext`, `gsapscrambletext`, `gsapflip`, `lenis`, `abcore`) |
+| `ab-home.prod.js` | Registered hosted script `abhome`, applied to Home, footer |
+
+How the prototype code was re-pointed (per `webflow/build/home/class-map.md`):
+- Settings + Quotes come from the hidden `[data-settings-source]` / `[data-quote-source]` lists (empty CMS fields keep the Designer text, e.g. the placeholder email).
+- Script-only layers are **injected** by `ab-core` (nebula, starfield canvas, grain, warp flash, toast, layout grid, cursor HUD) and by `ab-home` (altitude meter), so pages don't carry them in the Designer.
+- Board frames: the script sets `href="/work/<slug>"` (fixes the `detail_work` href), reads brand colors from the two hidden nodes' inline styles, auto-places frames (first three hand-placed), picks previews by slug (510 → globe, Aguirre → map, cover "Mark" → logo mark). Frames open with a warp, then navigate. `/work/<slug>` still 404s until the Mission template exists.
+- Tools: color from the hidden `[data-field=color]` node, first 4 chips on the inner ring.
+- Planner: validates (≥1 type, email), fills the three hidden fields, flies the rocket, then calls `requestSubmit()` so Webflow Forms posts it (Webflow's handler is delegated on `document`; the first pass stops propagation). Success is Webflow's `.w-form-done`; "Plot another mission" restores the form.
+- Menu: toggles `.is-open` (+ `hidden`, `aria-expanded`), clip-path circle reveal.
+- Anchors (`#work`, `/#launch`…) warp then jump through Lenis; `stopPropagation` keeps Webflow's own smooth-scroll out.
+
+### Deviations / notes
+- **Heading effect classes**: the spans in `#work-h`, `#cap-h`, `#log-h` (→ `t-outline`), `#orbit-h` (→ `t-orbit`), `#launch-h` (→ `t-stars`) have no class in Webflow, so `ab-home` adds them by heading ID. Cleaner later: add the class to each span in the Designer.
+- **FAQ open/close** lives in `ab-core` (code-map said page-level) because Services uses it too.
+- **Hero headline fit** lives in `ab-home` (code-map said site-wide): it sizes the Home `.w` word spans only.
+- **Footer phone fix**: `ab-core.css` makes the last footer column span the row at ≤767 (the email button overflowed a half-width column at 390).
+- **Lora** (serif title on the Aguirre frame) isn't a loaded font; it falls back to Georgia.
+- The prototype's `.horizon` footer glow has no element in the Webflow footer, so that script was dropped.
+- Quote order follows the CMS list (Houston first); the static fallback text is Tsiolkovsky. Set the Quotes list sort in the Designer if the order matters.
+- The launch button starts `disabled` (`w-form-loading`) until Webflow's Turnstile check finishes: that's Webflow's bot protection, not the script.
+
+### Testing (2026-09-25)
+Staging at 1440 / 1024 / 390: no console errors, no horizontal overflow (after the footer fix), all 9 bento visuals built, process wide+pinned (1440/1024) / vertical (390), board canvas (desktop) / swipe deck (390), orbit, quotes, metrics, wordmark, menu open/close + scroll lock, FAQ, layout grid, planner flow (with the final submit stubbed, so no test entry in the Forms inbox). Reduced motion (JS path, via a `matchMedia` override on a copy of the staging HTML): no Lenis, no pin, no splits, everything visible, FAQ + process buttons work.
+Not verified visually: the browser pane was hidden, which freezes `requestAnimationFrame` and IntersectionObserver, so lazy planets, the starfield and animation feel need a look in a real browser.

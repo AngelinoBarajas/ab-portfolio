@@ -13,6 +13,6 @@
 - [ ] 6d. Services template
 - [ ] 6e. About
 - [ ] 6f. 404
-- [ ] 7. Custom code modules built, tagged and loaded — **pulled forward**: site-wide + Home first (next session), other pages' scripts as each page is built
+- [~] 7. Custom code: ✅ part 1 (2026-09-25) site-wide `ab-core` JS + CSS and Home `ab-home`, tag **v0.1.2**, loaded via jsDelivr (registered hosted scripts + SRI), staging published and tested at 1440/1024/390 + reduced motion. Waiting on Angelino's OK. Other pages' bundles as each page is built
 - [ ] 8. QA at 1440 / 1024 / 390, reduced motion, Lighthouse
 - [ ] 9. Angelino approves → publish
