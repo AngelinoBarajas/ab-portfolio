@@ -12,7 +12,7 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 | 4. CMS | ✅ 13 collections, all references resolved. IDs in `docs/webflow-cms-ids.json`. Added this session: Tools › **Pen + paper**, Mission Channels › Aguirre **Site plan**, AB Identity **Sketches** + **Illustrator** |
 | 3b. Global styles | ✅ 29 classes + tag styles (Body, H1–H6, p) |
 | 5. Components | 🟡 Nav, Footer, Frame label, Bento card, FAQ item, **Next card** (no props yet) done (group "Global"). Mission card is a page-level Collection item (nested Types list rules out a component). Remaining: code block, crew dock |
-| 6. Pages | 🟡 Home ✅, Work ✅, Mission template ✅, Services template ✅, Knowledge System mission ✅, **About ✅** (`/about`, page `6ab6d8aa86c563fd3f8b64a4`) — all approved 2026-09-25. **404** built on staging (utility page `6ab6e4a645ff2d1bd12b1c3e`), awaiting OK |
+| 6. Pages | 🟡 Home ✅, Work ✅, Mission template ✅, Services template ✅, Knowledge System mission ✅, **About ✅** (`/about`, page `6ab6d8aa86c563fd3f8b64a4`) — all approved 2026-09-25. **404 ✅** (utility page `6ab6e4a645ff2d1bd12b1c3e`) — all pages approved 2026-09-25 |
 | 7. Custom code | 🟡 Live on staging: `ab-core` JS + CSS **v0.6.2** · `ab-home`, `ab-mission`, `ab-about` JS v0.6.2 · `ab-about.css` v0.6.2 · `ab-mission.css` v0.5.0 · `ab-work` + `ab-services` (+ CSS) v0.4.0 · head inline script `abwarpin` 0.3.2. Build/deploy steps in `code/README.md`; per-version notes in `docs/webflow-build-notes.md` (v0.3.2 → v0.6.2) |
 | 8. Brand | ✅ New **AB planet monogram** (`logo/ab-logo.svg`, asset `6ab6bba8167f1da71a4bf9a8`) in Nav + Footer; inlined + animated by `core/22-logo.js` (warp spin-in, fill; black-hole hover; no glow). One geometry source: `AB.markSVG` / `AB.MARK` in `core/21-mark.js`. Favicon/webclip PNGs in `logo/` (upload pending) |
 
@@ -95,11 +95,11 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 
 - **404 built** (`signal-lost`), v0.7.0/0.7.1: details + MCP findings in `docs/webflow-build-notes.md` › 404 page. Utility pages can't hold Collection Lists → core caches site data (`ab:site`).
 - **Drag cue on every hero** with draggables (Angelino's ask): `AB.dragCue`, one key per hero type.
-- **Copy direction (Angelino):** stop leaning on "building globes"; position the work as interactive 3D that's useful to clients and visitors. Rewrite list proposed in chat, pending his OK (About log lede + waypoint 04, Home WebGL bento + FAQ, Services › Interactive 3D + data summary/solve/deliverable/stage/code label, Tools › Three.js use). 510 Visuals mission copy stays (it really is a globe).
+- **Copy direction (Angelino):** stop leaning on "building globes"; position the work as interactive 3D that's useful to clients and visitors. **Applied + published 2026-09-25** (his OK): About log lede + waypoint 04, Home WebGL bento Text prop + FAQ home-1, Services › webgl-data summary / solve 1 / deliverable 1 / stage 2 / code label, Tools › Three.js use. Seeds + build sources updated to match. 510 Visuals mission copy stays (it really is a globe). Keep new copy on this line: interactive 3D that's useful to clients and visitors.
 
 ## Next session
 
-1. **404 page** (`/404`, Webflow's utility page) — prototype `prototypes/404.html`, section `signal-lost` (see `docs/build-spec.md`). Same method as About: plan first (sections, static vs CMS, classes, what needs code), then `webflow/build/404/` → `prep.py` → WHTML → rebind, site-data block after the Footer, Navigator names, any code via jsDelivr with SRI, publish webflow.io only, check 1440 / 1024 / 390, stop for his OK.
+1. ~~**404 page**~~ ✅ approved. (Was: `/404`, Webflow's utility page — prototype `prototypes/404.html`, section `signal-lost` (see `docs/build-spec.md`). Same method as About: plan first (sections, static vs CMS, classes, what needs code), then `webflow/build/404/` → `prep.py` → WHTML → rebind, site-data block after the Footer, Navigator names, any code via jsDelivr with SRI, publish webflow.io only, check 1440 / 1024 / 390, stop for his OK.
 2. Then **step 8 QA**: every page vs its prototype at 1440 / 1024 / 390, no console errors, no horizontal scroll, reduced motion, Lighthouse, links + warp transitions. Then ask before any publish beyond webflow.io.
 3. Offered, not yet decided: a stronger Interstellar "Hover to fly close" (black hole grows, stars stretch, near clock slows while Earth speeds up).
 

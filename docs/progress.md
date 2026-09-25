@@ -14,7 +14,7 @@
 - [x] 6d+. New mission: **Knowledge System** debrief (`/work/knowledge-system`, code v0.5.0–0.5.2): **approved by Angelino 2026-09-25**. Mission titles stay solid (no outline word), his call
 - [x] Brand: AB planet monogram logo in Nav + Footer (animated, v0.4.1–0.4.6); AB Identity mission rebuilt around it (2026-09-25)
 - [x] 6e. About: **approved by Angelino 2026-09-25** (page `6ab6d8aa86c563fd3f8b64a4`, `/about`, code v0.6.2)
-- [~] 6f. 404: built + on staging 2026-09-25 (utility page `6ab6e4a645ff2d1bd12b1c3e`, code v0.7.0/0.7.1), awaiting Angelino's OK
+- [x] 6f. 404: **approved by Angelino 2026-09-25** (utility page `6ab6e4a645ff2d1bd12b1c3e`, code v0.7.0/0.7.1)
 - [~] 7. Custom code: ✅ part 1 (2026-09-25) site-wide `ab-core` JS + CSS and Home `ab-home`, tag **v0.1.2**, loaded via jsDelivr (registered hosted scripts + SRI), staging published and tested at 1440/1024/390 + reduced motion. Waiting on Angelino's OK. Other pages' bundles as each page is built
-- [ ] 8. QA at 1440 / 1024 / 390, reduced motion, Lighthouse
+- [ ] 8. QA ← next. At 1440 / 1024 / 390, reduced motion, Lighthouse
 - [ ] 9. Angelino approves → publish
