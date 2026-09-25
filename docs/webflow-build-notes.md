@@ -93,9 +93,33 @@ Checked the published HTML: all 10 sections, 3 board frames with CMS `data-*`, 9
 
 Steps 1–2 also done by Angelino 2026-09-25 (Designer reloaded, 3 dynamic color bindings set via Element settings › Dynamic style settings › Get BG/Text Color from <Collection>). The MCP can't read dynamic style bindings back; verify on staging.
 
+## Work page (built 2026-09-25, awaiting Angelino's OK)
+
+Page `6ab6853da89bdfd5de03324d` (`/work`; a static page can share the `work` slug with the Missions collection). `main-wrapper` › hero (`section_arc-hero`) · missions (`section_arc`) · next-mission (`section_arc-cta`), then Footer + the site-data block. Source files and the prototype → Webflow map: `webflow/build/work/` (`class-map.md`).
+
+| Section | CMS | Notes |
+|---|---|---|
+| Hero | none (counts from the list) | `ab_dbh_*` + `ab_meta_*` classes, reusable for the Mission template hero. Meta values filled by `ab-work` from the cards; Designer text is the fallback |
+| Missions | Mission Types (Filter chip = on, sort asc) for chips; Missions (sort asc) for cards | card = Collection item `.ab_mission-card`; link carries `data-slug/name/status/cover-kind`, planet carries `data-planet/colors/ring/glow`, cover Image bound to *Cover*. List view rows are built by the script from the cards |
+| Next mission | none | component **Next card** (`4b1e1337-5942-b371-9cd3-f2df9f140923`, group Global), no props yet |
+
+CMS change: new Switch field **Filter chip** (`filter-chip`, `80a08003679946064ca0a03df42cfd64`) on Mission Types; on for Website, Branding, Logo, Design, Development, App, UI/UX, WebGL (the prototype's core list). Mission Types `sort` re-ordered to that chip order (the 4 non-chip types 9–12).
+
+### Designer steps for Angelino (Work)
+1. **Card tags**: in the Missions list card, `.ab_mission-card_tags` › add a Collection List sourced from the card's *Types* field; item = Text Block bound to *Name*, class `ab_mission-card_tag`; give the nested wrapper/list/item the class `ab_arc_chip-list`. Filtering needs these tags (until then the bar shows only "All"). Verified with simulated tags: Branding → AB Identity + Northwind, count "Showing 2 of 6".
+2. **Card brand colors**: hidden `[data-field=brand-bg]` → BG = *Brand background*, `[data-field=brand-fg]` → Text = *Brand foreground*, `[data-field=brand-accent]` → BG = *Brand accent* (top group, not *Next mission*). Until then covers use the fallback navy/orange.
+3. **Cover image visibility** (optional): bind the card Image's visibility to *Cover* is set. The script already removes empty images.
+
+### Deviations (Work)
+- Chips come from Mission Types with *Filter chip* on (prototype: hard-coded core list). Counts and zero-count hiding are script-side.
+- List view is script-built from the cards (no second Collection List, which would need a second nested Types list).
+- Drawn covers (Mark / Brand / App / Site) are injected by cover kind; the Brand cover word is the first word of the mission name, subline = rest of the name + "Est. <year>"; the Site cover headline is fixed placeholder copy.
+- Card link binds to the Missions template; the script sets `/work/<slug>` (placeholders get `#` + a toast).
+- Prototype opened debriefs/home in a new tab; Webflow keeps the same tab (warp, then navigate).
+
 ## Custom code, part 1 (2026-09-25): site-wide + Home
 
-Source `code/src/` → `code/dist/` (`code/README.md` has the build/deploy steps). Live on staging: **v0.1.4** (core JS + CSS, home).
+Source `code/src/` → `code/dist/` (`code/README.md` has the build/deploy steps). Live on staging: **v0.2.1** (core JS + CSS, home, work).
 
 | What | Where in Webflow |
 |---|---|
@@ -141,3 +165,10 @@ Board previews draw pins in the mission's Brand accent: 510 Visuals teal `#5eead
 - **Dot field** follows the cursor more tightly (easing .14 → .32).
 - **Brand accent:** hidden `[data-field=brand-accent]` node added to the board item by Angelino (BG = Brand accent); globe/map pins use it.
 - **Copy (less map-focused):** hero lede, WebGL bento card (title "Interactive 3D, fed by the CMS"), footer brand line and footer service link "Interactive 3D + data". The Services CMS item for `webgl-data` still says "Globes, maps + 3D"; update it when the Services template is built.
+
+### v0.2.0 / v0.2.1 (2026-09-25): Work page
+- New bundle `ab-work` (`code/src/work/00-archive.js`), registered script `abwork`, applied to the Work page footer (the page had no custom-code block, so `add_page_script` 404'd; `set_page_scripts` created it).
+- `ab-core`: next-card HUD/streaks/ship moved in as `core/38-next.js` (site-wide, `.ab_next-card`); metrics read `data-count` on enter, so page bundles can set it from the CMS.
+- `ab-core.css`: debrief hero, archive bar states, mission card covers + status chip, list rows, next-card internals.
+- **v0.2.0 shipped a broken `ab-core.css`**: a cleanup regex left an unclosed `@media (max-width:991px){@media (max-width:767px){`, which silently swallowed every rule after it (Work covers unstyled, and the reduced-motion block on every page). Fixed in v0.2.1, and `build.mjs` now fails the build on unbalanced braces.
+- Tested on staging (1024 + 390): no console errors, no horizontal scroll, 6 cards with covers/numbers/links, placeholders toast, list/grid switch, sticky bar, Home unchanged (board, bento, metrics).

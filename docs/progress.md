@@ -6,9 +6,9 @@
 - [x] 3. Global styles + Client-First utilities (29 classes, variable-linked; see `docs/webflow-build-notes.md`). Tag styles set (Body, H1–H6, p)
 - [x] 4. CMS collections created (13): 173 fields, slugs match `cms/schema.json`; display names renamed after creation (the API derives slugs from display names). Missions collection slug `work`.
 - [x] 4b. Seed content imported (149 items), references resolved (types, stack, services, next-mission, pairs-with, FAQ, mission links). Items are staged (not draft), not published. 8 images copied to the Webflow CDN. UK spellings in seed copy converted to US.
-- [~] 5. Components: ✅ Nav, ✅ Footer (+ page-level site-data block), ✅ Frame label, ✅ Bento card (Light/Dark), ✅ FAQ item (built on Home). Planet + buttons are classes, not components. Still to build with their first page: mission card (Work), next card (Work/Mission), code block (Services), crew dock (Mission)
+- [~] 5. Components: ✅ Nav, ✅ Footer (+ page-level site-data block), ✅ Frame label, ✅ Bento card (Light/Dark), ✅ FAQ item (built on Home). Planet + buttons are classes, not components. ✅ Next card (component, built on Work; props added with the Mission template). Mission card is a page-level Collection List item (it holds a nested Types list, so it can't be a component). Still to build with their first page:, code block (Services), crew dock (Mission)
 - [x] 6a. Home: all 10 sections built in `main-wrapper` 2026-09-25 (see `docs/webflow-build-notes.md` › Home). **Approved by Angelino 2026-09-25** (no bugs found). Statement metrics deferred: he'll supply the numbers later
-- [~] 6b. Work (Mission archive): in progress 2026-09-25
+- [~] 6b. Work (Mission archive): built + on staging 2026-09-25 (page `6ab6853da89bdfd5de03324d`, `/work`), code v0.2.1. Waiting on 3 Designer steps (card Types tags, card brand colors, check cover image) + Angelino's OK
 - [ ] 6c. Mission template
 - [ ] 6d. Services template
 - [ ] 6e. About

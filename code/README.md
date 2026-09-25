@@ -25,6 +25,7 @@ Minified files are named `*.prod.js` / `*.prod.css`, not `*.min.*`: for a `.min.
 | GSAP 3.13 (+ ScrollTrigger, Draggable, InertiaPlugin, SplitText, ScrambleText, Flip), Lenis 1.3.26 | jsDelivr npm | Site scripts, footer, in that order |
 | `ab-core.prod.js` | `src/core/*.js` | Site scripts, footer, after Lenis |
 | `ab-home.prod.js` | `src/home/*.js` | Home page scripts, footer |
+| `ab-work.prod.js` | `src/work/*.js` | Work page (Mission archive) scripts, footer. Registered script `abwork` |
 
 Each bundle is one `window.Webflow.push` with one `__ab<Name>Init` guard; modules share a scope and every animation checks `prefers-reduced-motion`. `ab-core` exposes helpers to page bundles on `window.AB` (`$`, `$$`, `toast`, `warp`, `lenis`, `buildPlanet`, `settings`, `quotes`, `decorate`, `nudge`…), so a page bundle must load after it.
 

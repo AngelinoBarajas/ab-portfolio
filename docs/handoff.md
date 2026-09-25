@@ -1,4 +1,4 @@
-# Session handoff (2026-09-25, end of the custom-code session)
+# Session handoff (2026-09-25, end of the Work page session)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -11,9 +11,9 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 | 3. Variables + fonts | ✅ 38 variables (37 from tokens + `Neutral / Glass`); 4 custom variable fonts (Archivo with wdth axis). IDs in `docs/webflow-ids.md` |
 | 4. CMS | ✅ 13 collections, 149 items, all references resolved. IDs in `docs/webflow-cms-ids.json` |
 | 3b. Global styles | ✅ 29 classes + tag styles (Body, H1–H6, p) |
-| 5. Components | 🟡 Nav, Footer, Frame label, Bento card, FAQ item done (group "Global"). Remaining: mission card, next card, code block, crew dock, built on the first page that uses each |
-| 6. Pages | 🟡 Home built + on staging (ab-portfolio-723a30.webflow.io, 2026-09-25). Remaining: Work, Mission template, Services template, About, 404 |
-| 7. Custom code | 🟡 Part 1 done 2026-09-25: site-wide `ab-core` (JS + CSS) + Home `ab-home`, on staging at v0.1.4 (Home review edits applied; metrics copy still open). Build/deploy steps in `code/README.md`; what was re-pointed and the deviations in `docs/webflow-build-notes.md` › Custom code, part 1. **Waiting on Angelino's OK for Home**, then pages resume with Work (each page gets its own bundle) |
+| 5. Components | 🟡 Nav, Footer, Frame label, Bento card, FAQ item, **Next card** (no props yet) done (group "Global"). Mission card is a page-level Collection item (nested Types list rules out a component). Remaining: code block, crew dock |
+| 6. Pages | 🟡 Home ✅ **approved** by Angelino. **Work** (`/work`, page `6ab6853da89bdfd5de03324d`) built + on staging, waiting on 3 Designer steps + his OK. Remaining: Mission template, Services template, About, 404 |
+| 7. Custom code | 🟡 `ab-core` (JS + CSS), `ab-home`, `ab-work` all on staging at **v0.2.1**. Build/deploy steps in `code/README.md`; notes in `docs/webflow-build-notes.md` (Custom code part 1, v0.2.x) |
 
 Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top"> (hero · work · statement · services · process · transmission · stack · testimonials · faq · contact) · [Footer] · Site data (hidden CMS sources)`. Section-by-section notes: `docs/webflow-build-notes.md` › Home; prototype → Webflow hook map for the step 7 scripts: `webflow/build/home/class-map.md`.
 
@@ -37,6 +37,8 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 8. Components can't contain CMS Collection Lists; keep CMS sources page-level (`ab_cms-source`) and put CMS-driven cards inside page-level Collection Lists.
 9. CMS-driven `data-*` attributes: bind with the raw `static_json` shape (see build notes › MCP findings). Color fields can't bind; carry them in a hidden node and bind its style in the Designer.
 10. SVGs with camelCase tags (`textPath`, gradients) go in an HTML Embed. After every WHTML insert, strip duplicate `href` (links) and `class` (styled DOM) attributes, and re-check gradients for `N%at`.
+11. WHTML **drops classes that have no CSS rule** (e.g. a bare `ab_mission-card_year`): give every class at least one rule, or hook the script on a `data-*` attribute instead. Text inside a DOM `<button>`: create the button with `data_element_builder` (type DOM), then WHTML a `<span>` into it.
+12. `data_element_builder` errors can still create elements ("id is a reserved attribute name" did); DOM ids go through `set_dom_id`. A page with no custom code yet needs `set_page_scripts` (not `add_page_script`, which 404s).
 
 ## Known MCP limits hit this session
 
@@ -57,9 +59,9 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 
 ## Next session
 
-1. **Metrics (Statement section) — waiting on Angelino.** He wants more meaningful numbers than 11 / 14 / 2 (ideas he floated: characters of custom code, number of Unicorn Studio scenes; others offered: CMS items powering the interactive pieces, sites shipped). **Don't invent figures**: ask for the three numbers + labels, then update each `.ab_metric_number` text **and** its `data-count` attribute (the count-up animates to `data-count`) plus `.ab_metric_label`, via `data_element_tool` on page `6ab5fe4b5ee75f9c981dc0cb`. Publish webflow.io only.
-2. Then his **OK for Home**, then build **Work** (Mission archive) per the build order, with a new `ab-work` bundle (`code/src/work/`, add `await bundle('work', 'ab-work', '__abWorkInit')` to `build.mjs`), same deploy steps.
-3. `/work/<slug>` 404s until the Mission template is built; board frames already link there.
+1. **Work: Angelino's 3 Designer steps** (details in `docs/webflow-build-notes.md` › Work › Designer steps): nested *Types* list in the card (filters depend on it), 3 card brand-color bindings, optional cover visibility. Then re-check filtering on staging and ask for his **OK on Work**.
+2. Then the **Mission template** (`/work/[slug]`, template page `6ab602e48e2fa6779570a308`): reuse `ab_dbh_*` / `ab_meta_*` for the hero, add props to the **Next card** component (eyebrow, title lines, link, planet attributes bound to *Next mission*), crew dock component, new `ab-mission` bundle (`code/src/mission/`, add it to `build.mjs`). Board frames and Work cards already link to `/work/<slug>` (404 until then).
+3. **Metrics (Home Statement)**: Angelino will send the three numbers + labels later. Don't invent them; when they arrive, update `.ab_metric_number` text + `data-count` and `.ab_metric_label` on page `6ab5fe4b5ee75f9c981dc0cb`, publish webflow.io only.
 
 ## Home review edits already done (v0.1.4, from `ab-portfolio-hp-edits.docx`)
 
@@ -69,8 +71,9 @@ Possible follow-ups he may raise: Tools list order (the 3 new Adobe items sort f
 
 ## Open items for Angelino
 
-- **Metrics numbers** for the Statement section (see Next session).
-- **Home OK** (stop point, now with the custom code live on staging). Please look at it in a real browser: the starfield, lazy planets and animation feel couldn't be checked from the hidden browser pane. The 3 Designer steps are done (reload, color bindings, form renamed "Mission Planner"; ID restored to `planner`). Still confirm the Forms notification email in Site settings.
+- **Work Designer steps** (3, see Next session) and his **OK on Work**.
+- **Metrics numbers** for the Statement section (deferred by him, 2026-09-25).
+- Confirm the Forms notification email in Site settings.
 
 - Placeholders in `docs/placeholders.md` (email, socials, 4 pin images, testimonials, headshot, `[X–Y weeks]`).
 - Check the Lincoln Center / ON NYC pin coordinates (both on the generic NYC point).
