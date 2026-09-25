@@ -290,3 +290,7 @@ Board previews draw pins in the mission's Brand accent: 510 Visuals teal `#5eead
 - **Knowledge System featured** on the Home board (Selected work, 4th frame): `home/10-work.js` draws a small knowledge-graph preview (`.ab_kg`, lines draw on a loop, static under reduced motion).
 - v0.5.2: the page-hero H1 covered the hero planet, so the planet never got the drag. `.ab_dbh_title[data-drag-ready]{pointer-events:none}` with the word toys `pointer-events:auto`. Page heroes now get Home's "Drag me" cue (hand chip + first-word tug, 3 times, 10 s apart) under their own key `ab:toys`.
 - Live: core JS/CSS **v0.5.2**, home + mission JS v0.5.1, mission CSS v0.5.0, work + services v0.4.0.
+
+### 2026-09-25: Services rail = all services (done)
+The old rail list was locked to *Pairs with* (Source shows a lock on a template list tied to a self-reference). Angelino added a new Collection List inside `#svRail` in the Designer and picked **Services** under *CMS Collections*; the MCP then moved the rail link into it (all 6 bindings survived: slug, planet type/colors/ring/glow, name), gave wrapper/list/item `ab_arc_chip-list`, sorted by `sort` ascending, and removed the old list. Verified on staging: 8 services numbered 01–08, eyebrow "Service 08 / 08", next service wraps to 01. Also: the 7 Services sections got Navigator display names (they showed as "Section").
+Lesson: a Collection List can't be added inside another list, and an unconnected new list refuses children ("Connect this Collection List…"): pick the source first.

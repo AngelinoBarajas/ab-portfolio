@@ -100,7 +100,7 @@ Possible follow-ups he may raise: Tools list order (the 3 new Adobe items sort f
 
 ## Open items for Angelino
 
-- **Services template**: rail Collection List (`#svRail`) › Source › **Services** (Designer; the API resolves it to *Pairs with*), then his OK.
+- **Services template**: rail fixed (all 8 services, 2026-09-25); waiting on his OK.
 - **Favicon + webclip**: Site settings › General › upload `logo/favicon-32.png` + `logo/webclip-256.png`.
 - **Review copy** written this session: AB Identity (summary, captions, system/problem text, sketch notes, stats labels), Aguirre *Site plan* board, Services WebGL title. AB Identity handoff line still says "One Figma library…".
 
