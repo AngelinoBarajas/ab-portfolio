@@ -26,6 +26,19 @@
     });
   });
 
+  // links to another page on the site warp out first (same effect as Return to orbit). Handlers that already
+  // took the click (board frames, cards, the next card) call AB.go themselves; data-no-warp opts a link out
+  document.addEventListener('click', function(e){
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target.closest && e.target.closest('a[href]'); if (!a) return;
+    var raw = a.getAttribute('href') || '';
+    if (!raw || raw.charAt(0) === '#' || /^(mailto|tel|javascript|sms):/i.test(raw)) return;
+    if ((a.target && a.target !== '_self') || a.hasAttribute('download') || a.hasAttribute('data-no-warp') || a.origin !== location.origin) return;
+    if (a.pathname.replace(/\/$/, '') === location.pathname.replace(/\/$/, '') && a.search === location.search) return;
+    e.preventDefault();
+    AB.go(a.href);
+  });
+
   function nudge(el, after){
     el.addEventListener('keydown', function(e){
       var m = { ArrowLeft: [-24, 0], ArrowRight: [24, 0], ArrowUp: [0, -24], ArrowDown: [0, 24] }[e.key];

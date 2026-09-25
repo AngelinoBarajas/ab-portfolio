@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-work v0.3.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-work v0.3.2 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abWorkInit) return;
@@ -183,7 +183,7 @@ window.Webflow.push(function(){
     a.addEventListener('click', function(e){
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
       e.preventDefault(); var href = a.getAttribute('href');
-      warp(function(){ location.href = href; });
+      AB.go(href);
     });
   });
 

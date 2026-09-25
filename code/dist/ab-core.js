@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.3.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.3.2 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -335,7 +335,26 @@ window.Webflow.push(function(){
       .to(sf.state, { warp: 0, duration: .9, ease: 'power2.out' }, '<');
   }
 
-  Object.assign(AB, { toast: toast, copyText: copyText, fmt: fmt, buildPlanet: buildPlanet, planets: planets, sf: sf, warp: warp, inject: inject });
+  /* ---------- page transitions: warp out, and the next page arrives out of the warp ---------- */
+  var WARP_IN = 'ab:warp-in';
+  function go(href){
+    try { sessionStorage.setItem(WARP_IN, '1'); } catch(e){}
+    warp(function(){ location.href = href; });
+  }
+  (function arrive(){
+    var html = document.documentElement, flag = null;
+    try { flag = sessionStorage.getItem(WARP_IN); sessionStorage.removeItem(WARP_IN); } catch(e){}
+    var flash = $('#warpFlash');
+    if (flag && hasGsap && !reduce && flash){
+      gsap.set(flash, { opacity: .85 }); sf.state.warp = 1;
+      html.classList.remove('ab-warp-in');
+      gsap.timeline().to(flash, { opacity: 0, duration: .6, ease: 'power2.out' }, .05).to(sf.state, { warp: 0, duration: 1.1, ease: 'power2.out' }, 0);
+    } else html.classList.remove('ab-warp-in');
+    // back/forward cache: a page restored mid-warp would keep its flash up
+    addEventListener('pageshow', function(e){ if (e.persisted && flash){ if (hasGsap) gsap.set(flash, { opacity: 0 }); else flash.style.opacity = 0; sf.state.warp = 0; } });
+  })();
+
+  Object.assign(AB, { toast: toast, copyText: copyText, fmt: fmt, buildPlanet: buildPlanet, planets: planets, sf: sf, warp: warp, go: go, inject: inject });
 
   /* ===== core/20-ui.js ===== */
 
@@ -445,6 +464,19 @@ window.Webflow.push(function(){
       var top = id === 'top';
       warp(function(){ scrollToTarget(top ? 0 : t); });
     });
+  });
+
+  // links to another page on the site warp out first (same effect as Return to orbit). Handlers that already
+  // took the click (board frames, cards, the next card) call AB.go themselves; data-no-warp opts a link out
+  document.addEventListener('click', function(e){
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target.closest && e.target.closest('a[href]'); if (!a) return;
+    var raw = a.getAttribute('href') || '';
+    if (!raw || raw.charAt(0) === '#' || /^(mailto|tel|javascript|sms):/i.test(raw)) return;
+    if ((a.target && a.target !== '_self') || a.hasAttribute('download') || a.hasAttribute('data-no-warp') || a.origin !== location.origin) return;
+    if (a.pathname.replace(/\/$/, '') === location.pathname.replace(/\/$/, '') && a.search === location.search) return;
+    e.preventDefault();
+    AB.go(a.href);
   });
 
   function nudge(el, after){

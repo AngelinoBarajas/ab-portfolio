@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission.css v0.3.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission.css v0.3.2 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · ab-mission.css · Mission template (/work/[slug]) only. Script-built parts + states the Designer cannot express. */
 /* ---------- glossary chips + tip ---------- */
 .gl{all:unset;cursor:help;border-bottom:1px dashed var(--_color---brand--signal);color:inherit;position:relative;white-space:nowrap}
@@ -453,6 +453,8 @@ body.eng [data-cadet-only]{display:none}
 /* ---------- crew dock ---------- */
 .crew-dock{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:9000;display:flex;align-items:center;gap:10px;padding:6px 6px 6px 14px;border:1px solid var(--_color---neutral--hair-strong);background:rgba(10,11,20,.82);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 18px 40px -12px rgba(0,0,0,.7);transform:translate(-50%,140%);opacity:0;visibility:hidden;transition:transform .5s cubic-bezier(.2,.9,.2,1.1),opacity .3s,visibility .3s}
 .crew-dock.show{transform:translate(-50%,0);opacity:1;visibility:visible}
+/* the level toast rises above the dock instead of sliding in underneath it */
+body.dock-on .ab_toast{bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:9001}
 body.dock-on .toast{bottom:calc(86px + env(safe-area-inset-bottom,0px))}
 @media (max-width:620px){body.dock-on .toast{bottom:calc(78px + env(safe-area-inset-bottom,0px))}}
 .crew-dock .mono{font-size:11px;color:var(--_color---text--tertiary);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
@@ -540,7 +542,7 @@ body.eng .crew-dock .dot{background:#7cc4ff;box-shadow:0 0 10px #7cc4ff}
 .mf-radar .blip{fill:#3BE38A;animation:ab-mfblip 4s linear infinite}
 @keyframes ab-mfsweep{to{transform:rotate(360deg)}}
 @keyframes ab-mfblip{0%,8%{opacity:0}12%{opacity:1}60%,100%{opacity:0}}
-.ab_bento-card.is-mf > *{position:relative;z-index:1}
+.ab_bento-card.is-mf > :not(.sel){position:relative;z-index:1}
 .ab_bento-card.is-mf > .sel{z-index:6}
 .ab_bento-card.is-mf > .mf-radar{position:absolute;z-index:0}
 .ab_bento-card.is-mf > .ab_bento-card_link{position:absolute;z-index:6}

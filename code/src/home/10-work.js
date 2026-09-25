@@ -108,7 +108,7 @@
       if (e && (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1)) return; // new tab: let the browser handle it
       if (e) e.preventDefault();
       var href = f.getAttribute('href');
-      warp(function(){ location.href = href; });
+      AB.go(href);
     }
 
     if (!hasGsap){ frames.forEach(function(f){ f.addEventListener('click', function(e){ if (f.classList.contains('is-slot')) openFrame(f, e); }); }); return; }

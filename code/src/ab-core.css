@@ -29,6 +29,8 @@ html.lenis,html.lenis body{height:auto}
 .ab_stars{position:fixed;left:0;top:0;width:100%;height:100%;z-index:1;pointer-events:none}
 .ab_grain{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
 .ab_warp-flash{position:fixed;inset:0;z-index:70;pointer-events:none;background:var(--void);opacity:0}
+/* arriving from a warp: a tiny head script sets html.ab-warp-in from sessionStorage before first paint (and drops it after 1.5 s as a failsafe); ab-core hands over to #warpFlash */
+html.ab-warp-in body::after{content:"";position:fixed;inset:0;z-index:70;pointer-events:none;background:var(--void);opacity:.85}
 
 /* ---------- planets (.ab_planet[data-planet]) ---------- */
 .ab_planet.is-drag{cursor:grab;touch-action:none;z-index:3}

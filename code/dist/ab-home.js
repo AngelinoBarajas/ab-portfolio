@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.3.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.3.2 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -254,7 +254,7 @@ window.Webflow.push(function(){
       if (e && (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1)) return; // new tab: let the browser handle it
       if (e) e.preventDefault();
       var href = f.getAttribute('href');
-      warp(function(){ location.href = href; });
+      AB.go(href);
     }
 
     if (!hasGsap){ frames.forEach(function(f){ f.addEventListener('click', function(e){ if (f.classList.contains('is-slot')) openFrame(f, e); }); }); return; }

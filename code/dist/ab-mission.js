@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission v0.3.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission v0.3.2 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abMissionInit) return;
@@ -24,7 +24,7 @@ window.Webflow.push(function(){
   /* ===== mission/10-mocks.js ===== */
   /* ---------- mockup specs per mission (monitor scenes: figma / phone / flow / exploded / cms), keyed by mission slug ---------- */
   // Images come from the repo's prototype folder on jsDelivr, pinned to a tag (immutable).
-  var IMG = 'https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.2.0/prototypes/img/';
+  var IMG = 'https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.3.2/prototypes/img/';
   /* =========================================================
      CMS STAND-IN · Mockup spec per mission (Missions → "Monitor mockup" code field)
      els: layers of the Figma frame, in a 1000 × 625 frame (1440 × 900 at 1×).
@@ -157,12 +157,24 @@ window.Webflow.push(function(){
         { name: 'Execution', steps: ['Fabrication', 'Installation'], solid: ICO,
           copy: ['Fabrication managed through a network of trusted partners.', 'On-site installation, commissioning and handover.'] }
       ] };
-    m.explode = { frame: 'Globe hero', bg: '#1c1e24', img: IMG + '510-live-globe.webp',
-      pins: [[569, 358], [620, 382], [786, 397], [973, 367], [990, 332], [759, 331], [907, 344]], hq: [990, 332],
-      arcs: ['M990 332Q760 -60 663 122', 'M990 332Q870 300 759 331', 'M990 332Q950 330 907 344'],
-      leaders: ['M990 332L1112 300V285', 'M990 332L1127 163'],
-      card: { pin: 2, at: [800, 430], img: IMG + '510-p-virtual-sky.webp', title: 'Virtual Sky', city: 'Oklahoma City, OK' } };
+    // globe render: the current production globe (code/vendor/510-globe.js) shot at 1600 x 955 on its default
+    // North America view with pins + arcs off; overlay points are those pins projected with the same camera
+    m.explode = { frame: 'Globe hero', bg: '#1c1e24', img: IMG + '510-globe-mesh.webp',
+      pins: [[566, 359], [617, 382], [782, 397], [970, 368], [970, 503], [988, 333]], hq: [988, 333],
+      arcs: ['M989 332Q752 121 564 358', 'M989 332Q810 180 616 381', 'M989 332Q929 274 782 396', 'M989 332Q994 333 971 367', 'M989 332Q1042 361 971 503'],
+      leaders: ['M988 333L1110 301V286', 'M988 333L1125 164'],
+      card: { pin: 2, at: [796, 430], img: IMG + '510-p-virtual-sky.webp', title: 'Virtual Sky', city: 'Oklahoma City, OK' } };
   })();
+  // FigJam ideation board → the designed plan (same scene as 510's service map; every website mission gets one)
+  MOCKS['daniel-aguirre-law'].flow = { file: 'Daniel Aguirre Law — Site plan', fg: '#FCF6EC', accent: '#A88B5C',
+    groups: [
+      { name: 'Plan', steps: ['Site map', 'Content model'], solid: '<path d="M22 8h16v10H22zM8 42h14v10H8zM38 42h14v10H38zM30 18v12M15 42V30h30v12"/>',
+        copy: ['Ten pages mapped first, from the homepage to contact, with practice areas and hubs as templates.', 'Case Results, Practice Areas, Insights and Topics planned as linked CMS collections the firm edits itself.'] },
+      { name: 'Design', steps: ['Wireframes', 'Cream glass'], solid: '<path d="M8 10h44v42H8zM8 20h44M16 28h28M16 34h18M36 42h10v4H36z"/>',
+        copy: ['Wireframes put the live case map in the hero, right beside the promise.', 'A warm cream-glass language, frosted cards with a thin gold line, so it never reads as a stock law firm.'] },
+      { name: 'Build', steps: ['Webflow build', 'English / Spanish'], solid: '<path d="M22 18L10 31l12 13M38 18l12 13-12 13M34 12l-8 38"/>',
+        copy: ['Built custom in Webflow on Client-First, with the D3 case map as the hero.', 'Everything works in English and Spanish, and the firm updates content without a developer.'] }
+    ] };
   MOCKS['daniel-aguirre-law'].cms = {
     site: 'Daniel Aguirre Law', collection: 'Case Results', url: 'danielaguirre.law',
     eyebrow: 'PROVEN NATIONWIDE', title: 'Immigration cases won, family by family.',
@@ -795,10 +807,14 @@ window.Webflow.push(function(){
     sws.forEach(function(sw){ $$('[data-lv]', sw).forEach(function(b){ b.addEventListener('click', function(e){ e.preventDefault(); set(b.getAttribute('data-lv'), true, sw.parentNode === dock); }); }); });
     var saved = 'cadet'; try { saved = localStorage.getItem('ab-crew') || 'cadet'; } catch(e){}
     set(saved); addEventListener('resize', paint); if (document.fonts) document.fonts.ready.then(paint);
-    var heroVis = true, footVis = false, crew = $('#crew'), foot = $('#siteFoot') || $('footer');
-    function upd(){ var show = !heroVis && !footVis; dock.classList.toggle('show', show); document.body.classList.toggle('dock-on', show); if (show) setTimeout(paint, 0); }
+    // the dock only rides along while there's level-dependent content left: once the last section with
+    // cadet/engineer copy has scrolled away, it leaves (and comes back on the way up)
+    var heroVis = true, footVis = false, pastLevels = false, crew = $('#crew'), foot = $('#siteFoot') || $('footer');
+    var lvEls = $$('[data-eng-only], [data-cadet-only]'), lastLv = lvEls.length ? (lvEls[lvEls.length - 1].closest('section') || lvEls[lvEls.length - 1]) : null;
+    function upd(){ var show = !heroVis && !footVis && !pastLevels; dock.classList.toggle('show', show); document.body.classList.toggle('dock-on', show); if (show) setTimeout(paint, 0); }
     if (crew) new IntersectionObserver(function(es){ heroVis = es[0].isIntersecting; upd(); }).observe(crew);
     if (foot) new IntersectionObserver(function(es){ footVis = es[0].isIntersecting; upd(); }, { rootMargin: '0px 0px -30% 0px' }).observe(foot);
+    if (lastLv) new IntersectionObserver(function(es){ pastLevels = !es[0].isIntersecting && es[0].boundingClientRect.top < 0; upd(); }, { rootMargin: '0px 0px -40% 0px' }).observe(lastLv);
   })();
 
   /* ---------- glossary tips ---------- */
@@ -982,7 +998,7 @@ window.Webflow.push(function(){
     var card = $('.ab_next-card', slot), pl = $('.ab_planet', card);
     if (pl && buildPlanet) buildPlanet(pl);
     if (AB.nextCard) AB.nextCard(card);
-    card.addEventListener('click', function(e){ if (e.metaKey || e.ctrlKey || e.shiftKey) return; e.preventDefault(); var href = card.getAttribute('href'); warp(function(){ location.href = href; }); });
+    card.addEventListener('click', function(e){ if (e.metaKey || e.ctrlKey || e.shiftKey) return; e.preventDefault(); AB.go(card.getAttribute('href')); });
   })();
 
   /* ---------- hero: drag the planet, entrance ---------- */

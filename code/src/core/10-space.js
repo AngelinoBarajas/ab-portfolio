@@ -284,4 +284,23 @@
       .to(sf.state, { warp: 0, duration: .9, ease: 'power2.out' }, '<');
   }
 
-  Object.assign(AB, { toast: toast, copyText: copyText, fmt: fmt, buildPlanet: buildPlanet, planets: planets, sf: sf, warp: warp, inject: inject });
+  /* ---------- page transitions: warp out, and the next page arrives out of the warp ---------- */
+  var WARP_IN = 'ab:warp-in';
+  function go(href){
+    try { sessionStorage.setItem(WARP_IN, '1'); } catch(e){}
+    warp(function(){ location.href = href; });
+  }
+  (function arrive(){
+    var html = document.documentElement, flag = null;
+    try { flag = sessionStorage.getItem(WARP_IN); sessionStorage.removeItem(WARP_IN); } catch(e){}
+    var flash = $('#warpFlash');
+    if (flag && hasGsap && !reduce && flash){
+      gsap.set(flash, { opacity: .85 }); sf.state.warp = 1;
+      html.classList.remove('ab-warp-in');
+      gsap.timeline().to(flash, { opacity: 0, duration: .6, ease: 'power2.out' }, .05).to(sf.state, { warp: 0, duration: 1.1, ease: 'power2.out' }, 0);
+    } else html.classList.remove('ab-warp-in');
+    // back/forward cache: a page restored mid-warp would keep its flash up
+    addEventListener('pageshow', function(e){ if (e.persisted && flash){ if (hasGsap) gsap.set(flash, { opacity: 0 }); else flash.style.opacity = 0; sf.state.warp = 0; } });
+  })();
+
+  Object.assign(AB, { toast: toast, copyText: copyText, fmt: fmt, buildPlanet: buildPlanet, planets: planets, sf: sf, warp: warp, go: go, inject: inject });

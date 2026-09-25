@@ -114,10 +114,14 @@
     sws.forEach(function(sw){ $$('[data-lv]', sw).forEach(function(b){ b.addEventListener('click', function(e){ e.preventDefault(); set(b.getAttribute('data-lv'), true, sw.parentNode === dock); }); }); });
     var saved = 'cadet'; try { saved = localStorage.getItem('ab-crew') || 'cadet'; } catch(e){}
     set(saved); addEventListener('resize', paint); if (document.fonts) document.fonts.ready.then(paint);
-    var heroVis = true, footVis = false, crew = $('#crew'), foot = $('#siteFoot') || $('footer');
-    function upd(){ var show = !heroVis && !footVis; dock.classList.toggle('show', show); document.body.classList.toggle('dock-on', show); if (show) setTimeout(paint, 0); }
+    // the dock only rides along while there's level-dependent content left: once the last section with
+    // cadet/engineer copy has scrolled away, it leaves (and comes back on the way up)
+    var heroVis = true, footVis = false, pastLevels = false, crew = $('#crew'), foot = $('#siteFoot') || $('footer');
+    var lvEls = $$('[data-eng-only], [data-cadet-only]'), lastLv = lvEls.length ? (lvEls[lvEls.length - 1].closest('section') || lvEls[lvEls.length - 1]) : null;
+    function upd(){ var show = !heroVis && !footVis && !pastLevels; dock.classList.toggle('show', show); document.body.classList.toggle('dock-on', show); if (show) setTimeout(paint, 0); }
     if (crew) new IntersectionObserver(function(es){ heroVis = es[0].isIntersecting; upd(); }).observe(crew);
     if (foot) new IntersectionObserver(function(es){ footVis = es[0].isIntersecting; upd(); }, { rootMargin: '0px 0px -30% 0px' }).observe(foot);
+    if (lastLv) new IntersectionObserver(function(es){ pastLevels = !es[0].isIntersecting && es[0].boundingClientRect.top < 0; upd(); }, { rootMargin: '0px 0px -40% 0px' }).observe(lastLv);
   })();
 
   /* ---------- glossary tips ---------- */
@@ -301,7 +305,7 @@
     var card = $('.ab_next-card', slot), pl = $('.ab_planet', card);
     if (pl && buildPlanet) buildPlanet(pl);
     if (AB.nextCard) AB.nextCard(card);
-    card.addEventListener('click', function(e){ if (e.metaKey || e.ctrlKey || e.shiftKey) return; e.preventDefault(); var href = card.getAttribute('href'); warp(function(){ location.href = href; }); });
+    card.addEventListener('click', function(e){ if (e.metaKey || e.ctrlKey || e.shiftKey) return; e.preventDefault(); AB.go(card.getAttribute('href')); });
   })();
 
   /* ---------- hero: drag the planet, entrance ---------- */

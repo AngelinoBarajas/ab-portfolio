@@ -177,7 +177,7 @@
     a.addEventListener('click', function(e){
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
       e.preventDefault(); var href = a.getAttribute('href');
-      warp(function(){ location.href = href; });
+      AB.go(href);
     });
   });
 
