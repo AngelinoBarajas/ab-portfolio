@@ -8,7 +8,7 @@
      ========================================================= */
   var SCENE = (function(){
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var scenes = {}, active = null;
+    var scenes = {}, active = null, EXT = {};
     function mk(tag, cls, html){ var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
     function q(r, s){ return r.querySelector(s); }
     function qa(r, s){ return Array.prototype.slice.call(r.querySelectorAll(s)); }
@@ -36,7 +36,7 @@
       sc.stg.style.width = sc.SW + 'px'; sc.stg.style.height = sc.SH + 'px';
       sc.stg.style.setProperty('--acc', sc.M.mock.accent || '#FF6A3D');
       w.appendChild(sc.stg); v.appendChild(w);
-      ({ figma: buildFigma, phone: buildPhone, flow: buildFlow, exploded: buildExplode, cms: buildCms, sketch: buildSketch, vector: buildVector })[sc.kind](sc);
+      (EXT[sc.kind] || ({ figma: buildFigma, phone: buildPhone, flow: buildFlow, exploded: buildExplode, cms: buildCms, sketch: buildSketch, vector: buildVector })[sc.kind])(sc);
       fit(sc);
     }
     function fit(sc){
@@ -663,6 +663,9 @@
       controls(sc, [{ t: 'Trace', at: 'trace' }, { t: 'Pathfinder', at: 'pathfinder' }, { t: 'Color', at: 'color' }, { t: 'Export', at: 'export' }]);
     }
 
-    return { mount: mount, activate: activate };
+    // other scene files (21-knowledge.js) register builders here and share the helpers
+    function add(kind, fn){ EXT[kind] = fn; }
+    return { mount: mount, activate: activate, add: add, get: function(id){ return scenes[id]; },
+      kit: { mk: mk, q: q, qa: qa, esc: esc, controls: controls, CURSOR: CURSOR, reduce: reduce } };
   })();
 

@@ -153,6 +153,8 @@
     ] };
   // AB Identity: the sketch + Illustrator scenes are fully coded (geometry from AB.MARK), they only need to exist
   MOCKS['ab-identity'] = { accent: '#FF6A3D', sketch: true, vector: true };
+  // Knowledge System: seven coded scenes (21-knowledge.js), generic example content
+  MOCKS['knowledge-system'] = { accent: '#a597ff', graph: true, library: true, voice: true, setup: true, video: true, schema: true, portable: true };
   MOCKS['daniel-aguirre-law'].cms = {
     site: 'Daniel Aguirre Law', collection: 'Case Results', url: 'danielaguirre.law',
     eyebrow: 'PROVEN NATIONWIDE', title: 'Immigration cases won, family by family.',

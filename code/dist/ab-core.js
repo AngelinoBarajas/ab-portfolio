@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.4.6 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.5.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -618,6 +618,21 @@ window.Webflow.push(function(){
       });
     } else decorate(document);
 
+    /* ---------- metric icons ([data-metric-icon] on a metric: code | clock | cup), drawn in the signal color ---------- */
+    var MICON = {
+      code: '<path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 4l-3 16"/>',
+      clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
+      cup: '<path d="M4 9h12v5a6 6 0 0 1-6 6a6 6 0 0 1-6-6z"/><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8 2.5c-1 1.2 1 2.3 0 3.5M12 2.5c-1 1.2 1 2.3 0 3.5"/>'
+    };
+    $$('[data-metric-icon]').forEach(function(m){
+      var k = m.getAttribute('data-metric-icon'); if (!MICON[k] || $('.ab_metric_icon', m)) return;
+      m.insertAdjacentHTML('afterbegin', '<span class="ab_metric_icon" aria-hidden="true"><svg viewBox="0 0 24 24">' + MICON[k] + '</svg></span>');
+      if (reduce) return;
+      var ps = $$('.ab_metric_icon path, .ab_metric_icon circle', m);
+      ps.forEach(function(p){ var L = p.getTotalLength ? p.getTotalLength() : 60; p.style.strokeDasharray = L; p.style.strokeDashoffset = L; });
+      ScrollTrigger.create({ trigger: m, start: 'top 90%', once: true, onEnter: function(){ gsap.to(ps, { strokeDashoffset: 0, duration: 1.2, stagger: .15, ease: 'power2.inOut' }); } });
+    });
+
     /* ---------- metrics ([data-count]) ---------- */
     $$('[data-count]').forEach(function(el){
       var o = { v: 0 };
@@ -626,7 +641,7 @@ window.Webflow.push(function(){
       ScrollTrigger.create({ trigger: el, start: 'top 90%', once: true, onEnter: function(){
         var raw = el.getAttribute('data-count'); if (raw == null || raw === '' || isNaN(+raw)) return;
         var target = +raw, suf = el.getAttribute('data-suffix') || '';
-        gsap.fromTo(o, { v: 0 }, { v: target, duration: 1.6, ease: 'power3.out', onUpdate: function(){ el.textContent = Math.round(o.v) + suf; } });
+        gsap.fromTo(o, { v: 0 }, { v: target, duration: 1.6, ease: 'power3.out', onUpdate: function(){ var n = Math.round(o.v); el.textContent = (target >= 1000 ? n.toLocaleString('en-US') : n) + suf; } });
       } });
     });
 
@@ -947,6 +962,40 @@ window.Webflow.push(function(){
   }
   $$('.ab_next-card').forEach(nextCard);
   AB.nextCard = nextCard; // page bundles call this for cards they build (Mission next-mission)
+
+  /* ===== core/39-herodrag.js ===== */
+  /* ---------- hero toys site-wide: on every page hero except Home (which has its own), the H1's words
+     and the hero planet can be thrown around like Home's, and drift back after a few seconds.
+     Runs after the page bundles (setTimeout 0), since Services rebuilds its title lines and Mission fills its own. ---------- */
+  (function(){
+    if (!hasGsap || !window.Draggable) return;
+    setTimeout(function(){
+      var hero = $('#hero'), title = $('#heroTitle');
+      if (!hero || !title || $('.ab_hero_component') || title.hasAttribute('data-drag-ready')) return;
+      title.setAttribute('data-drag-ready', '');
+      if (!title.getAttribute('aria-label')) title.setAttribute('aria-label', title.textContent.replace(/\s+/g, ' ').trim());
+      // Work + Services titles are lines of .ab_dbh_word (keep them whole: outline/star effects live on the line);
+      // a plain title (Mission) is split into word spans
+      var items = $$('.ab_dbh_word', title);
+      if (!items.length){
+        var words = title.textContent.trim().split(/\s+/); title.innerHTML = '';
+        words.forEach(function(w, i){ var s = document.createElement('span'); s.className = 'w'; s.textContent = w; title.appendChild(s); if (i < words.length - 1) title.appendChild(document.createTextNode(' ')); });
+        items = $$('.w', title);
+      }
+      items.forEach(function(el){ el.classList.add('is-toy'); el.setAttribute('aria-hidden', 'true'); el.tabIndex = 0; });
+      var planet = $('.ab_planet[data-drag]', hero);
+      if (planet && !planet.hasAttribute('data-parallax')) items.push(planet);
+      items.forEach(function(el){
+        var back;
+        function schedule(){ if (back) back.kill(); back = gsap.delayedCall(6, function(){ gsap.to(el, { x: 0, y: 0, rotation: 0, duration: 1.4, ease: 'elastic.out(1,.55)' }); }); }
+        Draggable.create(el, { type: 'x,y', bounds: hero, inertia: !!window.InertiaPlugin, edgeResistance: .7, zIndexBoost: false,
+          onPress: function(){ if (back) back.kill(); gsap.to(el, { scale: 1.04, duration: .2 }); },
+          onRelease: function(){ gsap.to(el, { scale: 1, duration: .3 }); },
+          onDragEnd: schedule, onThrowComplete: schedule });
+        nudge(el, schedule);
+      });
+    }, 0);
+  })();
 
   /* ===== core/40-footer.js ===== */
 
