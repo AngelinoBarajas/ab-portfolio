@@ -21,7 +21,7 @@
     "name": "Three.js",
     "color": "#FFFFFF",
     "icon": "cube",
-    "use": "The WebGL globe and 3D shapes"
+    "use": "Interactive 3D scenes and shapes"
   },
   {
     "name": "Lenis",

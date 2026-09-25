@@ -176,7 +176,7 @@ LOG = [
     ('Origin', 'Waypoint 01', 'A philosophy degree', 'I studied how to ask better questions, take arguments apart and put them back together. Turns out that’s most of design.', 'book'),
     ('Ignition', 'Waypoint 02', 'Taught myself design', 'No design school. Just curiosity, a lot of late nights and pulling apart work I admired to see how it was made.', 'pen'),
     ('Liftoff', 'Waypoint 03', 'Then taught myself code', 'When a design needed something the tools couldn’t do, I learned to build it. That’s still how I pick up every new skill.', 'code'),
-    ('Orbit', 'Waypoint 04', 'Webflow, WebGL + motion', 'Now I plan, design in Figma and build in Webflow from the ground up: globes, maps, CMS systems and interactions people remember.', 'orbit'),
+    ('Orbit', 'Waypoint 04', 'Webflow, WebGL + motion', 'Now I plan, design in Figma and build in Webflow from the ground up: interactive 3D, CMS systems and interactions that help people find what they came for.', 'orbit'),
     ('Next', 'Waypoint 05', 'Your mission', 'The next waypoint on this log is yours. Tell me what you’re building and we’ll plot the course together.', 'flag'),
 ]
 items = ''
@@ -188,7 +188,7 @@ for i, (tag, k, h, p, ic) in enumerate(LOG):
               % (' is-next' if nxt else '', ' is-right' if i % 2 else '', ' is-next' if nxt else '', tag.lower(), ic, tag, k, h, p,
                  '<a class="ab_tl_link" href="/#launch">Plot the course →</a>' if nxt else ''))
 w('log.html', '<section class="section_about-log" id="log" data-frame="flight-log" aria-labelledby="log-h">' + FL('flight-log') + wrap(
-    sech('/flight-log · 5 waypoints', 'log-h', 'Flight', 'log', 'How a philosophy student ended up building globes in Webflow.') +
+    sech('/flight-log · 5 waypoints', 'log-h', 'Flight', 'log', 'How a philosophy student ended up building interactive 3D for the web.') +
     '<div class="ab_tl" data-tl="" role="list"><div class="ab_tl_line" aria-hidden="true"></div><div class="ab_tl_fill" aria-hidden="true"></div>'
     '<div class="ab_tl_ship" data-tl-ship="" aria-hidden="true"></div>' + items + '</div>') + '</section>')
 w('log.css', '''

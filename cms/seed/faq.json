@@ -1,7 +1,7 @@
 [
   {
     "name": "Do you only build in Webflow?",
-    "answer": "Webflow is home base, because clients can edit it after launch. The custom pieces (globes, maps, scroll systems) are plain JavaScript hosted on GitHub, so they aren't locked to one platform.",
+    "answer": "Webflow is home base, because clients can edit it after launch. The custom pieces (3D scenes, maps, scroll systems) are plain JavaScript hosted on GitHub, so they aren't locked to one platform.",
     "scope": "Homepage",
     "sort": 1,
     "_key": "home-1"
