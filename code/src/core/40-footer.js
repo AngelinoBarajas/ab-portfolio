@@ -61,7 +61,8 @@
 
   /* ---------- feed the black hole: tidal stretch while dragging, spaghettification on capture ---------- */
   (function(){
-    var bhw = $('.ab_planet[data-planet="blackhole"]'), feedPlanets = $$('.ab_planet.is-feed');
+    // the footer's own black hole (About's Interstellar card has one too, earlier in the page)
+    var foot = $('#siteFoot') || document, bhw = $('.ab_planet[data-planet="blackhole"]', foot), feedPlanets = $$('.ab_planet.is-feed');
     if (!bhw || !feedPlanets.length || !hasGsap || !window.Draggable) return;
     var count = 0, grow = 1, countEl = $('#feedCount'), NOVA = 7, novae = 0;
     feedPlanets.forEach(function(p){ p.tabIndex = 0; p.setAttribute('role', 'button'); p.setAttribute('aria-label', 'Planet. Press Enter to send it into the black hole.'); });

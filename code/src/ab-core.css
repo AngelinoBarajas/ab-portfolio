@@ -403,6 +403,10 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 .ab_planner_read b{color:var(--star);font-weight:500}
 .ab_planner_read.is-below{position:static;margin-top:-8px;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.6}
 .ab_planner_chips.is-shake{animation:ab-shake .4s}
+.ab_planner_addons{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:10px}
+.ab_planner_addon-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust)}
+.ab_planner_chip.is-addon{border-style:dashed}
+.ab_planner_chip.is-addon[aria-pressed="true"]{border-style:solid}
 @keyframes ab-shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
 .button.is-launch{overflow:visible}
 .ab_planner_flame{position:absolute;left:50%;bottom:-40px;width:18px;height:40px;transform:translateX(-50%);background:linear-gradient(var(--signal),transparent);opacity:0;filter:blur(2px);pointer-events:none}
