@@ -425,6 +425,8 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
   .ab_footer_feed-orbit .ab_planet.is-feed:nth-child(2){left:6%}
   .ab_footer_feed-orbit .ab_planet.is-feed:nth-child(4){right:8%;bottom:70%}
 }
+/* phones: the Mission control column (email button) takes the full row, as in the prototype */
+@media (max-width:767px){.ab_footer_grid > .ab_footer_col:last-child{grid-column:1/-1}}
 .ab_footer_link::before{content:"";position:absolute;left:-14px;top:50%;width:6px;height:6px;margin-top:-3px;background:var(--signal);transform:scale(0);transition:transform .25s cubic-bezier(.2,.9,.2,1.4)}
 .ab_footer_link:hover::before,.ab_footer_link:focus-visible::before{transform:scale(1)}
 .ab_footer_link:focus-visible{color:var(--star);transform:translateX(6px)}
