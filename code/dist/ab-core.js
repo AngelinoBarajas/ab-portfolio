@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.3.3 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.3.4 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -337,21 +337,29 @@ window.Webflow.push(function(){
 
   /* ---------- page transitions: warp out, and the next page arrives out of the warp ---------- */
   var WARP_IN = 'ab:warp-in';
+  // leaving: warp in and HOLD on the fully covered screen (warp() fades back out, which showed the old page
+  // again while the next one loaded); the next page starts covered and fades in
   function go(href){
     try { sessionStorage.setItem(WARP_IN, '1'); } catch(e){}
-    warp(function(){ location.href = href; });
+    var flash = $('#warpFlash');
+    if (!hasGsap || reduce || !flash){ location.href = href; return; }
+    flash.style.pointerEvents = 'auto';
+    gsap.timeline()
+      .to(sf.state, { warp: 1, duration: .55, ease: 'power3.in' })
+      .to(flash, { opacity: 1, duration: .25 }, '-=.2')
+      .add(function(){ location.href = href; });
   }
   (function arrive(){
     var html = document.documentElement, flag = null;
     try { flag = sessionStorage.getItem(WARP_IN); sessionStorage.removeItem(WARP_IN); } catch(e){}
     var flash = $('#warpFlash');
     if (flag && hasGsap && !reduce && flash){
-      gsap.set(flash, { opacity: .85 }); sf.state.warp = 1;
+      gsap.set(flash, { opacity: 1 }); sf.state.warp = 1;
       html.classList.remove('ab-warp-in');
       gsap.timeline().to(flash, { opacity: 0, duration: .6, ease: 'power2.out' }, .05).to(sf.state, { warp: 0, duration: 1.1, ease: 'power2.out' }, 0);
     } else html.classList.remove('ab-warp-in');
     // back/forward cache: a page restored mid-warp would keep its flash up
-    addEventListener('pageshow', function(e){ if (e.persisted && flash){ if (hasGsap) gsap.set(flash, { opacity: 0 }); else flash.style.opacity = 0; sf.state.warp = 0; } });
+    addEventListener('pageshow', function(e){ if (e.persisted && flash){ if (hasGsap) gsap.set(flash, { opacity: 0 }); else flash.style.opacity = 0; flash.style.pointerEvents = ''; sf.state.warp = 0; } });
   })();
 
   Object.assign(AB, { toast: toast, copyText: copyText, fmt: fmt, buildPlanet: buildPlanet, planets: planets, sf: sf, warp: warp, go: go, inject: inject });
