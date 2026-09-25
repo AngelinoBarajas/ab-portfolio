@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.1.2 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.1.3 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -121,9 +121,10 @@ window.Webflow.push(function(){
     var pc = $('#projCount'); if (pc) pc.textContent = cms.length;
     // hand-placed spots for the first missions (board coordinates); later items auto-place in rows of three
     var LAYOUT = [[90, 110, 480, 330], [660, 230, 470, 320], [1220, 90, 440, 300]];
-    // previews picked from the slug (the CMS has no preview/pin fields)
+    // previews picked from the slug (the CMS has no preview/pin fields). pinColor = the mission's Brand accent;
+    // an optional hidden [data-field=brand-accent] node (BG color bound to Brand accent) overrides it from the CMS
     var PREVIEW = {
-      '510-visuals': { type: 'globe', pins: '40.7,-74;40.76,-73.98;36.17,-115.14;35.47,-97.52;37.54,-77.43;34.05,-118.24;24.71,46.68' },
+      '510-visuals': { type: 'globe', pinColor: '#5eead4', pins: '40.7,-74;40.76,-73.98;36.17,-115.14;35.47,-97.52;37.54,-77.43;34.05,-118.24;24.71,46.68' },
       'daniel-aguirre-law': { type: 'map', pinColor: '#891E2D', pinHome: '#A88B5C', pins: '41.46,-72.82;31,-97.5;36.7,-119.4;32.7,-83.4;40.9,-77.8;35.5,-79.4;28.6,-82.4;42.9,-75.5;39.3,-111.7;34.3,-111.7;37.5,-78.8;42.3,-71.8;40,-89.2;47.4,-120.5' }
     };
     function colorOf(node, prop){
@@ -150,7 +151,11 @@ window.Webflow.push(function(){
         inner.style.setProperty('--fbg', bg || '#1c1e24'); inner.style.setProperty('--ffg', fg || '#ffffff');
         f.__bg = bg || '#1c1e24';
         var pv = PREVIEW[slug];
-        if (pv){ var cv = document.createElement('canvas'); cv.className = 'pv'; cv.setAttribute('aria-hidden', 'true'); inner.appendChild(cv); f.__pv = pv; }
+        if (pv){
+          var cv = document.createElement('canvas'); cv.className = 'pv'; cv.setAttribute('aria-hidden', 'true'); inner.appendChild(cv);
+          var acc = colorOf($('[data-field="brand-accent"]', f), 'bg');
+          f.__pv = { type: pv.type, pins: pv.pins, pinHome: pv.pinHome, pinColor: acc || pv.pinColor };
+        }
         else if (cover === 'mark'){
           var mk = document.createElement('div'); mk.className = 'pv'; mk.setAttribute('aria-hidden', 'true'); mk.style.cssText = 'position:absolute;right:22px;top:22px;width:120px;height:120px';
           mk.innerHTML = '<svg viewBox="-80 -80 160 160" width="100%" height="100%"><circle r="61.8" fill="none" stroke="currentColor" stroke-opacity=".25" stroke-dasharray="3 3"/><path d="M 0 -61.8 A 61.8 61.8 0 1 0 61.8 0" fill="none" stroke="currentColor" stroke-width="12"/><rect x="47" y="-15" width="30" height="30" fill="#FF6A3D"/></svg>';
@@ -166,7 +171,9 @@ window.Webflow.push(function(){
 
     // previews
     function parsePins(str){ return (str || '').split(';').filter(Boolean).map(function(p){ var a = p.split(','); return [+a[0], +a[1]]; }); }
-    function globePreview(c, pins){
+    function rgba(hx, a){ return 'rgba(' + hex(hx).join(',') + ',' + a + ')'; }
+    function globePreview(c, pins, pcol){
+      pcol = pcol || '#FF6A3D';
       var S = 230, dp = 2; c.width = S * dp; c.height = S * dp; c.style.width = S + 'px'; c.style.height = S + 'px';
       var ctx = c.getContext('2d'), W = c.width, R = W * .42, rot = 0, visible = false, pts = [];
       for (var la = -80; la <= 80; la += 10) for (var lo = -180; lo < 180; lo += 10) pts.push([la, lo]);
@@ -177,7 +184,7 @@ window.Webflow.push(function(){
         ctx.fillStyle = g; ctx.beginPath(); ctx.arc(W / 2, W / 2, R, 0, 7); ctx.fill();
         ctx.strokeStyle = 'rgba(255,255,255,.25)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(W / 2, W / 2, R, 0, 7); ctx.stroke();
         for (var i = 0; i < pts.length; i++){ var p = proj(pts[i][0], pts[i][1]); if (p[2] < 0) continue; ctx.fillStyle = 'rgba(255,255,255,' + (0.15 + p[2] * .5) + ')'; ctx.fillRect(p[0], p[1], 3, 3); }
-        pins.forEach(function(pn){ var p = proj(pn[0], pn[1]); if (p[2] < .05) return; ctx.fillStyle = '#FF6A3D'; ctx.beginPath(); ctx.arc(p[0], p[1], 8, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(255,106,61,.45)'; ctx.beginPath(); ctx.arc(p[0], p[1], 18, 0, 7); ctx.stroke(); });
+        pins.forEach(function(pn){ var p = proj(pn[0], pn[1]); if (p[2] < .05) return; ctx.fillStyle = pcol; ctx.beginPath(); ctx.arc(p[0], p[1], 8, 0, 7); ctx.fill(); ctx.strokeStyle = rgba(pcol, .45); ctx.beginPath(); ctx.arc(p[0], p[1], 18, 0, 7); ctx.stroke(); });
       }
       onView(c, function(x){ visible = x; });
       draw();
@@ -204,7 +211,7 @@ window.Webflow.push(function(){
     }
     frames.forEach(function(f){
       var cv = $('canvas.pv', f); if (!cv || !f.__pv) return;
-      if (f.__pv.type === 'globe') globePreview(cv, parsePins(f.__pv.pins));
+      if (f.__pv.type === 'globe') globePreview(cv, parsePins(f.__pv.pins), f.__pv.pinColor);
       if (f.__pv.type === 'map') mapPreview(cv, parsePins(f.__pv.pins), f.__pv);
     });
 
