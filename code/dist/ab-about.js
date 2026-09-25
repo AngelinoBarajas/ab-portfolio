@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.6.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.6.2 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -202,23 +202,7 @@ window.Webflow.push(function(){
     badge.addEventListener('pointercancel', function(e){ if (down && !down.moved){ down = null; return; } up(e); });
     badge.addEventListener('lostpointercapture', function(e){ if (down && down.moved) up(e); });
     badge.addEventListener('pointerleave', function(){ if (!down && hasGsap) gsap.to(badge, { rotationY: 0, rotationX: 0, duration: 1, ease: 'elastic.out(1,.5)', overwrite: 'auto' }); });
-    // the pilot planet docks on the strap's anchor, so the badge hangs from it (the Designer position is the no-JS fallback)
-    var planet = $('[data-pilot-planet]');
-    function dock(){
-      if (!planet) return;
-      // layout offsets, not bounding rects: the badge's drop-in (and any swing) transforms would shift a rect
-      var host = planet.offsetParent, x = 0, y = 0, n = wrap, pw = planet.offsetWidth;
-      if (!host) return;
-      while (n && n !== host){ x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
-      if (n !== host) return;
-      planet.style.right = 'auto'; planet.classList.add('is-docked');
-      planet.style.left = (x + wrap.clientWidth / 2 - pw / 2).toFixed(1) + 'px';
-      planet.style.top = (y - pw / 2 + 32).toFixed(1) + 'px';
-    }
-    dock();
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(dock);
-    addEventListener('load', dock);
-    addEventListener('resize', function(){ dock(); if (!S.running && !S.held){ measure(); rest(); } });
+    addEventListener('resize', function(){ if (!S.running && !S.held){ measure(); rest(); } });
     // arrives swinging in from above
     if (!reduce && hasGsap) gsap.from(wrap, { y: -120, rotation: -6, opacity: 0, duration: 1.6, ease: 'elastic.out(1,.55)', delay: .4, clearProps: 'transform,opacity' });
   })();
@@ -291,6 +275,10 @@ window.Webflow.push(function(){
     if (reduce){ elH.textContent = '01:00:00'; elE.textContent = '7y 000d 00h'; return; }
     new IntersectionObserver(function(es){ var was = vis; vis = es[0].isIntersecting; if (vis && !was) requestAnimationFrame(tick); }).observe(td);
   })();
+
+  /* ---------- Between launches cards: spotlight + tilt from core (AB.cardFx); the bookshelf stays flat ---------- */
+  $$('.section_about-off .ab_bento-card.is-shelf').forEach(function(c){ c.setAttribute('data-no-tilt', ''); });
+  if (AB.cardFx) $$('.section_about-off .ab_bento-card').forEach(AB.cardFx);
 
   /* ---------- crew of three: hover speeds the orbits up smoothly (playbackRate, so nobody jumps to a new spot;
      changing animation-duration on hover re-computes the progress and the planets snap) ---------- */

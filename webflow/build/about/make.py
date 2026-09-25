@@ -80,7 +80,7 @@ w('hero.html', '<section class="section_about-hero" id="hero" data-frame="pilot-
   '</div></div></div></div></section>')
 w('hero.css', '''
 .section_about-hero{position:relative}
-.ab_planet.is-dbh.is-pilot{right:clamp(140px,11vw,190px);top:clamp(104px,9vw,130px);width:clamp(64px,5.6vw,92px);z-index:3}
+.ab_planet.is-dbh.is-pilot{left:44%;right:auto;top:clamp(180px,21vw,320px);width:clamp(200px,21vw,360px);z-index:1}
 .ab_rec{display:flex;align-items:center;gap:8px;color:var(--dust);letter-spacing:0.1em;text-transform:uppercase}
 .ab_rec_dot{width:8px;height:8px;border-radius:50%;background-color:#FF3B3B}
 .ab_about-hero_grid{position:relative;z-index:4;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,0.9fr);align-items:center;gap:clamp(32px,5vw,80px)}
@@ -129,8 +129,8 @@ w('hero.css', '''
 .ab_sig-slot{display:block;width:min(260px,70%)}
 .ab_sig-slot.is-back{margin-top:auto}
 .ab_badge_hint{position:absolute;left:0;right:0;bottom:0;font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-align:center;white-space:nowrap;color:var(--dust);pointer-events:none}
-@media screen and (max-width: 991px){.ab_about-hero_grid{grid-template-columns:minmax(0,1fr)}.ab_badge_wrap{max-width:340px;margin-top:10px}}
-@media screen and (max-width: 767px){.ab_planet.is-dbh.is-pilot{top:96px;right:90px;width:52px}}
+@media screen and (max-width: 991px){.ab_planet.is-dbh.is-pilot{left:auto;right:-30px;top:150px;width:240px}.ab_about-hero_grid{grid-template-columns:minmax(0,1fr)}.ab_badge_wrap{max-width:340px;margin-top:10px}}
+@media screen and (max-width: 767px){.ab_planet.is-dbh.is-pilot{top:120px;right:-40px;width:170px}}
 ''')
 
 # ---------- mission statement ----------

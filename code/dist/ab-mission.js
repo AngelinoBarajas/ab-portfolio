@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission v0.6.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission v0.6.2 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abMissionInit) return;
@@ -1663,15 +1663,8 @@ window.Webflow.push(function(){
       }
       setTimeout(step, tiles.length * 120 + 900);
     }
-    // spotlight + gentle tilt, draggable tags, spin the specimen
-    $$('.ab_bento-card.is-mf', sec).forEach(function(c){
-      c.addEventListener('pointermove', function(e){
-        var r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
-        c.style.setProperty('--mx', (x * 100) + '%'); c.style.setProperty('--my', (y * 100) + '%');
-        if (!reduce && hasGsap && !coarse && !(e.target.closest && e.target.closest('.mf-tag, .ab_planet'))) gsap.to(c, { rotationY: (x - .5) * 5, rotationX: (.5 - y) * 5, transformPerspective: 900, duration: .5, ease: 'power2.out' });
-      });
-      c.addEventListener('pointerleave', function(){ if (hasGsap) gsap.to(c, { rotationY: 0, rotationX: 0, duration: .7, ease: 'elastic.out(1,.6)' }); });
-    });
+    // draggable tags, spin the specimen (card spotlight + tilt: core AB.cardFx; covers cards added later too)
+    if (AB.cardFx) $$('.ab_bento-card.is-mf', sec).forEach(AB.cardFx);
     if (canDrag) $$('.mf-tag', sec).forEach(function(t){
       Draggable.create(t, { type: 'x,y', bounds: t.closest('.ab_bento-card'), zIndexBoost: true, onRelease: function(){ gsap.to(t, { x: 0, y: 0, duration: .9, ease: 'elastic.out(1,.45)', delay: .15 }); } });
     });

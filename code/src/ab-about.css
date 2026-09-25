@@ -6,8 +6,12 @@
 .ab_rec_dot{box-shadow:0 0 10px #ff3b3b;animation:ab-about-blink 1.6s steps(1) infinite}
 @keyframes ab-about-blink{50%{opacity:.2}}
 
-/* pilot planet: docked on the badge strap at desktop (above the hero grid, so the strap hangs from it) */
-.ab_planet.is-pilot.is-docked{z-index:5}
+/* pilot planet: big, in the background behind the title + badge. The hero grid lets pointers through its empty
+   space so the planet can still be grabbed there (hero toys); its content stays interactive. */
+.ab_about-hero_grid,.ab_about-hero_copy{pointer-events:none}
+.ab_about-hero_copy > *,.ab_badge_wrap{pointer-events:auto}
+.ab_about-hero_copy > .ab_dbh_title{pointer-events:none}
+.ab_about-hero_copy .ab_dbh_word{pointer-events:auto}
 /* pilot planet: the extra thin rings + two moons (built by ab-about.js inside the planet body) */
 .ab_planet .pring.is-thin > i{background:radial-gradient(closest-side,transparent 90.5%,var(--t1) 92%,var(--t2) 95.5%,transparent 97%)}
 .ab_moon{position:absolute;left:50%;top:50%;pointer-events:none;will-change:transform}
