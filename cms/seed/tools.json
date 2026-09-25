@@ -118,5 +118,23 @@
     "color": "#8A8FA3",
     "icon": "code",
     "use": ""
+  },
+  {
+    "name": "Photoshop",
+    "color": "#31A8FF",
+    "icon": "pen",
+    "use": "Photo retouching, compositing and mockups"
+  },
+  {
+    "name": "Illustrator",
+    "color": "#FF9A00",
+    "icon": "pen",
+    "use": "Vector logos, icons and illustration"
+  },
+  {
+    "name": "Lightroom",
+    "color": "#31A8FF",
+    "icon": "pen",
+    "use": "Photo editing and color grading"
   }
 ]

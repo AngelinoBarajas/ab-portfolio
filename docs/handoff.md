@@ -13,7 +13,7 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 | 3b. Global styles | ✅ 29 classes + tag styles (Body, H1–H6, p) |
 | 5. Components | 🟡 Nav, Footer, Frame label, Bento card, FAQ item done (group "Global"). Remaining: mission card, next card, code block, crew dock, built on the first page that uses each |
 | 6. Pages | 🟡 Home built + on staging (ab-portfolio-723a30.webflow.io, 2026-09-25). Remaining: Work, Mission template, Services template, About, 404 |
-| 7. Custom code | 🟡 Part 1 done 2026-09-25: site-wide `ab-core` (JS + CSS) + Home `ab-home`, on staging (core v0.1.2, home v0.1.3). Build/deploy steps in `code/README.md`; what was re-pointed and the deviations in `docs/webflow-build-notes.md` › Custom code, part 1. **Waiting on Angelino's OK for Home**, then pages resume with Work (each page gets its own bundle) |
+| 7. Custom code | 🟡 Part 1 done 2026-09-25: site-wide `ab-core` (JS + CSS) + Home `ab-home`, on staging at v0.1.4 (Home review edits applied; metrics copy still open). Build/deploy steps in `code/README.md`; what was re-pointed and the deviations in `docs/webflow-build-notes.md` › Custom code, part 1. **Waiting on Angelino's OK for Home**, then pages resume with Work (each page gets its own bundle) |
 
 Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top"> (hero · work · statement · services · process · transmission · stack · testimonials · faq · contact) · [Footer] · Site data (hidden CMS sources)`. Section-by-section notes: `docs/webflow-build-notes.md` › Home; prototype → Webflow hook map for the step 7 scripts: `webflow/build/home/class-map.md`.
 

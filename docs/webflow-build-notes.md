@@ -95,7 +95,7 @@ Steps 1–2 also done by Angelino 2026-09-25 (Designer reloaded, 3 dynamic color
 
 ## Custom code, part 1 (2026-09-25): site-wide + Home
 
-Source `code/src/` → `code/dist/` (`code/README.md` has the build/deploy steps). Live on staging: `ab-core` JS + CSS at **v0.1.2**, `ab-home` at **v0.1.3**.
+Source `code/src/` → `code/dist/` (`code/README.md` has the build/deploy steps). Live on staging: **v0.1.4** (core JS + CSS, home).
 
 | What | Where in Webflow |
 |---|---|
@@ -131,3 +131,13 @@ The hidden `[data-field=brand-bg]` node was first bound to Brand *foreground*, t
 
 ### v0.1.3 (2026-09-25): globe pins in the mission accent
 Board previews draw pins in the mission's Brand accent: 510 Visuals teal `#5eead4` (Aguirre map already used `#891E2D`). The value is a per-slug fallback in `code/src/home/10-work.js`; to make it CMS-driven, add a third hidden div `[data-field=brand-accent]` in the board item's `ab_cms-source` with Get BG Color → **Brand accent** (top group), and the script uses it. Only `ab-home` moved to v0.1.3; `ab-core` JS/CSS stay on v0.1.2.
+
+### v0.1.4 (2026-09-25): Home review edits (Angelino's hp-edits doc)
+- **Hero drag cue:** until a visitor drags something, the first headline word tugs and a "Drag me" hand chip appears (3 times, 10 s apart); remembered in `localStorage` `ab:dragged`.
+- **Altitude meter:** label is a dark chip and the track is darker, so it reads on the light Services section.
+- **Planner:** the flight-plan readout moved under the visual (script moves `#plRead`, class `is-below`), so it wraps instead of being cut off and no longer crowds Earth. Cleaner later: move `#plRead` below `.ab_planner_viz` in the Designer.
+- **Tools orbit:** real brand logos (Simple Icons, CC0) for Figma, D3, GitHub, Three.js, GSAP, Webflow, Photoshop, Illustrator, Lightroom (`code/src/home/35-logos.js`, keyed by tool name); Client-First, Lenis, Unicorn Studio have no public logo there and keep the generic icon. **New Tools items:** Photoshop, Illustrator, Lightroom. The inner ring takes ~40% of the chips; the readout count follows the list.
+- **Mobile:** hero giant planet starts at top 44px; the work deck swipes (frames had `touch-action:none`); footer feed planets scattered instead of an arc; text-selection boxes hide their name tag and the "Angelino" cursor sits under the word's end.
+- **Dot field** follows the cursor more tightly (easing .14 → .32).
+- **Brand accent:** hidden `[data-field=brand-accent]` node added to the board item by Angelino (BG = Brand accent); globe/map pins use it.
+- **Copy (less map-focused):** hero lede, WebGL bento card (title "Interactive 3D, fed by the CMS"), footer brand line and footer service link "Interactive 3D + data". The Services CMS item for `webgl-data` still says "Globes, maps + 3D"; update it when the Services template is built.
