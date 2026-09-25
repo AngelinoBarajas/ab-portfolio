@@ -106,6 +106,8 @@ Page `6ab6853da89bdfd5de03324d` (`/work`; a static page can share the `work` slu
 CMS change: new Switch field **Filter chip** (`filter-chip`, `80a08003679946064ca0a03df42cfd64`) on Mission Types; on for Website, Branding, Logo, Design, Development, App, UI/UX, WebGL (the prototype's core list). Mission Types `sort` re-ordered to that chip order (the 4 non-chip types 9–12).
 
 ### Designer steps for Angelino (Work)
+Steps 1–2 **done by Angelino 2026-09-25**, verified on staging: all 18 color nodes carry the right Missions values (not *Next mission*), covers pick them up, tags match the CMS on all 6 cards, chip counts correct, *Development* filter → 510, Aguirre, Halcyon (3 of 6). Step 3 optional, still open.
+
 1. **Card tags**: in the Missions list card, `.ab_mission-card_inner › .ab_mission-card_body › .ab_mission-card_tags` › add a Collection List sourced from the card's *Types* field; item = Text Block bound to *Name*, class `ab_mission-card_tag`; give the nested wrapper/list/item the class `ab_arc_chip-list`. Filtering needs these tags (until then the bar shows only "All"). Verified with simulated tags: Branding → AB Identity + Northwind, count "Showing 2 of 6".
 2. **Card brand colors**: hidden `[data-field=brand-bg]` → BG = *Brand background*, `[data-field=brand-fg]` → Text = *Brand foreground*, `[data-field=brand-accent]` → BG = *Brand accent* (top group, not *Next mission*). Until then covers use the fallback navy/orange.
 3. **Cover image visibility** (optional): bind the card Image's visibility to *Cover* is set. The script already removes empty images.
