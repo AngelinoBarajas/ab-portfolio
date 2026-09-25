@@ -29,6 +29,7 @@ Reference for MCP writes. Site: **AB Portfolio** `6ab5fe4a5ee75f9c981dc0be` (ab-
 | UI / Select | `--_color---ui--select` | `variable-3bb33bdf-f5fc-952d-4ac2-4b18860344d4` |
 | Brand / Nebula | `--_color---brand--nebula` | `variable-c18e579e-ddae-05c3-3a55-d74e8bad7a19` |
 | Status / Live | `--_color---status--live` | `variable-933d4fa6-cefe-d92c-d5a0-66292bb6b8d4` |
+| Neutral / Glass | `--_color---neutral--glass` | `variable-d1d1ff59-2189-0b3c-da50-7a93570fcb47` |
 | Status / Alert | `--_color---status--alert` | `variable-035bc075-2ce1-1de0-f6f6-58e1375ac261` |
 | Font / Display | `--_typography---font--display` | `variable-1861f25a-a51a-b0d3-480e-ac8425bb8938` |
 | Font / Body | `--_typography---font--body` | `variable-6ae502c9-765d-7490-13d1-5e5d89f65098` |
@@ -62,3 +63,10 @@ Reference for MCP writes. Site: **AB Portfolio** `6ab5fe4a5ee75f9c981dc0be` (ab-
 | Geist | wght 100–900 | `6ab5ff8d4f8377385169dcdb` |
 | JetBrains Mono | wght 100–800 | `6ab5ff8ee65dafe58896e6f1` |
 | Caveat | wght 400–700 | `6ab5ff8ec4913869c097d744` |
+
+## Components
+
+| Component | ID |
+|---|---|
+| Nav | `2a7d17af-8058-c7e5-40b8-743eb5d45bac` |
+| Footer | `b6135eba-84f0-865b-6ee0-af875233bbb3` |
