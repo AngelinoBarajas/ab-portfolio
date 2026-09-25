@@ -505,16 +505,18 @@
     ];
     function buildSketch(sc){
       var P = sc.portrait, st = sc.stg, M = AB.MARK, fid = 'skr-' + sc.id;
-      var cols = P ? 2 : 3, cw = P ? 270 : 320, ch = P ? 202 : 240, gx = P ? 20 : 34, gy = P ? 64 : 58, x0 = P ? 40 : 72, y0 = P ? 118 : 128, k = cw / 200;
+      var cols = P ? 2 : 3, cw = P ? 250 : 320, ch = P ? 188 : 240, gx = P ? 20 : 34, gy = P ? 46 : 58, x0 = P ? 60 : 72, y0 = P ? 118 : 128, k = cw / 200;
       var cells = SKETCHES.map(function(s, i){ return { s: s, x: x0 + (i % cols) * (cw + gx), y: y0 + Math.floor(i / cols) * (ch + gy) }; });
       st.innerHTML = '<div class="sk-paper"></div><svg class="sk-defs" width="0" height="0" aria-hidden="true"><filter id="' + fid + '"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter></svg>' +
         '<div class="sk-title">AB mark · explorations</div><div class="sk-count">iterations: <b>1</b></div>' +
         cells.map(function(c, i){
-          var s = c.s, inner = s.mark ? '<g transform="translate(10 30) scale(.367)"><path class="sk-l" d="' + M.a + '"/><path class="sk-l" d="' + M.planet + '"/><path class="sk-l" d="' + M.b + '"/></g>' :
-            s.d.map(function(d){ return '<path class="sk-l" d="' + d + '"/>'; }).join('');
+          // stroke widths in user units (non-scaling-stroke broke the dash-draw inside the scaled cells)
+          var sw = 'stroke-width:' + (2.2 / k).toFixed(2), swm = 'stroke-width:' + (2.2 / (k * .367)).toFixed(2);
+          var s = c.s, inner = s.mark ? '<g transform="translate(10 30) scale(.367)"><path class="sk-l" style="' + swm + '" d="' + M.a + '"/><path class="sk-l" style="' + swm + '" d="' + M.planet + '"/><path class="sk-l" style="' + swm + '" d="' + M.b + '"/></g>' :
+            s.d.map(function(d){ return '<path class="sk-l" style="' + sw + '" d="' + d + '"/>'; }).join('');
           return '<div class="sk-cell" data-i="' + i + '" style="left:' + c.x + 'px;top:' + c.y + 'px;width:' + cw + 'px;height:' + ch + 'px">' +
             '<svg viewBox="0 0 200 150" preserveAspectRatio="xMidYMid meet"><g filter="url(#' + fid + ')">' + inner +
-            (s.no ? '<path class="sk-x" d="M16 16L184 134M184 16L16 134"/>' : '') + '</g></svg>' +
+            (s.no ? '<path class="sk-x" style="stroke-width:' + (3.2 / k).toFixed(2) + '" d="M16 16L184 134M184 16L16 134"/>' : '') + '</g></svg>' +
             '<span class="sk-v">' + s.v + '</span><span class="sk-note">' + esc(s.note) + '</span></div>';
         }).join('') +
         '<svg class="sk-hi" viewBox="0 0 ' + sc.SW + ' ' + sc.SH + '" aria-hidden="true"><path class="sk-ring" filter="url(#' + fid + ')" d=""/></svg>' +
@@ -527,13 +529,13 @@
       cellEls.forEach(function(el, i){
         var c = cells[i], sk = c.s;
         qa(el, '.sk-l').forEach(function(p){
-          var L = p.getTotalLength ? p.getTotalLength() : 300; p.style.strokeDasharray = L; p.style.strokeDashoffset = L;
+          var L = (p.getTotalLength ? p.getTotalLength() : 300) + 3; // +3: no round-cap dot while hidden p.style.strokeDasharray = L; p.style.strokeDashoffset = L;
           var sx = sk.mark ? .367 * k : k, ox = c.x + (sk.mark ? 10 * k : 0) + (cw - 200 * k) / 2, oy = c.y + (sk.mark ? 30 * k : 0) + (ch - 150 * k) / 2;
           lines.push({ p: p, L: L, cell: i, map: function(pt){ return { x: ox + pt.x * sx, y: oy + pt.y * sx }; } });
         });
       });
-      var xs = qa(st, '.sk-x'); xs.forEach(function(p){ var L = p.getTotalLength ? p.getTotalLength() : 420; p.style.strokeDasharray = L; p.style.strokeDashoffset = L; p.dataset.len = L; });
-      var RL = ring.getTotalLength ? ring.getTotalLength() : 1200; ring.style.strokeDasharray = RL; ring.style.strokeDashoffset = RL;
+      var xs = qa(st, '.sk-x'); xs.forEach(function(p){ var L = (p.getTotalLength ? p.getTotalLength() : 420) + 4; p.style.strokeDasharray = L; p.style.strokeDashoffset = L; p.dataset.len = L; });
+      var RL = (ring.getTotalLength ? ring.getTotalLength() : 1200) + 4; ring.style.strokeDasharray = RL; ring.style.strokeDashoffset = RL;
       var tl = gsap.timeline({ paused: true, repeat: -1 }), calls = [];
       function at(t, fn){ tl.call(fn, null, t); calls.push({ t: t, fn: fn }); }
       function setN(n){ cnt.textContent = n; }
@@ -545,12 +547,12 @@
       cellEls.forEach(function(el, i){
         if (i === 3) tl.addLabel('iterate', t);
         lines.filter(function(l){ return l.cell === i; }).forEach(function(l){
-          var d = Math.max(.35, Math.min(1.1, l.L / 320)), o = { v: 0 };
+          var d = Math.max(.28, Math.min(.75, l.L / 420)), o = { v: 0 };
           var p0 = l.map(l.p.getPointAtLength ? l.p.getPointAtLength(0) : { x: 0, y: 0 });
-          tl.to(pen, { x: p0.x - 6, y: p0.y - 34, duration: .25, ease: 'power2.inOut' }, t);
-          tl.to(l.p, { strokeDashoffset: 0, duration: d, ease: 'none' }, t + .25);
-          tl.fromTo(o, { v: 0 }, { v: 1, duration: d, ease: 'none', immediateRender: false, onUpdate: function(){ if (!l.p.getPointAtLength) return; var pt = l.map(l.p.getPointAtLength(o.v * l.L)); gsap.set(pen, { x: pt.x - 6, y: pt.y - 34 }); } }, t + .25);
-          t += d + .3;
+          tl.to(pen, { x: p0.x - 6, y: p0.y - 34, duration: .2, ease: 'power2.inOut' }, t);
+          tl.to(l.p, { strokeDashoffset: 0, duration: d, ease: 'none' }, t + .2);
+          tl.fromTo(o, { v: 0 }, { v: 1, duration: d, ease: 'none', immediateRender: false, onUpdate: function(){ if (!l.p.getPointAtLength) return; var pt = l.map(l.p.getPointAtLength(o.v * l.L)); gsap.set(pen, { x: pt.x - 6, y: pt.y - 34 }); } }, t + .2);
+          t += d + .22;
         });
         (function(n){ at(t, function(){ setN(n); }); })(NUM[i]);
         tl.to(qa(el, '.sk-v,.sk-note'), { autoAlpha: 1, duration: .3 }, t);

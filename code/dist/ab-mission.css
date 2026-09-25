@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission.css v0.4.3 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission.css v0.4.4 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · ab-mission.css · Mission template (/work/[slug]) only. Script-built parts + states the Designer cannot express. */
 /* ---------- glossary chips + tip ---------- */
 .gl{all:unset;cursor:help;border-bottom:1px dashed var(--_color---brand--signal);color:inherit;position:relative;white-space:nowrap}
@@ -475,17 +475,17 @@ body.eng .crew-dock .dot{background:#7cc4ff;box-shadow:0 0 10px #7cc4ff}
 /* ---------- manifest internals ---------- */
 .ab_mf_site .vs-t{position:relative;border:1px solid var(--_color---neutral--hair);background:var(--_color---neutral--panel);padding:8px;display:flex;flex-direction:column;gap:7px;opacity:.35;transform:translateY(6px);transition:opacity .5s var(--d),transform .5s cubic-bezier(.2,.9,.2,1.2) var(--d),border-color .3s}
 .vs-w{height:54px;border:1px dashed var(--_color---neutral--hair-strong);padding:6px;display:flex;flex-direction:column;gap:4px;position:relative}
-.vs-w i{display:block;height:5px;background:var(--_color---text--primary);opacity:.75;width:80%;transition:width .45s cubic-bezier(.2,.9,.2,1.2)}
-.vs-w i.s{width:50%;opacity:.3;height:4px}
-.vs-w b{position:absolute;right:6px;bottom:6px;width:22px;height:10px;background:var(--_color---brand--signal);transition:width .35s,background .3s}
-.vs-t span{font-family:var(--_typography---font--mono);font-size:10.5px;letter-spacing:.02em;color:var(--_color---text--secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:16px}
-.vs-t em{position:absolute;right:6px;bottom:6px;width:14px;height:14px;display:grid;place-items:center;background:var(--_color---brand--signal);color:var(--_color---brand--on-signal);font-style:normal;font-size:9px;transform:scale(0);transition:transform .35s cubic-bezier(.2,.9,.2,1.6) calc(var(--d) + .35s)}
+.vs-w:not(.is-art) i{display:block;height:5px;background:var(--_color---text--primary);opacity:.75;width:80%;transition:width .45s cubic-bezier(.2,.9,.2,1.2)}
+.vs-w:not(.is-art) i.s{width:50%;opacity:.3;height:4px}
+.vs-w:not(.is-art) b{position:absolute;right:6px;bottom:6px;width:22px;height:10px;background:var(--_color---brand--signal);transition:width .35s,background .3s}
+.vs-t > span{font-family:var(--_typography---font--mono);font-size:10.5px;letter-spacing:.02em;color:var(--_color---text--secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:16px}
+.vs-t > em{position:absolute;right:6px;bottom:6px;width:14px;height:14px;display:grid;place-items:center;background:var(--_color---brand--signal);color:var(--_color---brand--on-signal);font-style:normal;font-size:9px;transform:scale(0);transition:transform .35s cubic-bezier(.2,.9,.2,1.6) calc(var(--d) + .35s)}
 .ab_mf_site.on .vs-t{opacity:1;transform:none}
-.ab_mf_site.on .vs-t em{transform:scale(1)}
+.ab_mf_site.on .vs-t > em{transform:scale(1)}
 .ab_mf_site .vs-t:hover{transform:translateY(-4px) scale(1.04)!important;border-color:var(--_color---ui--select);box-shadow:0 10px 22px -10px rgba(11,12,20,.35);z-index:2}
-.vs-t:hover .vs-w{border-color:var(--_color---ui--select);border-style:solid;background:rgba(47,107,255,.05)}
-.vs-t:hover .vs-w i:nth-child(1){width:55%}.vs-t:hover .vs-w i:nth-child(2){width:92%}.vs-t:hover .vs-w i.s{width:74%}
-.vs-t:hover .vs-w b{width:34px;background:var(--_color---ui--select)}
+.vs-t:hover .vs-w:not(.is-art){border-color:var(--_color---ui--select);border-style:solid;background:rgba(47,107,255,.05)}
+.vs-t:hover .vs-w:not(.is-art) i:nth-child(1){width:55%}.vs-t:hover .vs-w:not(.is-art) i:nth-child(2){width:92%}.vs-t:hover .vs-w:not(.is-art) i.s{width:74%}
+.vs-t:hover .vs-w:not(.is-art) b{width:34px;background:var(--_color---ui--select)}
 .vs-t.is-tour{border-color:var(--_color---brand--signal)}
 .vs-t:hover::after{content:attr(data-p);position:absolute;left:-1px;top:-19px;font-family:var(--_typography---font--mono);font-size:10px;background:var(--_color---ui--select);color:#fff;padding:2px 6px;white-space:nowrap;z-index:3}
 .vs-cur{position:absolute;left:0;top:0;z-index:4;width:16px;opacity:0;pointer-events:none}
@@ -751,8 +751,8 @@ body.eng .crew-dock .dot{background:#7cc4ff;box-shadow:0 0 10px #7cc4ff}
 .stg-sketch.is-p .sk-count{right:40px;top:78px;font-size:26px}
 .sk-cell{position:absolute;border:1.5px dashed rgba(43,43,43,.2)}
 .sk-cell svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.sk-l{fill:none;stroke:#2b2b2b;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
-.sk-x{fill:none;stroke:#e5484d;stroke-width:3.2;stroke-linecap:round;vector-effect:non-scaling-stroke;opacity:.85}
+.sk-l{fill:none;stroke:#2b2b2b;stroke-linecap:round;stroke-linejoin:round}
+.sk-x{fill:none;stroke:#e5484d;stroke-linecap:round;opacity:.85}
 .sk-v{position:absolute;left:10px;bottom:4px;font-family:var(--_typography---font--script);font-weight:600;font-size:21px;color:#7a7a7a}
 .sk-note{position:absolute;right:10px;bottom:4px;max-width:72%;text-align:right;font-family:var(--_typography---font--script);font-weight:600;font-size:22px;line-height:1;color:#2b2b2b}
 .sk-cell.is-win .sk-note{color:#c2410c}
@@ -881,3 +881,6 @@ body.eng .crew-dock .dot{background:#7cc4ff;box-shadow:0 0 10px #7cc4ff}
 .vx-card .ab_mark{width:70%}
 .vs-t:hover .vx-card i{transform:rotate(-10deg) translateY(-2px)}
 .vx-card i,.vx-card b{transition:transform .4s cubic-bezier(.2,.9,.2,1.3)}
+
+/* palette + type specimens: the hovered block rises so a selection box is never covered by the block below */
+.ab_pal:hover,.ab_typespec:hover{z-index:6}

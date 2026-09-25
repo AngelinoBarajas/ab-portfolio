@@ -159,6 +159,7 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 :where([data-selectable]){position:relative}
 .sel{position:absolute;inset:-1px;border:1px solid var(--select);pointer-events:none;opacity:0;transform:scale(1.02);transition:opacity .25s,transform .35s cubic-bezier(.2,.9,.2,1.2);z-index:5}
 [data-selectable]:hover > .sel,[data-selectable].is-selected > .sel,[data-selectable]:focus-visible > .sel{opacity:1;transform:none}
+[data-selectable]:hover,[data-selectable].is-selected,[data-selectable]:focus-visible{z-index:8}
 .sel i{position:absolute;width:9px;height:9px;background:#fff;border:1.5px solid var(--select)}
 .sel .tl{left:-5px;top:-5px}.sel .tc{left:calc(50% - 4.5px);top:-5px}.sel .tr{right:-5px;top:-5px}
 .sel .ml{left:-5px;top:calc(50% - 4.5px)}.sel .mr{right:-5px;top:calc(50% - 4.5px)}
