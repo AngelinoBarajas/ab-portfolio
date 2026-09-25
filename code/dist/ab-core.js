@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.4.5 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.4.6 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -890,6 +890,17 @@ window.Webflow.push(function(){
   var nextCount = 0;
   function nextCard(card){
     if (!card || card.__nx) return; card.__nx = true; var ci = nextCount++;
+    // multi-word names break onto two balanced lines so the title never runs under the planet
+    var tt = $('.ab_next-card_title', card);
+    if (tt && !tt.children.length){
+      var w = tt.textContent.trim().split(/\s+/);
+      if (w.length > 1){
+        var cut = 1, best = 1e9;
+        for (var wi = 1; wi < w.length; wi++){ var dd = Math.abs(w.slice(0, wi).join(' ').length - w.slice(wi).join(' ').length); if (dd < best){ best = dd; cut = wi; } }
+        tt.setAttribute('aria-label', w.join(' '));
+        tt.innerHTML = esc(w.slice(0, cut).join(' ')) + '<br>' + esc(w.slice(cut).join(' '));
+      }
+    }
     var NS = 'http://www.w3.org/2000/svg', planet = $('.ab_planet', card), go = $('.ab_next-card_go', card);
     card.insertAdjacentHTML('afterbegin', '<span class="nx-grid" aria-hidden="true"></span><span class="nx-c tl" aria-hidden="true"></span><span class="nx-c tr" aria-hidden="true"></span><span class="nx-c bl" aria-hidden="true"></span><span class="nx-c br" aria-hidden="true"></span>' +
       '<span class="nx-hud" aria-hidden="true"><span>RA <b>' + (4 + ci * 3) + 'h ' + (21 + ci * 7) + 'm</b></span><span>DEC <b>+' + (12 + ci * 5) + '°</b></span><span>ETA <b class="nx-eta">T−00:10</b></span></span>' +
