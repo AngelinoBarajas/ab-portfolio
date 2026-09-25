@@ -184,7 +184,7 @@ A Collection List on a CMS template whose source is collection X renders **only 
 
 ## Custom code, part 1 (2026-09-25): site-wide + Home
 
-Source `code/src/` → `code/dist/` (`code/README.md` has the build/deploy steps). Live on staging: **v0.4.0** (core JS/CSS, work, mission JS/CSS, services JS/CSS); home v0.3.2 (core JS + CSS, home, work, mission + mission CSS).
+Source `code/src/` → `code/dist/` (`code/README.md` has the build/deploy steps). Live on staging: core JS/CSS, home, mission JS/CSS **v0.4.2**; work + services v0.4.0 (core JS + CSS, home, work, mission + mission CSS).
 
 | What | Where in Webflow |
 |---|---|
@@ -258,3 +258,10 @@ Board previews draw pins in the mission's Brand accent: 510 Visuals teal `#5eead
 - `logo/ab-logo.svg` (AB monogram with a ringed planet) uploaded as asset `6ab6bba8167f1da71a4bf9a8`; the "AB" text in the **Nav** and **Footer** components' `.ab_nav_logo` links replaced by an Image (`.ab_logo-img`, 24px tall, the no-JS fallback). `.ab_nav_logo` is now `inline-flex`.
 - `core/22-logo.js` inlines the SVG (3 paths: `lg-a`, `lg-planet`, `lg-b`) and hides the img: outline draws on (stroke-dash), fills, then an orange glow pulse; hover pulls A and B toward the planet (black-hole). Pure CSS keyframes (`ab-core.css` › logo), so a paused/hidden tab never leaves it invisible. Footer copy draws when scrolled into view; reduced motion = static glow. Frames: `logo/logo-animation-frames.png`.
 - Favicon + webclip made from the logo on the site's dark bg: `logo/favicon-32.png`, `logo/webclip-256.png` (Site settings upload is a Designer step; the API can't).
+
+### v0.4.2 (2026-09-25): warp-in logo + AB Identity on the new mark
+- **Logo intro**: the outline warps in (scale .05 → 1 with a 720° spin, slight blur), then the pieces fill and the orange glow pulses. Hover = black-hole pull. Frames: `logo/logo-animation-frames.png`.
+- **`core/21-mark.js`**: one source for the planet monogram, `AB.markSVG({ cls, grid, dims })` + `AB.MARK` paths. Construction (logo units 490.16 × 241.75, measured from the artwork): planet centered at 240,121 on the cap-height midline, r 98 around a 68 core, ring on a 21.5° axis. Preview: `logo/logo-construction.png`.
+- The old orbit mark is gone everywhere: Work card cover "Mark" (grid + black-hole hover), Home board preview (AB Identity frame), AB Identity monitor channels (The mark: grid draws, mark warps in + fills + glows; Construction: with measurements; On light) and the Applications mockups (favicon tab, avatar, card, sticker).
+- **CMS (AB Identity)**: summary, engineer objective, params line 1, manifest pages, channel captions (The mark, Construction), system "The orbit mark" → "The planet monogram" (slug `ab-identity-the-planet-monogram`, new copy + the real warp CSS as its snippet), problem "One mark from favicon to billboard" fix/result/engineer. Copy describes only the mark's geometry and what was built; Angelino to review wording.
+- Live: core JS/CSS, home, mission JS/CSS v0.4.2; work + services v0.4.0.
