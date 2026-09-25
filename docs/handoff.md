@@ -97,6 +97,10 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 - **Drag cue on every hero** with draggables (Angelino's ask): `AB.dragCue`, one key per hero type.
 - **Copy direction (Angelino):** stop leaning on "building globes"; position the work as interactive 3D that's useful to clients and visitors. **Applied + published 2026-09-25** (his OK): About log lede + waypoint 04, Home WebGL bento Text prop + FAQ home-1, Services › webgl-data summary / solve 1 / deliverable 1 / stage 2 / code label, Tools › Three.js use. Seeds + build sources updated to match. 510 Visuals mission copy stays (it really is a globe). Keep new copy on this line: interactive 3D that's useful to clients and visitors.
 
+## This session (2026-09-25, Process page) in one list
+
+- **New Process page** `/process` (Angelino's idea): prototype approved ("Continue"), built v0.8.0, on staging, awaiting his OK. Details: `docs/webflow-build-notes.md` › Process page. Nav/menu/footer Process links now go there; Home links to it.
+
 ## Next session
 
 1. ~~**404 page**~~ ✅ approved. (Was: `/404`, Webflow's utility page — prototype `prototypes/404.html`, section `signal-lost` (see `docs/build-spec.md`). Same method as About: plan first (sections, static vs CMS, classes, what needs code), then `webflow/build/404/` → `prep.py` → WHTML → rebind, site-data block after the Footer, Navigator names, any code via jsDelivr with SRI, publish webflow.io only, check 1440 / 1024 / 390, stop for his OK.

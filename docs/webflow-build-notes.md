@@ -349,3 +349,29 @@ MCP findings:
 - v0.7.1: `.ab_lost_zero{z-index:2}` so the cue chip isn't hidden behind the second 4.
 - Live: core JS/CSS + home JS **v0.7.0**, 404 JS v0.7.0 + CSS v0.7.1; about v0.6.2, mission v0.5.1/0.5.0, work + services v0.4.0 unchanged.
 - Tested: local dist copy (1440/1024/390, reduced motion via matchMedia override, resize reset), then staging 1440/1024/390: no horizontal scroll, planet centered, radar finds the page on ping 3, no console errors other than the page's own 404 status. Per-hero cue verified: About shows it after Work was dragged; Work stays quiet.
+
+## Process page (built 2026-09-25, awaiting Angelino's OK)
+
+Page `6ab701e2df00b2e38832af5b` (`/process`, static; duplicate of About, About sections removed). New page Angelino asked for: one route, eight destinations. Prototype `prototypes/process.html` (assembled from `prototypes/_parts/` by `_parts/assemble.py`). Build files `webflow/build/process/` (`make.py`, `form-fields.embed.html`). Code `ab-process` JS + CSS v0.8.0 (page footer script `abprocess` + head `<link>`).
+
+| Section | Notes |
+|---|---|
+| Hero (`section_process-hero#hero`) | reuses `ab_dbh_*`, `ab_crumb`, `ab_rec` + new combo `ab_rec_dot.is-live`; planet `.ab_planet.is-dbh.is-process` (repainted to the picked destination); countdown `ab_count_*` (T−6 → T−0 as the route flies; the page's type moment); title stepped down in `ab-process.css` |
+| Star chart (`#chart`) | planets + orbits script-built from the hidden **Services** list (`[data-dest-source]`, Navigator "Services · star chart source", inside the site-data block); panel `ab_chart_panel` with `[data-dest-*]` hooks |
+| Route (`#route`) | 6 static `ab_route_wp` cards (Website legs as default text); path/ship/launch pad script-built; pinned sideways ≥768, vertical rail ≤767 |
+| Crew roles | light section (`theme-light` + `ab_light-*`), ticks injected |
+| Timeline (`#eta`) | 6 factors, options are Designer spans (`ab_eta_opt`) the script turns into buttons; gauge SVG injected; bucket copy in a hidden Designer list (`[data-eta-buckets]`). No numbers (Angelino: depends on scope) |
+| FAQ | 6 **FAQ item component** instances with props (static, not CMS: the FAQ Scope option can't gain "Process" via the API) |
+| Launch (`#launch`) | native Webflow Form, fields in an Embed (`form-fields.embed.html`): destination chips (script), Name, Email, Budget, Brief, hidden `Destination`. Success/fail text themed |
+
+CMS (Services): new fields **Short name**, **Process leg 1–6**, **Timeline preset** (six 0–2 numbers), **Process example** (Reference → Missions; custom-deploys has none → "yours could be first"). Filled for all 8. IDs in `docs/webflow-cms-ids.json`. Reference sub-field text binding (`ref:::field`) used for the example slug/name.
+
+Site-wide: Nav, mobile menu and Footer "Process" links → `/process` (stray duplicate `href` attributes removed). Home process section gained "See the full flight plan →" (`ab_process_more`).
+
+MCP findings: `set_dom_id` fails with "[Conflict] … component map" on any page with component instances (hero re-inserted via WHTML with `id="hero"` instead; WHTML ids work). Rate limits (429) hit after ~50 writes in a row: pace the calls. Embed code key = `code`. Form success/fail inner divs don't take `set_text` (WHTML new text in, remove the default).
+
+Designer steps for Angelino: rename the form (Form settings › Name, it's "Email Form"; the script doesn't depend on its ID). Optional: shorter crew section top spacing (inherits the light-section padding like About).
+
+### v0.8.0 (2026-09-25)
+- New `ab-process` bundle. Destination saved in `localStorage` `ab:dest` (restored silently). Core unchanged (v0.7.0).
+- Tested: local copy of staging with the dist build at 1440 / 1024 / 390 (headless shots + DOM checks), re-plot for all fields, custom-deploys empty example, silent restore; then staging 1440 / 1024 / 390: no console errors, no horizontal scroll, nav links, Home link.
