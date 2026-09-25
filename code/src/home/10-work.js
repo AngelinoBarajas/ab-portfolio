@@ -45,8 +45,8 @@
           f.__pv = { type: pv.type, pins: pv.pins, pinHome: pv.pinHome, pinColor: acc || pv.pinColor };
         }
         else if (cover === 'mark'){
-          var mk = document.createElement('div'); mk.className = 'pv'; mk.setAttribute('aria-hidden', 'true'); mk.style.cssText = 'position:absolute;right:22px;top:22px;width:120px;height:120px';
-          mk.innerHTML = '<svg viewBox="-80 -80 160 160" width="100%" height="100%"><circle r="61.8" fill="none" stroke="currentColor" stroke-opacity=".25" stroke-dasharray="3 3"/><path d="M 0 -61.8 A 61.8 61.8 0 1 0 61.8 0" fill="none" stroke="currentColor" stroke-width="12"/><rect x="47" y="-15" width="30" height="30" fill="#FF6A3D"/></svg>';
+          var mk = document.createElement('div'); mk.className = 'pv'; mk.setAttribute('aria-hidden', 'true'); mk.style.cssText = 'position:absolute;right:22px;top:26px;width:170px';
+          mk.innerHTML = AB.markSVG({ grid: true });
           inner.appendChild(mk);
         }
         var op = document.createElement('span'); op.className = 'ab_board_fopen'; op.textContent = 'Open case →'; inner.appendChild(op);

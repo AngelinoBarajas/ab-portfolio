@@ -3,13 +3,9 @@
      ========================================================= */
   (function(){
     var screen = $('#screen'), chans = $('#chans'); if (!screen || !CH.length) { var sec = $('#monitor'); if (sec && !CH.length) sec.remove(); return; }
-    function markSVG(mode){
-      var grid = '<g class="lg-grid"><circle class="lg-g" r="100"/><circle class="lg-g" r="61.8"/><circle class="lg-g" r="38.2"/><circle class="lg-g" cx="61.8" r="38.2"/><circle class="lg-g" cx="-38.2" cy="-38.2" r="23.6"/><path class="lg-g" d="M-110 0H110M0 -110V110M-78 -78L78 78M-78 78L78 -78"/></g>';
-      var dims = mode === 'grid' ? '<g font-family="JetBrains Mono,monospace" font-size="6" fill="#4C8DFF"><text x="-104" y="-92">R 100</text><text x="-58" y="-50">R 61.8</text><text x="46" y="-40">R 38.2</text><text x="40" y="26" fill="#FF6A3D">30 × 30</text></g>' : '';
-      return '<svg viewBox="-120 -120 240 240" aria-hidden="true">' + (mode === 'light' || mode === 'plain' ? '' : grid) + dims +
-        '<path class="lg-m" d="M 0 -61.8 A 61.8 61.8 0 1 0 61.8 0"/><g class="lg-orbit"><rect class="lg-s" x="47" y="-15" width="30" height="30"/></g></svg>';
-    }
-    function smallMark(color, sq){ return '<svg viewBox="-80 -80 160 160" aria-hidden="true"><path d="M 0 -58 A 58 58 0 1 0 58 0" fill="none" stroke="' + color + '" stroke-width="20"/><rect x="40" y="-20" width="40" height="40" fill="' + (sq || '#FF6A3D') + '"/></svg>'; }
+    // the AB planet monogram (AB.markSVG in core): build/grid show the construction grid, grid adds its measurements
+    function markSVG(mode){ return AB.markSVG({ grid: mode !== 'light' && mode !== 'plain', dims: mode === 'grid' }); }
+    function smallMark(color){ var M = AB.MARK; return '<svg viewBox="0 0 490.16 241.75" aria-hidden="true"><g fill="' + color + '"><path d="' + M.a + '"/><path d="' + M.planet + '"/><path d="' + M.b + '"/></g></svg>'; }
     function channelView(c){
       var v = '<div class="view ' + c.kind + (c.mode === 'light' ? ' light' : '') + '" data-ch="' + esc(c.id) + '" data-kind="' + c.kind + '" role="tabpanel" aria-label="' + esc(c.label) + '">';
       if (c.kind === 'img') v += c.src ? '<img class="full" src="' + esc(c.src) + '" alt="' + esc(c.caption) + '" loading="lazy">' : '';
@@ -126,13 +122,18 @@
     }
     // logo channels: the mark draws itself on its grid
     function logoAnim(view, mode){
-      if (reduce || !hasGsap) return;
-      var gs = $$('.lg-g', view), mk = $('.lg-m', view), orb = $('.lg-orbit', view);
-      gsap.killTweensOf([gs, mk, orb]);
-      gs.forEach(function(g){ var L = g.getTotalLength(); gsap.fromTo(g, { strokeDasharray: L, strokeDashoffset: L }, { strokeDashoffset: 0, duration: 1.2, ease: 'power2.inOut', delay: Math.random() * .4 }); });
-      if (mk){ var Lm = mk.getTotalLength(); gsap.fromTo(mk, { strokeDasharray: Lm, strokeDashoffset: Lm }, { strokeDashoffset: 0, duration: 1.1, ease: 'power3.inOut', delay: mode === 'build' ? .7 : .1 }); }
-      if (orb){ gsap.fromTo(orb, { scale: 0, svgOrigin: '62 0' }, { scale: 1, duration: .6, ease: 'back.out(3)', delay: mode === 'build' ? 1.6 : .9 });
-        gsap.to(orb, { rotation: -360, svgOrigin: '0 0', duration: 6, ease: 'none', repeat: -1, delay: 2.4 }); }
+      var svg = $('svg', view); if (!svg) return;
+      svg.classList.remove('is-glow');
+      if (reduce || !hasGsap){ svg.classList.add('is-glow'); return; }
+      var gs = $$('.lg-g', view), mk = $('.lg-m', view), ps = $$('.lg-m path', view), dm = $('.lg-d', view);
+      gsap.killTweensOf([gs, mk, ps, dm]);
+      gs.forEach(function(g){ var L = g.getTotalLength ? g.getTotalLength() : 600; gsap.fromTo(g, { strokeDasharray: L, strokeDashoffset: L }, { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut', delay: Math.random() * .3 }); });
+      if (dm) gsap.fromTo(dm, { opacity: 0 }, { opacity: 1, duration: .5, delay: .9 });
+      // the mark warps in from a point, spinning, as an outline, then fills and starts to glow
+      var d = gs.length ? .6 : .1;
+      gsap.fromTo(mk, { scale: .05, rotation: -720, opacity: 0, svgOrigin: '240 121' }, { scale: 1, rotation: 0, opacity: 1, duration: 1.1, ease: 'expo.out', delay: d });
+      gsap.fromTo(ps, { fillOpacity: 0, stroke: 'currentColor', strokeWidth: 5, strokeOpacity: 1 }, { fillOpacity: 1, strokeOpacity: 0, duration: .6, stagger: .12, ease: 'power2.out', delay: d + .9,
+        onComplete: function(){ svg.classList.add('is-glow'); } });
     }
     setCh(0, true);
   })();

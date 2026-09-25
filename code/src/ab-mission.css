@@ -53,25 +53,24 @@
 .view.logo{display:grid;place-items:center;background:#07080d}
 .view.logo.light{background:#F2F0EA}
 .view.logo svg{position:absolute;inset:0;margin:auto;height:78%;width:78%;overflow:visible}
-.lg-g{fill:none;stroke:#4C8DFF;stroke-width:.7;opacity:.6}
-.lg-m{fill:none;stroke:#F2F0EA;stroke-width:12}
-.view.logo.light .lg-m{stroke:#0B0C14}
-.lg-s{fill:#FF6A3D}
+.view.logo .lg-m{color:#F2F0EA}
+.view.logo svg.is-glow{animation:ab-logo-glow 3.4s ease-in-out infinite}
+.view.logo.light .lg-m{color:#0B0C14}
 .view.apps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;padding:clamp(14px,3vw,34px);align-items:center;background:radial-gradient(60% 70% at 50% 40%,rgba(255,106,61,.12),transparent 70%),#07080d}
 .app{display:flex;flex-direction:column;align-items:center;gap:10px;font-family:var(--mono);font-size:10.5px;color:var(--dust);text-transform:uppercase;letter-spacing:.08em;text-align:center}
 .app .tab{width:100%;max-width:190px;background:#1e2132;border:1px solid var(--hair);padding:8px 10px;display:flex;align-items:center;gap:8px;color:var(--soft);text-transform:none;letter-spacing:0;font-family:var(--body);font-size:12px}
-.app .tab svg{width:16px;height:16px;flex:none}
+.app .tab svg{width:28px;height:14px;flex:none}
 .app .av{width:min(120px,80%);aspect-ratio:1;background:#0e1020;border:1px solid var(--hair2);display:grid;place-items:center}
-.app .av svg{width:62%}
+.app .av svg{width:70%}
 .app .card{width:100%;max-width:200px;aspect-ratio:1.75;perspective:600px}
 .app .card > div{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.2,.9,.2,1)}
 .app .card:hover > div,.app .card:focus-within > div{transform:rotateY(180deg)}
 .app .card .f,.app .card .b{position:absolute;inset:0;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;border:1px solid var(--hair2)}
-.app .card .f{background:#07080d}.app .card .f svg{height:58%}
+.app .card .f{background:#07080d}.app .card .f svg{width:62%}
 .app .card .b{background:#FF6A3D;color:#07080d;transform:rotateY(180deg);flex-direction:column;align-items:flex-start;justify-content:flex-end;padding:10px 12px;text-transform:none;font-family:var(--body);font-size:11px;letter-spacing:0;line-height:1.3}
 .app .card .b b{font-family:var(--display);font-weight:900;font-stretch:118%;font-size:14px;text-transform:uppercase}
 .app .stk{width:min(130px,86%);aspect-ratio:1;border-radius:50%;background:#F2F0EA;display:grid;place-items:center;box-shadow:0 10px 30px rgba(0,0,0,.5);transform:rotate(-8deg)}
-.app .stk svg{width:58%}
+.app .stk svg{width:66%}
 @media (max-width:700px){.view.apps{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
 .ab_mon::before,.ab_mon::after{content:"";position:absolute;width:6px;height:6px;border-radius:50%;background:#2a2e44;box-shadow:inset 0 1px 1px rgba(0,0,0,.6);top:6px}
 .ab_mon::before{left:6px}.ab_mon::after{right:6px}
