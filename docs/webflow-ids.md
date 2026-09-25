@@ -95,6 +95,7 @@ Reference for MCP writes. Site: **AB Portfolio** `6ab5fe4a5ee75f9c981dc0be` (ab-
 | Page | ID |
 |---|---|
 | Home | `6ab5fe4b5ee75f9c981dc0cb` |
+| About (`/about`) | `6ab6d8aa86c563fd3f8b64a4` |
 | Missions Template (`/work/[slug]`) | `6ab602e48e2fa6779570a308` |
 | Services Template (`/services/[slug]`) | `6ab602e4e41add8af5e28b6c` |
 

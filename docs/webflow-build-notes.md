@@ -294,3 +294,28 @@ Board previews draw pins in the mission's Brand accent: 510 Visuals teal `#5eead
 ### 2026-09-25: Services rail = all services (done)
 The old rail list was locked to *Pairs with* (Source shows a lock on a template list tied to a self-reference). Angelino added a new Collection List inside `#svRail` in the Designer and picked **Services** under *CMS Collections*; the MCP then moved the rail link into it (all 6 bindings survived: slug, planet type/colors/ring/glow, name), gave wrapper/list/item `ab_arc_chip-list`, sorted by `sort` ascending, and removed the old list. Verified on staging: 8 services numbered 01–08, eyebrow "Service 08 / 08", next service wraps to 01. Also: the 7 Services sections got Navigator display names (they showed as "Section").
 Lesson: a Collection List can't be added inside another list, and an unconnected new list refuses children ("Connect this Collection List…"): pick the source first.
+
+## About page (built 2026-09-25, awaiting Angelino's OK)
+
+Page `6ab6d8aa86c563fd3f8b64a4` (`/about`, static; created as a duplicate of Work so Nav, Footer and the site-data block came along, then the Work sections were removed). `main-wrapper` › hero · mission statement · flight log · **Between launches** (light bento; renamed from "off-duty" by Angelino) · next mission, then Footer + site data. Build files: `webflow/build/about/` (`make.py` writes the section html/css and runs `prep.py`). Code: `ab-about` bundle + `ab-about.css` (page head `<link>`), v0.6.0. No CMS beyond Site Settings (availability).
+
+| Section | Notes |
+|---|---|
+| Hero (`section_about-hero`) | reuses `ab_dbh_*`, `ab_crumb`, `ab_meta`. Crew badge = `ab_badge_*` (page-level, not a component). **Lanyard physics** (Angelino's ask): drag the badge anywhere, the strap (`[data-badge-lanyard]`) stretches from its anchor to the clip, and on release a damped pendulum + springy strap swing it back to hanging; a short press flips it; arrow keys push it; touch uses `pan-y` so vertical swipes still scroll. Badge logo = `AB.markSVG` (new monogram). |
+| Pilot planet | Angelino's brief: orange, lots of rings, two moons for his wife and son. `.ab_planet.is-dbh.is-pilot` (gas, orange ramp, tilt 16) + 5 thin rings (`.pring.is-thin`) and two moons (`.ab_moon.is-wife` violet, `.is-son` green; pass behind the planet on the far side; "Moon · wife/son" tags on hover) built by `ab-about`. Docked on the badge strap's anchor at every width (`is-docked`, z 5), so the badge hangs from the planet; still draggable via core hero toys. The Designer position is the no-JS fallback. |
+| Mission statement | words split + scroll-lit by the script from the Designer paragraph (`.ab_ms_hl` spans = orange words); heart; signature SVG injected into `[data-about-sig]`; promises tick in (`.is-on`). |
+| Flight log | `ab_tl_*`; even cards carry the `is-right` combo (no nth-child in the Designer); ship + icons injected; fill/ship scrubbed by ScrollTrigger. |
+| Between launches | `ab_bento_grid is-about`; dark cards = `ab_bento-card is-dark` (combo with Color mode = Dark). Facts and philosophy questions are hidden Designer lists (`[data-about-facts] p[data-k]`, `[data-about-questions] p`); books carry `data-g/c/h/fg/note`. Shelf now has *Zarathustra* leaning out (Angelino is re-reading *Thus Spoke Zarathustra*; also on the badge back). |
+| Next mission | the Next card instance was **unlinked on this page only** ("Need a pilot?", violet ringed planet); the component itself is unchanged. |
+
+MCP notes this build:
+- WHTML combo selectors must match the element's **whole class chain**: `.ab_planet.is-pilot` on an element with `ab_planet is-dbh is-pilot` created a stray `.is-pilot-parent.is-pilot` style (removed) and left the real chain empty.
+- Gradients with `N% at` were mangled again (`60%at`); those backgrounds live in `ab-about.css`.
+- `set_attributes` with `id` fails ("internal error"); use `set_dom_id`.
+- A WHTML insert needs a single root element.
+- Core fix: the footer black-hole game now looks up its black hole inside `#siteFoot` (About has a second one in the Interstellar card).
+
+### v0.6.0 (2026-09-25)
+- New `ab-about` (JS + CSS), core black-hole scoping, Home planner: budget scale `<$20k · $20–40k · $40–60k · $60–80k · $80–100k` (default $20–40k) and a **Complete knowledge system** add-on chip (own `Add-ons` hidden field, in the brief, the readout and the sent text; a small linked-node satellite orbits the destination). The script sets the scale/ticks and adds the chip + field when the Home embed lacks them; `webflow/build/home/planner-fields.embed.html` has the new markup for the next embed update.
+- Live: core JS/CSS **v0.6.0**, home JS v0.6.0, about JS/CSS v0.6.0; mission v0.5.1/0.5.0, work + services v0.4.0 unchanged.
+- Tested: local copy of staging with the dist builds (drag/swing/settle, docking at 1440/1024/390), then staging at 1440/1024/390: no console errors, no horizontal scroll, planner fields verified without submitting. IntersectionObserver reveals (promises, signature, clocks) are frozen in the hidden pane, so they were not seen running.

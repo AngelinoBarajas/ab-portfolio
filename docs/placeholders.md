@@ -4,7 +4,7 @@ Build with these as-is. Angelino swaps them in later.
 
 | Item | Where | Status |
 |---|---|---|
-| Headshot (4:5) | About → crew badge (`PHOTO` in the prototype) | Coming |
+| Headshot (4:5) | About → crew badge: drop an Image into `.ab_badge_photo` (hero › badge › front face) in the Designer; the CSS fills the 4:5 frame and hides the silhouette | Coming |
 | Globe pin images for AMANT, EWC, Patriot Act, ON NYC | Globe Pins collection (510 Visuals mission) — take them from the live 510 Visuals CMS. **Empty in Webflow** (Image fields can't hold text) | Coming |
 | Globe pin coordinates | Lincoln Center and ON NYC both sit on the generic NYC point (40.7128, -74.006); check against the live 510 Visuals CMS | To confirm |
 | Cover images for AB Identity + placeholder missions | Missions → `cover` (empty in the seed) | Coming |

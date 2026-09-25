@@ -81,7 +81,7 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 
 ## Next session
 
-1. **About page** (`/about`, static) — prototype `prototypes/about.html`; sections per `docs/build-spec.md`: pilot-dossier hero (crew badge) · mission-statement · flight-log · off-duty (light bento) · next-mission. Same build method as Work/Services (`webflow/build/<page>/`, prep.py, WHTML, rebind, `ab-about` bundle if needed). Headshot is a placeholder. Stop for his OK on staging.
+1. **About page**: built + on staging (v0.6.0, 2026-09-25), waiting on Angelino's OK. Details: `docs/webflow-build-notes.md` › About page. Open: headshot (drop an Image into `.ab_badge_photo`); the Home planner embed can be updated to `webflow/build/home/planner-fields.embed.html` (the script already applies the new budget scale + add-on).
 2. Then **404**. Still open (don't block): favicon/webclip upload, placeholders, Lincoln Center / ON NYC pin coordinates, Forms notification email, full QA pass.
 
 ### Brief: Knowledge System mission (Angelino's words, keep every point)
