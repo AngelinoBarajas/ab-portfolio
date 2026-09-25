@@ -14,6 +14,7 @@
 .ab_lost_ring{animation:ab-lorb 30s linear infinite}
 @keyframes ab-lorb{to{transform:rotate(360deg)}}
 .ab_planet.is-lost:active{cursor:grabbing}
+.ab_lost_zero{z-index:2}
 .ab_lost_zero .ab_drag-hint{z-index:8}
 
 /* astronaut */
