@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.5.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.5.1 · github.com/AngelinoBarajas/ab-portfolio */
 /* =========================================================
    AB Portfolio · ab-core.css (site-wide)
    Only what the Webflow Designer can't express: pseudo-elements, state
@@ -175,6 +175,13 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 .ab_board_frame.is-selected .ab_board_fname,.ab_board_frame:hover .ab_board_fname{opacity:0}
 .ab_board_frame canvas.pv{position:absolute;right:16px;top:16px}
 .ab_board_frame img.pv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ab_kg{position:absolute;right:18px;top:18px;width:230px;--kc:#a597ff}
+.ab_kg svg{display:block;width:100%;height:auto;overflow:visible}
+.ab_kg path{fill:none;stroke:var(--kc);stroke-width:1.6;stroke-dasharray:160;stroke-dashoffset:160;animation:ab-kgDraw 4.8s calc(var(--k) * .18s) ease-in-out infinite}
+.ab_kg rect{fill:#15122e;stroke:#3a3f5c;stroke-width:1.2}
+.ab_kg rect.c{fill:var(--kc);stroke:var(--kc)}
+@keyframes ab-kgDraw{0%{stroke-dashoffset:160}35%,80%{stroke-dashoffset:0}100%{stroke-dashoffset:-160}}
+@media (prefers-reduced-motion:reduce){.ab_kg path{animation:none;stroke-dashoffset:0}}
 .ab_board_ftitle.is-serif{font-family:"Lora",Georgia,serif;font-weight:600;font-stretch:100%;text-transform:none}
 .ab_board_fopen{position:absolute;left:24px;top:22px;font-family:var(--_typography---font--mono);font-size:11px;padding:4px 8px;border:1px solid currentColor;opacity:0;transition:opacity .25s}
 .ab_board_frame:hover .ab_board_fopen,.ab_board_frame.is-selected .ab_board_fopen{opacity:.85}
