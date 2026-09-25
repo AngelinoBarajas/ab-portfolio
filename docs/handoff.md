@@ -1,4 +1,4 @@
-# Session handoff (2026-09-25, end of the Knowledge System + Services approval session)
+# Session handoff (2026-09-25, end of the About page session)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -12,8 +12,8 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 | 4. CMS | ✅ 13 collections, all references resolved. IDs in `docs/webflow-cms-ids.json`. Added this session: Tools › **Pen + paper**, Mission Channels › Aguirre **Site plan**, AB Identity **Sketches** + **Illustrator** |
 | 3b. Global styles | ✅ 29 classes + tag styles (Body, H1–H6, p) |
 | 5. Components | 🟡 Nav, Footer, Frame label, Bento card, FAQ item, **Next card** (no props yet) done (group "Global"). Mission card is a page-level Collection item (nested Types list rules out a component). Remaining: code block, crew dock |
-| 6. Pages | 🟡 Home ✅, Work ✅, Mission template ✅, **Services template ✅** (`/services/[slug]`, page `6ab602e4e41add8af5e28b6c`), **Knowledge System mission ✅** — all approved 2026-09-25. Remaining: **About** (next), 404 |
-| 7. Custom code | 🟡 Live on staging: `ab-core` JS + CSS **v0.5.2** · `ab-home` + `ab-mission` JS v0.5.1 · `ab-mission.css` v0.5.0 · `ab-work` + `ab-services` (+ CSS) v0.4.0 · head inline script `abwarpin` 0.3.2. Build/deploy steps in `code/README.md`; per-version notes in `docs/webflow-build-notes.md` (v0.3.2 → v0.5.2) |
+| 6. Pages | 🟡 Home ✅, Work ✅, Mission template ✅, Services template ✅, Knowledge System mission ✅, **About ✅** (`/about`, page `6ab6d8aa86c563fd3f8b64a4`) — all approved 2026-09-25. Remaining: **404** (next) |
+| 7. Custom code | 🟡 Live on staging: `ab-core` JS + CSS **v0.6.2** · `ab-home`, `ab-mission`, `ab-about` JS v0.6.2 · `ab-about.css` v0.6.2 · `ab-mission.css` v0.5.0 · `ab-work` + `ab-services` (+ CSS) v0.4.0 · head inline script `abwarpin` 0.3.2. Build/deploy steps in `code/README.md`; per-version notes in `docs/webflow-build-notes.md` (v0.3.2 → v0.6.2) |
 | 8. Brand | ✅ New **AB planet monogram** (`logo/ab-logo.svg`, asset `6ab6bba8167f1da71a4bf9a8`) in Nav + Footer; inlined + animated by `core/22-logo.js` (warp spin-in, fill; black-hole hover; no glow). One geometry source: `AB.markSVG` / `AB.MARK` in `core/21-mark.js`. Favicon/webclip PNGs in `logo/` (upload pending) |
 
 Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top"> (hero · work · statement · services · process · transmission · stack · testimonials · faq · contact) · [Footer] · Site data (hidden CMS sources)`. Section-by-section notes: `docs/webflow-build-notes.md` › Home; prototype → Webflow hook map for the step 7 scripts: `webflow/build/home/class-map.md`.
@@ -79,26 +79,23 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 - **Orbit logos**: Webflow CMS, Claude (new Tools item), Finsweet (hand-drawn {F).
 - **Services template approved**: rail now = all 8 services (new Designer list + MCP move); Navigator section names fixed.
 
+## This session (2026-09-25, About page) in one list
+
+- **About page built + approved** (`/about`, v0.6.0 → v0.6.2). Details and MCP findings: `docs/webflow-build-notes.md` › About page. Page was created as a duplicate of Work (Nav, Footer, site-data block came along), then the Work sections were removed.
+- Crew badge on a lanyard with **pendulum physics** (drag, swoop back, flip on click, arrow keys); badge uses the new AB mark.
+- **Pilot planet**: orange, 5 extra thin rings, two moons (wife violet, son green); big in the hero background (Angelino's call after trying it docked on the lanyard).
+- Section renamed **Between launches** (was off-duty). *Thus Spoke Zarathustra* on the badge back + a leaning book on the shelf.
+- **Bento spotlight + tilt site-wide**: `core/32-cards.js` (`AB.cardFx`) on every `.ab_bento-card`; Home/Mission copies removed.
+- Crew-of-three orbits: hover speed-up via `playbackRate` (no jump).
+- **Home planner**: budget `<$20k · $20–40k · $40–60k · $60–80k · $80–100k` + **Complete knowledge system** add-on (own `Add-ons` form field). The script applies it; the Designer embed still has the old markup (new markup in `webflow/build/home/planner-fields.embed.html`).
+- Core: footer black-hole game scoped to `#siteFoot`.
+- Testing method that worked: download the staging HTML, swap the jsDelivr tags for local `dist/` builds (+ an rAF→setTimeout shim via `?shim`), serve it with a `python -m http.server` launch entry, test in the browser pane, then tag + deploy. Screenshots of lower sections often time out in the pane; DOM checks cover it.
+
 ## Next session
 
-1. **About page**: built + on staging (v0.6.0, 2026-09-25), waiting on Angelino's OK. Details: `docs/webflow-build-notes.md` › About page. Open: headshot (drop an Image into `.ab_badge_photo`); the Home planner embed can be updated to `webflow/build/home/planner-fields.embed.html` (the script already applies the new budget scale + add-on).
-2. Then **404**. Still open (don't block): favicon/webclip upload, placeholders, Lincoln Center / ON NYC pin coordinates, Forms notification email, full QA pass.
-
-### Brief: Knowledge System mission (Angelino's words, keep every point)
-- built for Webflow CMS natively, but can be adapted to any platform
-- how it connects all the knowledge and content on your site, and how that elevates SEO, AEO, etc.
-- gives you the foundation for insights/blogs
-- the voice kit, and how it can use AI as a partner to help you develop meaningful content that is in your voice and approved/reviewed by you before it's live
-- how easy it is to set up and update
-- how you can integrate video with it
-- any other highlights worthy of adding
-
-Source material (read before writing copy; never invent client facts or numbers):
-- `X:/Claude-Skills/code backup/5 TEN/5TEN_next-phase.html` — plan, content strategy, **Voice Kit**, investment (client-facing)
-- `X:/Claude-Skills/code backup/5 TEN/5TEN_build-map.md` — Connected Content System build map (Topics, Essays, video URL/duration/chapters, conditional video)
-- `X:/Claude-Skills/code backup/daniel-aguirre/builds/resources-page-build-spec.md` — Aguirre's connected content system (Topics/Insights, 58-term vocabulary, tagging, topic template)
-- `X:/Claude-Skills/code backup/daniel-aguirre/content/demo-insights-articles.md`, `.../daniel-aguirre/_HANDOFF.md`
-- the `connected-content-system` skill (strategy + architecture)
+1. **404 page** (`/404`, Webflow's utility page) — prototype `prototypes/404.html`, section `signal-lost` (see `docs/build-spec.md`). Same method as About: plan first (sections, static vs CMS, classes, what needs code), then `webflow/build/404/` → `prep.py` → WHTML → rebind, site-data block after the Footer, Navigator names, any code via jsDelivr with SRI, publish webflow.io only, check 1440 / 1024 / 390, stop for his OK.
+2. Then **step 8 QA**: every page vs its prototype at 1440 / 1024 / 390, no console errors, no horizontal scroll, reduced motion, Lighthouse, links + warp transitions. Then ask before any publish beyond webflow.io.
+3. Offered, not yet decided: a stronger Interstellar "Hover to fly close" (black hole grows, stars stretch, near clock slows while Earth speeds up).
 
 ## Home review edits already done (v0.1.4, from `ab-portfolio-hp-edits.docx`)
 
@@ -108,11 +105,12 @@ Possible follow-ups he may raise: Tools list order (the 3 new Adobe items sort f
 
 ## Open items for Angelino
 
-- **Services template**: rail fixed (all 8 services, 2026-09-25); waiting on his OK.
+- **Headshot**: drop an Image into `.ab_badge_photo` (About hero › badge › front face); CSS fills the 4:5 frame.
+- **Planner embed** (optional): swap the Home planner fields embed for `webflow/build/home/planner-fields.embed.html` so the Designer matches what the script does.
+
 - **Favicon + webclip**: Site settings › General › upload `logo/favicon-32.png` + `logo/webclip-256.png`.
 - **Review copy** written this session: AB Identity (summary, captions, system/problem text, sketch notes, stats labels), Aguirre *Site plan* board, Services WebGL title. AB Identity handoff line still says "One Figma library…".
 
-- **Mission template**: 5 Designer filters, then his OK.
 - **Metrics numbers** for the Statement section (deferred by him, 2026-09-25).
 - Confirm the Forms notification email in Site settings.
 
