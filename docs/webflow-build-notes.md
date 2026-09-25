@@ -325,3 +325,27 @@ MCP notes this build:
 - Pilot planet undocked and made big in the background (see the table above).
 - **Bento spotlight + tilt site-wide**: new `core/32-cards.js` (`AB.cardFx`) binds every `.ab_bento-card` (Home 9, Mission manifest 7, Services "What's included" 6, About 6). The Home and Mission copies were removed; `[data-no-tilt]` keeps a card flat (About bookshelf). Services "What's included" had no spotlight before.
 - Live: core JS/CSS, home, mission JS and about JS/CSS **v0.6.2**; mission CSS v0.5.0, work + services v0.4.0 unchanged. Staging: no console errors on Home, Mission, Services, About; planet checked at 1440 / 900 / 390.
+
+## 404 page (built 2026-09-25, awaiting Angelino's OK)
+
+Webflow 404 utility page `6ab6e4a645ff2d1bd12b1c3e` (not in the Data API page list: open it in the Designer and read `get_current_page`). `page-wrapper` › [Nav] · `main-wrapper` › `section_lost` (Navigator "Signal lost", `data-frame="signal-lost"`) · [Footer]. Build files: `webflow/build/404/` (`make.py` → `lost.html/css` → `prep.py`). Code: `ab-404` JS + CSS (page footer script `ab404` + page head `<link>`).
+
+| Part | Notes |
+|---|---|
+| Top row | reuses `ab_dbh_top`, `ab_crumb*`, `ab_rec` + new combo `is-alert` (Status / Alert) |
+| Big 404 | decorative `div.ab_lost_404[aria-hidden]` (digits + `ab_lost_zero` › ring + `.ab_planet.is-lost` + "Drag me" tag). The page h1 is "Lost in space" (`heading-style-h2`, `#lostTitle`); prototype had h1 = 404 |
+| Astronaut | `ab_astro` › `[data-astro-art]` (SVG injected) + bubble + hint |
+| Routes | `nav.ab_routes` › 4 `ab_route` links (`/`, `/work`, `/about`, `/#launch`), keys 1–4; fill/hover colors in `ab-404.css` |
+| Telemetry | `aside.ab_lsig` › radar (`[data-radar]`, role button) + 2×2 `ab_lsig_cell` readout; radar KNOWN list = real slugs |
+
+MCP findings:
+- **Utility pages can't hold Collection Lists** ("Dynamic elements are not allowed in page"), so no site-data block. Core v0.7.0 caches Site Settings + Quotes in `localStorage` `ab:site` on every page that has the block; a page without it reads the cache, or fetches `/` once and parses the block (verified on staging with an empty cache: 5 quotes, availability from the CMS).
+- Utility pages DO accept registered page scripts (`set_page_scripts`) and page head freeform code.
+- `set_dom_id` on `main-wrapper` / the section fails with "[Conflict] … component map" (value-independent; the h1 id worked before the Nav/Footer instances were inserted). Nothing uses them here. Optional Designer step: main `#top`, section `#hero`.
+- `insert_component_instance` works on the utility page; `data_element_builder` `after` a component instance errors ("Cannot insert elements directly into a component instance"): append to the parent instead.
+
+### v0.7.0 – v0.7.1 (2026-09-25)
+- New `ab-404` bundle. Core: site-data cache (above); **drag cue on every hero** via `AB.dragCue` (`core/39-herodrag.js`) with one key per hero type (`ab:toys:work|services|mission|about|404`; Home keeps `ab:dragged`), so dragging on one page no longer hides the cue on the others. Home's cue now uses the helper.
+- v0.7.1: `.ab_lost_zero{z-index:2}` so the cue chip isn't hidden behind the second 4.
+- Live: core JS/CSS + home JS **v0.7.0**, 404 JS v0.7.0 + CSS v0.7.1; about v0.6.2, mission v0.5.1/0.5.0, work + services v0.4.0 unchanged.
+- Tested: local dist copy (1440/1024/390, reduced motion via matchMedia override, resize reset), then staging 1440/1024/390: no horizontal scroll, planet centered, radar finds the page on ping 3, no console errors other than the page's own 404 status. Per-hero cue verified: About shows it after Work was dragged; Work stays quiet.

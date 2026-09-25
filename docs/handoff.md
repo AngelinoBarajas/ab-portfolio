@@ -1,4 +1,4 @@
-# Session handoff (2026-09-25, end of the About page session)
+# Session handoff (2026-09-25, 404 page session)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -12,7 +12,7 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 | 4. CMS | ✅ 13 collections, all references resolved. IDs in `docs/webflow-cms-ids.json`. Added this session: Tools › **Pen + paper**, Mission Channels › Aguirre **Site plan**, AB Identity **Sketches** + **Illustrator** |
 | 3b. Global styles | ✅ 29 classes + tag styles (Body, H1–H6, p) |
 | 5. Components | 🟡 Nav, Footer, Frame label, Bento card, FAQ item, **Next card** (no props yet) done (group "Global"). Mission card is a page-level Collection item (nested Types list rules out a component). Remaining: code block, crew dock |
-| 6. Pages | 🟡 Home ✅, Work ✅, Mission template ✅, Services template ✅, Knowledge System mission ✅, **About ✅** (`/about`, page `6ab6d8aa86c563fd3f8b64a4`) — all approved 2026-09-25. Remaining: **404** (next) |
+| 6. Pages | 🟡 Home ✅, Work ✅, Mission template ✅, Services template ✅, Knowledge System mission ✅, **About ✅** (`/about`, page `6ab6d8aa86c563fd3f8b64a4`) — all approved 2026-09-25. **404** built on staging (utility page `6ab6e4a645ff2d1bd12b1c3e`), awaiting OK |
 | 7. Custom code | 🟡 Live on staging: `ab-core` JS + CSS **v0.6.2** · `ab-home`, `ab-mission`, `ab-about` JS v0.6.2 · `ab-about.css` v0.6.2 · `ab-mission.css` v0.5.0 · `ab-work` + `ab-services` (+ CSS) v0.4.0 · head inline script `abwarpin` 0.3.2. Build/deploy steps in `code/README.md`; per-version notes in `docs/webflow-build-notes.md` (v0.3.2 → v0.6.2) |
 | 8. Brand | ✅ New **AB planet monogram** (`logo/ab-logo.svg`, asset `6ab6bba8167f1da71a4bf9a8`) in Nav + Footer; inlined + animated by `core/22-logo.js` (warp spin-in, fill; black-hole hover; no glow). One geometry source: `AB.markSVG` / `AB.MARK` in `core/21-mark.js`. Favicon/webclip PNGs in `logo/` (upload pending) |
 
@@ -90,6 +90,12 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 - **Home planner**: budget `<$20k · $20–40k · $40–60k · $60–80k · $80–100k` + **Complete knowledge system** add-on (own `Add-ons` form field). The script applies it; the Designer embed still has the old markup (new markup in `webflow/build/home/planner-fields.embed.html`).
 - Core: footer black-hole game scoped to `#siteFoot`.
 - Testing method that worked: download the staging HTML, swap the jsDelivr tags for local `dist/` builds (+ an rAF→setTimeout shim via `?shim`), serve it with a `python -m http.server` launch entry, test in the browser pane, then tag + deploy. Screenshots of lower sections often time out in the pane; DOM checks cover it.
+
+## This session (2026-09-25, 404 page) in one list
+
+- **404 built** (`signal-lost`), v0.7.0/0.7.1: details + MCP findings in `docs/webflow-build-notes.md` › 404 page. Utility pages can't hold Collection Lists → core caches site data (`ab:site`).
+- **Drag cue on every hero** with draggables (Angelino's ask): `AB.dragCue`, one key per hero type.
+- **Copy direction (Angelino):** stop leaning on "building globes"; position the work as interactive 3D that's useful to clients and visitors. Rewrite list proposed in chat, pending his OK (About log lede + waypoint 04, Home WebGL bento + FAQ, Services › Interactive 3D + data summary/solve/deliverable/stage/code label, Tools › Three.js use). 510 Visuals mission copy stays (it really is a globe).
 
 ## Next session
 
