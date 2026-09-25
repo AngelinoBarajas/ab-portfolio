@@ -125,3 +125,6 @@ How the prototype code was re-pointed (per `webflow/build/home/class-map.md`):
 ### Testing (2026-09-25)
 Staging at 1440 / 1024 / 390: no console errors, no horizontal overflow (after the footer fix), all 9 bento visuals built, process wide+pinned (1440/1024) / vertical (390), board canvas (desktop) / swipe deck (390), orbit, quotes, metrics, wordmark, menu open/close + scroll lock, FAQ, layout grid, planner flow (with the final submit stubbed, so no test entry in the Forms inbox). Reduced motion (JS path, via a `matchMedia` override on a copy of the staging HTML): no Lenis, no pin, no splits, everything visible, FAQ + process buttons work.
 Not verified visually: the browser pane was hidden, which freezes `requestAnimationFrame` and IntersectionObserver, so lazy planets, the starfield and animation feel need a look in a real browser.
+
+### Fix 2026-09-25: board tiles showed no text
+The hidden `[data-field=brand-bg]` node was first bound to Brand *foreground*, then to **Next mission › Brand background** (the dropdown shows both as "Brand background"). Result: text the same color as the tile, then every tile wearing its next mission's color. Now bound to the Mission's own Brand background (fixed by Angelino, verified on staging). When binding colors inside a Collection List, pick the field from the **top group**, not a reference group.
