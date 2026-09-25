@@ -152,9 +152,39 @@ Optional: Page settings › SEO title bound to *Name* (the script sets the tab t
 - Live demos: patched vendor copies (globe links use `data-globe-link` or the mission's live URL; the case map drops "Read full case" links via `window.__daMapNoLinks`).
 - Coded scene mockups (figma/phone/flow/exploded/cms) are data in the bundle keyed by slug, not CMS; a channel whose mockup is missing shows "Mockup coming soon".
 
+## Services template (built 2026-09-25, awaiting the rail Designer step + Angelino's OK)
+
+Template page `6ab602e4e41add8af5e28b6c` (`/services/[slug]`). `page-wrapper` › [Nav] · `main-wrapper#top` › hero (`section_dbh`) · problems solved · what's included (light bento) · flight plan · related missions · under the hood · FAQ · next service · [Footer] · site data (Settings + Quotes). Build files: `webflow/build/services/` (`make.py` writes the section html/css and runs `prep.py`; `bind.py` turns a `get_all_elements` dump into the text + attribute binding operations from the `data-field` markers). Code: `ab-services` bundle + `ab-services.css` (template head `<link>`), v0.4.0.
+
+| Section | CMS | Notes |
+|---|---|---|
+| Hero | current item: name (h1 + Discipline), summary, best for, slug, title 1/2 (hidden), planet type/colors/ring/glow (attributes) | h1 is bound to *Name* (SEO); the script splits it into *Title line 1* + outline *Title line 2*. Tools = Tools list, Pairs with = Services list (both resolve to the item's multi-refs), Related missions count from the script |
+| Rail | Services list (sort asc), link to the template, `data-slug/planet/colors/ring/glow` bound | ⚠️ resolves to **Pairs with** until the Designer step below. Dot colors: per-slug map in the script (Color fields can't bind); optional hidden `[data-field=dot]` wins |
+| Problems solved | solve 1–3 problem / heading / answer | empty solves are removed |
+| What's included | deliverable 1–6 + description + icon (`data-sv-icon`, option name) | icons drawn by the script from the option; empty cells removed |
+| Flight plan | stage 1–4 + description | line fill + ship scrubbed on scroll (≥992), stages light up as they scroll in (stacked) |
+| Related missions | hidden Missions list (resolves to the item's *Related missions*) → slugs | cards are **cloned from `/work`** (same markup, tags, brand colors, cover image) and set up by `AB.missionCard` (moved into core from `ab-work`); fewer than 3 → a "Yours could be next/first" card |
+| Under the hood | code label + code (hidden) | `AB.codeBlock` (moved into core); section removed when the service has no code (Branding) |
+| FAQ | FAQ list (resolves to the item's *FAQ*) › FAQ item component, props bound | open/close from `ab-core` |
+| Next service | next in rail order | `AB.nextCard`; falls back to the first paired service while the rail is Pairs with |
+
+CMS change: Services › *WebGL + data* title 1/2 → "Interactive" / "3D + data" (was "Globes, maps" / "+ 3D"). Summary unchanged.
+
+### Designer step for Angelino (Services template)
+1. **Rail = all services**: select the Collection List inside `#svRail` (hero, under the meta row) › Settings › **Source** › pick the **Services** collection (not *Pairs with*). The API can't: any Services-sourced list on this template resolves to *Pairs with*, and `curatedItemIds` is refused ("only on lists connected directly to a collection"). Until then the rail shows the 2 paired services, the eyebrow reads "Service · <name>" without numbers, and Next service is a paired one.
+2. Optional: rail dot colors from the CMS: in the rail item add a hidden div `[data-field=dot]` with Background color = *Rail dot color* (the script prefers it over its built-in map).
+
+### MCP finding: multi-ref resolution on template pages
+A Collection List on a CMS template whose source is collection X renders **only the current item's references** when the template's collection has a (single) MultiReference field to X, with no filter and the stored source still `{collectionId}`. Works for Tools, Missions, FAQ here (and Mission Types / Tools on the Mission template). A self-reference (Services › *Pairs with*) means a Services list can't list all services from the API.
+
+### v0.4.0 (2026-09-25)
+- New bundle `ab-services` (`code/src/services/`: service, sections, missions) + `ab-services.css`; registered `abservices`, applied with `set_page_scripts` (page had no custom code).
+- Core: `36-missions.js` (`AB.missionCard`, `AB.markSVG`: covers, colors, number, status, link, from `ab-work`), `37-code.js` (`AB.codeBlock` + the single Copy handler, from `ab-mission`); `.cb` CSS moved to `ab-core.css`. Work + Mission re-tested on staging (6 cards/covers/links, 9 code blocks, monitor 5 channels, next card), no console errors.
+- Tested on staging: webflow-development (4 tools, 2 pairs, 3 related incl. the Halcyon placeholder, 6 icons, 4 stages + ship, code block, 3 FAQ, next card, planet), branding (no hood, 2 related + "next" card), custom-deploys (0 related → "first"). No console errors. Motion not watched (pane hidden).
+
 ## Custom code, part 1 (2026-09-25): site-wide + Home
 
-Source `code/src/` → `code/dist/` (`code/README.md` has the build/deploy steps). Live on staging: **v0.3.4** core + mission CSS, v0.3.2 page bundles (core JS + CSS, home, work, mission + mission CSS).
+Source `code/src/` → `code/dist/` (`code/README.md` has the build/deploy steps). Live on staging: **v0.4.0** (core JS/CSS, work, mission JS/CSS, services JS/CSS); home v0.3.2 (core JS + CSS, home, work, mission + mission CSS).
 
 | What | Where in Webflow |
 |---|---|

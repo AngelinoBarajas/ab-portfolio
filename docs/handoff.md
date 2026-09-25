@@ -1,4 +1,4 @@
-# Session handoff (2026-09-25, end of the Mission template session)
+# Session handoff (2026-09-25, Services template session)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -12,7 +12,7 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 | 4. CMS | ✅ 13 collections, 149 items, all references resolved. IDs in `docs/webflow-cms-ids.json` |
 | 3b. Global styles | ✅ 29 classes + tag styles (Body, H1–H6, p) |
 | 5. Components | 🟡 Nav, Footer, Frame label, Bento card, FAQ item, **Next card** (no props yet) done (group "Global"). Mission card is a page-level Collection item (nested Types list rules out a component). Remaining: code block, crew dock |
-| 6. Pages | 🟡 Home ✅, Work ✅ approved. **Mission template** (`/work/[slug]`, page `6ab602e48e2fa6779570a308`) built + on staging, waiting on 5 Designer filters + his OK. Remaining: Services template, About, 404 |
+| 6. Pages | 🟡 Home ✅, Work ✅, Mission template ✅ approved. **Services template** (`/services/[slug]`, page `6ab602e4e41add8af5e28b6c`) built + on staging, waiting on 1 Designer step (rail source) + his OK. Remaining: About, 404 |
 | 7. Custom code | 🟡 `ab-core` (JS + CSS), `ab-home`, `ab-work`, `ab-mission` (+ CSS, vendor globe/map) all on staging at **v0.3.2** (+ site head inline script `abwarpin`). Build/deploy steps in `code/README.md`; notes in `docs/webflow-build-notes.md` (Custom code part 1, v0.2.x) |
 
 Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top"> (hero · work · statement · services · process · transmission · stack · testimonials · faq · contact) · [Footer] · Site data (hidden CMS sources)`. Section-by-section notes: `docs/webflow-build-notes.md` › Home; prototype → Webflow hook map for the step 7 scripts: `webflow/build/home/class-map.md`.
@@ -59,14 +59,8 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 
 ## Next session
 
-1. **Mission template: Angelino's 5 Designer filters** (the MCP can't write them; probed). In each list's settings › Filter › **Mission** › **Equals** › **Current Mission**, on template page `6ab602e48e2fa6779570a308`:
-   1. Channels: hidden `[data-channels-source]` list inside the Monitor section (Mission Channels)
-   2. Systems list (Mission Systems, inside `#systems`)
-   3. Problems solved list (Problems Solved, inside `#anoms`)
-   4. Telemetry numbers list (Mission Stats, inside `#tel`)
-   5. Globe Pins: hidden `[data-pins-source]` list in the site-data block at the bottom
-   Then publish webflow.io only and re-check `/work/510-visuals`, `/work/daniel-aguirre-law`, `/work/ab-identity` (channels 5 / 4 / 4, systems 6 / 5 / 3, problems 5 / 5 / 4, stats 4 / 4 / 3; live globe + map boot; scenes play; no console errors). The browser pane must be visible (a hidden pane pauses IntersectionObserver, so live demos never boot).
-2. His **OK on the Mission template**, then the **Services template** (`/services/[slug]`, page `6ab602e4e41add8af5e28b6c`): reuse `ab_sec-h`, systems/FAQ patterns, code block, Next card; update the Services item `webgl-data` title ("Globes, maps + 3D").
+1. **Services template: Angelino's Designer step** (build notes › Services template): rail Collection List (`#svRail`) › Source › **Services**. Then publish webflow.io only and check the rail shows 8 services, the current one highlighted, eyebrow "Service 0N / 08", Next service = the next in the rail.
+2. His **OK on the Services template**, then **About** (`prototypes/about.html`), then **404**.
 3. **Metrics (Home Statement)**: still waiting on Angelino's numbers.
 
 ## Home review edits already done (v0.1.4, from `ab-portfolio-hp-edits.docx`)
