@@ -95,7 +95,7 @@ Steps 1–2 also done by Angelino 2026-09-25 (Designer reloaded, 3 dynamic color
 
 ## Custom code, part 1 (2026-09-25): site-wide + Home
 
-Source `code/src/` → `code/dist/` (`code/README.md` has the build/deploy steps). Live on staging at tag **v0.1.2**.
+Source `code/src/` → `code/dist/` (`code/README.md` has the build/deploy steps). Live on staging: `ab-core` JS + CSS at **v0.1.2**, `ab-home` at **v0.1.3**.
 
 | What | Where in Webflow |
 |---|---|
@@ -128,3 +128,6 @@ Not verified visually: the browser pane was hidden, which freezes `requestAnimat
 
 ### Fix 2026-09-25: board tiles showed no text
 The hidden `[data-field=brand-bg]` node was first bound to Brand *foreground*, then to **Next mission › Brand background** (the dropdown shows both as "Brand background"). Result: text the same color as the tile, then every tile wearing its next mission's color. Now bound to the Mission's own Brand background (fixed by Angelino, verified on staging). When binding colors inside a Collection List, pick the field from the **top group**, not a reference group.
+
+### v0.1.3 (2026-09-25): globe pins in the mission accent
+Board previews draw pins in the mission's Brand accent: 510 Visuals teal `#5eead4` (Aguirre map already used `#891E2D`). The value is a per-slug fallback in `code/src/home/10-work.js`; to make it CMS-driven, add a third hidden div `[data-field=brand-accent]` in the board item's `ab_cms-source` with Get BG Color → **Brand accent** (top group), and the script uses it. Only `ab-home` moved to v0.1.3; `ab-core` JS/CSS stay on v0.1.2.
