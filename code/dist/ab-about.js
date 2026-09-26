@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.23.3 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.23.4 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -470,17 +470,33 @@ window.Webflow.push(function(){
     });
     var gmScreen = $('[data-gm]');
     if (gmScreen && 'ontouchstart' in window){
-      gmScreen.style.touchAction = 'none';   // swipes that start on the little game screen don't scroll the page
-      var t0 = null;
-      gmScreen.addEventListener('touchstart', function(e){ var t = e.touches[0]; t0 = { x: t.clientX, y: t.clientY }; }, { passive: true });
-      gmScreen.addEventListener('touchend', function(e){
-        if (!t0) return; var t = e.changedTouches[0], dx = t.clientX - t0.x, dy = t.clientY - t0.y; t0 = null;
-        if (Math.abs(dx) < 24 && Math.abs(dy) < 24){ step(ki >= 8 ? (ki === 8 ? 'b' : 'a') : 'tap'); return; }
-        step(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'ArrowRight' : 'ArrowLeft') : (dy > 0 ? 'ArrowDown' : 'ArrowUp'));
-      }, { passive: true });
+      // swipes that start on the little game screen never scroll the page (touch-action alone isn't enough on iOS)
+      gmScreen.style.touchAction = 'none';
+      var t0 = null, t1 = null, fbT = 0, press = LV.press, pressTxt = press ? press.textContent : '';
+      var ARW = { ArrowUp: '↑', ArrowDown: '↓', ArrowLeft: '←', ArrowRight: '→', b: 'B', a: 'A' };
+      // the "Press start" line echoes the code as it's entered, so it's clear which swipes counted
+      function echo(ok){
+        if (!press || LV.beaten) return;
+        clearTimeout(fbT);
+        press.style.animation = 'none';
+        press.textContent = ki ? K.slice(0, ki).map(function(k){ return ARW[k]; }).join(' ') : (ok === false ? '✗ try again' : pressTxt);
+        fbT = setTimeout(function(){ if (!LV.beaten){ press.textContent = pressTxt; press.style.animation = ''; } }, 2500);
+      }
+      function fin(){
+        if (!t0) return; var end = t1 || t0, dx = end.x - t0.x, dy = end.y - t0.y; t0 = t1 = null;
+        var before = ki, c0 = LV.cheated;
+        if (Math.abs(dx) < 24 && Math.abs(dy) < 24) step(ki >= 8 ? (ki === 8 ? 'b' : 'a') : 'tap');
+        else step(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'ArrowRight' : 'ArrowLeft') : (dy > 0 ? 'ArrowDown' : 'ArrowUp'));
+        if (LV.cheated !== c0){ if (press){ clearTimeout(fbT); press.textContent = 'Cheat accepted'; } return; }
+        echo(!(before > 0 && ki < before));
+      }
+      gmScreen.addEventListener('touchstart', function(e){ var t = e.touches[0]; t0 = { x: t.clientX, y: t.clientY }; t1 = null; }, { passive: true });
+      gmScreen.addEventListener('touchmove', function(e){ var t = e.touches[0]; t1 = { x: t.clientX, y: t.clientY }; if (e.cancelable) e.preventDefault(); }, { passive: false });
+      gmScreen.addEventListener('touchend', function(e){ var t = e.changedTouches[0]; if (t) t1 = { x: t.clientX, y: t.clientY }; fin(); }, { passive: true });
+      gmScreen.addEventListener('touchcancel', fin, { passive: true });
     }
     function cheat(){
-      LV.n += 30; if (LV.el) LV.el.textContent = 'LV ' + LV.n;
+      LV.cheated = Date.now(); LV.n += 30; if (LV.el) LV.el.textContent = 'LV ' + LV.n;
       toast('Cheat code accepted · +30 levels · warp drive overclocked');
       var o = document.createElement('div'); o.className = 'ab_konami'; o.innerHTML = '<b>+30 lives</b>'; document.body.appendChild(o);
       function done(){ if (o.parentNode) o.parentNode.removeChild(o); }
