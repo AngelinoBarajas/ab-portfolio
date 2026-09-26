@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about.css v0.17.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about.css v0.18.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · About page (/about). Loaded with a page-head <link>. Layout, type and color live on the
    Webflow classes; this holds what the Designer can't: keyframes, 3D, pseudos, descendant rules and
    the state classes ab-about.js toggles. */
@@ -57,8 +57,10 @@
 .ab_sig{display:block;width:100%;height:auto;overflow:visible}
 .ab_sig text{font-family:var(--_typography---font--script),"Caveat",cursive;font-size:64px;font-weight:600;fill:transparent;stroke:var(--_color---brand--signal);stroke-width:1.2;stroke-dasharray:900;stroke-dashoffset:900;transition:stroke-dashoffset 2.6s cubic-bezier(.4,0,.2,1),fill .8s 2s}
 .ab_sig.on text{stroke-dashoffset:0;fill:var(--_color---brand--signal)}
-.ab_sig path{fill:none;stroke:var(--_color---brand--signal);stroke-width:1.5;stroke-dasharray:300;stroke-dashoffset:300;transition:stroke-dashoffset 1s 1.8s ease}
-.ab_sig.on path{stroke-dashoffset:0}
+.ab_sig .ab_sig-line{fill:none;stroke:var(--_color---brand--signal);stroke-width:1.6;stroke-linecap:round}
+.ab_sig .ab_sig-tail{fill:none;stroke:#fff3e6;stroke-width:2.6;stroke-linecap:round;opacity:0;filter:drop-shadow(0 0 3px #ffb27a) drop-shadow(0 0 7px rgba(255,106,61,.8))}
+.ab_sig .ab_sig-star{opacity:0;fill:#fff;filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 8px #ffb27a)}
+.ab_sig .ab_sig-star path{fill:#ffe6cf}
 
 /* ---------- mission statement ---------- */
 .ab_ms_big.is-ready .ab_ms_wd{color:rgba(242,240,234,.14);transition:color .3s}
@@ -85,7 +87,12 @@
 .ab_tl.is-ready .ab_tl_card.is-right{transform:translateX(18px)}
 .ab_tl.is-ready .ab_tl_item.is-on .ab_tl_card{opacity:1;transform:none}
 .ab_tl_icon svg{display:block;width:100%;height:100%}
-@media (max-width:767px){.ab_tl.is-ready .ab_tl_card,.ab_tl.is-ready .ab_tl_card.is-right{transform:translateY(14px)}.ab_tl.is-ready .ab_tl_item.is-on .ab_tl_card{transform:none}}
+@media (max-width:767px){.ab_tl.is-ready .ab_tl_card,.ab_tl.is-ready .ab_tl_card.is-right{transform:translateY(14px)}.ab_tl.is-ready .ab_tl_item.is-on .ab_tl_card{transform:none}
+  .ab_tl_icon{top:18px;bottom:auto;right:16px;width:30px;height:30px}
+  .ab_tl_tag,.ab_tl_title{padding-right:40px}
+  /* crew badge hint: wraps inside the screen, centered under the badge */
+  .ab_badge_hint{left:50%;right:auto;transform:translateX(-50%);width:max-content;max-width:calc(100vw - 32px);white-space:normal;text-align:center}
+}
 
 /* ---------- Between launches (light bento) ---------- */
 .ab_planet.is-td,.ab_planet.is-sp{aspect-ratio:1;left:auto;top:auto}
@@ -93,6 +100,11 @@
 .ab_bento-card[data-td].is-close .ab_planet.is-td{animation:ab-about-pull 2.4s ease-in-out infinite}
 @keyframes ab-about-pull{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 .ab_td_value{font-variant-numeric:tabular-nums}
+.ab_td_orbit{position:absolute;left:50%;top:50%;width:0;height:0;z-index:6;pointer-events:none;animation:ab-about-orb 34s linear infinite}
+.ab_td_ship{position:absolute;left:0;top:0;width:24px;height:24px;margin:-12px 0 0 -12px;transform:translateX(var(--rf,110px));transition:transform 1.6s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 0 4px rgba(242,240,234,.45))}
+.ab_bento-card[data-td].is-close .ab_td_ship{transform:translateX(var(--rc,70px)) scale(.8)}
+.ab_td_ship svg{display:block;width:100%;height:100%;overflow:visible}
+.ab_td_ship .sp{animation:ab-about-orb 5s linear infinite;transform-origin:0 0}
 .ab_td_rate-fill{transition:width .6s cubic-bezier(.2,.9,.2,1)}
 .ab_bento-card[data-td].is-close [data-td-rate]{width:100%}
 .ab_bento-card_viz.is-sp{background:radial-gradient(60% 60% at 50% 45%,#1a1d33,#07080D 75%)}
@@ -131,11 +143,45 @@
 .ab_shelf_note.show{opacity:1;transform:none}
 .ab_shelf_note b{display:block;margin-bottom:3px;color:var(--_color---brand--signal);font-weight:500;text-transform:uppercase;letter-spacing:.1em}
 
+/* player one secret: boss fight + credits */
+.ab_boss{position:fixed;inset:0;z-index:96;overflow:hidden;background:#07080d;color:var(--_color---text--primary);font-family:var(--_typography---font--mono);-webkit-user-select:none;user-select:none}
+.ab_boss::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(180deg,rgba(255,255,255,.04) 0 1px,transparent 1px 3px)}
+.ab_boss_stars{position:absolute;inset:-100% 0 0;background-image:radial-gradient(1.5px 1.5px at 20% 30%,#fff,transparent),radial-gradient(1px 1px at 70% 60%,#fff,transparent),radial-gradient(1.5px 1.5px at 40% 80%,#ffe6cf,transparent),radial-gradient(1px 1px at 85% 15%,#fff,transparent),radial-gradient(1px 1px at 10% 70%,#9b7dff,transparent);background-size:220px 220px;animation:ab-boss-stars 3s linear infinite;opacity:.7}
+@keyframes ab-boss-stars{to{transform:translateY(50%)}}
+.ab_boss_x{position:absolute;top:16px;right:16px;z-index:5;padding:8px 12px;border:1px solid var(--_color---neutral--hair-strong);background:rgba(7,8,13,.7);color:var(--_color---text--primary);font:inherit;font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.ab_boss_x:hover,.ab_boss_x:focus-visible{border-color:var(--_color---brand--signal);color:var(--_color---brand--signal);outline:none}
+.ab_boss_hud{position:absolute;top:18px;left:16px;right:120px;z-index:3;display:grid;gap:8px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#ff5a6a;max-width:520px}
+.ab_boss_hp{display:block;height:12px;border:2px solid #ff5a6a;padding:2px}
+.ab_boss_hp i{display:block;height:100%;width:100%;background:repeating-linear-gradient(90deg,#ff5a6a 0 10px,#c0303e 10px 12px);transition:width .2s steps(3)}
+.ab_boss_warn{position:absolute;left:0;right:0;top:40%;z-index:3;text-align:center;font-family:var(--_typography---font--display);font-weight:900;font-stretch:125%;font-size:clamp(26px,5vw,64px);text-transform:uppercase;color:#ff5a6a;opacity:0}
+.ab_boss_arena{position:absolute;inset:70px 0 0;z-index:2}
+.ab_boss_mon{position:absolute;left:50%;top:9%;width:min(62vw,360px);height:auto;margin-left:calc(min(62vw,360px) / -2);filter:drop-shadow(0 0 18px rgba(155,125,255,.55))}
+.ab_boss_ship{position:absolute;left:50%;bottom:10%;width:min(16vw,76px);height:auto;margin-left:calc(min(16vw,76px) / -2);filter:drop-shadow(0 0 10px rgba(255,106,61,.6))}
+.ab_boss_laser{position:absolute;left:-2px;top:0;width:4px;height:22px;background:linear-gradient(#fff,#FF6A3D);box-shadow:0 0 10px #FF6A3D}
+.ab_boss_blob{position:absolute;left:-7px;top:0;width:14px;height:14px;background:#ff5a6a;box-shadow:0 0 12px #ff5a6a}
+.ab_boss_dmg{position:absolute;left:0;top:0;font-size:18px;font-weight:600;color:#ffd166;text-shadow:2px 2px 0 #0b0c14}
+.ab_boss_win{position:absolute;left:16px;right:16px;top:32%;z-index:3;text-align:center;opacity:0;pointer-events:none}
+.ab_boss_win b{display:block;font-family:var(--_typography---font--display);font-weight:900;font-stretch:125%;font-size:clamp(48px,11vw,150px);line-height:.9;text-transform:uppercase;color:#4cf2a0;text-shadow:6px 6px 0 #1b6b47}
+.ab_boss_win p{max-width:520px;margin:18px auto 0;font-size:14px;line-height:1.6;letter-spacing:.04em;color:var(--_color---text--primary)}
+.ab_boss_crawl{position:absolute;inset:0;z-index:3;opacity:0;overflow:hidden;perspective:420px;pointer-events:none}
+.ab_boss_crawl-in{position:absolute;left:50%;top:0;width:min(560px,86vw);margin-left:calc(min(560px,86vw) / -2);transform-origin:50% 100%;text-align:center}
+.ab_boss_crawl{-webkit-mask-image:linear-gradient(180deg,transparent 4%,#000 30%,#000 100%);mask-image:linear-gradient(180deg,transparent 4%,#000 30%,#000 100%)}
+.ab_boss_crawl > .ab_boss_crawl-in{rotate:x 24deg}
+.ab_boss_cr{margin:0 0 44px}
+.ab_boss_cr small{display:block;margin-bottom:8px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--_color---brand--signal)}
+.ab_boss_cr span{display:block;font-family:var(--_typography---font--display);font-weight:800;font-stretch:112%;font-size:clamp(22px,4.2vw,40px);line-height:1.1;text-transform:uppercase;color:#ffd166}
+.ab_boss_cr.is-end span{font-size:clamp(34px,7vw,72px);color:#4cf2a0}
+.ab_boss_cr.is-end small{margin-top:12px;color:var(--_color---text--tertiary)}
+.ab_boss.is-still .ab_boss_crawl{overflow:auto;pointer-events:auto;-webkit-mask-image:none;mask-image:none;perspective:none;top:52%}
+.ab_boss.is-still .ab_boss_crawl-in{position:static;margin:0 auto;rotate:none}
+.ab_boss.is-still .ab_boss_win{top:14%}
+.ab_boss.is-still .ab_boss_warn,.ab_boss.is-still .ab_boss_arena,.ab_boss.is-still .ab_boss_hud{display:none}
+
 /* konami burst */
 .ab_konami{position:fixed;inset:0;z-index:95;pointer-events:none;display:grid;place-items:center}
 .ab_konami b{font-family:var(--_typography---font--display);font-weight:900;font-stretch:125%;font-size:clamp(40px,9vw,140px);color:#4cf2a0;text-shadow:6px 6px 0 #1b6b47;text-transform:uppercase;letter-spacing:-.01em}
 
 @media (prefers-reduced-motion:reduce){
-  .ab_badge_swing,.ab_badge_scan,.ab_rec_dot,.ab_ms_heart.on,.ab_crew_orbit,.ab_crew_moon,.ab_gm_press{animation:none}
+  .ab_badge_swing,.ab_badge_scan,.ab_rec_dot,.ab_ms_heart.on,.ab_crew_orbit,.ab_crew_moon,.ab_gm_press,.ab_td_orbit,.ab_td_ship .sp,.ab_boss_stars{animation:none}
   .ab_badge_inner,.ab_tl_card{transition:none}
 }

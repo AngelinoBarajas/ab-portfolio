@@ -20,7 +20,8 @@
   function keyAct(el, fn){ el.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); fn(e); } }); }
 
   /* ---------- decorative SVGs into their Designer slots ---------- */
-  var SIG = '<svg class="ab_sig" viewBox="0 0 300 90" role="img" aria-label="Signed, Angelino"><text x="6" y="62">Angelino</text><path d="M10 78 C 90 70, 170 86, 280 72"/></svg>';
+  var SIG = '<svg class="ab_sig" viewBox="0 0 300 90" role="img" aria-label="Signed, Angelino"><text x="6" y="62">Angelino</text><path class="ab_sig-line" d="M10 80 Q 150 90 280 64"/><path class="ab_sig-tail" d="M10 80 Q 150 90 280 64"/>' +
+    '<g class="ab_sig-star"><circle r="2.6"/><path d="M0 -9 L1.3 -1.3 L9 0 L1.3 1.3 L0 9 L-1.3 1.3 L-9 0 L-1.3 -1.3 Z"/></g></svg>';
   var SIL = '<svg viewBox="0 0 100 110" aria-hidden="true"><circle cx="50" cy="36" r="22" fill="none" stroke="#8A8FA3" stroke-width="2" stroke-dasharray="4 4"/><path d="M8 108c4-26 22-40 42-40s38 14 42 40" fill="none" stroke="#8A8FA3" stroke-width="2" stroke-dasharray="4 4"/></svg>';
   var HEART = '<svg viewBox="0 0 8 7"><path d="M1 0h2v1h2V0h2v1h1v3H7v1H6v1H5v1H3V6H2V5H1V4H0V1h1z"/></svg>';
   var ICON = {
@@ -93,12 +94,12 @@
     var wrap = $('[data-badge-wrap]'), badge = $('[data-badge]'), rig = $('[data-badge-rig]'), strap = $('[data-badge-lanyard]');
     if (!wrap || !badge || !rig || !strap) return;
     var front = $('.ab_badge_face.is-front', badge), back = $('.ab_badge_face.is-back', badge), hint = $('[data-badge-hint]');
-    if (hint) hint.textContent = coarse ? 'Tap the badge to flip it · swipe it sideways to swing' : 'Click the badge to flip it · drag it to swing';
+    if (hint) hint.textContent = coarse ? 'Tap to flip · swipe sideways to swing' : 'Click the badge to flip it · drag it to swing';
     badge.setAttribute('aria-label', 'Crew badge. Press Enter to flip it over, arrow keys to swing it.');
     function flip(){
       badge.classList.toggle('is-flipped'); var f = badge.classList.contains('is-flipped');
       if (front) front.setAttribute('aria-hidden', f ? 'true' : 'false'); if (back) back.setAttribute('aria-hidden', f ? 'false' : 'true');
-      if (f){ var s = back && $('.ab_sig', back); if (s) setTimeout(function(){ s.classList.add('on'); }, 350); }
+      if (f){ var s = back && $('.ab_sig', back); if (s) setTimeout(function(){ sigOn(s); }, 350); }
     }
     keyAct(badge, flip);
 
@@ -201,8 +202,40 @@
     if (!reduce && hasGsap) gsap.from(wrap, { y: -120, rotation: -6, opacity: 0, duration: 1.6, ease: 'elastic.out(1,.55)', delay: .4, clearProps: 'transform,opacity' });
   })();
 
-  /* ---------- signatures draw in when seen ---------- */
-  $$('.section_about-ms .ab_sig').forEach(function(s){ if (reduce) s.classList.add('on'); else io(s, function(){ s.classList.add('on'); }, { threshold: .6 }); });
+  /* ---------- signatures: the name writes itself, then a shooting star arcs under it and leaves the underline ---------- */
+  // the underline is sized to the rendered name (Caveat), rising to the right like a meteor's path
+  function sigFit(svg){
+    var t = $('text', svg), line = $('.ab_sig-line', svg), tail = $('.ab_sig-tail', svg); if (!t || !line) return 0;
+    var w = 200; try { w = t.getComputedTextLength() || w; } catch (e){}
+    var x0 = 10, x1 = Math.min(294, 6 + w + 10), d = 'M' + x0 + ' 80 Q ' + (x0 + (x1 - x0) * .55).toFixed(1) + ' 90 ' + x1.toFixed(1) + ' 66';
+    line.setAttribute('d', d); tail.setAttribute('d', d);
+    var L = line.getTotalLength(); svg.__L = L;
+    if (!svg.__drawn){ line.style.strokeDasharray = L; line.style.strokeDashoffset = L; }
+    return L;
+  }
+  function sigOn(svg){
+    if (svg.__on) return; svg.__on = true; svg.classList.add('on');
+    var line = $('.ab_sig-line', svg), tail = $('.ab_sig-tail', svg), star = $('.ab_sig-star', svg);
+    function finish(){ svg.__drawn = true; line.style.strokeDashoffset = 0; }
+    if (reduce || !hasGsap){ sigFit(svg); finish(); return; }
+    var go = function(){
+      var L = sigFit(svg), TL = Math.min(70, L * .35), o = { p: 0 };
+      tail.style.strokeDasharray = TL + ' ' + (L + TL);
+      gsap.timeline({ delay: 1.5, onComplete: finish })
+        .set([tail, star], { opacity: 1 })
+        .to(o, { p: 1, duration: 1.05, ease: 'power2.in', onUpdate: function(){
+          var at = o.p * L, pt = line.getPointAtLength(at);
+          line.style.strokeDashoffset = L - at;
+          tail.style.strokeDashoffset = TL - at;
+          star.setAttribute('transform', 'translate(' + pt.x.toFixed(1) + ' ' + pt.y.toFixed(1) + ') scale(' + (.5 + o.p * .6).toFixed(2) + ')');
+        } })
+        .to(star, { opacity: 0, duration: .5, ease: 'power2.out' })
+        .to(tail, { opacity: 0, duration: .45, ease: 'power2.out' }, '<');
+    };
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(go); else go();
+  }
+  $$('.ab_sig').forEach(function(svg){ if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ sigFit(svg); }); else sigFit(svg); });
+  $$('.section_about-ms .ab_sig').forEach(function(s){ if (reduce) sigOn(s); else io(s, function(){ sigOn(s); }, { threshold: .6 }); });
 
   /* ---------- mission statement: words light up as you scroll, then the heart beats ---------- */
   (function(){
@@ -253,6 +286,19 @@
   (function(){
     var td = $('[data-td]'); if (!td) return;
     var here = 0, hover = false, vis = false, last = 0, elH = $('[data-td-here]', td), elE = $('[data-td-earth]', td);
+    // the Endurance: a ring ship floating at the edge of the black hole; flying close pulls it in to the horizon
+    var hole = $('.ab_planet.is-td', td), hintEl = $('.ab_off_hint', td);
+    if (hintEl) hintEl.textContent = (coarse ? 'Tap' : 'Hover') + ' to fly the Endurance close · 1 hour there = 7 years here';
+    if (hole){
+      var mods = ''; for (var mi = 0; mi < 12; mi++) mods += '<rect x="-3" y="-15.5" width="6" height="4.2" rx=".6" transform="rotate(' + (mi * 30) + ')"/>';
+      var orb = document.createElement('div'); orb.className = 'ab_td_orbit'; orb.setAttribute('aria-hidden', 'true');
+      orb.innerHTML = '<div class="ab_td_ship"><svg viewBox="-20 -20 40 40"><g class="sp"><path d="M0 -12V12M-12 0H12" stroke="#8A8FA3" stroke-width="1"/><circle r="12.4" fill="none" stroke="#8A8FA3" stroke-width=".7"/><g fill="#F2F0EA">' + mods + '</g><circle r="3.2" fill="#F2F0EA"/><circle r="1.2" fill="#FF6A3D"/></g></svg></div>';
+      hole.appendChild(orb);
+      var orbR = function(){ var w = hole.offsetWidth || 180; orb.style.setProperty('--rf', Math.round(w * .66) + 'px'); orb.style.setProperty('--rc', Math.round(w * .4) + 'px'); };
+      orbR(); addEventListener('resize', orbR);
+      var orbRate = function(r){ if (!orb.getAnimations) return; orb.getAnimations().forEach(function(a){ if (hasGsap){ var o = { r: a.playbackRate }; gsap.to(o, { r: r, duration: 1.2, ease: 'power2.out', onUpdate: function(){ a.playbackRate = o.r; } }); } else a.playbackRate = r; }); };
+      if (window.MutationObserver) new MutationObserver(function(){ orbRate(td.classList.contains('is-close') ? 3.2 : 1); }).observe(td, { attributes: true, attributeFilter: ['class'] });
+    }
     td.addEventListener('pointerenter', function(){ hover = true; td.classList.add('is-close'); });
     td.addEventListener('pointerleave', function(){ hover = false; td.classList.remove('is-close'); });
     if (coarse) td.addEventListener('click', function(){ hover = !hover; td.classList.toggle('is-close', hover); });
@@ -319,11 +365,14 @@
       gsap.to(qT, { duration: .8, scrambleText: { text: QS[qi], chars: '?!/_<>', speed: .6 } });
       if (mark) gsap.fromTo(mark, { rotation: -20 }, { rotation: 0, duration: .8, ease: 'elastic.out(1,.4)' });
     }
-    box.addEventListener('click', next); keyAct(box, next);
+    // tapping anywhere on the card asks the next question (links inside it still work)
+    var phCard = box.closest('.ab_bento-card') || box;
+    phCard.style.cursor = 'pointer';
+    phCard.addEventListener('click', function(e){ if (e.target.closest && e.target.closest('a')) return; next(); }); keyAct(box, next);
   })();
 
   /* ---------- player one: click for XP, level up; the Konami code is a cheat ---------- */
-  var LV = { n: 7 };
+  var LV = { n: 7, BOSS: 20, beaten: false, boss: null };
   (function(){
     var gm = $('[data-gm]'); if (!gm) return;
     var card = gm.closest('.ab_bento-card'), lvl = $('[data-gm-lvl]', gm), xpN = $('[data-gm-xpn]', gm), bar = $('[data-gm-xp]', gm), xp = 0;
@@ -335,11 +384,13 @@
         pop.style.left = (e.clientX - r.left - 12) + 'px'; pop.style.top = (e.clientY - r.top - 20) + 'px'; gm.appendChild(pop);
         gsap.to(pop, { y: -30, opacity: 0, duration: .8, ease: 'steps(6)', onComplete: function(){ pop.parentNode && pop.parentNode.removeChild(pop); } });
       }
-      if (xp >= 100){ xp -= 100; LV.n++; lvl.textContent = 'LV ' + pad2(LV.n); card.classList.remove('is-lvlup'); void card.offsetWidth; card.classList.add('is-lvlup'); toast('Level up · LV ' + pad2(LV.n) + ' · new skill unlocked'); }
+      if (xp >= 100){ xp -= 100; LV.n++; lvl.textContent = 'LV ' + pad2(LV.n); card.classList.remove('is-lvlup'); void card.offsetWidth; card.classList.add('is-lvlup');
+        if (LV.n >= LV.BOSS && !LV.beaten && LV.boss){ toast('LV ' + pad2(LV.n) + ' · something huge is on the radar…'); setTimeout(LV.boss, 900); }
+        else toast('Level up · LV ' + pad2(LV.n) + ' · new skill unlocked'); }
       bar.style.width = xp + '%'; xpN.textContent = 'XP ' + p3(xp);
     }
     gm.addEventListener('click', gain); keyAct(gm, function(){ gain(); });
-    LV.el = lvl;
+    LV.el = lvl; LV.press = $('.ab_gm_press', gm);
   })();
   (function(){
     var K = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'], ki = 0;
@@ -354,6 +405,8 @@
       if (reduce || !hasGsap){ setTimeout(done, 1500); return; }
       gsap.timeline({ onComplete: done }).from(o.firstChild, { scale: .4, opacity: 0, duration: .5, ease: 'back.out(2)' }).to(o.firstChild, { opacity: 0, y: -40, duration: .6, delay: .8 });
       if (sf && sf.state) gsap.timeline().to(sf.state, { warp: .8, duration: .5, ease: 'power2.in' }).to(sf.state, { warp: 0, duration: 1.2, ease: 'power2.out' });
+      // the cheat also skips straight to the boss
+      if (!LV.beaten && LV.boss) setTimeout(LV.boss, 1700);
     });
   })();
 

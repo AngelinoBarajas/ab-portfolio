@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.17.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.18.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -1109,9 +1109,16 @@ window.Webflow.push(function(){
     function layout(){
       if (!go) return;
       var r = card.getBoundingClientRect(), g = go.getBoundingClientRect(), pr = planet ? planet.getBoundingClientRect() : { left: r.right - 120, top: r.top + 40, width: 80, height: 80 };
-      var x0 = g.right - r.left + 16, y0 = g.top - r.top + g.height / 2, x1 = pr.left - r.left + pr.width * .1, y1 = pr.top - r.top + pr.height * .5;
+      var x0 = g.right - r.left + 16, y0 = g.top - r.top + g.height / 2, x1 = pr.left - r.left + pr.width * .1, y1 = pr.top - r.top + pr.height * .5, dx = x1 - x0, d;
       svg.setAttribute('viewBox', '0 0 ' + r.width + ' ' + r.height);
-      var d = 'M' + x0 + ' ' + y0 + ' C ' + (x0 + (x1 - x0) * .35) + ' ' + (y0 + 40) + ', ' + (x0 + (x1 - x0) * .6) + ' ' + (y1 - 90) + ', ' + x1 + ' ' + y1;
+      if (dx >= 140){
+        // room to fly: launch beside the button, lift, then drop onto the planet (the swing scales with the distance)
+        d = 'M' + x0 + ' ' + y0 + ' C ' + (x0 + dx * .35) + ' ' + (y0 + Math.min(40, dx * .15)) + ', ' + (x0 + dx * .6) + ' ' + (y1 - Math.min(90, dx * .3)) + ', ' + x1 + ' ' + y1;
+      } else {
+        // the planet sits right beside the button (narrow cards): launch from under the button and skim the card's floor up to it
+        var bx = g.left - r.left + 10, by = Math.min(r.height - 12, g.bottom - r.top + 16), ex = pr.left - r.left + pr.width * .5, ey = Math.min(pr.bottom - r.top - pr.height * .12, r.height - 14), sx = ex - bx;
+        d = 'M' + bx + ' ' + by + ' C ' + (bx + sx * .45) + ' ' + (by + 6) + ', ' + (ex - sx * .12) + ' ' + (by + 4) + ', ' + ex + ' ' + ey;
+      }
       path.setAttribute('d', d); done.setAttribute('d', d); L = path.getTotalLength(); done.style.strokeDasharray = L + ' ' + (L + 20); done.style.strokeDashoffset = L;
     }
     layout(); addEventListener('resize', layout); if (document.fonts) document.fonts.ready.then(layout);
