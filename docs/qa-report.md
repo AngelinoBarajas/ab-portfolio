@@ -81,3 +81,5 @@ All bundles now load from freeform footer code with `defer` (details: build note
 | Mission | 50 → 44 → **49** | 6.1 s | 610 ms |
 
 First paint is still ~4 s in the lab: what's left in front of it is Webflow's own synchronous jQuery + webflow.js and the render-blocking CSS (Webflow's + `ab-core.css`, 67 KB), which the site can't defer. Remaining levers: CSS-sized hero titles (late LCP from the font swap / Home fit) and starting Mission's monitor scenes after first paint. Lab numbers use a throttled mid-range phone; real devices on Wi-Fi/5G are much faster.
+
+**Reverted (2026-09-26):** Angelino chose to keep Webflow's script registry ("everything through jsDelivr like before"); the deferred numbers above no longer apply, the v0.13.0 column does.

@@ -486,3 +486,5 @@ Report + decisions: `docs/qa-report.md`. Live: `ab-core` JS + CSS, `ab-home`, `a
 
 The script registry can't take `defer`, so every bundle moved to freeform footer code as `<script defer src integrity crossorigin>`:
 **Site settings › Footer**: GSAP 3.13 (gsap, ScrollTrigger, Draggable, InertiaPlugin, SplitText, ScrambleTextPlugin, Flip) → Lenis 1.3.26 → `ab-core` v0.13.0. **Each page footer**: its bundle (Home/About/Services template/hub v0.13.0, Work 0.4.0, Process 0.10.0, Contact 0.12.0, 404 0.7.0, Mission template 0.10.0). Registry: only `abwarpin` (header). All page registered scripts cleared. Rendered order verified on staging: Webflow jQuery + webflow.js (sync) → 10 deferred scripts in order. Deploy procedure updated in `code/README.md` (no more `register_hosted_script`).
+
+**Reverted the same day (Angelino: "everything through jsDelivr like before")**: back to registered scripts (site: GSAP ×7, Lenis, `abwarpin`, `abcore` 0.13.0; pages: their bundles at the current versions), freeform footers cleared. The v0.13.0 fixes stay. Verified on staging: 9 templates init core + page bundle + Lenis, no `defer` tags.
