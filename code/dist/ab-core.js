@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.8.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.8.1 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -1041,8 +1041,8 @@ window.Webflow.push(function(){
   })();
 
   /* ---------- drag cue (every hero with draggables): until something on THIS hero is dragged, the first draggable
-     tugs and a "Drag me" hand chip points at it, 3 times, 10 s apart. One localStorage key per hero type
-     (ab:toys:work|services|mission|about|404, Home keeps ab:dragged), so dragging on one page doesn't hide it on the others.
+     tugs and a "Drag me" hand chip points at it, 3 times, 10 s apart. One sessionStorage key per hero type
+     (ab:toys:work|services|mission|about|404, Home keeps ab:dragged), so dragging on one page doesn't hide it on the others; per visit, so it comes back next time.
      opts: host (positioned box the chip sits in), first (element it points at), items (presses that end it),
      key (optional), at ('mid' default = over the first item, 'end' = at its right edge), tug (degrees). ---------- */
   function heroKind(){
@@ -1054,14 +1054,14 @@ window.Webflow.push(function(){
   AB.dragCue = function(o){
     var KEY = o.key || 'ab:toys:' + heroKind(), done = false, first = o.first, host = o.host;
     if (!hasGsap || !first || !host) return;
-    try { if (localStorage.getItem(KEY)) return; } catch (e){}
+    try { if (sessionStorage.getItem(KEY)) return; } catch (e){}
     if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
     var hint = document.createElement('div'); hint.className = 'ab_drag-hint'; hint.setAttribute('aria-hidden', 'true'); hint.style.opacity = 0;
     hint.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V12m0-6.5v-1a1.5 1.5 0 0 1 3 0V12m0-6a1.5 1.5 0 0 1 3 0v6m0-3.5a1.5 1.5 0 0 1 3 0V16a6 6 0 0 1-6 6h-2a6 6 0 0 1-5-2.7L3.4 15a1.6 1.6 0 0 1 2.6-1.9L8 15.5"/></svg><span>Drag me</span>';
     host.appendChild(hint);
     function stop(){
       if (done) return; done = true;
-      try { localStorage.setItem(KEY, '1'); } catch (e){}
+      try { sessionStorage.setItem(KEY, '1'); } catch (e){}
       gsap.killTweensOf(first, 'rotation'); gsap.killTweensOf(hint); gsap.set(first, { rotation: 0 });
       gsap.to(hint, { opacity: 0, duration: .3, onComplete: function(){ hint.remove(); } });
     }
