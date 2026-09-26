@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.22.2 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.22.3 · github.com/AngelinoBarajas/ab-portfolio */
 /* =========================================================
    AB Portfolio · ab-core.css (site-wide)
    Only what the Webflow Designer can't express: pseudo-elements, state
@@ -130,7 +130,9 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 /* mobile menu: orange marks the page you're on (not Contact), with a small tag */
 .ab_menu_link.is-contact{color:var(--_color---text--primary)}
 .ab_menu_link.w--current,.ab_menu_link.w--current .ab_menu_link-path{color:var(--_color---brand--signal)}
-.ab_menu_link.w--current::after{content:"You are here";align-self:center;margin-left:12px;padding:3px 8px;border:1px solid var(--_color---brand--signal);font-family:var(--_typography---font--mono);font-size:10px;font-weight:500;letter-spacing:.14em;line-height:1.2;text-transform:uppercase;white-space:nowrap;color:var(--_color---brand--signal)}
+.ab_menu_link.w--current{flex-wrap:wrap;row-gap:4px}
+.ab_menu_link.w--current .ab_menu_link-path{display:none}
+.ab_menu_link.w--current::after{content:"You are here";align-self:center;padding:3px 8px;border:1px solid var(--_color---brand--signal);font-family:var(--_typography---font--mono);font-size:10px;font-weight:500;letter-spacing:.14em;line-height:1.2;text-transform:uppercase;white-space:nowrap;color:var(--_color---brand--signal)}
 
 /* ---------- hero ---------- */
 .ab_hero_meta,.ab_hero_bottom{pointer-events:none}
