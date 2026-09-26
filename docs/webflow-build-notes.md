@@ -378,3 +378,6 @@ Designer steps for Angelino: rename the form (Form settings › Name, it's "Emai
 
 ### v0.8.1 (2026-09-25): drag cue per visit
 - Angelino: no drag cue on Home. The cue worked; his browser had `ab:dragged` in localStorage (set the first time he dragged on Home, back in v0.1.4), so it never showed again. `AB.dragCue` now remembers in **sessionStorage**: the cue shows on every hero each visit until something on that hero is dragged. Core JS v0.8.1 (CSS stays v0.7.0). Verified on staging with the old flag set.
+
+### v0.8.2 (2026-09-25): Process phone rail
+- Rocket sat ~10px right of the dashed rail on phones (rail center 11px, diamonds 10px, rocket 20px). Rail `left:9px`, rocket `left:-7px`: all on one 10px center line. Only `ab-process.css` changed (page head link v0.8.2); prototype source updated too. Verified on staging at 390.
