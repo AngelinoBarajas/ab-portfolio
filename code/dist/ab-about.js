@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.22.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.22.2 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -309,12 +309,14 @@ window.Webflow.push(function(){
     // to the corner, so it keeps playing while the visitor scrolls. Starts at 0:32 (Spotify decides what a logged-out
     // listener hears: often a preview clip)
     var viz = $('.ab_bento-card_viz.is-td', td) || td;
+    // desktop only: phones (iPhone Safari especially) often won't let a page start Spotify's embed, so no button there
+    var scoreOn = !coarse;
     var TRACK = 'spotify:track:6pWgRkpqVfxnj3WuIcJ7WP', START = 32;
     var play = document.createElement('button'); play.type = 'button'; play.className = 'abx-score';
     play.innerHTML = '<i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></i><span>Play the score</span>';
     play.setAttribute('aria-label', 'Play the Interstellar score, Cornfield Chase, from 0:32');
     // bottom-right corner of the card (phones: under the hint line)
-    td.appendChild(play);
+    if (scoreOn) td.appendChild(play);
     // the player is built (hidden) the first time the visitor flies close, so a tap on Play starts it right away:
     // browsers only allow sound from a tap/click, and it has to reach the player while that tap still counts
     var dockEl = null, ctrl = null, seeked = false, want = false;
@@ -340,7 +342,7 @@ window.Webflow.push(function(){
       }
       if (show) dockEl.classList.add('is-on');
     }
-    if (window.MutationObserver) new MutationObserver(function(){ if (td.classList.contains('is-close')) scoreDock(false); }).observe(td, { attributes: true, attributeFilter: ['class'] });
+    if (scoreOn && window.MutationObserver) new MutationObserver(function(){ if (td.classList.contains('is-close')) scoreDock(false); }).observe(td, { attributes: true, attributeFilter: ['class'] });
     play.addEventListener('click', function(e){
       e.stopPropagation(); want = true; seeked = false;
       scoreDock(true);
