@@ -304,34 +304,40 @@
     // listener hears: often a preview clip)
     var viz = $('.ab_bento-card_viz.is-td', td) || td;
     var TRACK = 'spotify:track:6pWgRkpqVfxnj3WuIcJ7WP', START = 32;
-    var play = document.createElement('button'); play.type = 'button'; play.className = 'ab_td_play';
-    play.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>Play the score</span>';
+    var play = document.createElement('button'); play.type = 'button'; play.className = 'abx-score';
+    play.innerHTML = '<i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></i><span>Play the score</span>';
     play.setAttribute('aria-label', 'Play the Interstellar score, Cornfield Chase, from 0:32');
-    viz.appendChild(play);
-    var dockEl = null, ctrl = null, seeked = false;
-    function scoreDock(){
-      if (dockEl){ dockEl.classList.add('is-on'); return; }
-      dockEl = document.createElement('div'); dockEl.className = 'ab_score is-on'; dockEl.setAttribute('role', 'region'); dockEl.setAttribute('aria-label', 'Interstellar score player');
-      dockEl.innerHTML = '<div class="ab_score_h"><span>Now playing · Interstellar</span><button type="button" class="ab_score_x" aria-label="Close the player">×</button></div><div class="ab_score_f"><div id="abScoreFrame"></div></div>';
-      document.body.appendChild(dockEl);
-      $('.ab_score_x', dockEl).addEventListener('click', function(){ if (ctrl) try { ctrl.pause(); } catch (e){} dockEl.classList.remove('is-on'); });
-      var make = function(API){
-        API.createController(document.getElementById('abScoreFrame'), { uri: TRACK, width: '100%', height: 80 }, function(c){
-          ctrl = c;
-          c.addListener('ready', function(){ try { c.play(); } catch (e){} });
-          c.addListener('playback_update', function(ev){ var d = ev && ev.data; if (!seeked && d && !d.isPaused && d.position < START * 1000){ seeked = true; try { c.seek(START); } catch (e){} } });
-        });
-      };
-      if (window.__abSpotifyAPI) make(window.__abSpotifyAPI);
-      else {
-        window.onSpotifyIframeApiReady = function(API){ window.__abSpotifyAPI = API; make(API); };
-        var s = document.createElement('script'); s.src = 'https://open.spotify.com/embed/iframe-api/v1'; s.async = true; document.head.appendChild(s);
+    // it sits in the event horizon (the black hole's dark center)
+    (hole || viz).appendChild(play);
+    // the player is built (hidden) the first time the visitor flies close, so a tap on Play starts it right away:
+    // browsers only allow sound from a tap/click, and it has to reach the player while that tap still counts
+    var dockEl = null, ctrl = null, seeked = false, want = false;
+    function scoreDock(show){
+      if (!dockEl){
+        dockEl = document.createElement('div'); dockEl.className = 'ab_score'; dockEl.setAttribute('role', 'region'); dockEl.setAttribute('aria-label', 'Interstellar score player');
+        dockEl.innerHTML = '<div class="ab_score_h"><span>Now playing · Interstellar</span><button type="button" class="ab_score_x" aria-label="Close the player">×</button></div><div class="ab_score_f"><div id="abScoreFrame"></div></div>';
+        document.body.appendChild(dockEl);
+        $('.ab_score_x', dockEl).addEventListener('click', function(){ want = false; if (ctrl) try { ctrl.pause(); } catch (e){} dockEl.classList.remove('is-on'); });
+        var make = function(API){
+          API.createController(document.getElementById('abScoreFrame'), { uri: TRACK, width: '100%', height: 80 }, function(c){
+            ctrl = c;
+            c.addListener('ready', function(){ if (want) try { c.play(); } catch (e){} });
+            c.addListener('playback_update', function(ev){ var d = ev && ev.data; if (!seeked && d && !d.isPaused && d.position < START * 1000){ seeked = true; try { c.seek(START); } catch (e){} } });
+          });
+        };
+        if (window.__abSpotifyAPI) make(window.__abSpotifyAPI);
+        else {
+          window.onSpotifyIframeApiReady = function(API){ window.__abSpotifyAPI = API; make(API); };
+          var s = document.createElement('script'); s.src = 'https://open.spotify.com/embed/iframe-api/v1'; s.async = true; document.head.appendChild(s);
+        }
       }
+      if (show) dockEl.classList.add('is-on');
     }
+    if (window.MutationObserver) new MutationObserver(function(){ if (td.classList.contains('is-close')) scoreDock(false); }).observe(td, { attributes: true, attributeFilter: ['class'] });
     play.addEventListener('click', function(e){
-      e.stopPropagation();
-      if (ctrl && dockEl){ dockEl.classList.add('is-on'); seeked = false; try { ctrl.play(); } catch (err){} return; }
-      scoreDock();
+      e.stopPropagation(); want = true; seeked = false;
+      scoreDock(true);
+      if (ctrl) try { ctrl.play(); } catch (err){}
     });
     td.addEventListener('pointerenter', function(){ hover = true; td.classList.add('is-close'); });
     td.addEventListener('pointerleave', function(){ hover = false; td.classList.remove('is-close'); });
