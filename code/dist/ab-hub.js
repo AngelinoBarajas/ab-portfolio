@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-hub v0.22.3 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-hub v0.23.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHubInit) return;
@@ -339,7 +339,7 @@ window.Webflow.push(function(){
       if (i > -1){
         if (old > -1 && old !== i) status(old, baseStatus(old));
         if (was > -1 && was !== i && was !== old) status(was, baseStatus(was));
-        status(i, 'PRIORITY GO', 60);
+        status(i, 'PRIORITY GO', 60); if (AB.quest) AB.quest('diagnostics'); 
         cur = -1; print(i, false);
         prompt('DIAGNOSTIC MATCH · AB-' + HUB[i].no + ' ' + HUB[i].short.toUpperCase() + ' · PRIORITY GO');
         toast('Priority go · ' + HUB[i].t1 + ' ' + HUB[i].t2);
@@ -573,6 +573,7 @@ window.Webflow.push(function(){
     if (on === landed) return; landed = on;
     fsec.classList.toggle('is-landed', on);
     if (!on) return;
+    if (AB.quest) AB.quest('touchdown'); 
     fset('n', 'T+0'); fset('l', 'Touchdown');
     if (reduce || !hasGsap) return;
     var dock = $('.hbf-dock', track), cols = sel().map(function(j){ return HUB[j].c; }).concat(['#FF6A3D', '#F2F0EA']);

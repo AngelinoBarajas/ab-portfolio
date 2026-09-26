@@ -97,6 +97,7 @@
     if (hint) hint.textContent = coarse ? 'Tap to flip · swipe sideways to swing' : 'Click the badge to flip it · drag it to swing';
     badge.setAttribute('aria-label', 'Crew badge. Press Enter to flip it over, arrow keys to swing it.');
     function flip(){
+      if (AB.quest) AB.quest('badge'); 
       badge.classList.toggle('is-flipped'); var f = badge.classList.contains('is-flipped');
       if (front) front.setAttribute('aria-hidden', f ? 'true' : 'false'); if (back) back.setAttribute('aria-hidden', f ? 'false' : 'true');
       if (f){ var s = back && $('.ab_sig', back); if (s) setTimeout(function(){ sigOn(s); }, 350); }
@@ -142,7 +143,7 @@
     function stopTick(){ ticking = false; if (hasGsap) gsap.ticker.remove(step); }
     function release(){
       if (reduce){ S.held = false; if (hasGsap) gsap.to(S, { phi: 0, r: L, duration: .5, ease: 'power2.out', onUpdate: render, onComplete: rest }); else rest(); return; }
-      S.held = false; startTick();
+      S.held = false; startTick(); if (AB.quest) AB.quest('lanyard'); 
     }
     // keyboard: arrows give it a push
     badge.addEventListener('keydown', function(e){
@@ -297,7 +298,20 @@
       var orbR = function(){ var w = hole.offsetWidth || 180; orb.style.setProperty('--rf', Math.round(w * .66) + 'px'); orb.style.setProperty('--rc', Math.round(w * .4) + 'px'); };
       orbR(); addEventListener('resize', orbR);
       var orbRate = function(r){ if (!orb.getAnimations) return; orb.getAnimations().forEach(function(a){ if (hasGsap){ var o = { r: a.playbackRate }; gsap.to(o, { r: r, duration: 1.2, ease: 'power2.out', onUpdate: function(){ a.playbackRate = o.r; } }); } else a.playbackRate = r; }); };
-      if (window.MutationObserver) new MutationObserver(function(){ orbRate(td.classList.contains('is-close') ? 3.2 : 1); }).observe(td, { attributes: true, attributeFilter: ['class'] });
+      if (window.MutationObserver) new MutationObserver(function(){ var c = td.classList.contains('is-close'); orbRate(c ? 3.2 : 1); if (c && AB.quest) AB.quest('endurance'); }).observe(td, { attributes: true, attributeFilter: ['class'] });
+      // side quest: near the horizon, five fast taps on the black hole fire the thrusters and the Endurance breaks free
+      var taps = [], freeing = false;
+      hole.addEventListener('click', function(e){
+        if (!td.classList.contains('is-close') || freeing) return;
+        e.stopPropagation();
+        var now = Date.now(); taps = taps.filter(function(t){ return now - t < 2200; }); taps.push(now);
+        if (hasGsap && !reduce) gsap.fromTo(orb, { scale: 1 }, { scale: 1.06, duration: .08, yoyo: true, repeat: 1 });
+        if (taps.length < 5) return;
+        taps = []; freeing = true; orb.classList.add('is-escape');
+        toast('Full thrust. The Endurance broke free of the horizon.');
+        if (AB.quest) AB.quest('escape');
+        setTimeout(function(){ orb.classList.remove('is-escape'); freeing = false; }, 3200);
+      });
     }
     // the score: flying close shows a play button; it opens the official track (Spotify embed) in a small player docked
     // to the corner, so it keeps playing while the visitor scrolls. Starts at 0:32 (Spotify decides what a logged-out
@@ -394,7 +408,7 @@
       p.style.touchAction = 'pan-y';
       p.addEventListener('pointerdown', function(e){ drag = true; sx = e.clientX; try { p.setPointerCapture(e.pointerId); } catch (err){} p.style.cursor = 'grabbing'; });
       p.addEventListener('pointermove', function(e){ if (!drag || !hasGsap) return; gsap.to(p, { rotation: (e.clientX - sx) * .5, duration: .3, overwrite: 'auto' }); });
-      function end(){ if (!drag) return; drag = false; p.style.cursor = ''; if (hasGsap) gsap.to(p, { rotation: 0, duration: 1.4, ease: 'elastic.out(1,.4)', overwrite: 'auto' }); }
+      function end(){ if (!drag) return; drag = false; p.style.cursor = ''; if (AB.quest) AB.quest('spin');  if (hasGsap) gsap.to(p, { rotation: 0, duration: 1.4, ease: 'elastic.out(1,.4)', overwrite: 'auto' }); }
       p.addEventListener('pointerup', end); p.addEventListener('pointercancel', end);
     });
   })();
@@ -406,7 +420,7 @@
     if (!box || !qT || !QS.length) return;
     var qi = 0;
     function next(){
-      qi = (qi + 1) % QS.length; if (qN) qN.textContent = 'Question ' + pad2(qi + 1);
+      qi = (qi + 1) % QS.length; if (qi === 0) if (AB.quest) AB.quest('questions');  if (qN) qN.textContent = 'Question ' + pad2(qi + 1);
       if (reduce || !hasGsap || !window.ScrambleTextPlugin){ qT.textContent = QS[qi]; return; }
       gsap.to(qT, { duration: .8, scrambleText: { text: QS[qi], chars: '?!/_<>', speed: .6 } });
       if (mark) gsap.fromTo(mark, { rotation: -20 }, { rotation: 0, duration: .8, ease: 'elastic.out(1,.4)' });
@@ -451,6 +465,7 @@
       if (reduce || !hasGsap){ setTimeout(done, 1500); return; }
       gsap.timeline({ onComplete: done }).from(o.firstChild, { scale: .4, opacity: 0, duration: .5, ease: 'back.out(2)' }).to(o.firstChild, { opacity: 0, y: -40, duration: .6, delay: .8 });
       if (sf && sf.state) gsap.timeline().to(sf.state, { warp: .8, duration: .5, ease: 'power2.in' }).to(sf.state, { warp: 0, duration: 1.2, ease: 'power2.out' });
+      if (AB.quest) AB.quest('konami'); 
       // the cheat also skips straight to the boss
       if (!LV.beaten && LV.boss) setTimeout(LV.boss, 1700);
     });
@@ -465,6 +480,7 @@
       if (c) b.style.backgroundColor = c; if (h) b.style.height = h + 'px'; if (fg) b.style.color = fg;
       b.setAttribute('aria-label', (b.getAttribute('data-g') || 'Book') + '. Knock it off the shelf.');
       function knock(){
+        if (AB.quest) AB.quest('book'); 
         if (note){ note.innerHTML = '<b>' + esc(b.getAttribute('data-g') || '') + '</b>' + esc(b.getAttribute('data-note') || 'Always one on the nightstand.'); note.classList.add('show'); clearTimeout(nt); nt = setTimeout(function(){ note.classList.remove('show'); }, 2600); }
         if (reduce || !hasGsap || b.__busy) return;
         b.__busy = true; b.classList.add('is-out');

@@ -295,7 +295,7 @@
   }
   function land(on){
     if (on === landed) return; landed = on;
-    dock.classList.toggle('is-landed', on); ship.classList.toggle('is-landed', on);
+    dock.classList.toggle('is-landed', on); ship.classList.toggle('is-landed', on); if (on && AB.quest) AB.quest('touchdown');
     if (hudL) hudL.textContent = on ? 'Touchdown' : lastK < 0 ? 'On the pad' : (STAGE_CODES[lastK] || '') + (lastK === wps.length - 1 ? ' · liftoff' : '');
     if (on && Date.now() - lastBurst > 1500){ lastBurst = Date.now(); burst(); }
   }

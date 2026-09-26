@@ -157,7 +157,7 @@
       var bars = $$('.ab_boss_bar', o), vs = $('.ab_boss_vs', o), dim = $('.ab_boss_dim', o), flash = $('.ab_boss_flash', o), hud = $('.ab_boss_hud', o);
       if (reduce || !hasGsap){
         // no fight: straight to the result, credits as a still list
-        o.classList.add('is-still'); win.style.opacity = 1; crawl.style.opacity = 1; hp.style.width = '0%'; ended = true; return;
+        o.classList.add('is-still'); win.style.opacity = 1; crawl.style.opacity = 1; hp.style.width = '0%'; ended = true; if (AB.quest) AB.quest('boss'); return;
       }
       function shake(n){ gsap.fromTo(arena, { x: (Math.random() - .5) * n, y: (Math.random() - .5) * n }, { x: 0, y: 0, duration: .45, ease: 'elastic.out(1,.25)' }); }
       function shot(){
@@ -201,7 +201,7 @@
           .to(ship, { x: 0, rotationY: 0, duration: .45, ease: 'power2.inOut' }, '+=.1');
       }
       function explode(){
-        SFX.loopStop(); SFX.boom();
+        SFX.loopStop(); SFX.boom(); if (AB.quest) AB.quest('boss');
         var rects = $$('rect', mon);
         rects.forEach(function(r){ gsap.to(r, { x: (Math.random() - .5) * 34, y: (Math.random() - .3) * 30, opacity: 0, duration: 1.1 + Math.random() * .8, ease: 'power2.out' }); });
         gsap.fromTo(flash, { opacity: 1 }, { opacity: 0, duration: 1.2, ease: 'power2.out' });

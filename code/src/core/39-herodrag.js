@@ -25,7 +25,7 @@
         Draggable.create(el, { type: 'x,y', bounds: hero, inertia: !!window.InertiaPlugin, edgeResistance: .7, zIndexBoost: false,
           onPress: function(){ if (back) back.kill(); gsap.to(el, { scale: 1.04, duration: .2 }); },
           onRelease: function(){ gsap.to(el, { scale: 1, duration: .3 }); },
-          onDragEnd: schedule, onThrowComplete: schedule });
+          onDragEnd: function(){ schedule(); if (AB.quest) AB.quest('toys'); }, onThrowComplete: schedule });
         nudge(el, schedule);
       });
       AB.dragCue({ host: title.parentNode, first: items[0], items: items });

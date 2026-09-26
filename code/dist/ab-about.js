@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.22.3 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.23.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -103,6 +103,7 @@ window.Webflow.push(function(){
     if (hint) hint.textContent = coarse ? 'Tap to flip · swipe sideways to swing' : 'Click the badge to flip it · drag it to swing';
     badge.setAttribute('aria-label', 'Crew badge. Press Enter to flip it over, arrow keys to swing it.');
     function flip(){
+      if (AB.quest) AB.quest('badge'); 
       badge.classList.toggle('is-flipped'); var f = badge.classList.contains('is-flipped');
       if (front) front.setAttribute('aria-hidden', f ? 'true' : 'false'); if (back) back.setAttribute('aria-hidden', f ? 'false' : 'true');
       if (f){ var s = back && $('.ab_sig', back); if (s) setTimeout(function(){ sigOn(s); }, 350); }
@@ -148,7 +149,7 @@ window.Webflow.push(function(){
     function stopTick(){ ticking = false; if (hasGsap) gsap.ticker.remove(step); }
     function release(){
       if (reduce){ S.held = false; if (hasGsap) gsap.to(S, { phi: 0, r: L, duration: .5, ease: 'power2.out', onUpdate: render, onComplete: rest }); else rest(); return; }
-      S.held = false; startTick();
+      S.held = false; startTick(); if (AB.quest) AB.quest('lanyard'); 
     }
     // keyboard: arrows give it a push
     badge.addEventListener('keydown', function(e){
@@ -303,7 +304,20 @@ window.Webflow.push(function(){
       var orbR = function(){ var w = hole.offsetWidth || 180; orb.style.setProperty('--rf', Math.round(w * .66) + 'px'); orb.style.setProperty('--rc', Math.round(w * .4) + 'px'); };
       orbR(); addEventListener('resize', orbR);
       var orbRate = function(r){ if (!orb.getAnimations) return; orb.getAnimations().forEach(function(a){ if (hasGsap){ var o = { r: a.playbackRate }; gsap.to(o, { r: r, duration: 1.2, ease: 'power2.out', onUpdate: function(){ a.playbackRate = o.r; } }); } else a.playbackRate = r; }); };
-      if (window.MutationObserver) new MutationObserver(function(){ orbRate(td.classList.contains('is-close') ? 3.2 : 1); }).observe(td, { attributes: true, attributeFilter: ['class'] });
+      if (window.MutationObserver) new MutationObserver(function(){ var c = td.classList.contains('is-close'); orbRate(c ? 3.2 : 1); if (c && AB.quest) AB.quest('endurance'); }).observe(td, { attributes: true, attributeFilter: ['class'] });
+      // side quest: near the horizon, five fast taps on the black hole fire the thrusters and the Endurance breaks free
+      var taps = [], freeing = false;
+      hole.addEventListener('click', function(e){
+        if (!td.classList.contains('is-close') || freeing) return;
+        e.stopPropagation();
+        var now = Date.now(); taps = taps.filter(function(t){ return now - t < 2200; }); taps.push(now);
+        if (hasGsap && !reduce) gsap.fromTo(orb, { scale: 1 }, { scale: 1.06, duration: .08, yoyo: true, repeat: 1 });
+        if (taps.length < 5) return;
+        taps = []; freeing = true; orb.classList.add('is-escape');
+        toast('Full thrust. The Endurance broke free of the horizon.');
+        if (AB.quest) AB.quest('escape');
+        setTimeout(function(){ orb.classList.remove('is-escape'); freeing = false; }, 3200);
+      });
     }
     // the score: flying close shows a play button; it opens the official track (Spotify embed) in a small player docked
     // to the corner, so it keeps playing while the visitor scrolls. Starts at 0:32 (Spotify decides what a logged-out
@@ -400,7 +414,7 @@ window.Webflow.push(function(){
       p.style.touchAction = 'pan-y';
       p.addEventListener('pointerdown', function(e){ drag = true; sx = e.clientX; try { p.setPointerCapture(e.pointerId); } catch (err){} p.style.cursor = 'grabbing'; });
       p.addEventListener('pointermove', function(e){ if (!drag || !hasGsap) return; gsap.to(p, { rotation: (e.clientX - sx) * .5, duration: .3, overwrite: 'auto' }); });
-      function end(){ if (!drag) return; drag = false; p.style.cursor = ''; if (hasGsap) gsap.to(p, { rotation: 0, duration: 1.4, ease: 'elastic.out(1,.4)', overwrite: 'auto' }); }
+      function end(){ if (!drag) return; drag = false; p.style.cursor = ''; if (AB.quest) AB.quest('spin');  if (hasGsap) gsap.to(p, { rotation: 0, duration: 1.4, ease: 'elastic.out(1,.4)', overwrite: 'auto' }); }
       p.addEventListener('pointerup', end); p.addEventListener('pointercancel', end);
     });
   })();
@@ -412,7 +426,7 @@ window.Webflow.push(function(){
     if (!box || !qT || !QS.length) return;
     var qi = 0;
     function next(){
-      qi = (qi + 1) % QS.length; if (qN) qN.textContent = 'Question ' + pad2(qi + 1);
+      qi = (qi + 1) % QS.length; if (qi === 0) if (AB.quest) AB.quest('questions');  if (qN) qN.textContent = 'Question ' + pad2(qi + 1);
       if (reduce || !hasGsap || !window.ScrambleTextPlugin){ qT.textContent = QS[qi]; return; }
       gsap.to(qT, { duration: .8, scrambleText: { text: QS[qi], chars: '?!/_<>', speed: .6 } });
       if (mark) gsap.fromTo(mark, { rotation: -20 }, { rotation: 0, duration: .8, ease: 'elastic.out(1,.4)' });
@@ -457,6 +471,7 @@ window.Webflow.push(function(){
       if (reduce || !hasGsap){ setTimeout(done, 1500); return; }
       gsap.timeline({ onComplete: done }).from(o.firstChild, { scale: .4, opacity: 0, duration: .5, ease: 'back.out(2)' }).to(o.firstChild, { opacity: 0, y: -40, duration: .6, delay: .8 });
       if (sf && sf.state) gsap.timeline().to(sf.state, { warp: .8, duration: .5, ease: 'power2.in' }).to(sf.state, { warp: 0, duration: 1.2, ease: 'power2.out' });
+      if (AB.quest) AB.quest('konami'); 
       // the cheat also skips straight to the boss
       if (!LV.beaten && LV.boss) setTimeout(LV.boss, 1700);
     });
@@ -471,6 +486,7 @@ window.Webflow.push(function(){
       if (c) b.style.backgroundColor = c; if (h) b.style.height = h + 'px'; if (fg) b.style.color = fg;
       b.setAttribute('aria-label', (b.getAttribute('data-g') || 'Book') + '. Knock it off the shelf.');
       function knock(){
+        if (AB.quest) AB.quest('book'); 
         if (note){ note.innerHTML = '<b>' + esc(b.getAttribute('data-g') || '') + '</b>' + esc(b.getAttribute('data-note') || 'Always one on the nightstand.'); note.classList.add('show'); clearTimeout(nt); nt = setTimeout(function(){ note.classList.remove('show'); }, 2600); }
         if (reduce || !hasGsap || b.__busy) return;
         b.__busy = true; b.classList.add('is-out');
@@ -643,7 +659,7 @@ window.Webflow.push(function(){
       var bars = $$('.ab_boss_bar', o), vs = $('.ab_boss_vs', o), dim = $('.ab_boss_dim', o), flash = $('.ab_boss_flash', o), hud = $('.ab_boss_hud', o);
       if (reduce || !hasGsap){
         // no fight: straight to the result, credits as a still list
-        o.classList.add('is-still'); win.style.opacity = 1; crawl.style.opacity = 1; hp.style.width = '0%'; ended = true; return;
+        o.classList.add('is-still'); win.style.opacity = 1; crawl.style.opacity = 1; hp.style.width = '0%'; ended = true; if (AB.quest) AB.quest('boss'); return;
       }
       function shake(n){ gsap.fromTo(arena, { x: (Math.random() - .5) * n, y: (Math.random() - .5) * n }, { x: 0, y: 0, duration: .45, ease: 'elastic.out(1,.25)' }); }
       function shot(){
@@ -687,7 +703,7 @@ window.Webflow.push(function(){
           .to(ship, { x: 0, rotationY: 0, duration: .45, ease: 'power2.inOut' }, '+=.1');
       }
       function explode(){
-        SFX.loopStop(); SFX.boom();
+        SFX.loopStop(); SFX.boom(); if (AB.quest) AB.quest('boss');
         var rects = $$('rect', mon);
         rects.forEach(function(r){ gsap.to(r, { x: (Math.random() - .5) * 34, y: (Math.random() - .3) * 30, opacity: 0, duration: 1.1 + Math.random() * .8, ease: 'power2.out' }); });
         gsap.fromTo(flash, { opacity: 1 }, { opacity: 0, duration: 1.2, ease: 'power2.out' });
@@ -735,6 +751,53 @@ window.Webflow.push(function(){
         .to(crawl, { opacity: 1, duration: .5 }, '<')
         .fromTo(crawlIn, { yPercent: 0, y: function(){ return crawl.offsetHeight; } }, { yPercent: -100, y: function(){ return crawl.offsetHeight * .35; }, duration: 22, ease: 'none', onComplete: function(){ ended = true; } });
     };
+  })();
+
+  /* ===== about/20-quests.js ===== */
+  /* ---------- side quests log: a line on the Player one card ("Side quests") opens the list; every find ticks
+     off live; all found turns the crew badge gold. Unfound quests show only a hint ---------- */
+  (function(){
+    var Q = AB.quest, gm = $('[data-gm]'); if (!Q || !gm) return;
+    var card = gm.closest('.ab_bento-card'), copy = card && $('.ab_bento-card_copy', card); if (!copy) return;
+    var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'abx-qlog';
+    copy.appendChild(btn);
+    var panel = null, badge = $('[data-badge]'), prevFocus = null;
+    function N(){ return Q.list.length; }
+    function paintBtn(){ btn.innerHTML = '✦ Quest log · <b>' + Q.count() + '/' + N() + '</b>'; btn.setAttribute('aria-label', 'Open the side quest log, ' + Q.count() + ' of ' + N() + ' found'); }
+    function gold(){ if (badge) badge.classList.toggle('is-gold', Q.count() === N()); }
+    function render(){
+      if (!panel) return;
+      var n = Q.count();
+      $('.abx-qp_h span', panel).textContent = 'Side quests · ' + n + '/' + N();
+      $('.abx-qp_bar i', panel).style.width = (n / N() * 100) + '%';
+      $('.abx-qp_gold', panel).hidden = n !== N();
+      $('.abx-qp_list', panel).innerHTML = Q.list.map(function(q){
+        var d = Q.has(q[0]);
+        return '<li class="' + (d ? 'is-done' : '') + '"><i aria-hidden="true">' + (d ? '✓' : '◇') + '</i><div><b>' + (d ? esc(q[1]) : 'Unknown quest') + '</b><span>' + esc(q[2]) + '</span></div></li>';
+      }).join('');
+    }
+    function close(){ if (!panel) return; panel.classList.remove('is-on'); document.removeEventListener('keydown', onKey); if (AB.lenis) AB.lenis.start(); document.documentElement.style.overflow = ''; if (prevFocus) try { prevFocus.focus(); } catch (e){} }
+    function onKey(e){ if (e.key === 'Escape') close(); }
+    function open(){
+      if (!panel){
+        panel = document.createElement('div'); panel.className = 'abx-qp'; panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-modal', 'true'); panel.setAttribute('aria-label', 'Side quest log');
+        panel.innerHTML = '<div class="abx-qp_box" data-lenis-prevent><div class="abx-qp_h"><span></span><button type="button" class="abx-qp_x" aria-label="Close the quest log">×</button></div>' +
+          '<div class="abx-qp_t">Side quests</div><div class="abx-qp_note">Little things hidden around the site. Finds are saved in this browser.</div>' +
+          '<div class="abx-qp_bar" aria-hidden="true"><i></i></div><div class="abx-qp_gold" hidden>Every side quest found. Your crew badge on this page just went gold. Thanks for playing, Player One.</div>' +
+          '<ul class="abx-qp_list"></ul><button type="button" class="abx-qp_reset">Reset the log</button></div>';
+        document.body.appendChild(panel);
+        $('.abx-qp_x', panel).addEventListener('click', close);
+        panel.addEventListener('click', function(e){ if (e.target === panel) close(); });
+        $('.abx-qp_reset', panel).addEventListener('click', function(){ Q.reset(); toast('Quest log reset'); });
+      }
+      prevFocus = document.activeElement; render();
+      panel.classList.add('is-on'); document.addEventListener('keydown', onKey);
+      if (AB.lenis) AB.lenis.stop(); document.documentElement.style.overflow = 'hidden';
+      setTimeout(function(){ var x = $('.abx-qp_x', panel); if (x) x.focus(); }, 60);
+    }
+    btn.addEventListener('click', function(e){ e.stopPropagation(); open(); });
+    document.addEventListener('ab:quest', function(){ paintBtn(); gold(); render(); });
+    paintBtn(); gold();
   })();
 
 });

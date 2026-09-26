@@ -233,7 +233,7 @@
       if (i > -1){
         if (old > -1 && old !== i) status(old, baseStatus(old));
         if (was > -1 && was !== i && was !== old) status(was, baseStatus(was));
-        status(i, 'PRIORITY GO', 60);
+        status(i, 'PRIORITY GO', 60); if (AB.quest) AB.quest('diagnostics'); 
         cur = -1; print(i, false);
         prompt('DIAGNOSTIC MATCH · AB-' + HUB[i].no + ' ' + HUB[i].short.toUpperCase() + ' · PRIORITY GO');
         toast('Priority go · ' + HUB[i].t1 + ' ' + HUB[i].t2);

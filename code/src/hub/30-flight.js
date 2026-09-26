@@ -88,6 +88,7 @@
     if (on === landed) return; landed = on;
     fsec.classList.toggle('is-landed', on);
     if (!on) return;
+    if (AB.quest) AB.quest('touchdown'); 
     fset('n', 'T+0'); fset('l', 'Touchdown');
     if (reduce || !hasGsap) return;
     var dock = $('.hbf-dock', track), cols = sel().map(function(j){ return HUB[j].c; }).concat(['#FF6A3D', '#F2F0EA']);

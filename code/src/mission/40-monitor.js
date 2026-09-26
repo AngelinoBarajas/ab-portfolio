@@ -42,8 +42,10 @@
       gsap.to(o, { t: 1, duration: .38, onUpdate: function(){ var img = nctx.createImageData(160, 100), d = img.data; for (var i = 0; i < d.length; i += 4){ var v = Math.random() * 255 | 0; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255; } nctx.putImageData(img, 0, 0); } });
       gsap.fromTo(screen, { filter: 'brightness(2) saturate(0)' }, { filter: 'brightness(1) saturate(1)', duration: .45, ease: 'power2.out', clearProps: 'filter' });
     }
+    var seenCh = {};
     function setCh(i, silent){
       i = (i + CH.length) % CH.length; var c = CH[i]; curCh = i;
+      seenCh[i] = true; if (CH.length > 1 && Object.keys(seenCh).length >= CH.length && AB.quest) AB.quest('channels');
       views.forEach(function(v, k){ v.classList.toggle('on', k === i); });
       chBtns.forEach(function(b, k){ b.setAttribute('aria-selected', k === i ? 'true' : 'false'); });
       monLabel.textContent = c.label; monCap.textContent = c.caption; monKind.textContent = KIND[c.kind] || '';

@@ -103,7 +103,7 @@
     }
     function home(p, drag){ gsap.to(p, { x: 0, y: 0, rotation: 0, scaleX: 1, scaleY: 1, duration: 1, ease: 'elastic.out(1,.55)', onComplete: function(){ if (drag) drag.enable(); } }); }
     function consume(p, drag){
-      if (drag) drag.disable();
+      if (drag) drag.disable(); if (AB.quest) AB.quest('blackhole'); 
       var b = bhCenter(), c = center(p), r0 = Math.hypot(c.x - b.x, c.y - b.y), a0 = Math.atan2(c.y - b.y, c.x - b.x), o = { t: 0 };
       var core = $('.bh-core', bhw), rh = core ? core.getBoundingClientRect().width / 2 : 20;
       var done = function(){

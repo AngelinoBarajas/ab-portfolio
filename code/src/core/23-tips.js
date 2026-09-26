@@ -19,6 +19,7 @@
     tipEl.style.top = Math.round(Math.max(8, y)) + 'px';
   }
   function tipShow(el, title, text, aside){
+    if (aside && AB.quest) AB.quest('aside');
     clearTimeout(tipT);
     tipEl.innerHTML = '<b>' + (aside ? '<i aria-hidden="true">✦</i> ' : '') + esc(title) + '</b>' + esc(text);
     tipEl.classList.toggle('is-aside', !!aside);
@@ -123,3 +124,22 @@
   };
   // after page scripts have written their copy (Mission [[terms]], Process legs…)
   setTimeout(function(){ tipLink(); }, 900);
+  // twinkles: every so often a small ✦ sparkles at a corner of one aside that's on screen (a hint there's
+  // something to hover / tap). Skipped for reduced motion, in hidden tabs and while a tip is open
+  if (!reduce) (function(){
+    function spark(){
+      setTimeout(spark, 5200 + Math.random() * 5200);
+      if (document.hidden || tipCur || !ASIDES.length || document.documentElement.classList.contains('menu-open')) return;
+      var vis = [];
+      ASIDES.forEach(function(a){ var els; try { els = document.querySelectorAll(a.t); } catch (e){ return; }
+        for (var i = 0; i < els.length; i++){ var r = els[i].getBoundingClientRect(); if (r.width > 4 && r.bottom > 70 && r.top < innerHeight - 20 && r.right > 0 && r.left < innerWidth) vis.push(r); } });
+      if (!vis.length) return;
+      var r = vis[Math.floor(Math.random() * vis.length)], s = document.createElement('span');
+      s.className = 'ab-twinkle'; s.setAttribute('aria-hidden', 'true'); s.textContent = '✦';
+      var cx = Math.random() < .5 ? r.left : r.right, cy = Math.random() < .5 ? r.top : r.bottom;
+      s.style.left = Math.round(Math.max(8, Math.min(innerWidth - 20, cx + (Math.random() * 10 - 5)))) + 'px';
+      s.style.top = Math.round(Math.max(8, Math.min(innerHeight - 20, cy + (Math.random() * 10 - 5)))) + 'px';
+      document.body.appendChild(s); setTimeout(function(){ s.remove(); }, 1500);
+    }
+    setTimeout(spark, 3500);
+  })();

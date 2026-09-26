@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.22.3 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.23.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -68,7 +68,7 @@ window.Webflow.push(function(){
       Draggable.create(el, { type: 'x,y', bounds: hero, inertia: true, edgeResistance: .7,
         onPress: function(){ if (back) back.kill(); gsap.to(el, { scale: 1.04, duration: .2 }); },
         onRelease: function(){ gsap.to(el, { scale: 1, duration: .3 }); },
-        onDragEnd: schedule, onThrowComplete: schedule });
+        onDragEnd: function(){ schedule(); if (AB.quest) AB.quest('toys'); }, onThrowComplete: schedule });
       nudge(el, schedule);
     });
     // badge: rotating text ring, a tiny moon orbiting the core, spins up on hover
@@ -102,7 +102,7 @@ window.Webflow.push(function(){
         if (satDrags === 1) toast('It says do not drag.');
         if (satDrags === 3) toast('Seriously. It is load-bearing.');
         if (satDrags >= 5 && !satGone){
-          satGone = true; this.disable(); var d = this;
+          satGone = true; this.disable(); var d = this; if (AB.quest) AB.quest('satellite'); 
           toast('You had one job.');
           gsap.to(sat, { x: innerWidth, y: -300, rotation: 720, duration: 2.6, ease: 'power2.in', onComplete: function(){
             gsap.set(sat, { x: -innerWidth, y: 200, rotation: -200 });
