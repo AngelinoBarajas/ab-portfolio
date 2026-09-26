@@ -160,6 +160,8 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 
 - **Button audit** (all 22 URLs): fixed the Services template breadcrumb (→ `/services`) and `#top` on the 404 (core **v0.13.1**, registry as before). Details in `docs/qa-report.md`.
 
+- **Aguirre hidden** (switch on) and **client removal made one-step**: Hide from site now covers every surface (runbook `docs/remove-a-client.md`; Webflow blocks Unpublish on referenced items). v0.14.0. Work breadcrumb /home → /#work kept (his call).
+
 ## Next session
 
 1. ~~New standalone Contact page~~ built 2026-09-26 (see above); pending his OK, the asides, and Designer: rename the form "Email Form" → Contact. Original brief: Run page-pipeline from stage 2 (Direct): divergence gate + direction questions for him, then an HTML prototype in `prototypes/` (the `_parts/assemble.py` shell pattern), approval, then Webflow. Today every "Contact" / "Book a call" link (Nav, mobile menu `/contact` label, Footer, CTAs) goes to Home `#launch` (the planner form); decide with him what moves to `/contact` and what stays. Forms: Home planner + Process form post to the same notification email (still unconfirmed in Site settings › Forms). Reuse the native-form + Embed fields pattern (`webflow/build/process/form-fields.embed.html`).
