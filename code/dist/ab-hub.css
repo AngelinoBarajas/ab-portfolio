@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-hub.css v0.17.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-hub.css v0.17.1 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · ab-hub.css · Services hub (/services) only. States, pseudo-elements, glass and script-built parts the Designer can't hold.
    Webflow classes: ab_hub-* (+ ab_mc/ab_mon/ab_screen/ab_console .is-hub, ab_chip). Script-built parts use hb-* classes. */
 /* the planner panel grows a lot when a main is picked; native scroll anchoring then jumps the page (and fights Lenis) */
@@ -356,7 +356,7 @@ html:has(.section_hub-hero),.main-wrapper:has(.section_hub-hero){overflow-anchor
   .hb-pp-page.is-l{border-right:0;border-bottom:1px dashed rgba(255,255,255,.16);min-height:300px}
   .hb-pp-page.is-r{min-height:340px}
   /* page turns go top to bottom: the sheet hinges on the line between the two stacked pages (script sets its top/height) */
-  .ab_hub-log{grid-auto-rows:1fr}
+  .ab_hub-log{grid-template-rows:1fr 1fr}
   .hb-pp-turn{left:0;right:0;width:auto;transform-origin:50% 0}
   .hb-pp-turn.is-back{left:0;transform-origin:50% 100%}
   .hb-pp-turn .hb-pp-face.is-rev{transform:rotateX(180deg)}

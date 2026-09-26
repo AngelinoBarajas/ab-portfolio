@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process v0.17.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process v0.17.1 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abProcessInit) return;
@@ -338,7 +338,7 @@ window.Webflow.push(function(){
         onUpdate: function(self){ gsap.set(track, { x: -dist() * self.progress }); fly(self.progress * 1.02); } });
       fly(0);
     } else {
-      st = ScrollTrigger.create({ trigger: track, start: 'top 60%', end: 'bottom 60%', scrub: true,
+      st = ScrollTrigger.create({ trigger: track, start: 'top 60%', end: 'bottom 80%', scrub: true,
         onUpdate: function(self){ ship.style.top = (self.progress * (track.offsetHeight - 40)) + 'px';
           var k = -1, mid = innerHeight * .6; wps.forEach(function(w, i){ if (w.getBoundingClientRect().top < mid) k = i; }); stage(k); land(self.progress > .97); } });
     }

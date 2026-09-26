@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process.css v0.17.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process.css v0.17.1 · github.com/AngelinoBarajas/ab-portfolio */
 /* Process (/process) · the flight planner. Loaded from the page <head>.
    Only what the Designer can't hold: font-stretch, outline text, script-built pieces (abp-*: chart planets + orbits,
    route path / ship / pad, gauge, chips, form fields), state classes (.is-on, aria-pressed), pseudos and reduced motion.
@@ -133,13 +133,13 @@
 @media screen and (max-width:767px){.ab_process-hero_grid>.ab_process-hero_copy{pointer-events:none}.ab_process-hero_copy a,.ab_process-hero_copy button,.ab_process-hero_copy .is-toy{pointer-events:auto}}
 @media screen and (max-width:767px){
   /* touchdown: planet centered on the screen (the track's 36px rail padding is offset), text + links centered under it */
-  .abp-dock{position:relative;left:auto;top:auto;width:auto;flex-direction:column;align-items:center;text-align:center;margin:56px 0 24px -20px}
+  .abp-dock{position:relative;left:auto;top:auto;width:auto;flex-direction:column;align-items:center;text-align:center;margin:56px 0 56px -20px}
   .abp-dock-sys{--dock:150px;flex:none}
   .abp-dock-txt{margin-top:22px;align-items:center}
   .abp-dock-h{font-size:34px}
   .abp-dock-acts{margin-top:10px}
   /* hero: the countdown becomes a compact mission clock under the crumb, beside the planet, instead of trailing the buttons */
-  .ab_process-hero_grid>.ab_count{order:-1;justify-self:start;margin:4px 0 26px}
+  .ab_process-hero_grid>.ab_count{order:-1;justify-self:start;margin:4px 0 -18px}
   .ab_count_number{font-size:78px;line-height:.9}
   .ab_count_meta{flex-direction:column;align-items:flex-start;gap:4px;margin-top:8px}
   /* star chart: smaller planets so the orbits breathe */
@@ -148,9 +148,9 @@
   .ab_eta_grid{display:flex;flex-direction:column;gap:14px}
   .ab_eta_gauge{order:-1;position:sticky;top:84px;z-index:6;display:grid;grid-template-columns:128px minmax(0,1fr);gap:8px 14px;align-items:center;padding:12px 14px;background-color:rgba(11,12,22,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
   .ab_eta_dial{grid-row:span 1;margin:0;width:auto}
-  .ab_eta_out{margin:0}
-  .ab_eta_title{font-size:22px;line-height:1}
-  .ab_eta_text{font-size:12.5px;line-height:1.4;margin-top:4px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .ab_eta_gauge .ab_eta_out{margin:0;text-align:left}
+  .ab_eta_gauge .ab_eta_title{font-size:20px;line-height:1.05}
+  .ab_eta_gauge .ab_eta_text{font-size:12.5px;line-height:1.4;margin-top:4px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
   .ab_eta_adds{grid-column:1 / -1;margin:0}
   .ab_eta_note,.abp-tickl{display:none}
 }
