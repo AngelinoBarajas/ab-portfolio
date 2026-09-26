@@ -28,10 +28,20 @@
       return { t: g('quote'), a: g('author'), c: g('context') };
     }).filter(function(q){ return q.t; });
   }
-  var S0 = readSettings(), QUOTES = readQuotes(), siteCache = null;
+  // Glossary (CMS): Terms (auto-linked in copy) and Asides (a tip on one element, by CSS selector), read by core/23-tips
+  function readGloss(root){
+    return $$('[data-glossary-source] .w-dyn-item', root).map(function(it){
+      var g = function(k){ var n = $('[data-field="' + k + '"]', it); return n ? n.textContent.trim() : ''; };
+      return { n: g('name'), d: g('definition'), k: g('kind'), t: g('target') };
+    }).filter(function(x){ return x.n && x.d; });
+  }
+  var hasGloss = !!$('[data-glossary-source]');
+  var S0 = readSettings(), QUOTES = readQuotes(), GLOSS = readGloss(), siteCache = null;
   try { siteCache = JSON.parse(localStorage.getItem(SITE_KEY) || 'null'); } catch (e){}
-  if (hasSiteData){ try { localStorage.setItem(SITE_KEY, JSON.stringify({ s: S0, q: QUOTES })); } catch (e){} }
-  else if (siteCache){ S0 = siteCache.s || {}; QUOTES = siteCache.q || []; }
+  var cache = siteCache || {};
+  if (hasSiteData){ cache.s = S0; cache.q = QUOTES; } else if (siteCache){ S0 = siteCache.s || {}; QUOTES = siteCache.q || []; }
+  if (hasGloss) cache.g = GLOSS; else if (siteCache && siteCache.g) GLOSS = siteCache.g;
+  if (hasSiteData || hasGloss){ try { localStorage.setItem(SITE_KEY, JSON.stringify(cache)); } catch (e){} }
   function bind(key, val){ if (!val) return; $$('[data-bind="' + key + '"]').forEach(function(e){ e.textContent = val; }); }
   function applySettings(){
     bind('availability', S0.availability);
@@ -48,15 +58,14 @@
   $$('[data-social]').forEach(function(a){
     a.addEventListener('click', function(e){ if (S0[a.getAttribute('data-social')]) return; e.preventDefault(); toast('Add your profile links in Site Settings.'); });
   });
-  if (!hasSiteData && !siteCache && window.fetch && window.DOMParser){
+  if (((!hasSiteData && !siteCache) || (!hasGloss && !(siteCache && siteCache.g))) && window.fetch && window.DOMParser){
     fetch('/', { credentials: 'same-origin' }).then(function(r){ return r.ok ? r.text() : ''; }).then(function(html){
       if (!html) return;
-      var doc = new DOMParser().parseFromString(html, 'text/html'), s = readSettings(doc), q = readQuotes(doc);
-      Object.keys(s).forEach(function(k){ S0[k] = s[k]; });
-      QUOTES.push.apply(QUOTES, q);
-      try { localStorage.setItem(SITE_KEY, JSON.stringify({ s: s, q: q })); } catch (e){}
-      applySettings();
+      var doc = new DOMParser().parseFromString(html, 'text/html'), s = readSettings(doc), q = readQuotes(doc), g = readGloss(doc);
+      if (!hasSiteData){ Object.keys(s).forEach(function(k){ S0[k] = s[k]; }); QUOTES.push.apply(QUOTES, q); cache.s = s; cache.q = q; applySettings(); }
+      if (!hasGloss && g.length){ GLOSS.length = 0; GLOSS.push.apply(GLOSS, g); cache.g = g; if (AB.tip) AB.tip.refresh(); }
+      try { localStorage.setItem(SITE_KEY, JSON.stringify(cache)); } catch (e){}
     })['catch'](function(){});
   }
 
-  Object.assign(AB, { hasGsap: hasGsap, reduce: reduce, coarse: coarse, $: $, $$: $$, num: num, esc: esc, pad2: pad2, hex: hex, rgbToHex: rgbToHex, onView: onView, settings: S0, quotes: QUOTES });
+  Object.assign(AB, { hasGsap: hasGsap, reduce: reduce, coarse: coarse, $: $, $$: $$, num: num, esc: esc, pad2: pad2, hex: hex, rgbToHex: rgbToHex, onView: onView, settings: S0, quotes: QUOTES, gloss: GLOSS });

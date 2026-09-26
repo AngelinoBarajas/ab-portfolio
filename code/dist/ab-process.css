@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process.css v0.9.4 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process.css v0.10.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* Process (/process) · the flight planner. Loaded from the page <head>.
    Only what the Designer can't hold: font-stretch, outline text, script-built pieces (abp-*: chart planets + orbits,
    route path / ship / pad, gauge, chips, form fields), state classes (.is-on, aria-pressed), pseudos and reduced motion.
@@ -121,6 +121,9 @@
    copy column overlaps the planet too, so only its toys and links take the pointer there */
 .ab_process-hero_grid,.ab_count,.section_process-hero .ab_dbh_top{pointer-events:none}
 .section_process-hero .ab_dbh_top a{pointer-events:auto}
+/* tips: the REC label (desktop, clear of the planet) and the touchdown planet take the pointer */
+@media screen and (min-width:768px){.section_process-hero .ab_rec{pointer-events:auto}}
+.abp-dock-sys{pointer-events:auto}
 .ab_count.is-hover>.sel{opacity:1;transform:none}
 .ab_process-hero_grid>*:not(.ab_count){pointer-events:auto}
 @media screen and (max-width:767px){.ab_process-hero_grid>.ab_process-hero_copy{pointer-events:none}.ab_process-hero_copy a,.ab_process-hero_copy button,.ab_process-hero_copy .is-toy{pointer-events:auto}}

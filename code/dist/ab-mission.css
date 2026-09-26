@@ -1,11 +1,5 @@
-/*! AB Portfolio · ab-mission.css v0.9.4 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission.css v0.10.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · ab-mission.css · Mission template (/work/[slug]) only. Script-built parts + states the Designer cannot express. */
-/* ---------- glossary chips + tip ---------- */
-.gl{all:unset;cursor:help;border-bottom:1px dashed var(--_color---brand--signal);color:inherit;position:relative;white-space:nowrap}
-.gl:focus-visible{outline:2px solid var(--_color---ui--select);outline-offset:2px}
-.gl-tip{position:fixed;z-index:85;max-width:280px;padding:12px 14px;background:var(--_color---neutral--panel);border:1px solid var(--_color---brand--signal);font-family:var(--_typography---font--mono);font-size:12px;line-height:1.5;color:var(--_color---text--primary);pointer-events:none;opacity:0;transform:translateY(6px);transition:opacity .2s,transform .2s}
-.gl-tip.show{opacity:1;transform:none}
-.gl-tip b{display:block;color:var(--_color---brand--signal);font-weight:500;margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em}
 /* ---------- monitor internals (views are built by ab-mission) ---------- */
 .ab_screen canvas{max-width:100%}
 .mon-bar .rec{display:inline-flex;align-items:center;gap:7px;color:#ff4b3a}

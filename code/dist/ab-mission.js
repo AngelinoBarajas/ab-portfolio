@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission v0.9.4 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission v0.10.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abMissionInit) return;
@@ -1495,18 +1495,7 @@ window.Webflow.push(function(){
     if (lastLv) new IntersectionObserver(function(es){ pastLevels = !es[0].isIntersecting && es[0].boundingClientRect.top < 0; upd(); }, { rootMargin: '0px 0px -40% 0px' }).observe(lastLv);
   })();
 
-  /* ---------- glossary tips ---------- */
-  (function(){
-    var tip = document.createElement('div'); tip.className = 'gl-tip'; tip.setAttribute('role', 'tooltip'); document.body.appendChild(tip);
-    function show(b){ var t = b.getAttribute('data-term'); tip.innerHTML = '<b>' + esc(t) + '</b>' + esc(GLOSS[t] || ''); var r = b.getBoundingClientRect(); tip.style.left = Math.max(12, Math.min(innerWidth - 292, r.left)) + 'px'; tip.style.top = (r.bottom + 10) + 'px'; tip.classList.add('show'); }
-    function hide(){ tip.classList.remove('show'); }
-    document.addEventListener('mouseover', function(e){ var b = e.target.closest && e.target.closest('.gl'); if (b) show(b); });
-    document.addEventListener('mouseout', function(e){ if (e.target.closest && e.target.closest('.gl')) hide(); });
-    document.addEventListener('focusin', function(e){ if (e.target.classList && e.target.classList.contains('gl')) show(e.target); });
-    document.addEventListener('focusout', hide);
-    document.addEventListener('click', function(e){ var b = e.target.closest && e.target.closest('.gl'); if (b){ e.stopPropagation(); if (tip.classList.contains('show')) hide(); else show(b); } else hide(); });
-    addEventListener('scroll', hide, { passive: true });
-  })();
+  /* glossary tips: core/23-tips (AB.tip) handles the .gl buttons rich() makes */
 
   /* ---------- briefing: parameters (one per line in the CMS) ---------- */
   var PARAMS = txt('[data-field="params"]').split(/\n+/).map(function(s){ return s.trim(); }).filter(Boolean);

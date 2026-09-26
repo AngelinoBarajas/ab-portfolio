@@ -392,9 +392,10 @@
       if (on !== cnt.classList.contains('is-hover')){
         cnt.classList.toggle('is-hover', on);
         var sz = on && $('.sel-size', cnt); if (sz && !cnt.getAttribute('data-size')) sz.textContent = Math.round(cnt.offsetWidth) + ' × ' + Math.round(cnt.offsetHeight);
+        if (AB.tip){ if (on) AB.tip.show(cnt); else AB.tip.hide(cnt); }
       }
     });
-    heroSec.addEventListener('pointerleave', function(){ cnt.classList.remove('is-hover'); });
+    heroSec.addEventListener('pointerleave', function(){ cnt.classList.remove('is-hover'); if (AB.tip) AB.tip.hide(cnt); });
   }
 
   // restore the last mission silently (no scramble, no toast)

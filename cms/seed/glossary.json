@@ -26,5 +26,192 @@
   {
     "name": "TopoJSON",
     "definition": "A compact file format for map shapes, like the outline of every U.S. state."
+  },
+  {
+    "name": "AEO",
+    "definition": "Answer engine optimization: shaping content so AI assistants like ChatGPT, Perplexity and Google's AI answers can understand it and cite it."
+  },
+  {
+    "name": "JSON-LD",
+    "definition": "Structured data in a script tag that tells search engines and AI exactly what a page is: an article, a term, an FAQ, a business."
+  },
+  {
+    "name": "multi-reference",
+    "definition": "A Webflow CMS field that links one item to many others, like an article to every topic it covers."
+  },
+  {
+    "name": "Finsweet",
+    "definition": "Free Webflow add-ons for filters, sorting and CMS tricks Webflow doesn't do natively."
+  },
+  {
+    "name": "Webflow",
+    "definition": "The visual builder this site runs on: real HTML and CSS, with a CMS your team can edit.",
+    "kind": "Term"
+  },
+  {
+    "name": "WebGL",
+    "definition": "Your graphics card drawing in the browser. It's how the planets spin without melting your laptop.",
+    "kind": "Term"
+  },
+  {
+    "name": "GSAP",
+    "definition": "The animation engine behind most of the motion here. Smooth at 60fps, polite to your battery.",
+    "kind": "Term"
+  },
+  {
+    "name": "Figma",
+    "definition": "Where every page starts: design, prototypes and comments before any code.",
+    "kind": "Term"
+  },
+  {
+    "name": "Client-First",
+    "definition": "A naming system for Webflow classes, so the next developer isn't lost.",
+    "kind": "Term"
+  },
+  {
+    "name": "Variables",
+    "definition": "Colors, sizes and fonts saved once and reused. Change one, the whole site follows.",
+    "kind": "Term"
+  },
+  {
+    "name": "Component",
+    "definition": "A reusable block: edit it once and every copy updates.",
+    "kind": "Term"
+  },
+  {
+    "name": "Lighthouse",
+    "definition": "Google's speed, accessibility and SEO audit. The report card a launch has to pass.",
+    "kind": "Term"
+  },
+  {
+    "name": "API",
+    "definition": "How two apps talk to each other without you copy-pasting between them.",
+    "kind": "Term"
+  },
+  {
+    "name": "Handoff",
+    "definition": "The part where your team gets the keys and a guide, not a phone number.",
+    "kind": "Term"
+  },
+  {
+    "name": "Breakpoint",
+    "definition": "The screen width where a layout rearranges itself for tablets and phones.",
+    "kind": "Term"
+  },
+  {
+    "name": "Lenis",
+    "definition": "The smooth-scroll engine. It's why the page glides instead of jumping.",
+    "kind": "Term"
+  },
+  {
+    "name": "Rive",
+    "definition": "Interactive animations that react to input, lighter than video.",
+    "kind": "Term"
+  },
+  {
+    "name": "Reduced motion",
+    "definition": "A system setting some people need. This site honors it: calmer and still complete.",
+    "kind": "Term"
+  },
+  {
+    "name": "Discovery call",
+    "definition": "A 30-minute chat: where you're headed, what's in the way, whether we're a fit.",
+    "kind": "Term"
+  },
+  {
+    "name": "2 cursors online",
+    "definition": "One of them is you. The other one is also you, in another tab. Probably.",
+    "kind": "Aside",
+    "target": ".ab_nav_clock-wrap"
+  },
+  {
+    "name": "Launch window",
+    "definition": "Launch window open. Seats on this flight are limited (to one, it's just me).",
+    "kind": "Aside",
+    "target": ".ab_nav_status [data-bind=\"availability\"]"
+  },
+  {
+    "name": "The mark",
+    "definition": "An A and a B, drawn as a planet. 25 iterations, most of them bad.",
+    "kind": "Aside",
+    "target": ".ab_nav_logo"
+  },
+  {
+    "name": "Caffeine log",
+    "definition": "Measured in mugs, not cups. The science is settled.",
+    "kind": "Aside",
+    "target": ".ab_metric[data-metric-icon=\"cup\"]"
+  },
+  {
+    "name": "Lines of code",
+    "definition": "All hand-written. Every one of them has been rewritten at least once.",
+    "kind": "Aside",
+    "target": ".ab_metric[data-metric-icon=\"code\"]"
+  },
+  {
+    "name": "Not sure yet",
+    "definition": "Totally fine. Most good missions start here.",
+    "kind": "Aside",
+    "target": ".ab_planner_chip.is-unsure"
+  },
+  {
+    "name": "Black hole",
+    "definition": "Yes, you can feed it things. No, it won't give them back.",
+    "kind": "Aside",
+    "target": ".ab_footer_bh-zone .ab_planet.is-blackhole"
+  },
+  {
+    "name": "Layout grid",
+    "definition": "The layout grid I design on. 12 columns, 24px gutters.",
+    "kind": "Aside",
+    "target": "#gridToggle"
+  },
+  {
+    "name": "T-minus",
+    "definition": "Six stages, one launch. The clock only starts after the discovery call.",
+    "kind": "Aside",
+    "target": ".section_process-hero .ab_count"
+  },
+  {
+    "name": "REC",
+    "definition": "Not actually recording. It just likes to look busy.",
+    "kind": "Aside",
+    "target": ".section_process-hero .ab_rec"
+  },
+  {
+    "name": "Earth",
+    "definition": "Every mission starts here: your brief, your goals, your deadline.",
+    "kind": "Aside",
+    "target": ".abp-pad"
+  },
+  {
+    "name": "Touchdown",
+    "definition": "You made it. The confetti is real (as real as it gets on the internet).",
+    "kind": "Aside",
+    "target": ".abp-dock-sys"
+  },
+  {
+    "name": "Re-reading",
+    "definition": "Thus Spoke Zarathustra. Light reading for long flights.",
+    "kind": "Aside",
+    "target": ".ab_badge_li:nth-child(2)"
+  },
+  {
+    "name": "Home planet",
+    "definition": "Two moons: violet for my wife, green for my son. They keep the orbit steady.",
+    "kind": "Aside",
+    "target": ".ab_planet.is-pilot"
+  },
+  {
+    "name": "Signal lost",
+    "definition": "Even the best navigators lose a signal. The warp drive can get you home.",
+    "kind": "Aside",
+    "target": ".ab_rec.is-alert"
+  },
+  {
+    "name": "Crew level",
+    "definition": "Cadet keeps it plain English. Engineer shows the wiring. Switch anytime, no clearance needed.",
+    "kind": "Aside",
+    "target": "#crew"
   }
 ]

@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.9.4 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.10.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* =========================================================
    AB Portfolio · ab-core.css (site-wide)
    Only what the Webflow Designer can't express: pseudo-elements, state
@@ -694,3 +694,15 @@ section:hover > .ab_frame-label{color:var(--_color---ui--select)}
 .ab_dbh_title .is-toy:active{cursor:grabbing}
 .ab_dbh_title .ab_dbh_word.is-toy,.ab_dbh_title .w{display:inline-block}
 .ab_dbh_title .is-toy:focus-visible{outline:2px solid var(--_color---ui--select);outline-offset:4px}
+
+/* ---------- tips (core/23-tips): glossary terms + asides ---------- */
+.gl{all:unset;cursor:help;border-bottom:1px dashed var(--_color---brand--signal);color:inherit;position:relative;white-space:nowrap}
+.gl:hover{border-bottom-style:solid}
+.gl:focus-visible{outline:2px solid var(--_color---ui--select);outline-offset:2px}
+.gl-tip{position:fixed;left:0;top:0;z-index:85;max-width:280px;padding:12px 14px;background:var(--_color---neutral--panel);border:1px solid var(--_color---brand--signal);font-family:var(--_typography---font--mono);font-size:12px;line-height:1.5;color:var(--_color---text--primary);pointer-events:none;opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .2s,transform .2s,visibility 0s .2s}
+.gl-tip.show{opacity:1;visibility:visible;transform:none;transition:opacity .2s,transform .2s}
+.gl-tip b{display:block;color:var(--_color---brand--signal);font-weight:500;margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em}
+.gl-tip.is-aside{border-color:var(--_color---ui--select)}
+.gl-tip.is-aside b{color:var(--_color---ui--select)}
+.gl-tip b i{font-style:normal}
+@media (prefers-reduced-motion:reduce){.gl-tip,.gl-tip.show{transition:none;transform:none}}

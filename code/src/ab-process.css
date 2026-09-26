@@ -120,6 +120,9 @@
    copy column overlaps the planet too, so only its toys and links take the pointer there */
 .ab_process-hero_grid,.ab_count,.section_process-hero .ab_dbh_top{pointer-events:none}
 .section_process-hero .ab_dbh_top a{pointer-events:auto}
+/* tips: the REC label (desktop, clear of the planet) and the touchdown planet take the pointer */
+@media screen and (min-width:768px){.section_process-hero .ab_rec{pointer-events:auto}}
+.abp-dock-sys{pointer-events:auto}
 .ab_count.is-hover>.sel{opacity:1;transform:none}
 .ab_process-hero_grid>*:not(.ab_count){pointer-events:auto}
 @media screen and (max-width:767px){.ab_process-hero_grid>.ab_process-hero_copy{pointer-events:none}.ab_process-hero_copy a,.ab_process-hero_copy button,.ab_process-hero_copy .is-toy{pointer-events:auto}}

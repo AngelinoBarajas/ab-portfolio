@@ -174,7 +174,7 @@
       "displayName": "Glossary",
       "singularName": "Term",
       "slug": "glossary",
-      "purpose": "Cadet-mode tooltips on case studies",
+      "purpose": "Site-wide tips: Terms auto-link in copy (and [[term]] in Mission copy); Asides attach to one element by CSS selector",
       "fields": [
         {
           "slug": "name",
@@ -186,6 +186,22 @@
           "slug": "definition",
           "displayName": "Definition",
           "type": "PlainText"
+        },
+        {
+          "slug": "kind",
+          "displayName": "Kind",
+          "type": "Option",
+          "options": [
+            "Term",
+            "Aside"
+          ],
+          "helpText": "Empty = Term"
+        },
+        {
+          "slug": "target",
+          "displayName": "Target",
+          "type": "PlainText",
+          "helpText": "Asides only: CSS selector"
         }
       ]
     },
