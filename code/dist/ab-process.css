@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process.css v0.8.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process.css v0.8.2 · github.com/AngelinoBarajas/ab-portfolio */
 /* Process (/process) · the flight planner. Loaded from the page <head>.
    Only what the Designer can't hold: font-stretch, outline text, script-built pieces (abp-*: chart planets + orbits,
    route path / ship / pad, gauge, chips, form fields), state classes (.is-on, aria-pressed), pseudos and reduced motion.
@@ -108,9 +108,10 @@ select.abp-in{appearance:none;-webkit-appearance:none;background-image:linear-gr
 
 @media (max-width:767px){
   .abp-path,.abp-pad{display:none}
-  .ab_route_track::before{content:"";position:absolute;left:10px;top:0;bottom:0;width:2px;background:repeating-linear-gradient(180deg,rgba(255,255,255,.18) 0 4px,transparent 4px 10px)}
+  .ab_route_track::before{content:"";position:absolute;left:9px;top:0;bottom:0;width:2px;background:repeating-linear-gradient(180deg,rgba(255,255,255,.18) 0 4px,transparent 4px 10px)}
   .ab_route_wp::before{display:none}
-  .abp-ship{left:3px;margin:0;width:34px;height:34px;transform:rotate(90deg)!important}
+  /* rail, waypoint diamonds and rocket share one center line at 10px */
+  .abp-ship{left:-7px;margin:0;width:34px;height:34px;transform:rotate(90deg)!important}
   .ab_crew_link{background:repeating-linear-gradient(90deg,var(--_color---neutral--hair-strong) 0 6px,transparent 6px 12px)}
   .ab_crew_link-label{transform:translate(-50%,-50%)}
 }
