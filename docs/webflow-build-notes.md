@@ -500,6 +500,19 @@ Angelino: hide Aguirre for now, and make any client removable easily. Runbook: `
 ## Mobile review batch 1: Home (v0.15.0, 2026-09-26, awaiting Angelino's OK)
 
 - **Drag cue off screen on phones**: `AB.dragCue` (`core/39-herodrag.js`) anchored the tag at the end of the first title word, which on phones ends at the column edge. The tag is now clamped inside the host and viewport (8px gutter); its arrow follows the anchor via `--ax` (`ab-core.css` `.ab_drag-hint::after`). Site-wide, so every hero cue benefits.
-- **Bento CTA row** (Webflow links, MCP `set_link` page links): Start a project → Contact page, See the work → Work page, How I work → Process page (All services was already `/services`). Angelino's rule 2026-09-26: buttons under the bento lead to standalone pages. This overrides the earlier "Start a project stays on /#launch" for this row only.
+- **Bento CTA row** (Webflow links, MCP `set_link` page links): See the work → Work page, How I work → Process page (All services was already `/services`). Start a project went to Contact briefly, then back to `#launch` (the Home planner) at Angelino's call, 2026-09-26.
 - **Planner jumped while scrolling (phones)**: the address bar showing/hiding is a height-only `resize`. Home `fitHero` called `ScrollTrigger.refresh()` on every resize, and the Home process pin length was `innerHeight × 2.6`, so every toggle resized the pin spacer by ~2.6× the bar height and everything below it (the planner) jumped. Fix: `fitHero` ignores height-only resizes; the pin length uses a viewport height that only updates when the width changes on touch devices (`pinH` in `home/30-process.js`); core sets `ScrollTrigger.config({ ignoreMobileResize: true })`.
 - Verified on staging at 375 (height 812 → 740: planner position, page height and pin end unchanged), 1024, 1440: no console errors, no horizontal scroll.
+
+## Mobile review batch 2: Services hub (v0.16.0 / CSS v0.16.1, 2026-09-26, awaiting Angelino's OK)
+
+All in `ab-hub` (JS 0.16.0, CSS 0.16.1); phones = `max-width:700px` unless noted.
+- **Diagnostics chips**: a two-column grid of wrapping tiles instead of the sideways scroller; All clear spans both columns. Every option is visible at the top.
+- **Launch pass visible on phones**: the side console (launch keys + telemetry) is hidden on phones; the manifest rows arm the same launches and the pass carries the telemetry. The pass now prints directly under the monitor's slot.
+- **Planner no longer scrolls**: removed the auto-glide to the panel after the first main pick (it pulled readers off the map). The map hint on phones says "Next: tap a planet to add a stop".
+- **Flight plan header**: `.ab_hub-flight_acts` wraps inside the column (Edit + Abort each full width); Abort was 440px on a 375 screen.
+- **Touchdown (≤860)**: planet 140px, centered on screen (`left:-18px` offsets the rail padding); the "Mission live" block + buttons move out of the dock into the flow after it (`flayout`), so Book a call is no longer clipped by the section; 64px between planet and label so the stop moons clear it; landing fires when the planet's bottom reaches 75% of the viewport (`endTrigger` dock).
+- **Flight resize**: on touch screens the route only rebuilds when the width changes (the address bar used to reset it mid-scroll).
+- **Logbook on phones**: the page turn is back, top to bottom: the sheet hinges on the line between the stacked pages (`rotationX`; forward lifts the lower page, back drops the upper one). Replaces the sideways slide.
+- **Final call**: the monitor spans the column, ON REQUEST lines up under AB-09, buttons stack full width with Book a call first.
+- Verified on staging: 375 (all 8 items), 1024 + 1440 (wide route, rotateY page turn, console + chip row unchanged): no console errors, no horizontal scroll. jsDelivr served "file not found" for a few seconds after the v0.16.1 tag; retry before comparing SRI.
