@@ -2012,7 +2012,7 @@ select.pr-in{appearance:none;background-image:linear-gradient(45deg,transparent 
     <a class="logo" href="home.html#top" aria-label="Angelino Barajas, home">AB</a>
     <nav class="nav-links" aria-label="Primary">
       <a href="work-index.html" data-scramble>Work</a>
-      <a href="home.html#capabilities" data-scramble>Services</a>
+      <a href="services-hub.html" data-scramble>Services</a>
       <a href="process.html" class="is-active" aria-current="page" data-scramble>Process</a>
       <a href="about.html" data-scramble>About</a>
       <a href="home.html#launch" data-scramble>Contact</a>
@@ -2027,7 +2027,7 @@ select.pr-in{appearance:none;background-image:linear-gradient(45deg,transparent 
   <span class="mono mm-tag">Choose a destination</span>
   <nav class="mm-links" aria-label="Mobile">
     <a href="home.html#work">Work<span class="mono">/work</span></a>
-    <a href="home.html#capabilities">Services<span class="mono">/services</span></a>
+    <a href="services-hub.html">Services<span class="mono">/services</span></a>
     <a href="process.html">Process<span class="mono">/process</span></a>
     <a href="#top">About<span class="mono">/about</span></a>
     <a href="home.html#launch">Contact<span class="mono">/contact</span></a>
@@ -2066,10 +2066,10 @@ select.pr-in{appearance:none;background-image:linear-gradient(45deg,transparent 
     </div>
     <nav class="foot-col" aria-label="Footer">
       <span class="mono foot-h">Navigate</span>
-      <a href="home.html#work">Work</a><a href="home.html#capabilities">Services</a><a href="process.html">Process</a><a href="about.html">About</a><a href="home.html#launch">Contact</a>
+      <a href="home.html#work">Work</a><a href="services-hub.html">Services</a><a href="process.html">Process</a><a href="about.html">About</a><a href="home.html#launch">Contact</a>
     </nav>
     <div class="foot-col">
-      <span class="mono foot-h">Services</span>
+      <a class="mono foot-h" href="services-hub.html">Services</a>
       <a href="services.html#webflow-development" class="svc">Webflow development</a><a href="services.html#webgl-data" class="svc">Interactive 3D + data</a><a href="services.html#branding" class="svc">Logo + brand identity</a><a href="services.html#cms-integrations" class="svc">CMS integrations</a><a href="services.html#custom-deploys" class="svc">Custom deploys</a>
     </div>
     <div class="foot-col">
@@ -3008,9 +3008,9 @@ window.__GLOSSARY = {
   addEventListener('scroll', function(){
     var y = scrollY;
     var ms = window.__abMissionST, inPin = ms && y >= ms.start - 10 && y <= ms.end + 10;
-    nav.classList.toggle('is-hidden', !inPin && y > 300 && y > lastY + 4);
-    if (inPin) nav.classList.remove('is-hidden');
-    if (y < lastY - 4 || y < 300) nav.classList.remove('is-hidden');
+    // only a clear direction changes the state (Lenis eases out in tiny steps)
+    if (inPin || y < 300 || y < lastY - 4) nav.classList.remove('is-hidden');
+    else if (y > lastY + 4) nav.classList.add('is-hidden');
     lastY = y;
   }, { passive: true });
 

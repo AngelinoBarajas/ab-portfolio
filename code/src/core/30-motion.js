@@ -56,9 +56,9 @@
     if (nav) addEventListener('scroll', function(){
       var y = scrollY;
       var ms = window.__abMissionST, inPin = ms && y >= ms.start - 10 && y <= ms.end + 10;
-      nav.classList.toggle('is-hidden', !inPin && y > 300 && y > lastY + 4);
-      if (inPin) nav.classList.remove('is-hidden');
-      if (y < lastY - 4 || y < 300) nav.classList.remove('is-hidden');
+      // only a clear direction changes the state: Lenis eases out in tiny steps, which used to flip it back and forth
+      if (inPin || y < 300 || y < lastY - 4) nav.classList.remove('is-hidden');
+      else if (y > lastY + 4) nav.classList.add('is-hidden');
       lastY = y;
     }, { passive: true });
 
