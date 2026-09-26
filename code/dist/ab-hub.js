@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-hub v0.11.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-hub v0.12.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHubInit) return;
@@ -525,7 +525,7 @@ window.Webflow.push(function(){
     dock.innerHTML = '<span class="hbf-shock" aria-hidden="true"></span>' +
       st.map(function(o, k){ return '<span class="hbf-moon" style="--c:' + o.c + ';--a:' + (k * 150 + 25) + 'deg" aria-hidden="true"><i></i><em>' + esc(o.code) + '</em></span>'; }).join('') +
       '<div class="hbf-live"><span>Touchdown · ' + esc(m.code) + '</span><b>Mission <span class="t-outline">live</span></b>' +
-      '<div class="hbf-live-a">' + btnHTML('is-primary', PROC + '#launch', 'Request this mission', '→', ' data-req') + btnHTML('is-ghost', HOME + '#launch', 'Book a call') + '</div></div>';
+      '<div class="hbf-live-a">' + btnHTML('is-primary', PROC + '#launch', 'Request this mission', '→', ' data-req') + btnHTML('is-ghost', '/contact#call', 'Book a call') + '</div></div>';
     dock.insertBefore(planetEl(m, 90, 'hbf-dock-pl'), dock.children[1] || null);
     track.appendChild(dock);
     $$('.ab_planet', track).forEach(build);
