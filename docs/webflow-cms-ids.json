@@ -52,7 +52,10 @@
    "context": "92cb2557781f1ee325ed8417e0746df2"
   },
   "glossary": {
-   "definition": "6330b09e6cdc55f22ecb1c511ca1232d"
+   "definition": "6330b09e6cdc55f22ecb1c511ca1232d",
+   "kind": "a5830d757998332edba994db01309f48",
+   "kind_options": {"Term": "647041433954169b10eeaba7849555e1", "Aside": "2774713396b9db975c879b57a29f79b2"},
+   "target": "3d28b38dc2bbd7ccf73a93b0abf8647d"
   },
   "faq": {
    "answer": "78cbd3a23acf3998ed4d053ec6d37102",
