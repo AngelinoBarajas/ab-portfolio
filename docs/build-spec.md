@@ -10,6 +10,7 @@
 | Service | Services template | `/services/[slug]` | `services.html` | service (hero + service rail), problems-solved, whats-included (light bento), flight-plan, related-missions, under-the-hood (only if Code is set), faq, next-service |
 | About | Static | `/about` | `about.html` | pilot-dossier (crew badge), mission-statement, flight-log, off-duty (light bento), next-mission |
 | 404 | Utility | `/404` | `404.html` | signal-lost |
+| Services hub (planned) | Static + Services list | `/services` | (to prototype) | overview of all 8 services, linking to `/services/[slug]` |
 | Process | Static + Services list | `/process` | `process.html` | launch-sequence (countdown hero), star-chart (Services CMS), trajectory (pinned route), crew-roles (light), timeline, faq, launch (form) |
 
 Every page shares: nav, mobile menu, starfield canvas + nebula + grain layers, layout-grid overlay (Shift+G), cursor HUD, toast, black hole footer.

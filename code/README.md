@@ -26,6 +26,9 @@ Minified files are named `*.prod.js` / `*.prod.css`, not `*.min.*`: for a `.min.
 | `ab-core.prod.js` | `src/core/*.js` | Site scripts, footer, after Lenis |
 | `ab-home.prod.js` | `src/home/*.js` | Home page scripts, footer |
 | `ab-work.prod.js` | `src/work/*.js` | Work page (Mission archive) scripts, footer. Registered script `abwork` |
+| `ab-mission` / `ab-services` / `ab-about` (+ `.css`) | `src/mission`, `src/services`, `src/about` | Mission template / Services template / About page footer + page head `<link>` |
+| `ab-404.prod.js` + `ab-404.prod.css` | `src/404/`, `src/ab-404.css` | 404 utility page footer script `ab404` + page head `<link>` |
+| `ab-process.prod.js` + `ab-process.prod.css` | `src/process/`, `src/ab-process.css` | Process page footer script `abprocess` + page head `<link>` |
 
 Each bundle is one `window.Webflow.push` with one `__ab<Name>Init` guard; modules share a scope and every animation checks `prefers-reduced-motion`. `ab-core` exposes helpers to page bundles on `window.AB` (`$`, `$$`, `toast`, `warp`, `lenis`, `buildPlanet`, `settings`, `quotes`, `decorate`, `nudge`…), so a page bundle must load after it.
 

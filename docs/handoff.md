@@ -1,4 +1,4 @@
-# Session handoff (2026-09-25, 404 page session)
+# Session handoff (2026-09-26, end of the 404 + Process page session)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -12,8 +12,8 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 | 4. CMS | ✅ 13 collections, all references resolved. IDs in `docs/webflow-cms-ids.json`. Added this session: Tools › **Pen + paper**, Mission Channels › Aguirre **Site plan**, AB Identity **Sketches** + **Illustrator** |
 | 3b. Global styles | ✅ 29 classes + tag styles (Body, H1–H6, p) |
 | 5. Components | 🟡 Nav, Footer, Frame label, Bento card, FAQ item, **Next card** (no props yet) done (group "Global"). Mission card is a page-level Collection item (nested Types list rules out a component). Remaining: code block, crew dock |
-| 6. Pages | 🟡 Home ✅, Work ✅, Mission template ✅, Services template ✅, Knowledge System mission ✅, **About ✅** (`/about`, page `6ab6d8aa86c563fd3f8b64a4`) — all approved 2026-09-25. **404 ✅** (utility page `6ab6e4a645ff2d1bd12b1c3e`) — all pages approved 2026-09-25 |
-| 7. Custom code | 🟡 Live on staging: `ab-core` JS + CSS **v0.6.2** · `ab-home`, `ab-mission`, `ab-about` JS v0.6.2 · `ab-about.css` v0.6.2 · `ab-mission.css` v0.5.0 · `ab-work` + `ab-services` (+ CSS) v0.4.0 · head inline script `abwarpin` 0.3.2. Build/deploy steps in `code/README.md`; per-version notes in `docs/webflow-build-notes.md` (v0.3.2 → v0.6.2) |
+| 6. Pages | 🟡 Approved 2026-09-25: Home, Work, Mission template, Services template, Knowledge System mission, About, **404** (utility page `6ab6e4a645ff2d1bd12b1c3e`). **Process** (`/process`, page `6ab701e2df00b2e38832af5b`, new page) built + on staging v0.9.0, **awaiting OK + tweaks**. Next new page: **Services hub** |
+| 7. Custom code | 🟡 Live on staging: `ab-core` JS **v0.8.1** + CSS **v0.9.0** · `ab-home` **v0.9.0** · `ab-process` JS + CSS **v0.9.0** · `ab-404` JS v0.7.0 + CSS v0.7.1 · `ab-about` JS + CSS v0.6.2 · `ab-mission` JS v0.5.1 + CSS v0.5.0 · `ab-work` + `ab-services` (+ CSS) v0.4.0 · head inline script `abwarpin` 0.3.2. Build/deploy steps in `code/README.md`; per-version notes in `docs/webflow-build-notes.md` (up to v0.9.0) |
 | 8. Brand | ✅ New **AB planet monogram** (`logo/ab-logo.svg`, asset `6ab6bba8167f1da71a4bf9a8`) in Nav + Footer; inlined + animated by `core/22-logo.js` (warp spin-in, fill; black-hole hover; no glow). One geometry source: `AB.markSVG` / `AB.MARK` in `core/21-mark.js`. Favicon/webclip PNGs in `logo/` (upload pending) |
 
 Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top"> (hero · work · statement · services · process · transmission · stack · testimonials · faq · contact) · [Footer] · Site data (hidden CMS sources)`. Section-by-section notes: `docs/webflow-build-notes.md` › Home; prototype → Webflow hook map for the step 7 scripts: `webflow/build/home/class-map.md`.
@@ -97,15 +97,23 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 - **Drag cue on every hero** with draggables (Angelino's ask): `AB.dragCue`, one key per hero type.
 - **Copy direction (Angelino):** stop leaning on "building globes"; position the work as interactive 3D that's useful to clients and visitors. **Applied + published 2026-09-25** (his OK): About log lede + waypoint 04, Home WebGL bento Text prop + FAQ home-1, Services › webgl-data summary / solve 1 / deliverable 1 / stage 2 / code label, Tools › Three.js use. Seeds + build sources updated to match. 510 Visuals mission copy stays (it really is a globe). Keep new copy on this line: interactive 3D that's useful to clients and visitors.
 
-## This session (2026-09-25, Process page) in one list
+## This session (2026-09-25/26, Process page) in one list
 
-- **New Process page** `/process` (Angelino's idea): prototype approved ("Continue"), built v0.8.0, on staging, awaiting his OK. Details: `docs/webflow-build-notes.md` › Process page. Nav/menu/footer Process links now go there; Home links to it.
+- **New Process page** `/process` ("flight planner": one route, eight destinations). Prototype `prototypes/process.html` (assembled from `prototypes/_parts/` by `_parts/assemble.py`), approved, built in Webflow (v0.8.0), then: v0.8.2 phone rail/rocket alignment, **v0.9.0 mission stops** (main + up to 2 stops, "+ More than three" field in the form). Details + MCP findings: `docs/webflow-build-notes.md` › Process page, v0.8.x, v0.9.0. **Still awaiting Angelino's OK**; he wants to review + tweak it next.
+- Sections: countdown hero (T−6 → T−0) · star chart (Services CMS → planets; panel; stops) · pinned sideways route (6 waypoints; vertical rail on phones) · crew roles (light) · what moves the timeline (dials + gauge, no numbers) · FAQ (6 FAQ item components) · launch form (native Webflow form, fields in an Embed: `webflow/build/process/form-fields.embed.html`).
+- **Services CMS** gained: Short name, Process leg 1–6, Timeline preset, Process example (Reference → Missions). Filled for all 8.
+- **Site-wide**: Nav, mobile menu, Footer "Process" → `/process`; Home process section has "See the full flight plan →".
+- **Both forms**: budget "Not sure yet · still scouting" (Process select option; Home planner chip under the slider).
+- **Drag cue** (`AB.dragCue`) now per visit (sessionStorage), on every hero with draggables (v0.8.1). Home's old `ab:dragged` localStorage flag had hidden it forever.
+- **Copy**: "interactive 3D that's useful to clients/visitors" instead of "building globes" (About, Home bento + FAQ, Services › webgl-data, Tools › Three.js). 510 Visuals keeps its globe copy.
+- **404** approved (v0.7.0/0.7.1): utility pages can't hold CMS lists → core caches site data (`ab:site`) and fetches `/` once if needed.
 
 ## Next session
 
-1. ~~**404 page**~~ ✅ approved. (Was: `/404`, Webflow's utility page — prototype `prototypes/404.html`, section `signal-lost` (see `docs/build-spec.md`). Same method as About: plan first (sections, static vs CMS, classes, what needs code), then `webflow/build/404/` → `prep.py` → WHTML → rebind, site-data block after the Footer, Navigator names, any code via jsDelivr with SRI, publish webflow.io only, check 1440 / 1024 / 390, stop for his OK.
-2. Then **step 8 QA**: every page vs its prototype at 1440 / 1024 / 390, no console errors, no horizontal scroll, reduced motion, Lighthouse, links + warp transitions. Then ask before any publish beyond webflow.io.
-3. Offered, not yet decided: a stronger Interstellar "Hover to fly close" (black hole grows, stars stretch, near clock slows while Earth speeds up).
+1. **Process page review + tweaks** (Angelino): walk it with him at 1440 / 1024 / 390, apply his tweaks the same way (source in `code/src/process/00-process.js`, `code/src/ab-process.css`, Designer copy/classes via `webflow/build/process/make.py`), bump + deploy, stop for his OK. Known candidates: crew section top spacing (inherits the light-section padding), whether the "flown before" link should match mission combinations (needs a hidden Missions list with their Services), the form's name in Webflow (still "Email Form").
+2. **New page: Services hub** (`/services`, static; a static page can share a slug with a collection, like `/work`). Same pipeline as Process: plan + divergence gate → HTML prototype in `prototypes/` (reuse the About/Process shell via a `_parts` assembler) → his OK → Webflow build → code → staging checks → stop for OK. The Services collection (8 items: title 1/2, summary, best for, planet, tools, pairs with, missions, FAQ, stages, deliverables, process legs…) is the data source. Then repoint Nav "Services" (now `/#capabilities`) and the footer service column heading to `/services`.
+3. Then **step 8 QA** (every page vs its prototype at 1440 / 1024 / 390, console, horizontal scroll, reduced motion, Lighthouse, links + warp transitions). Ask before any publish beyond webflow.io.
+4. Offered, not decided: stronger Interstellar "Hover to fly close" on About.
 
 ## Home review edits already done (v0.1.4, from `ab-portfolio-hp-edits.docx`)
 
@@ -114,6 +122,9 @@ Hero drag cue · altitude meter readable on light sections · planner readout un
 Possible follow-ups he may raise: Tools list order (the 3 new Adobe items sort first and take the inner ring; set a sort in the Designer or a script order), the Services CMS item `webgl-data` still named "Globes, maps + 3D" (update with the Services template), and the heading-span effect classes / `#plRead` position that the script patches (cleaner in the Designer).
 
 ## Open items for Angelino
+
+- **Process form name**: Designer › the Process form › Form settings › Name (it's "Email Form"; the MCP can't rename forms). Nothing depends on its ID.
+- **Forms notification email**: confirm in Site settings › Forms (Home planner + Process form both post there).
 
 - **Headshot**: drop an Image into `.ab_badge_photo` (About hero › badge › front face); CSS fills the 4:5 frame.
 - **Planner embed** (optional): swap the Home planner fields embed for `webflow/build/home/planner-fields.embed.html` so the Designer matches what the script does.
