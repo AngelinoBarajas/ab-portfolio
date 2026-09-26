@@ -307,8 +307,8 @@
     var play = document.createElement('button'); play.type = 'button'; play.className = 'abx-score';
     play.innerHTML = '<i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></i><span>Play the score</span>';
     play.setAttribute('aria-label', 'Play the Interstellar score, Cornfield Chase, from 0:32');
-    // it sits in the event horizon (the black hole's dark center)
-    (hole || viz).appendChild(play);
+    // bottom-right corner of the card (phones: under the hint line)
+    td.appendChild(play);
     // the player is built (hidden) the first time the visitor flies close, so a tap on Play starts it right away:
     // browsers only allow sound from a tap/click, and it has to reach the player while that tap still counts
     var dockEl = null, ctrl = null, seeked = false, want = false;
