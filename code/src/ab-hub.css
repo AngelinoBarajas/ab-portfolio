@@ -266,11 +266,11 @@ html:has(.section_hub-hero),.main-wrapper:has(.section_hub-hero){overflow-anchor
   .ab_hub-wp::before{display:none}
   .ab_hub-wp_node{left:-34px!important;top:22px!important;margin:0}
   .ab_hub-flight_hud{position:sticky;top:76px;right:auto;margin:0 var(--gutter) 16px;padding:8px 12px;background:rgba(7,8,13,.85);border:1px solid var(--hair);width:max-content}
-  .hbf-dock{position:relative!important;left:auto!important;top:auto!important;transform:none;width:120px;margin:10px 0 170px 20px}
-  .hbf-moon i{left:94px}.hbf-moon em{left:116px}
-  .hbf-live{left:-20px;transform:translateY(12px);text-align:left;max-width:calc(100vw - 80px)}
-  .section_hub-flight.is-landed .hbf-live{transform:none}
-  .hbf-live-a{justify-content:flex-start}
+  .hbf-dock{position:relative!important;left:-18px!important;top:auto!important;transform:none;width:140px;margin:56px auto 0}
+  .hbf-moon i{left:102px}.hbf-moon em{left:124px}
+  .ab_hub-flight_track > .hbf-live{position:relative;left:auto;top:auto;width:auto;max-width:none;margin:44px 0 0 -36px;padding-bottom:8px;transform:translateY(12px)}
+  .section_hub-flight.is-landed .ab_hub-flight_track > .hbf-live{transform:none}
+  .hbf-live-a{justify-content:center}
   .ab_hub-wp_meta{grid-template-columns:minmax(0,1fr)}
 }
 
@@ -330,9 +330,10 @@ html:has(.section_hub-hero),.main-wrapper:has(.section_hub-hero){overflow-anchor
 @media (max-width:700px){
   .hb-cols .hb-c-via,.hb-cols .hb-c-gate,.hb-cols .hb-c-status,.ab_hub-row .hb-c-via,.ab_hub-row .hb-c-gate,.ab_hub-row .hb-c-status,.ab_hub-call_row .hb-c-via,.ab_hub-call_row .hb-c-gate{display:none}
   .ab_hub-sym_label{max-width:100%}
-  .ab_hub-sym_chips{flex-wrap:nowrap;overflow-x:auto;margin-left:calc(var(--gutter) * -1);margin-right:calc(var(--gutter) * -1);padding:2px var(--gutter) 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-  .ab_hub-sym_chips::-webkit-scrollbar{display:none}
-  .ab_chip.is-diag{flex:none;white-space:nowrap}
+  .ab_hub-sym_chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .ab_chip.is-diag{white-space:normal;text-align:left;line-height:1.35;padding:7px 9px;font-size:10.5px;min-width:0}
+  .ab_chip.is-diag.is-reset{grid-column:1 / -1;text-align:center}
+  .ab_console.is-hub{display:none}
   .ab_hub-scr{padding:44px 6px 10px}
   .ab_hub-wide{display:none}
   .ab_hub-prompt{font-size:10.5px}
@@ -349,7 +350,19 @@ html:has(.section_hub-hero),.main-wrapper:has(.section_hub-hero){overflow-anchor
   .ab_hub-log{cursor:auto}
   .hb-pp-page.is-l{border-right:0;border-bottom:1px dashed rgba(255,255,255,.16);min-height:300px}
   .hb-pp-page.is-r{min-height:340px}
-  .hb-pp-turn{display:none}
+  /* page turns go top to bottom: the sheet hinges on the line between the two stacked pages (script sets its top/height) */
+  .hb-pp-turn{left:0;right:0;width:auto;transform-origin:50% 0;border-left:0;border-top:1px solid rgba(255,255,255,.14)}
+  .hb-pp-turn.is-back{left:0;transform-origin:50% 100%;border-right:0;border-top:0;border-bottom:1px solid rgba(255,255,255,.14)}
+  /* flight plan header: Edit + Abort wrap inside the column */
+  .ab_hub-flight_acts{flex:1 1 100%;min-width:0;max-width:100%}
+  .ab_hub-flight_acts .button{flex:1 1 auto;justify-content:center}
+  /* final call: the monitor spans the column, ON REQUEST lines up under AB-09, buttons stack full width */
+  .ab_mon.is-call{display:block;width:100%}
+  .ab_hub-call_row{flex-wrap:wrap;row-gap:10px}
+  .ab_hub-call_row .hb-c-status{margin-left:calc(var(--cw) * 1.9)}
+  .ab_hub-call_btns{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+  .ab_hub-call_btns .button{width:100%;justify-content:center}
+  .ab_hub-call_btns .button.is-primary{order:-1}
 }
 @media (prefers-reduced-motion:reduce){
   .ab_hub-prompt::after,.ab_hub-call_row .hb-caret,.ab_hub-planner.is-ping,.hb-pl-tag,.hb-arc.is-lit,.ab_hub-row.is-now .hb-c-status .hb-fl,.hb-key.is-now i,.hb-port.is-rec::before,.ab_hub-pass_ok::before,.section_hub-hero .ab_rec_dot.is-live,.ab_hub-sym_dot,.hbf-flame,.hbf-moon,.hbf-moon em,.section_hub-flight.is-landed .hbf-shock,.hb-map-hint::before{animation:none}

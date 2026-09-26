@@ -52,6 +52,9 @@
     fwide = innerWidth > 860;
     wps.forEach(function(w){ w.style.left = w.style.top = ''; });
     var dock = $('.hbf-dock', track); if (!dock) return;
+    // "Mission live" + its buttons: under the planet (absolute) on wide screens, in the flow after it on phones so nothing is clipped
+    var live = $('.hbf-live', track);
+    if (live){ if (fwide){ if (live.parentNode !== dock) dock.appendChild(live); } else if (live.parentNode !== track) track.appendChild(live); }
     if (!fwide){ track.style.width = ''; dock.style.left = dock.style.top = ''; return; }
     var h = track.offsetHeight, step = Math.max(360, innerWidth * .28), x0 = Math.min(240, innerWidth * .16);
     var dockX = x0 + step * STAGES.length + innerWidth * .22, W = dockX + innerWidth * .45, CARD_TOP = 150;
@@ -118,7 +121,7 @@
       window.__abMissionST = fst; // core holds the nav steady inside this range
     } else {
       // phones: the route is a vertical rail; stages light as they cross the middle, touchdown when the planet shows
-      fst = ScrollTrigger.create({ trigger: track, start: 'top 60%', end: 'bottom 60%', scrub: true,
+      fst = ScrollTrigger.create({ trigger: track, start: 'top 60%', endTrigger: $('.hbf-dock', track) || track, end: 'bottom 75%', scrub: true,
         onUpdate: function(self){ var k = -1, mid = innerHeight * .6; wps.forEach(function(w, i){ if (w.getBoundingClientRect().top < mid) k = i; }); fstage(k); land(self.progress > .98); } });
     }
   }
@@ -159,7 +162,8 @@
       toast('Flight plan plotted · ' + fsel.map(function(j){ return HUB[j].code; }).join(' + '));
     });
   }
-  var frT; addEventListener('resize', function(){ if (!flightOpen()) return; clearTimeout(frT); frT = setTimeout(function(){ fbuild(); if (window.ScrollTrigger) ScrollTrigger.refresh(); }, 250); });
+  // width changes only on touch screens: the phone address bar resizes the height while scrolling and a rebuild reset the route
+  var frT, frW = innerWidth; addEventListener('resize', function(){ if (!flightOpen() || (coarse && innerWidth === frW)) return; frW = innerWidth; clearTimeout(frT); frT = setTimeout(function(){ fbuild(); if (window.ScrollTrigger) ScrollTrigger.refresh(); }, 250); });
 
   drawPlan(false);
   // test-only: ?fly=0,5,2 launches that trajectory; ?p=0..1 sets the flight position

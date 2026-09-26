@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-hub v0.15.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-hub v0.16.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHubInit) return;
@@ -407,7 +407,6 @@ window.Webflow.push(function(){
   function flownLinks(list){ return list.map(function(f){ return '<a href="' + misHref(f.slug) + '">' + esc(f.name) + '</a>'; }).join(' '); }
   function pickBtn(j){ var s = HUB[j]; return '<button type="button" data-pick="' + j + '" style="--c:' + s.c + '"' + (stops.length >= 2 && main > -1 ? ' disabled' : '') + '><i></i>' + esc(s.short) + ' <b>' + esc(s.code) + '</b></button>'; }
 
-  var glided = false;
   function clickPort(i){
     if (main < 0){ main = i; }
     else if (i === main){ main = stops.length ? stops.shift() : -1; }
@@ -423,7 +422,8 @@ window.Webflow.push(function(){
     $$('.ab_hub-step').forEach(function(li){ var n = +li.getAttribute('data-step'); li.classList.toggle('is-on', n === step); li.classList.toggle('is-done', n < step); });
     map.classList.toggle('has-main', main > -1);
     var side = innerWidth > 991, arr = side ? ' →' : ' ↓';
-    hint.textContent = step === 1 ? 'Tap a planet, or pick in the panel' + arr : stops.length < 2 ? 'Next: add stops in the panel' + arr : 'Ready: launch from the panel' + arr;
+    // phones keep the reader on the map (no scroll to the panel), so the hint says stops can be tapped right here too
+    hint.textContent = step === 1 ? 'Tap a planet, or pick in the panel' + arr : stops.length < 2 ? (side ? 'Next: add stops in the panel' + arr : 'Next: tap a planet to add a stop') : 'Ready: launch from the panel' + arr;
     ports.forEach(function(p, j){
       var k = stops.indexOf(j), isRec = s && j !== main && k < 0 && rec.indexOf(j) > -1;
       p.classList.toggle('is-main', j === main); p.classList.toggle('is-stop', k > -1); p.classList.toggle('is-rec', !!isRec);
@@ -475,7 +475,6 @@ window.Webflow.push(function(){
     }
     panel.innerHTML = h;
     if (animate && !reduce){ panel.classList.remove('is-ping'); void panel.offsetWidth; panel.classList.add('is-ping'); }
-    if (animate && !side && step === 2 && !stops.length && !glided){ glided = true; setTimeout(function(){ goTo(panel, false, 80); }, 250); }
     $$('[data-pick]', panel).forEach(function(b){ b.addEventListener('click', function(){ clickPort(+b.getAttribute('data-pick')); }); });
     $$('[data-stop]', panel).forEach(function(b){ b.addEventListener('click', function(){ clickPort(+b.getAttribute('data-stop')); }); });
     var rs = $('[data-reset]', panel); if (rs) rs.addEventListener('click', function(){ main = -1; stops = []; drawPlan(false); });
@@ -538,6 +537,9 @@ window.Webflow.push(function(){
     fwide = innerWidth > 860;
     wps.forEach(function(w){ w.style.left = w.style.top = ''; });
     var dock = $('.hbf-dock', track); if (!dock) return;
+    // "Mission live" + its buttons: under the planet (absolute) on wide screens, in the flow after it on phones so nothing is clipped
+    var live = $('.hbf-live', track);
+    if (live){ if (fwide){ if (live.parentNode !== dock) dock.appendChild(live); } else if (live.parentNode !== track) track.appendChild(live); }
     if (!fwide){ track.style.width = ''; dock.style.left = dock.style.top = ''; return; }
     var h = track.offsetHeight, step = Math.max(360, innerWidth * .28), x0 = Math.min(240, innerWidth * .16);
     var dockX = x0 + step * STAGES.length + innerWidth * .22, W = dockX + innerWidth * .45, CARD_TOP = 150;
@@ -604,7 +606,7 @@ window.Webflow.push(function(){
       window.__abMissionST = fst; // core holds the nav steady inside this range
     } else {
       // phones: the route is a vertical rail; stages light as they cross the middle, touchdown when the planet shows
-      fst = ScrollTrigger.create({ trigger: track, start: 'top 60%', end: 'bottom 60%', scrub: true,
+      fst = ScrollTrigger.create({ trigger: track, start: 'top 60%', endTrigger: $('.hbf-dock', track) || track, end: 'bottom 75%', scrub: true,
         onUpdate: function(self){ var k = -1, mid = innerHeight * .6; wps.forEach(function(w, i){ if (w.getBoundingClientRect().top < mid) k = i; }); fstage(k); land(self.progress > .98); } });
     }
   }
@@ -645,7 +647,8 @@ window.Webflow.push(function(){
       toast('Flight plan plotted · ' + fsel.map(function(j){ return HUB[j].code; }).join(' + '));
     });
   }
-  var frT; addEventListener('resize', function(){ if (!flightOpen()) return; clearTimeout(frT); frT = setTimeout(function(){ fbuild(); if (window.ScrollTrigger) ScrollTrigger.refresh(); }, 250); });
+  // width changes only on touch screens: the phone address bar resizes the height while scrolling and a rebuild reset the route
+  var frT, frW = innerWidth; addEventListener('resize', function(){ if (!flightOpen() || (coarse && innerWidth === frW)) return; frW = innerWidth; clearTimeout(frT); frT = setTimeout(function(){ fbuild(); if (window.ScrollTrigger) ScrollTrigger.refresh(); }, 250); });
 
   drawPlan(false);
   // test-only: ?fly=0,5,2 launches that trajectory; ?p=0..1 sets the flight position
@@ -695,18 +698,21 @@ window.Webflow.push(function(){
     var turn = function(n){
       if (busy) return;
       var k = (spread + n + FLIGHTS.length) % FLIGHTS.length, flat = innerWidth <= 700;
-      if (reduce || !hasGsap || flat){
-        spread = k; fillSpread(k);
-        if (flat && hasGsap && !reduce) gsap.fromTo(pp, { x: n * 30, opacity: .3 }, { x: 0, opacity: 1, duration: .35, ease: 'power2.out' });
-        return;
-      }
+      if (reduce || !hasGsap){ spread = k; fillSpread(k); return; }
       busy = true;
       sheet.classList.toggle('is-back', n < 0);
-      gsap.timeline({ onComplete: function(){ busy = false; gsap.set(sheet, { opacity: 0, rotationY: 0 }); } })
-        .set(sheet, { opacity: 1, rotationY: 0 })
-        .to(sheet, { rotationY: n > 0 ? -90 : 90, duration: .32, ease: 'power2.in' })
+      // phones stack the pages, so the sheet turns top to bottom: forward lifts the lower page up over the spine, back drops the upper one
+      var ax = flat ? 'rotationX' : 'rotationY', sgn = flat ? -1 : 1, from = {}, mid = {}, end = { opacity: 0, duration: .32, ease: 'power2.out' };
+      if (flat){ var pg = n > 0 ? pageR : pageL; sheet.style.top = pg.offsetTop + 'px'; sheet.style.height = pg.offsetHeight + 'px'; sheet.style.bottom = 'auto'; }
+      else { sheet.style.top = sheet.style.height = sheet.style.bottom = ''; }
+      from[ax] = 0; from.opacity = 1;
+      mid[ax] = (n > 0 ? -90 : 90) * sgn; mid.duration = .32; mid.ease = 'power2.in';
+      end[ax] = (n > 0 ? -180 : 180) * sgn;
+      gsap.timeline({ onComplete: function(){ busy = false; gsap.set(sheet, { opacity: 0, rotationX: 0, rotationY: 0 }); } })
+        .set(sheet, from)
+        .to(sheet, mid)
         .add(function(){ spread = k; fillSpread(k); })
-        .to(sheet, { rotationY: n > 0 ? -180 : 180, opacity: 0, duration: .32, ease: 'power2.out' });
+        .to(sheet, end);
     };
     glass(pp, function(){ return busy; });
     var prevB = $('[data-log-prev]'), nextB = $('[data-log-next]');

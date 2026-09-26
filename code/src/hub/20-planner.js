@@ -33,7 +33,6 @@
   function flownLinks(list){ return list.map(function(f){ return '<a href="' + misHref(f.slug) + '">' + esc(f.name) + '</a>'; }).join(' '); }
   function pickBtn(j){ var s = HUB[j]; return '<button type="button" data-pick="' + j + '" style="--c:' + s.c + '"' + (stops.length >= 2 && main > -1 ? ' disabled' : '') + '><i></i>' + esc(s.short) + ' <b>' + esc(s.code) + '</b></button>'; }
 
-  var glided = false;
   function clickPort(i){
     if (main < 0){ main = i; }
     else if (i === main){ main = stops.length ? stops.shift() : -1; }
@@ -49,7 +48,8 @@
     $$('.ab_hub-step').forEach(function(li){ var n = +li.getAttribute('data-step'); li.classList.toggle('is-on', n === step); li.classList.toggle('is-done', n < step); });
     map.classList.toggle('has-main', main > -1);
     var side = innerWidth > 991, arr = side ? ' →' : ' ↓';
-    hint.textContent = step === 1 ? 'Tap a planet, or pick in the panel' + arr : stops.length < 2 ? 'Next: add stops in the panel' + arr : 'Ready: launch from the panel' + arr;
+    // phones keep the reader on the map (no scroll to the panel), so the hint says stops can be tapped right here too
+    hint.textContent = step === 1 ? 'Tap a planet, or pick in the panel' + arr : stops.length < 2 ? (side ? 'Next: add stops in the panel' + arr : 'Next: tap a planet to add a stop') : 'Ready: launch from the panel' + arr;
     ports.forEach(function(p, j){
       var k = stops.indexOf(j), isRec = s && j !== main && k < 0 && rec.indexOf(j) > -1;
       p.classList.toggle('is-main', j === main); p.classList.toggle('is-stop', k > -1); p.classList.toggle('is-rec', !!isRec);
@@ -101,7 +101,6 @@
     }
     panel.innerHTML = h;
     if (animate && !reduce){ panel.classList.remove('is-ping'); void panel.offsetWidth; panel.classList.add('is-ping'); }
-    if (animate && !side && step === 2 && !stops.length && !glided){ glided = true; setTimeout(function(){ goTo(panel, false, 80); }, 250); }
     $$('[data-pick]', panel).forEach(function(b){ b.addEventListener('click', function(){ clickPort(+b.getAttribute('data-pick')); }); });
     $$('[data-stop]', panel).forEach(function(b){ b.addEventListener('click', function(){ clickPort(+b.getAttribute('data-stop')); }); });
     var rs = $('[data-reset]', panel); if (rs) rs.addEventListener('click', function(){ main = -1; stops = []; drawPlan(false); });

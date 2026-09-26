@@ -34,18 +34,21 @@
     var turn = function(n){
       if (busy) return;
       var k = (spread + n + FLIGHTS.length) % FLIGHTS.length, flat = innerWidth <= 700;
-      if (reduce || !hasGsap || flat){
-        spread = k; fillSpread(k);
-        if (flat && hasGsap && !reduce) gsap.fromTo(pp, { x: n * 30, opacity: .3 }, { x: 0, opacity: 1, duration: .35, ease: 'power2.out' });
-        return;
-      }
+      if (reduce || !hasGsap){ spread = k; fillSpread(k); return; }
       busy = true;
       sheet.classList.toggle('is-back', n < 0);
-      gsap.timeline({ onComplete: function(){ busy = false; gsap.set(sheet, { opacity: 0, rotationY: 0 }); } })
-        .set(sheet, { opacity: 1, rotationY: 0 })
-        .to(sheet, { rotationY: n > 0 ? -90 : 90, duration: .32, ease: 'power2.in' })
+      // phones stack the pages, so the sheet turns top to bottom: forward lifts the lower page up over the spine, back drops the upper one
+      var ax = flat ? 'rotationX' : 'rotationY', sgn = flat ? -1 : 1, from = {}, mid = {}, end = { opacity: 0, duration: .32, ease: 'power2.out' };
+      if (flat){ var pg = n > 0 ? pageR : pageL; sheet.style.top = pg.offsetTop + 'px'; sheet.style.height = pg.offsetHeight + 'px'; sheet.style.bottom = 'auto'; }
+      else { sheet.style.top = sheet.style.height = sheet.style.bottom = ''; }
+      from[ax] = 0; from.opacity = 1;
+      mid[ax] = (n > 0 ? -90 : 90) * sgn; mid.duration = .32; mid.ease = 'power2.in';
+      end[ax] = (n > 0 ? -180 : 180) * sgn;
+      gsap.timeline({ onComplete: function(){ busy = false; gsap.set(sheet, { opacity: 0, rotationX: 0, rotationY: 0 }); } })
+        .set(sheet, from)
+        .to(sheet, mid)
         .add(function(){ spread = k; fillSpread(k); })
-        .to(sheet, { rotationY: n > 0 ? -180 : 180, opacity: 0, duration: .32, ease: 'power2.out' });
+        .to(sheet, end);
     };
     glass(pp, function(){ return busy; });
     var prevB = $('[data-log-prev]'), nextB = $('[data-log-next]');
