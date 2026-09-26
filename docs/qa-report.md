@@ -46,3 +46,21 @@ LCP 4.4–5.7 s, TBT 90–1,450 ms (Home worst: 9.1 s main-thread work, 1.9 s JS
 - Fix batch **A1–A5, A8 + D1: apply all.**
 - Performance: **defer + cap** (keep every effect; non-hero scenes at first scroll/idle, cap canvas resolution on phones, preload the display font; target 70+ mobile).
 - Then the **SEO pass** (seo-schema-builder); Angelino does the 2 Designer collection-link settings + the sitemap toggle.
+
+## Results after v0.13.0 (staging, Lighthouse mobile, 2026-09-26)
+
+| Page | Perf (was) | A11y (was) | Best practices | LCP | TBT |
+|---|---|---|---|---|---|
+| Home | 45 (39) | 96 (93) | 100 | 5.3 s | 1,180 ms |
+| About | 53 (55) | 91 (84) | 100 | 5.1 s | 700 ms |
+| Contact | 70 (72) | 100 (96) | 100 | 4.7 s | 50 ms |
+| Process | 56 (53) | 97 (90) | 100 | 5.3 s | 470 ms |
+| Services hub | 57 (60) | 97 (86) | 100 | 5.7 s | 400 ms |
+| Service item | 56 (52) | 96 (84) | 100 | 5.1 s | 570 ms |
+| Work | 70 (63) | 95 (88) | 100 | 5.0 s | 90 ms |
+| Mission | 44 (50) | 96 (83) | 100 | 6.2 s | 780 ms |
+
+- Every a11y fix verified on the published pages; no console errors, no horizontal scroll, all bundles init.
+- Performance moved within Lighthouse's run-to-run noise (±6): the per-frame + DPR + split fixes help real devices (smoother, less battery) more than the lab score. The lab score is held by **LCP ≈ 5 s**, which is first paint waiting on Webflow's jQuery + webflow.js + the synchronous GSAP/Lenis/core chain, then the display-font swap.
+- Remaining levers (need Angelino's call): (1) load the bundles from freeform footer code with `defer` instead of Webflow's script registry (registry rejects `defer`; local A/B −0.7 s FCP); (2) size the hero titles in CSS so the font swap / Home fit doesn't create a late LCP; (3) Mission: start the monitor scenes after first paint (heaviest template, 44).
+- SEO scores stay 54–66 on staging only because webflow.io is `noindex`.

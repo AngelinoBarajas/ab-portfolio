@@ -148,6 +148,14 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 - Published **webflow.io only**; verified 1440 / 1024 / 390, no console errors, no horizontal scroll; hub + Home regression clean. v0.12.1 fixed the clipped beam. **Approved 2026-09-26** (page + asides).
 - For step 8 QA: inner pages show no nav active marker (core only styles `.is-active`; Webflow's `w--current` is unstyled).
 
+## This session (2026-09-26, step 8 QA) in one list
+
+- **Contact page + 3 asides approved.**
+- **QA audit** (`docs/qa-report.md`): 22 URLs × 1440/1024/390 clean (console, horizontal scroll, init); reduced motion clean; warp OK; no visual regressions; copy clean.
+- **v0.13.0 live on staging**: a11y fixes (Lighthouse a11y now 91–100), `webgl-data` renamed "Interactive 3D + data", perf fixes (Home init split, no per-frame layout reads, planet float pauses off screen, starfield 1x on touch, preconnect + Archivo preload). Perf scores ~unchanged (LCP ≈ 5 s held by the sync script chain + font swap): 3 remaining levers offered.
+- **SEO**: Home title/description, OG mirroring, hub description trimmed (staging). JSON-LD drafted for launch (`{{DOMAIN}}`) + Designer steps in `docs/seo-plan.md`.
+- MCP finding: registered scripts accept only `data-*` attributes (no `defer`).
+
 ## Next session
 
 1. ~~New standalone Contact page~~ built 2026-09-26 (see above); pending his OK, the asides, and Designer: rename the form "Email Form" → Contact. Original brief: Run page-pipeline from stage 2 (Direct): divergence gate + direction questions for him, then an HTML prototype in `prototypes/` (the `_parts/assemble.py` shell pattern), approval, then Webflow. Today every "Contact" / "Book a call" link (Nav, mobile menu `/contact` label, Footer, CTAs) goes to Home `#launch` (the planner form); decide with him what moves to `/contact` and what stays. Forms: Home planner + Process form post to the same notification email (still unconfirmed in Site settings › Forms). Reuse the native-form + Embed fields pattern (`webflow/build/process/form-fields.embed.html`).
