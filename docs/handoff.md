@@ -1,4 +1,4 @@
-# Session handoff (2026-09-26, end of the Services hub Webflow build)
+# Session handoff (2026-09-26, Services hub built + approved)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -12,7 +12,7 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 | 4. CMS | ✅ 14 collections (+ **Hub manifest**: launch codes + pair notes, because Services is at Webflow's 60-field cap), all references resolved. IDs in `docs/webflow-cms-ids.json`. Added this session: Tools › **Pen + paper**, Mission Channels › Aguirre **Site plan**, AB Identity **Sketches** + **Illustrator** |
 | 3b. Global styles | ✅ 29 classes + tag styles (Body, H1–H6, p) |
 | 5. Components | 🟡 Nav, Footer, Frame label, Bento card, FAQ item, **Next card** (no props yet) done (group "Global"). Mission card is a page-level Collection item (nested Types list rules out a component). Remaining: code block, crew dock |
-| 6. Pages | 🟡 Approved 2026-09-25: Home, Work, Mission template, Services template, Knowledge System mission, About, **404** (utility page `6ab6e4a645ff2d1bd12b1c3e`). **Process** (`/process`, page `6ab701e2df00b2e38832af5b`) **approved 2026-09-26**. **Services hub** (`/services`, page `6ab74df0ae2408ea9be939c7`): **built 2026-09-26** from the approved prototype, on staging, **awaiting Angelino's OK** |
+| 6. Pages | 🟡 Approved 2026-09-25: Home, Work, Mission template, Services template, Knowledge System mission, About, **404** (utility page `6ab6e4a645ff2d1bd12b1c3e`). **Process** (`/process`, page `6ab701e2df00b2e38832af5b`) **approved 2026-09-26**. **Services hub** (`/services`, page `6ab74df0ae2408ea9be939c7`): built from the approved prototype, **approved 2026-09-26** |
 | 7. Custom code | 🟡 Live on staging: `ab-core` JS + CSS **v0.11.0** (site-wide; monitor decor + `.ab_chip` + nav hide hysteresis) · `ab-hub` JS + CSS **v0.11.0** (Services hub) · `ab-mission` JS v0.10.0 + CSS **v0.11.0** · `ab-home` v0.9.0 · `ab-process` JS + CSS v0.10.0 · `ab-404` JS v0.7.0 + CSS v0.7.1 · `ab-about` JS + CSS v0.6.2 · `ab-work` + `ab-services` (+ CSS) v0.4.0 · head inline script `abwarpin` 0.3.2. Build/deploy steps in `code/README.md`; per-version notes in `docs/webflow-build-notes.md` |
 | 8. Brand | ✅ New **AB planet monogram** (`logo/ab-logo.svg`, asset `6ab6bba8167f1da71a4bf9a8`) in Nav + Footer; inlined + animated by `core/22-logo.js` (warp spin-in, fill; black-hole hover; no glow). One geometry source: `AB.markSVG` / `AB.MARK` in `core/21-mark.js`. Favicon/webclip PNGs in `logo/` (upload pending) |
 
@@ -129,13 +129,14 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 - **CMS**: Services is at the 60-field cap → new **Hub manifest** collection (Service ref, Launch code, Pair notes), 8 items. Knowledge System added to Webflow development + Design systems › Related missions (matches the prototype).
 - **Code v0.11.0**: new `ab-hub` bundle + CSS; core gained the monitor decor + `.ab_chip` styles (out of `ab-mission.css`) and the nav hide hysteresis. jsDelivr SRI verified; registered `abcore` 0.11.0 + `abhub` 0.11.0; site/page/Mission-template CSS links updated.
 - **Links**: Nav, mobile menu, footer Navigate › Services → `/services`; footer Services column heading is now a link.
-- **4 Glossary asides** added as draft copy (Priority go, Launch manifest, Abort mission, Custom charter): Angelino to approve or edit in the CMS.
+- **4 Glossary asides** (Priority go, Launch manifest, Abort mission, Custom charter): approved as written.
+- **Angelino approved the Services hub 2026-09-26** ("looks good").
 - Published to **webflow.io only**. Verified local-dist + staging at 1440 / 1024 / 390: no console errors, no horizontal scroll, all interactions; Mission + Process regression clean.
 - MCP finding worth keeping: a Collection List nested inside a Collection item with source `{collectionId}` renders the item's own multi-ref (works via MCP).
 
 ## Next session
 
-1. **Angelino reviews `/services` on staging** (+ the 4 hub asides). Fix round if needed.
+1. **New standalone Contact page** (`/contact`, Angelino's ask 2026-09-26). Run page-pipeline from stage 2 (Direct): divergence gate + direction questions for him, then an HTML prototype in `prototypes/` (the `_parts/assemble.py` shell pattern), approval, then Webflow. Today every "Contact" / "Book a call" link (Nav, mobile menu `/contact` label, Footer, CTAs) goes to Home `#launch` (the planner form); decide with him what moves to `/contact` and what stays. Forms: Home planner + Process form post to the same notification email (still unconfirmed in Site settings › Forms). Reuse the native-form + Embed fields pattern (`webflow/build/process/form-fields.embed.html`).
 2. Then **step 8 QA** (every page vs its prototype at 1440 / 1024 / 390, console, horizontal scroll, reduced motion, Lighthouse, links + warp transitions). Ask before any publish beyond webflow.io.
 3. Offered, not decided: stronger Interstellar "Hover to fly close" on About. Process prototype (`prototypes/process.html`) predates v0.9.1–v0.9.4.
 

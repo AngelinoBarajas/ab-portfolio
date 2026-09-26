@@ -420,7 +420,7 @@ Angelino liked the Mission glossary popup and asked for more "on things you thin
 - Adding an aside later: CMS item with Kind = Aside, Target = a selector that exists on the page (check with `document.querySelector` in the console). Adding a term: Kind = Term (or empty); it links wherever the word appears in body copy.
 
 
-## Services hub (built 2026-09-26, awaiting Angelino's OK)
+## Services hub (built 2026-09-26, approved by Angelino 2026-09-26)
 
 Page `6ab74df0ae2408ea9be939c7` (`/services`, static; duplicate of Process, Process sections removed; Webflow allows it next to the `/services/[slug]` template, both return 200). Prototype `prototypes/services-hub.html` ("Launch control"). Build files `webflow/build/hub/` (`make.py` → section html/css + `prep.py`; `bind.py` turns a `get_all_elements` dump into text/attribute/link bindings). Code `ab-hub` JS + CSS **v0.11.0** (page footer script `abhub` + head `<link>`).
 
@@ -442,7 +442,7 @@ Page `6ab74df0ae2408ea9be939c7` (`/services`, static; duplicate of Process, Proc
 
 **Site-wide links:** Nav "Services", mobile menu Services, footer Navigate › Services → `/services`; footer Services column heading is now a link (`.ab_footer_heading.text-style-mono.is-link`).
 
-**Glossary asides (draft copy, awaiting OK):** Priority go (`.ab_hub-sym_label`), Launch manifest (`.ab_mon.is-hub .ab_mon_rec`), Abort mission (`.button.is-abort`), Custom charter (`.ab_hub-call_row`).
+**Glossary asides (approved as written):** Priority go (`.ab_hub-sym_label`), Launch manifest (`.ab_mon.is-hub .ab_mon_rec`), Abort mission (`.button.is-abort`), Custom charter (`.ab_hub-call_row`).
 
 **MCP findings:** (1) A Collection List **nested inside a Collection item**, source `{collectionId: X}` only, renders the item's own multi-ref to X (Tools, Pairs with, Related missions all verified on the published page); the `{collectionId, fieldId}` form stays broken. (2) A static page can take the slug of a collection's URL folder (`/services` next to `/services/[slug]`). (3) `static_link {mode:"page", to:<template id>}` inside a list on a *static* page rendered `/services` (the static page), not `/services/<slug>`: the script sets the Explore hrefs. (4) WHTML trims a leading space in a span (" · 8 launches"); fixed in script. (5) Duplicating a page does **not** copy its custom code.
 

@@ -18,6 +18,7 @@
 - [~] 7. Custom code: ✅ part 1 (2026-09-25) site-wide `ab-core` JS + CSS and Home `ab-home`, tag **v0.1.2**, loaded via jsDelivr (registered hosted scripts + SRI), staging published and tested at 1440/1024/390 + reduced motion. Waiting on Angelino's OK. Other pages' bundles as each page is built
 - [x] 6g. Process (`/process`, new page): **approved by Angelino 2026-09-26** (page `6ab701e2df00b2e38832af5b`, code v0.10.0 after review tweaks v0.9.1–v0.9.4)
 - [x] Site-wide tips (CMS Glossary terms + asides, core v0.10.2): **approved by Angelino 2026-09-26**
-- [~] 6h. Services hub (`/services`, new page): prototype approved 2026-09-26; **built in Webflow 2026-09-26** (page `6ab74df0ae2408ea9be939c7`, code v0.11.0, staging only). ← Waiting on Angelino's OK (+ the 4 hub glossary asides)
+- [~] 6h. Services hub (`/services`, new page): prototype approved 2026-09-26; built in Webflow (page `6ab74df0ae2408ea9be939c7`, code v0.11.0), **approved by Angelino 2026-09-26** (incl. the 4 hub glossary asides)
+- [ ] 6i. Contact page (`/contact`, new standalone page) ← NEXT (currently Contact links go to Home `#launch`)
 - [ ] 8. QA ← next. At 1440 / 1024 / 390, reduced motion, Lighthouse
 - [ ] 9. Angelino approves → publish
