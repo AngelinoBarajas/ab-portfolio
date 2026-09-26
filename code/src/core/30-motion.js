@@ -19,7 +19,7 @@
     var raw = a.getAttribute('href') || '';
     if (a.hash.length < 2 || a.pathname.replace(/\/$/, '') !== location.pathname.replace(/\/$/, '') || !/^(\/?#|\/[^#]*#)/.test(raw)) return;
     a.addEventListener('click', function(e){
-      var id = decodeURIComponent(a.hash.slice(1)), t = document.getElementById(id); if (!t) return;
+      var id = decodeURIComponent(a.hash.slice(1)), t = document.getElementById(id); if (!t && id !== 'top') return; // #top works on pages without a #top element (404)
       e.preventDefault(); e.stopPropagation();
       var top = id === 'top';
       warp(function(){ scrollToTarget(top ? 0 : t); });

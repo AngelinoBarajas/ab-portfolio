@@ -30,7 +30,7 @@ w('hero.html', '<section class="section_dbh" id="hero" data-frame="service" aria
   '<div class="padding-global"><div class="container-large"><div class="ab_dbh">'
   '<div class="ab_planet is-dbh" data-drag="" data-label="Service planet" data-service-planet="" data-spin="60"></div>'
   '<div class="ab_dbh_top"><div class="ab_crumb text-style-mono"><a class="ab_crumb_link" href="/">/home</a><span class="ab_crumb_sep">/</span>'
-  '<a class="ab_crumb_link" href="/#capabilities">services</a><span class="ab_crumb_sep">/</span><p class="ab_crumb_current" data-field="slug">service-slug</p></div></div>'
+  '<a class="ab_crumb_link" href="/services">services</a><span class="ab_crumb_sep">/</span><p class="ab_crumb_current" data-field="slug">service-slug</p></div></div>'
   '<div class="ab_dbh_eyebrow text-style-mono">Service <span data-sv="no">01</span> / <span data-sv="total">08</span> · <span data-sv="name">Service</span></div>'
   '<h1 class="ab_dbh_title is-service" id="heroTitle" data-field="name">Service name</h1>'
   '<p class="ab_dbh_sum" data-field="summary">Service summary.</p>'
