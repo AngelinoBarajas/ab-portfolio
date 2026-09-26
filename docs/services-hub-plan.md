@@ -1,4 +1,4 @@
-# Services hub (`/services`): **prototype APPROVED 2026-09-26** → Webflow build next
+# Services hub (`/services`): prototype approved 2026-09-26 · **built in Webflow 2026-09-26 (v0.11.0, staging), awaiting OK** · build record: `docs/webflow-build-notes.md` › Services hub
 
 **Read this block first.** Everything below it is the history (the original "Departures" concept, then review rounds 2–5). Where the history and this block disagree, this block wins.
 

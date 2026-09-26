@@ -1,4 +1,4 @@
-# Session handoff (2026-09-26, end of the Services hub prototype session)
+# Session handoff (2026-09-26, end of the Services hub Webflow build)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -9,11 +9,11 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 | 1. GitHub repo | ✅ Public: github.com/AngelinoBarajas/ab-portfolio (`main`) |
 | 2. Site | ✅ AB Portfolio `6ab5fe4a5ee75f9c981dc0be` (ab-portfolio-723a30.webflow.io). Home page `6ab5fe4b5ee75f9c981dc0cb`. Published to **webflow.io only** (no custom domain). |
 | 3. Variables + fonts | ✅ 38 variables (37 from tokens + `Neutral / Glass`); 4 custom variable fonts (Archivo with wdth axis). IDs in `docs/webflow-ids.md` |
-| 4. CMS | ✅ 13 collections, all references resolved. IDs in `docs/webflow-cms-ids.json`. Added this session: Tools › **Pen + paper**, Mission Channels › Aguirre **Site plan**, AB Identity **Sketches** + **Illustrator** |
+| 4. CMS | ✅ 14 collections (+ **Hub manifest**: launch codes + pair notes, because Services is at Webflow's 60-field cap), all references resolved. IDs in `docs/webflow-cms-ids.json`. Added this session: Tools › **Pen + paper**, Mission Channels › Aguirre **Site plan**, AB Identity **Sketches** + **Illustrator** |
 | 3b. Global styles | ✅ 29 classes + tag styles (Body, H1–H6, p) |
 | 5. Components | 🟡 Nav, Footer, Frame label, Bento card, FAQ item, **Next card** (no props yet) done (group "Global"). Mission card is a page-level Collection item (nested Types list rules out a component). Remaining: code block, crew dock |
-| 6. Pages | 🟡 Approved 2026-09-25: Home, Work, Mission template, Services template, Knowledge System mission, About, **404** (utility page `6ab6e4a645ff2d1bd12b1c3e`). **Process** (`/process`, page `6ab701e2df00b2e38832af5b`) **approved 2026-09-26**. **Services hub** (`/services`): prototype **approved 2026-09-26** (`prototypes/services-hub.html`); Webflow build next |
-| 7. Custom code | 🟡 Live on staging: `ab-core` JS + CSS **v0.10.2** (site-wide tips) · `ab-home` **v0.9.0** · `ab-process` JS + CSS **v0.10.0** (route fit, touchdown finale, hero planet drag, countdown frame, tips hooks) · `ab-404` JS v0.7.0 + CSS v0.7.1 · `ab-about` JS + CSS v0.6.2 · `ab-mission` JS + CSS **v0.10.0** · `ab-work` + `ab-services` (+ CSS) v0.4.0 · head inline script `abwarpin` 0.3.2. Build/deploy steps in `code/README.md`; per-version notes in `docs/webflow-build-notes.md` (up to v0.10.2). **Pending, not deployed:** `core/30-motion.js` nav hide-on-scroll hysteresis (built into `code/dist`, uncommitted; ship with the hub core bump) |
+| 6. Pages | 🟡 Approved 2026-09-25: Home, Work, Mission template, Services template, Knowledge System mission, About, **404** (utility page `6ab6e4a645ff2d1bd12b1c3e`). **Process** (`/process`, page `6ab701e2df00b2e38832af5b`) **approved 2026-09-26**. **Services hub** (`/services`, page `6ab74df0ae2408ea9be939c7`): **built 2026-09-26** from the approved prototype, on staging, **awaiting Angelino's OK** |
+| 7. Custom code | 🟡 Live on staging: `ab-core` JS + CSS **v0.11.0** (site-wide; monitor decor + `.ab_chip` + nav hide hysteresis) · `ab-hub` JS + CSS **v0.11.0** (Services hub) · `ab-mission` JS v0.10.0 + CSS **v0.11.0** · `ab-home` v0.9.0 · `ab-process` JS + CSS v0.10.0 · `ab-404` JS v0.7.0 + CSS v0.7.1 · `ab-about` JS + CSS v0.6.2 · `ab-work` + `ab-services` (+ CSS) v0.4.0 · head inline script `abwarpin` 0.3.2. Build/deploy steps in `code/README.md`; per-version notes in `docs/webflow-build-notes.md` |
 | 8. Brand | ✅ New **AB planet monogram** (`logo/ab-logo.svg`, asset `6ab6bba8167f1da71a4bf9a8`) in Nav + Footer; inlined + animated by `core/22-logo.js` (warp spin-in, fill; black-hole hover; no glow). One geometry source: `AB.markSVG` / `AB.MARK` in `core/21-mark.js`. Favicon/webclip PNGs in `logo/` (upload pending) |
 
 Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top"> (hero · work · statement · services · process · transmission · stack · testimonials · faq · contact) · [Footer] · Site data (hidden CMS sources)`. Section-by-section notes: `docs/webflow-build-notes.md` › Home; prototype → Webflow hook map for the step 7 scripts: `webflow/build/home/class-map.md`.
@@ -122,12 +122,22 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 - Nothing was pushed to Webflow and nothing was published this session. The session's files are **not committed** yet (prototype, `_parts/hub.*`, plan doc, docs, core source + dist).
 - Lessons (memory): [[lesson-lenis-scroll-anchoring-jump]], [[lesson-backdrop-filter-under-3d-animation]], [[lesson-nav-hide-scroll-hysteresis-lenis]], [[lesson-headless-chrome-min-width]], [[lesson-overflow-clip-on-maxwidth-section]].
 
+## This session (2026-09-26, Services hub Webflow build) in one list
+
+- Committed the prototype session (`c66b953`), then built **`/services`** in Webflow from the approved prototype (static page, duplicate of Process; Process sections removed). Full record: `docs/webflow-build-notes.md` › Services hub.
+- **Real Webflow elements** for all copy; Services Collection Lists drive the diagnostics chips and manifest rows; hidden lists (Services with nested Tools / Pairs with / Related missions, Hub manifest, Missions) feed the script. Bindings in bulk with `webflow/build/hub/bind.py`.
+- **CMS**: Services is at the 60-field cap → new **Hub manifest** collection (Service ref, Launch code, Pair notes), 8 items. Knowledge System added to Webflow development + Design systems › Related missions (matches the prototype).
+- **Code v0.11.0**: new `ab-hub` bundle + CSS; core gained the monitor decor + `.ab_chip` styles (out of `ab-mission.css`) and the nav hide hysteresis. jsDelivr SRI verified; registered `abcore` 0.11.0 + `abhub` 0.11.0; site/page/Mission-template CSS links updated.
+- **Links**: Nav, mobile menu, footer Navigate › Services → `/services`; footer Services column heading is now a link.
+- **4 Glossary asides** added as draft copy (Priority go, Launch manifest, Abort mission, Custom charter): Angelino to approve or edit in the CMS.
+- Published to **webflow.io only**. Verified local-dist + staging at 1440 / 1024 / 390: no console errors, no horizontal scroll, all interactions; Mission + Process regression clean.
+- MCP finding worth keeping: a Collection List nested inside a Collection item with source `{collectionId}` renders the item's own multi-ref (works via MCP).
+
 ## Next session
 
-1. **Commit** this session's work if it isn't yet (prototype + `_parts/hub.*`, `docs/services-hub-plan.md`, docs, `code/src/core/30-motion.js` + `code/dist`).
-2. **Build the Services hub in Webflow** from the approved prototype: follow the build map at the top of `docs/services-hub-plan.md` (static `/services` page, Services CMS as data source + new Code field + pair "why" lines, `ab-hub` bundle, move the mission-control monitor styles + square chip style into `ab-core.css`, ship the core nav fix in the same core bump, Glossary asides). Then repoint Nav "Services" (`/#capabilities`), the mobile menu and the footer Services heading to `/services`. Test local-dist → jsDelivr + SRI → webflow.io only → 1440 / 1024 / 390, no console errors → **stop for Angelino's OK**.
-3. Then **step 8 QA** (every page vs its prototype at 1440 / 1024 / 390, console, horizontal scroll, reduced motion, Lighthouse, links + warp transitions). Ask before any publish beyond webflow.io.
-4. Offered, not decided: stronger Interstellar "Hover to fly close" on About. Process prototype (`prototypes/process.html`) predates v0.9.1–v0.9.4.
+1. **Angelino reviews `/services` on staging** (+ the 4 hub asides). Fix round if needed.
+2. Then **step 8 QA** (every page vs its prototype at 1440 / 1024 / 390, console, horizontal scroll, reduced motion, Lighthouse, links + warp transitions). Ask before any publish beyond webflow.io.
+3. Offered, not decided: stronger Interstellar "Hover to fly close" on About. Process prototype (`prototypes/process.html`) predates v0.9.1–v0.9.4.
 
 ## Home review edits already done (v0.1.4, from `ab-portfolio-hp-edits.docx`)
 

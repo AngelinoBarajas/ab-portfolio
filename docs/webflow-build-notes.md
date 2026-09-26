@@ -419,3 +419,31 @@ Angelino liked the Mission glossary popup and asked for more "on things you thin
 - Live: core JS + CSS **v0.10.2**, ab-mission JS + CSS **v0.10.0**, ab-process JS + CSS **v0.10.0**. Verified on staging: every aside on its page (Home 8, About 2 + logo, 404, Mission crew + terms, Process 4), term auto-links per page, phone tap open/close, planet drag intact, no horizontal scroll, no console errors (the only 404s were test URLs).
 - Adding an aside later: CMS item with Kind = Aside, Target = a selector that exists on the page (check with `document.querySelector` in the console). Adding a term: Kind = Term (or empty); it links wherever the word appears in body copy.
 
+
+## Services hub (built 2026-09-26, awaiting Angelino's OK)
+
+Page `6ab74df0ae2408ea9be939c7` (`/services`, static; duplicate of Process, Process sections removed; Webflow allows it next to the `/services/[slug]` template, both return 200). Prototype `prototypes/services-hub.html` ("Launch control"). Build files `webflow/build/hub/` (`make.py` → section html/css + `prep.py`; `bind.py` turns a `get_all_elements` dump into text/attribute/link bindings). Code `ab-hub` JS + CSS **v0.11.0** (page footer script `abhub` + head `<link>`).
+
+| Section | Webflow | Script (ab-hub) |
+|---|---|---|
+| Hero (`section_hub-hero#hero`) | reuses `ab_dbh*`, `ab_crumb*`, `ab_rec` (+ `ab_rec_dot.is-live`), combos `.ab_dbh.is-hub` / `.ab_dbh_title.is-hub` / `.ab_dbh_sum.is-hub`, planet `.ab_planet.is-dbh.is-hub[data-hub-planet]`; diagnostics chips = Services Collection List (`solve-1-problem`, `data-slug`) + static "All clear" | chips → role=button, PRIORITY GO, hero planet repaint |
+| Monitor | `.ab_mc.is-hub` › `.ab_mon.is-hub` (bar, `.ab_screen.is-hub` › `.ab_hub-scr` › Services Collection List of `.ab_hub-row` [name, summary (sr-only), Explore link], `.ab_mon_cap` prompt, `.ab_hub-slot`) + `.ab_console.is-hub` (keys box, telemetry `data-tele`) | phosphor cells + column heads, row buttons, Explore hrefs `/services/<slug>`, launch keys, peek planets, CRT decor, clock, typed prompt |
+| Launch pass (`.ab_hub-print` › `article.ab_hub-pass`) | real elements with `data-pass` hooks, default = Webflow development | refilled per launch, print animation, glass tilt + glare, brackets, QR |
+| Trajectory (`section_hub-map.theme-light#trajectory`) | head + step pills `.ab_hub-step`; empty `.ab_hub-map` + `aside.ab_hub-planner` | map (arcs = Pairs with, Earth, stations), planner state machine, launch |
+| Flight plan (`section_hub-flight#flight`) | head (Edit / Abort buttons) + 6 stage cards `.ab_hub-wp` (Process copy); hidden until `.is-open` (ab-hub.css) | legs per stop, flown links, path/pad/ship/dock, pin + touchdown, warp in/out (`hb-warp`) |
+| Crew logbook (`section_hub-log#patches`) | head + empty `.ab_hub-log` / `.ab_hub-log_ctl` | spreads, badges, page turns, controls; brand accents parsed from `/work` card markup (sessionStorage `ab:mission-accents`) |
+| Final call (`section_hub-call`) | `.ab_mon.is-call` › `.ab_hub-call_row` + heading/copy/buttons | AB-09 cells typed in on view |
+
+**Data (hidden lists in the site-data block):** Services source (from Process, Navigator "Services · hub + planner source") gained `best-for`, `solve-1-problem` and three **nested lists**: `[data-list=tools]` (Tools), `[data-list=pairs]` (Services = Pairs with), `[data-list=missions]` (Missions = Related missions). New lists: **Hub manifest** (`[data-manifest-source]`: service slug via `service:::slug`, `code`, `pair-notes`) and **Missions** (`[data-log-source]`, sort number asc: slug, number, name, client, status).
+
+**CMS:** Services hit Webflow's **60-field cap**, so the launch code + pair "why" lines live in a new collection **Hub manifest** (`6ab74ea1e8e50b019e128d17`: Service (Reference), Launch code, Pair notes = `other-slug | sentence` per line), 8 items. Services › Related missions: Knowledge System added to Webflow development + Design systems (as in the approved prototype). IDs in `docs/webflow-cms-ids.json`.
+
+**Core v0.11.0:** monitor decor (`.scan .vig .roll .brk .osd`, screws, REC dot, tabular numbers) moved from `ab-mission.css` to `ab-core.css`; `.ab_chip` states in core; nav hide-on-scroll hysteresis (`30-motion.js`). Mission CSS re-linked at v0.11.0 (decor removed there).
+
+**Site-wide links:** Nav "Services", mobile menu Services, footer Navigate › Services → `/services`; footer Services column heading is now a link (`.ab_footer_heading.text-style-mono.is-link`).
+
+**Glossary asides (draft copy, awaiting OK):** Priority go (`.ab_hub-sym_label`), Launch manifest (`.ab_mon.is-hub .ab_mon_rec`), Abort mission (`.button.is-abort`), Custom charter (`.ab_hub-call_row`).
+
+**MCP findings:** (1) A Collection List **nested inside a Collection item**, source `{collectionId: X}` only, renders the item's own multi-ref to X (Tools, Pairs with, Related missions all verified on the published page); the `{collectionId, fieldId}` form stays broken. (2) A static page can take the slug of a collection's URL folder (`/services` next to `/services/[slug]`). (3) `static_link {mode:"page", to:<template id>}` inside a list on a *static* page rendered `/services` (the static page), not `/services/<slug>`: the script sets the Explore hrefs. (4) WHTML trims a leading space in a span (" · 8 launches"); fixed in script. (5) Duplicating a page does **not** copy its custom code.
+
+**Testing:** local-dist harness (staging HTML + local `dist`, `?shim`, `?hide=<css>` to bring lower sections to the top for headless shots since scrolled headless shots render blank, `?rm` reduced motion, `?fly=0,5,2&p=0.45`), then staging 1440 / 1024 / 390: no console errors, no horizontal scroll; arm/print, diagnostics, planner → launch → pin → abort, logbook turns, reduced motion; Mission monitor + Process regression clean.
