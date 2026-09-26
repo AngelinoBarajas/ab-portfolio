@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-contact.css v0.12.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-contact.css v0.12.1 · github.com/AngelinoBarajas/ab-portfolio */
 /* =========================================================
    CONTACT (/contact) · open a channel. Page <head> <link>.
    Designer classes: section_contact-hero, ab_ct-*; script-built parts: abc-*.
@@ -12,7 +12,8 @@
 .ab_ct-link:hover{color:var(--ch)}
 
 /* the dish on its cliff */
-.abc-dish{display:block;width:100%;height:auto;overflow:visible}
+/* Webflow's reset svg:not(:root){overflow:hidden} (0,1,1) clipped the beam at the SVG box: two classes beat it */
+.ab_ct-dish .abc-dish{display:block;width:100%;height:auto;overflow:visible}
 .abc-feed{fill:var(--ch);transition:fill .4s}
 .abc-rings{stroke:var(--ch)}
 .abc-rings path{opacity:0}
@@ -22,7 +23,7 @@
 .abc-dish-tag b{color:var(--_color---text--primary);font-weight:500;font-variant-numeric:tabular-nums}
 
 /* signal line */
-.abc-scope{display:block;width:100%;height:100%;overflow:visible}
+.ab_ct-scope .abc-scope{display:block;width:100%;height:100%;overflow:visible}
 .abc-grid{stroke:rgba(255,255,255,.08);stroke-dasharray:2 6;vector-effect:non-scaling-stroke}
 .abc-wave{fill:none;stroke:var(--ch);stroke-width:1.6;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 5px var(--ch));transition:stroke .4s}
 .abc-packet{position:absolute;top:50%;left:0;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#fff;box-shadow:0 0 16px 4px var(--ch),-40px 0 30px -6px var(--ch);opacity:0}
