@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.23.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.23.1 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -460,10 +460,24 @@ window.Webflow.push(function(){
   })();
   (function(){
     var K = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'], ki = 0;
+    // keyboard: the classic code; phones: swipe it on the Player one screen (↑↑↓↓←→←→) and tap twice for B, A
+    function step(k){ ki = k === K[ki] ? ki + 1 : (k === K[0] ? 1 : 0); if (ki < K.length) return; ki = 0; cheat(); }
     document.addEventListener('keydown', function(e){
       if (e.target && e.target.closest && e.target.closest('input, textarea, select, [data-badge]')) return;
-      var k = e.key.length === 1 ? e.key.toLowerCase() : e.key; ki = k === K[ki] ? ki + 1 : (k === K[0] ? 1 : 0);
-      if (ki < K.length) return; ki = 0;
+      step(e.key.length === 1 ? e.key.toLowerCase() : e.key);
+    });
+    var gmScreen = $('[data-gm]');
+    if (gmScreen && 'ontouchstart' in window){
+      gmScreen.style.touchAction = 'none';   // swipes that start on the little game screen don't scroll the page
+      var t0 = null;
+      gmScreen.addEventListener('touchstart', function(e){ var t = e.touches[0]; t0 = { x: t.clientX, y: t.clientY }; }, { passive: true });
+      gmScreen.addEventListener('touchend', function(e){
+        if (!t0) return; var t = e.changedTouches[0], dx = t.clientX - t0.x, dy = t.clientY - t0.y; t0 = null;
+        if (Math.abs(dx) < 24 && Math.abs(dy) < 24){ step(ki >= 8 ? (ki === 8 ? 'b' : 'a') : 'tap'); return; }
+        step(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'ArrowRight' : 'ArrowLeft') : (dy > 0 ? 'ArrowDown' : 'ArrowUp'));
+      }, { passive: true });
+    }
+    function cheat(){
       LV.n += 30; if (LV.el) LV.el.textContent = 'LV ' + LV.n;
       toast('Cheat code accepted · +30 levels · warp drive overclocked');
       var o = document.createElement('div'); o.className = 'ab_konami'; o.innerHTML = '<b>+30 lives</b>'; document.body.appendChild(o);
@@ -474,7 +488,7 @@ window.Webflow.push(function(){
       if (AB.quest) AB.quest('konami'); 
       // the cheat also skips straight to the boss
       if (!LV.beaten && LV.boss) setTimeout(LV.boss, 1700);
-    });
+    }
   })();
 
   /* ---------- bookshelf: knock a book off (colors + heights come from data attributes) ---------- */

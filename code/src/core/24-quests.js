@@ -3,7 +3,7 @@
      the first find also says where the log lives (About › Player one). The log UI is in ab-about. ---------- */
   var QUESTS = [
     ['boss', 'Defeat The Scope Creep', 'A certain card on the About page gets interesting at level 20.'],
-    ['konami', 'Enter the cheat code', 'Some codes never die. Up, up…'],
+    ['konami', 'Enter the cheat code', 'Some codes never die. Up, up… (on a phone, swipe it on the Player one screen, then tap twice).'],
     ['badge', 'Flip the crew badge', 'Every ID has a back side.'],
     ['lanyard', 'Swing the lanyard', 'That badge is on a string for a reason.'],
     ['book', 'Knock a book off the shelf', 'The bookshelf is a little crowded.'],
