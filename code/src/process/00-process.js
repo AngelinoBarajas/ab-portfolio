@@ -115,7 +115,12 @@
   pad.innerHTML = '<div class="ab_planet abp-pad-pl" data-planet="terra" data-seed="7" data-colors="#0b2a4a,#1f6fb2,#3fa66b,#a88b5c,#f2f0ea" data-spin="80" data-glow="rgba(76,141,255,.35)"></div><span>Earth · your brief</span>';
   var ship = document.createElement('div'); ship.className = 'abp-ship'; ship.setAttribute('aria-hidden', 'true');
   ship.innerHTML = '<svg viewBox="0 0 44 44"><path class="abp-flame" d="M6 22 L-8 17 L-4 22 L-8 27 Z" fill="#FF6A3D"/><path d="M6 14 H26 L40 22 L26 30 H6 Z" fill="#F2F0EA"/><path d="M14 14 L10 6 H18 L22 14 Z M14 30 L10 38 H18 L22 30 Z" fill="#8A8FA3"/><circle cx="28" cy="22" r="3.5" fill="#4C8DFF"/></svg>';
-  if (track){ track.insertBefore(svg, track.firstChild); track.appendChild(pad); track.appendChild(ship); if (AB.buildPlanet) AB.buildPlanet($('.abp-pad-pl', pad)); }
+  // touchdown: the mission's main destination waits at the end of the route (stops orbit it as moons); landing sets off a small celebration
+  var dock = document.createElement('div'); dock.className = 'abp-dock';
+  dock.innerHTML = '<div class="abp-dock-sys" aria-hidden="true"><div class="abp-dock-moons"></div><div class="ab_planet abp-dock-pl"></div><div class="abp-burst"></div></div>' +
+    '<div class="abp-dock-txt"><div class="abp-dock-l">Touchdown · <span data-dest-short>Website</span></div><div class="abp-dock-h">Mission <span class="t-outline">live</span></div><a class="abp-dock-cta" href="#launch">Plan this mission →</a></div>';
+  var dockPl = $('.abp-dock-pl', dock), moons = $('.abp-dock-moons', dock), lastDock = -1;
+  if (track){ track.insertBefore(svg, track.firstChild); track.appendChild(pad); track.appendChild(dock); track.appendChild(ship); if (AB.buildPlanet) AB.buildPlanet($('.abp-pad-pl', pad)); }
 
   /* ---------- render the mission (main + stops): everything re-plots ---------- */
   var lastMain = 0, lastLegs = [];
@@ -156,6 +161,10 @@
       addBtn.hidden = sel.length >= MAX_STOPS && !adding;
       addBtn.textContent = adding ? 'Pick a planet… (cancel)' : '+ Add a stop';
       addBtn.classList.toggle('is-on', adding);
+    }
+    if (dockPl){
+      if (i !== lastDock){ repaint(dockPl, d, 21 + i); lastDock = i; }
+      moons.innerHTML = stops.map(function(s, n){ return '<i style="--c:' + s.c + ';--o:' + (1.3 + n * .22) + ';--t:' + (10 + n * 6) + 's"></i>'; }).join('');
     }
     var hp = $('[data-process-planet]'); if (hp){ hp.setAttribute('data-label', 'Destination · ' + d.short); if (i !== lastMain) repaint(hp, d, 11 + i); lastMain = i; }
     // route: main leg in full, each stop adds a compact line; "flown before" = main's example, else a stop's
@@ -224,14 +233,15 @@
 
   /* ---------- the flight: pinned sideways (≥768) or a vertical rail (phones) ---------- */
   var hudN = $('[data-hud-n]'), hudL = $('[data-hud-l]'), countN = $('[data-count-n]');
-  var pts = [], len = 0, st = null, wide = false, lastK = -2, CARD_TOP = 200, pinOver = 0, routeSec = $('.section_process-route');
+  var pts = [], len = 0, st = null, wide = false, lastK = -2, CARD_TOP = 200, pinOver = 0, routeSec = $('.section_process-route'), trackW = 0, landed = false, lastBurst = 0, D = 240;
   function layout(){
     if (!track) return;
     wide = innerWidth > 767;
     wps.forEach(function(w, i){ w.style.left = w.style.top = ''; w.style.removeProperty('--ny'); if (nodes[i]) nodes[i].style.left = nodes[i].style.top = ''; });
     ship.style.transform = ship.style.top = '';
+    dock.style.left = dock.style.top = ''; dock.style.removeProperty('--dock');
     track.style.height = '';
-    if (!wide){ track.style.width = ''; return; }
+    if (!wide){ track.style.width = ''; trackW = 0; if (dockPl) dockPl.style.setProperty('--sz', dockPl.getBoundingClientRect().width + 'px'); return; }
     // fit the pinned flight to the viewport: the path band above the cards shrinks (200 → 140px) so every card shows
     // whole; on very short screens the pin starts a little later (the heading slides up, the cards stay in view)
     var tallest = 0; wps.forEach(function(w){ tallest = Math.max(tallest, w.offsetHeight); });
@@ -240,13 +250,21 @@
     pinOver = Math.max(0, Math.round(above + CARD_TOP + tallest + 28 - innerHeight));
     track.style.height = (CARD_TOP + tallest + 40) + 'px';
     var f = CARD_TOP / 200;
-    var step = Math.max(380, innerWidth * .3), x0 = Math.min(260, innerWidth * .18), W = x0 + step * wps.length + innerWidth * .35, h = track.offsetHeight;
-    track.style.width = W + 'px'; svg.setAttribute('width', W); svg.setAttribute('height', h); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + h);
+    var step = Math.max(380, innerWidth * .3), x0 = Math.min(260, innerWidth * .18), h = track.offsetHeight;
+    // the finale: last card on the left of the screen, the destination planet on the right (the scroll ends there)
+    var lastX = x0 + step * (wps.length - 1) + step * .35, viewL = lastX - 72, W = viewL + innerWidth - 40;
+    D = Math.round(Math.max(150, Math.min(280, innerWidth * .2, h - 190)));
+    var xp = viewL + innerWidth * .7, dTop = Math.max(10, Math.round((h - D - 130) / 2)), yc = dTop + D / 2;
+    dock.style.setProperty('--dock', D + 'px'); dock.style.left = Math.round(xp - 170) + 'px'; dock.style.top = dTop + 'px';
+    if (dockPl) dockPl.style.setProperty('--sz', D + 'px');
+    trackW = W; track.style.width = W + 'px'; svg.setAttribute('width', W); svg.setAttribute('height', h); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + h);
     pts = [[x0 * .45, 110 * f]];
     wps.forEach(function(w, i){ pts.push([x0 + step * i + step * .35, (i % 2 ? 140 : 60) * f]); });
     var d = 'M' + pts[0][0] + ' ' + pts[0][1];
     for (var i = 1; i < pts.length; i++){ var p = pts[i - 1], q = pts[i], mx = (p[0] + q[0]) / 2; d += ' C' + mx + ' ' + p[1] + ' ' + mx + ' ' + q[1] + ' ' + q[0] + ' ' + q[1]; }
-    d += ' S' + (W - 40) + ' ' + 100 * f + ' ' + W + ' ' + 80 * f;
+    // final leg: descend to the destination and stop just short of its surface
+    var q = pts[pts.length - 1], lx = xp - D / 2 - 18, mx2 = (q[0] + lx) / 2;
+    d += ' C' + mx2 + ' ' + q[1] + ' ' + mx2 + ' ' + yc + ' ' + lx + ' ' + yc;
     line.setAttribute('d', d); lit.setAttribute('d', d); len = line.getTotalLength();
     lit.style.strokeDasharray = len; lit.style.strokeDashoffset = len;
     pad.style.left = pts[0][0] + 'px'; pad.style.top = pts[0][1] + 'px';
@@ -263,6 +281,27 @@
     lit.style.strokeDashoffset = len - at;
     var k = -1; pts.slice(1).forEach(function(q, i){ if (p.x >= q[0] - 4) k = i; });
     stage(k);
+    land(at >= len - 2);
+  }
+  function land(on){
+    if (on === landed) return; landed = on;
+    dock.classList.toggle('is-landed', on); ship.classList.toggle('is-landed', on);
+    if (hudL) hudL.textContent = on ? 'Touchdown' : lastK < 0 ? 'On the pad' : (STAGE_CODES[lastK] || '') + (lastK === wps.length - 1 ? ' · liftoff' : '');
+    if (on && Date.now() - lastBurst > 1500){ lastBurst = Date.now(); burst(); }
+  }
+  // confetti in the mission's colors + a shockwave ring (CSS); skipped for reduced motion
+  function burst(){
+    var b = $('.abp-burst', dock); if (!b || reduce || !hasGsap) return;
+    b.innerHTML = '';
+    var cols = sel.map(function(k){ return DEST[k] ? DEST[k].c : ''; }).filter(Boolean).concat(['#FF6A3D', '#F2F0EA']);
+    for (var n = 0; n < 34; n++){
+      var sp = document.createElement('i'); sp.style.background = cols[n % cols.length]; if (n % 3 === 0) sp.className = 'is-strip';
+      b.appendChild(sp);
+      var a = Math.random() * Math.PI * 2, r = D * (.6 + Math.random() * .7);
+      gsap.fromTo(sp, { x: 0, y: 0, rotation: 0, opacity: 1, scale: 1 },
+        { x: Math.cos(a) * r, y: Math.sin(a) * r * .8 + D * .25, rotation: Math.random() * 540 - 270, opacity: 0, scale: .4, duration: 1.2 + Math.random() * .7, ease: 'power3.out', delay: Math.random() * .12 });
+    }
+    setTimeout(function(){ if (!landed) b.innerHTML = ''; }, 2200);
   }
   function stage(k){
     if (k === lastK) return; lastK = k;
@@ -278,14 +317,14 @@
     layout();
     if (!hasGsap || !window.ScrollTrigger) return;
     if (wide){
-      var dist = function(){ return track.scrollWidth - innerWidth + 40; };
+      var dist = function(){ return (trackW || track.scrollWidth) - innerWidth + 40; };
       st = ScrollTrigger.create({ trigger: '.section_process-route', start: function(){ return 'top+=' + pinOver + ' top'; }, end: function(){ return '+=' + dist(); }, pin: true, scrub: reduce ? true : .6, invalidateOnRefresh: true,
         onUpdate: function(self){ gsap.set(track, { x: -dist() * self.progress }); fly(self.progress * 1.02); } });
       fly(0);
     } else {
       st = ScrollTrigger.create({ trigger: track, start: 'top 60%', end: 'bottom 60%', scrub: true,
         onUpdate: function(self){ ship.style.top = (self.progress * (track.offsetHeight - 40)) + 'px';
-          var k = -1, mid = innerHeight * .6; wps.forEach(function(w, i){ if (w.getBoundingClientRect().top < mid) k = i; }); stage(k); } });
+          var k = -1, mid = innerHeight * .6; wps.forEach(function(w, i){ if (w.getBoundingClientRect().top < mid) k = i; }); stage(k); land(self.progress > .97); } });
     }
   }
   // desktop re-fits on height changes too; phones ignore them (the URL bar resizes the viewport while scrolling)
