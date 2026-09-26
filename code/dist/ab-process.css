@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process.css v0.9.2 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process.css v0.9.3 · github.com/AngelinoBarajas/ab-portfolio */
 /* Process (/process) · the flight planner. Loaded from the page <head>.
    Only what the Designer can't hold: font-stretch, outline text, script-built pieces (abp-*: chart planets + orbits,
    route path / ship / pad, gauge, chips, form fields), state classes (.is-on, aria-pressed), pseudos and reduced motion.
@@ -116,8 +116,13 @@
 .abp-dock.is-landed .abp-dock-cta{opacity:1;pointer-events:auto}
 .abp-dock-cta:hover{border-color:var(--_color---brand--signal)}
 .abp-ship.is-landed .abp-flame{opacity:0}
-/* hero: the countdown sits over the big planet; let drags reach the planet through it */
-.ab_count{pointer-events:none}
+/* hero: the big planet sits behind the text grid (z 4) and the countdown. The grid, countdown and crumb/REC row let the
+   pointer through so the planet stays draggable; the copy column (title toys, buttons) still takes it. Phones: the
+   copy column overlaps the planet too, so only its toys and links take the pointer there */
+.ab_process-hero_grid,.ab_count,.section_process-hero .ab_dbh_top{pointer-events:none}
+.section_process-hero .ab_dbh_top a{pointer-events:auto}
+.ab_process-hero_grid>*:not(.ab_count){pointer-events:auto}
+@media screen and (max-width:767px){.ab_process-hero_grid>.ab_process-hero_copy{pointer-events:none}.ab_process-hero_copy a,.ab_process-hero_copy button,.ab_process-hero_copy .is-toy{pointer-events:auto}}
 @media screen and (max-width:767px){
   .abp-dock{position:relative;left:auto;top:auto;width:auto;flex-direction:row;align-items:center;gap:18px;margin-top:6px;text-align:left}
   .abp-dock-sys{--dock:110px;flex:none}
