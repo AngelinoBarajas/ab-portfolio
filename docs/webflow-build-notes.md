@@ -560,3 +560,10 @@ Phones = `max-width:767px` in `ab-process.css`.
 - **Boss credits**: tap anywhere closes from the moment "You won" shows (was only after the 22s crawl).
 - **Bookshelf** now tilts like the other Between launches cards (the `data-no-tilt` exclusion is gone).
 - **Mobile menu current page** (core CSS): the Contact link's orange combo (`is-contact`) is neutralized; the current page (`w--current`) is orange with a "You are here" tag. Desktop nav already marks `w--current`.
+
+## v0.22.1 – v0.22.3 (2026-09-26)
+
+- **Score stops when you leave**: the Spotify embed has no volume control (no fade possible), so leaving the card with the mouse pauses it and tucks the player away; scrolling the card off screen does the same on every device. Verified with a real click + hover-off: playing at 7.3s → paused at 7.6s.
+- **Score is desktop only**: touch devices (`AB.coarse`) get no play button and no preloaded player (iPhone Safari often won't start another site's embed from a page tap; it played in phone-emulated Chrome but couldn't be verified on a real iPhone).
+- **Menu "You are here"**: the tag replaces the current link's `/path` and the row wraps, so long names (Services) put it under the name instead of off screen.
+- Publishing: Webflow returned 429 after several publishes within a few minutes; waiting ~1 minute and retrying worked.
