@@ -567,3 +567,11 @@ Phones = `max-width:767px` in `ab-process.css`.
 - **Score is desktop only**: touch devices (`AB.coarse`) get no play button and no preloaded player (iPhone Safari often won't start another site's embed from a page tap; it played in phone-emulated Chrome but couldn't be verified on a real iPhone).
 - **Menu "You are here"**: the tag replaces the current link's `/path` and the row wraps, so long names (Services) put it under the name instead of off screen.
 - Publishing: Webflow returned 429 after several publishes within a few minutes; waiting ~1 minute and retrying worked.
+
+## Side quests (v0.23.0, 2026-09-26, awaiting Angelino's OK)
+
+- **Core `24-quests.js`** (`AB.quest('id')`): 16 easter eggs, logged per browser in `localStorage` `ab:quests`. A find toasts "✦ Side quest complete · Title · n/16" 2.4s after the egg's own toast; the first find adds "Side quests are logged on About › Player one"; 16/16 adds the gold-badge line. `AB.quest.list / has / count / reset`, event `ab:quest`.
+- **Quests + where they fire**: boss (boss explodes) · konami (cheat) · badge (flip) · lanyard (drag release) · book (knock) · endurance (fly close) · escape (NEW: near the horizon, 5 taps on the black hole within 2.2s: the Endurance boosts out past the disk, `.ab_td_orbit.is-escape`) · spin (spin-drag) · questions (every philosophy question, wraps to Q1) · satellite (Home sat flies off) · toys (drag a hero word: Home + core herodrag) · blackhole (footer `consume`) · channels (every channel on one mission monitor) · diagnostics (hub chip) · touchdown (Process or hub landing) · aside (any ✦ aside opens). Titles/hints in `core/24-quests.js` (copy for Angelino's review).
+- **Quest log** (`about/20-quests.js`): "✦ Quest log · n/16" under the Player one card copy opens a retro panel: progress bar, found quests with title ✓, unfound as "Unknown quest" + hint, "Reset the log". All 16: the crew badge turns gold (`.ab_badge.is-gold`) + panel message.
+- **Aside twinkles** (core `23-tips.js`): every 5–10s a ✦ sparkles at a corner of one aside that's on screen (not in hidden tabs, not while a tip or the menu is open, not for reduced motion).
+- Verified on staging 375: log 0 → 4/16 live (badge, book, endurance, escape), 16 rows, gold at 16/16, reset, 3 twinkles in 16s, hub diagnostics logs cross-page, no console errors.
