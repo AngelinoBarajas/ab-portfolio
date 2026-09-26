@@ -28,6 +28,9 @@
 .abc-packet{position:absolute;top:50%;left:0;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#fff;box-shadow:0 0 16px 4px var(--ch),-40px 0 30px -6px var(--ch);opacity:0}
 .abc-scope-l{position:absolute;left:var(--gutter);top:-22px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust)}
 .abc-scope-l b{color:var(--star);font-weight:500;font-variant-numeric:tabular-nums}
+/* phones: the signal line sits in the form under the tuner (moved by the script) */
+.ab_ct-scope.is-inform{position:relative;left:auto;right:auto;top:auto;bottom:auto;width:auto;height:54px;margin:26px 0 2px;border:1px solid var(--hair);background:rgba(7,8,13,.45);transform:none}
+.ab_ct-scope.is-inform .abc-scope-l{left:0;top:-20px}
 
 /* meter */
 .abc-meter-t{margin-right:6px}

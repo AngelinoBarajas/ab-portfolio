@@ -165,14 +165,15 @@
 .ab_boss_crawl{position:absolute;inset:0;z-index:3;opacity:0;overflow:hidden;perspective:420px;pointer-events:none}
 .ab_boss_crawl-in{position:absolute;left:50%;top:0;width:min(560px,86vw);margin-left:calc(min(560px,86vw) / -2);transform-origin:50% 100%;text-align:center}
 .ab_boss_crawl{-webkit-mask-image:linear-gradient(180deg,transparent 4%,#000 30%,#000 100%);mask-image:linear-gradient(180deg,transparent 4%,#000 30%,#000 100%)}
-.ab_boss_crawl > .ab_boss_crawl-in{rotate:x 24deg}
+.ab_boss_tilt{position:absolute;inset:0;transform:rotateX(24deg);transform-origin:50% 100%;transform-style:preserve-3d}
 .ab_boss_cr{margin:0 0 44px}
 .ab_boss_cr small{display:block;margin-bottom:8px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--signal)}
 .ab_boss_cr span{display:block;font-family:var(--display);font-weight:800;font-stretch:112%;font-size:clamp(22px,4.2vw,40px);line-height:1.1;text-transform:uppercase;color:#ffd166}
 .ab_boss_cr.is-end span{font-size:clamp(34px,7vw,72px);color:#4cf2a0}
 .ab_boss_cr.is-end small{margin-top:12px;color:var(--dust)}
 .ab_boss.is-still .ab_boss_crawl{overflow:auto;pointer-events:auto;-webkit-mask-image:none;mask-image:none;perspective:none;top:52%}
-.ab_boss.is-still .ab_boss_crawl-in{position:static;margin:0 auto;rotate:none}
+.ab_boss.is-still .ab_boss_tilt{position:static;transform:none}
+.ab_boss.is-still .ab_boss_crawl-in{position:static;margin:0 auto}
 .ab_boss.is-still .ab_boss_win{top:14%}
 .ab_boss.is-still .ab_boss_warn,.ab_boss.is-still .ab_boss_arena,.ab_boss.is-still .ab_boss_hud{display:none}
 

@@ -50,6 +50,22 @@
   if (CUR){ set('no', pad2(CUR.i + 1)); set('total', pad2(TOTAL)); }
   else { var eb = $('.ab_dbh_eyebrow'); if (eb) eb.innerHTML = 'Service · <span data-sv="name">' + esc(NAME) + '</span>'; }
   (function(){ var on = CUR && CUR.el, rail = $('#svRail'); if (on && rail) rail.scrollLeft = Math.max(0, on.offsetLeft - 24); })();
+  // the rail scrolls sideways when it's wider than the column: fading edges + a nudging arrow say so; the arrow scrolls it
+  (function(){
+    var rail = $('#svRail'); if (!rail || !rail.parentNode) return;
+    var wrap = document.createElement('div'); wrap.className = 'sv-rail-wrap'; rail.parentNode.insertBefore(wrap, rail); wrap.appendChild(rail);
+    var more = document.createElement('button'); more.type = 'button'; more.className = 'sv-rail-more'; more.setAttribute('aria-label', 'Scroll to more services');
+    more.innerHTML = '<span aria-hidden="true">→</span>'; wrap.appendChild(more);
+    function upd(){
+      var over = rail.scrollWidth > rail.clientWidth + 4, end = rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 4;
+      wrap.classList.toggle('is-over', over); wrap.classList.toggle('is-end', end); wrap.classList.toggle('is-start', rail.scrollLeft <= 4);
+    }
+    more.addEventListener('click', function(){
+      var end = rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 4;
+      rail.scrollTo({ left: end ? 0 : rail.scrollLeft + rail.clientWidth * .75, behavior: reduce ? 'auto' : 'smooth' });
+    });
+    rail.addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd(); setTimeout(upd, 600);
+  })();
 
   $$('.ab_sv_pair').forEach(function(a){ var s = a.getAttribute('data-slug'); if (s) a.setAttribute('href', '/services/' + s); });
   (function(){ var p = $('[data-sv-pairs]'); if (p && !$('.ab_sv_pair', p)) p.innerHTML = '<p class="ab_meta_value">Works on its own</p>'; })();

@@ -56,6 +56,18 @@
   if (scope) scope.innerHTML = '<svg class="abc-scope" viewBox="0 0 1000 100" preserveAspectRatio="none"><path class="abc-grid" d="M0 50 H1000"/><path class="abc-wave" d="M0 50 H1000"/></svg>' +
     '<span class="abc-packet"></span><span class="abc-scope-l">Signal · <b data-ct-scopef>101.4 MHz</b></span>';
   var wave = $('.abc-wave'), packet = $('.abc-packet');
+  // phones: the signal line moves into the form, right under the tuner, so its color change is seen while tuning
+  (function(){
+    var tuner = $('.abc-tuner'); if (!scope || !tuner) return;
+    var home = scope.parentNode, next = scope.nextSibling;
+    function place(){
+      var phone = innerWidth <= 767;
+      if (phone && scope.parentNode !== tuner.parentNode) tuner.parentNode.insertBefore(scope, tuner.nextSibling);
+      else if (!phone && scope.parentNode !== home) home.insertBefore(scope, next && next.parentNode === home ? next : null);
+      scope.classList.toggle('is-inform', phone);
+    }
+    place(); addEventListener('resize', place);
+  })();
 
   /* ---------- form parts (fields live in the Embed inside the Webflow Form) ---------- */
   var box = $('[data-ct-form]'), form = box && $('form', box);

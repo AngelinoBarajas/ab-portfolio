@@ -15,6 +15,18 @@
     else t.scrollIntoView();
     if (window.ScrollTrigger) ScrollTrigger.update();
   }
+  // arriving with a hash (/#launch, /process#launch…): the browser jumps before pins and late layout add height above
+  // the target, so the visitor lands short. Re-aim once layout settles, unless they've started scrolling themselves.
+  (function(){
+    var h = location.hash, t = null; if (!h || h.length < 2) return;
+    try { t = document.getElementById(decodeURIComponent(h.slice(1))); } catch (e){}
+    if (!t) return;
+    var touched = false, mark = function(){ touched = true; };
+    ['wheel', 'touchmove', 'keydown'].forEach(function(ev){ addEventListener(ev, mark, { passive: true, once: true }); });
+    function aim(){ if (touched) return; if (window.ScrollTrigger) ScrollTrigger.refresh(); scrollToTarget(t); }
+    function start(){ setTimeout(aim, 150); setTimeout(aim, 900); setTimeout(aim, 2000); }
+    if (document.readyState === 'complete') start(); else addEventListener('load', start);
+  })();
   // same-page anchors (#work, /#launch on Home): warp, then jump. stopPropagation keeps Webflow's own smooth scroll out of it
   $$('a[href*="#"]').forEach(function(a){
     if (a.hasAttribute('data-board-frame') || a.hasAttribute('data-social') || a.hasAttribute('data-copy-email')) return;

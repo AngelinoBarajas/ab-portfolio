@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-services v0.18.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-services v0.19.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abServicesInit) return;
@@ -56,6 +56,22 @@ window.Webflow.push(function(){
   if (CUR){ set('no', pad2(CUR.i + 1)); set('total', pad2(TOTAL)); }
   else { var eb = $('.ab_dbh_eyebrow'); if (eb) eb.innerHTML = 'Service · <span data-sv="name">' + esc(NAME) + '</span>'; }
   (function(){ var on = CUR && CUR.el, rail = $('#svRail'); if (on && rail) rail.scrollLeft = Math.max(0, on.offsetLeft - 24); })();
+  // the rail scrolls sideways when it's wider than the column: fading edges + a nudging arrow say so; the arrow scrolls it
+  (function(){
+    var rail = $('#svRail'); if (!rail || !rail.parentNode) return;
+    var wrap = document.createElement('div'); wrap.className = 'sv-rail-wrap'; rail.parentNode.insertBefore(wrap, rail); wrap.appendChild(rail);
+    var more = document.createElement('button'); more.type = 'button'; more.className = 'sv-rail-more'; more.setAttribute('aria-label', 'Scroll to more services');
+    more.innerHTML = '<span aria-hidden="true">→</span>'; wrap.appendChild(more);
+    function upd(){
+      var over = rail.scrollWidth > rail.clientWidth + 4, end = rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 4;
+      wrap.classList.toggle('is-over', over); wrap.classList.toggle('is-end', end); wrap.classList.toggle('is-start', rail.scrollLeft <= 4);
+    }
+    more.addEventListener('click', function(){
+      var end = rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 4;
+      rail.scrollTo({ left: end ? 0 : rail.scrollLeft + rail.clientWidth * .75, behavior: reduce ? 'auto' : 'smooth' });
+    });
+    rail.addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd(); setTimeout(upd, 600);
+  })();
 
   $$('.ab_sv_pair').forEach(function(a){ var s = a.getAttribute('data-slug'); if (s) a.setAttribute('href', '/services/' + s); });
   (function(){ var p = $('[data-sv-pairs]'); if (p && !$('.ab_sv_pair', p)) p.innerHTML = '<p class="ab_meta_value">Works on its own</p>'; })();
@@ -159,6 +175,21 @@ window.Webflow.push(function(){
   /* ---------- FAQ count ---------- */
   set('faq-count', String($$('#svFaq .ab_faq_item').length));
   (function(){ var f = $('#faq'); if (f && !$('#svFaq .ab_faq_item')) f.remove(); })();
+
+  /* ===== services/15-tiles.js ===== */
+  /* ---------- what's included: two tiles stand out per service. The first wears this service's planet colors
+     (from its rail chip), the fifth goes dark; the rest stay light ---------- */
+  (function(){
+    var tiles = $$('.ab_bento-card.is-sv'); if (tiles.length < 2) return;
+    var chip = CUR && CUR.el, cols = ((chip && chip.getAttribute('data-colors')) || '').split(',').map(function(c){ return c.trim(); }).filter(Boolean);
+    var t0 = tiles[0];
+    if (cols.length >= 3){
+      t0.classList.add('is-planet');
+      t0.style.setProperty('--p0', cols[0]); t0.style.setProperty('--p1', cols[1]); t0.style.setProperty('--p2', cols[2]);
+      t0.style.setProperty('--pg', (chip.getAttribute('data-glow') || 'rgba(255,255,255,.2)'));
+    } else t0.classList.add('is-ink');
+    if (tiles[4]) tiles[4].classList.add('is-ink');
+  })();
 
   /* ===== services/20-missions.js ===== */
   /* ---------- related missions: the Work page's own cards, cloned by slug ----------

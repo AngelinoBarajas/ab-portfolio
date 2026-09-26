@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.18.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.19.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -498,9 +498,9 @@ window.Webflow.push(function(){
         '<div class="ab_boss_warn">Warning · boss approaching</div>' +
         '<div class="ab_boss_arena">' + sprite(BOSS, COL, 'ab_boss_mon') + sprite(SHIP, SCOL, 'ab_boss_ship') + '</div>' +
         '<div class="ab_boss_win"><b>You won</b><p>LV ' + LV.BOSS + ' · The Scope Creep is defeated. The project shipped on time, on budget, and nobody asked for “just one more thing.”</p></div>' +
-        '<div class="ab_boss_crawl" aria-hidden="true"><div class="ab_boss_crawl-in">' +
+        '<div class="ab_boss_crawl" aria-hidden="true"><div class="ab_boss_tilt"><div class="ab_boss_crawl-in">' +
           CREDITS.map(function(c){ return '<div class="ab_boss_cr">' + (c[0] ? '<small>' + esc(c[0]) + '</small>' : '') + '<span>' + esc(c[1]) + '</span></div>'; }).join('') +
-          '<div class="ab_boss_cr is-end"><span>The end</span><small>Tap anywhere to return</small></div></div></div>' +
+          '<div class="ab_boss_cr is-end"><span>The end</span><small>Tap anywhere to return</small></div></div></div></div>' +
         '<ul class="ab_sr">' + CREDITS.map(function(c){ return '<li>' + esc((c[0] ? c[0] + ': ' : '') + c[1]) + '</li>'; }).join('') + '</ul>';
       document.body.appendChild(o);
       if (lenis) lenis.stop(); root.style.overflow = 'hidden';
@@ -573,6 +573,7 @@ window.Webflow.push(function(){
         .to(ship, { y: -40, duration: 1.2, ease: 'sine.inOut', yoyo: true, repeat: 1 }, '<')
         .to(win, { opacity: 0, y: -30, duration: .6 }, '+=3')
         .to(crawl, { opacity: 1, duration: .5 }, '<')
+        .to(ship, { y: -innerHeight, duration: 1.4, ease: 'power2.in' }, '<')
         .fromTo(crawlIn, { yPercent: 0, y: function(){ return crawl.offsetHeight; } }, { yPercent: -100, y: function(){ return crawl.offsetHeight * .35; }, duration: 22, ease: 'none', onComplete: function(){ ended = true; } });
     };
   })();

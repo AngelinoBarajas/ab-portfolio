@@ -60,3 +60,28 @@
 @media (prefers-reduced-motion:reduce){
   .ab_sv_s,.ab_sv_s_p,.ab_sv_s_p span,.ab_sv_s_fx::before,.ab_sv_s_h,.ab_sv_s_a,.ab_sv_dl_ck,.ab_sv_dl_ck svg,.ab_sv_dl_ic,.ab_sv_plan_item,.ab_sv_plan_item::before,.ab_sv_rail_dot{transition:none}
 }
+
+/* rail: fading edges + arrow when it scrolls sideways (script wraps it in .sv-rail-wrap) */
+.sv-rail-wrap{position:relative}
+.sv-rail-wrap::before,.sv-rail-wrap::after{content:"";position:absolute;top:0;bottom:0;width:48px;pointer-events:none;z-index:2;opacity:0;transition:opacity .3s}
+.sv-rail-wrap::before{left:0;background:linear-gradient(90deg,var(--void),transparent)}
+.sv-rail-wrap::after{right:0;background:linear-gradient(270deg,var(--void) 30%,transparent)}
+.sv-rail-wrap.is-over::after{opacity:1}
+.sv-rail-wrap.is-over:not(.is-start)::before{opacity:1}
+.sv-rail-wrap.is-end::after{opacity:0}
+.sv-rail-more{position:absolute;right:0;top:50%;z-index:3;width:34px;height:34px;margin-top:-17px;display:none;place-items:center;border:1px solid var(--hair2);border-radius:50%;background:rgba(7,8,13,.85);color:var(--star);font-size:15px;cursor:pointer;transition:border-color .2s,color .2s,transform .3s}
+.sv-rail-wrap.is-over .sv-rail-more{display:grid}
+.sv-rail-wrap.is-over:not(.is-end) .sv-rail-more span{animation:sv-nudge 1.6s ease-in-out infinite}
+.sv-rail-wrap.is-end .sv-rail-more{transform:rotate(180deg)}
+.sv-rail-more:hover,.sv-rail-more:focus-visible{border-color:var(--signal);color:var(--signal);outline:none}
+@keyframes sv-nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+/* what's included: standout tiles */
+.ab_bento-card.is-sv.is-planet,.ab_bento-card.is-sv.is-ink{color:#F2F0EA;border-color:transparent}
+.ab_bento-card.is-sv.is-planet{background:radial-gradient(120% 95% at 100% 0%,var(--p2) 0%,var(--p1) 26%,var(--p0) 62%,#07080D 100%);box-shadow:0 24px 50px -24px var(--pg)}
+.ab_bento-card.is-sv.is-planet::after{content:"";position:absolute;right:-60px;top:-44px;width:220px;height:74px;border:1.5px solid rgba(242,240,234,.35);border-radius:50%;transform:rotate(-18deg);pointer-events:none}
+.ab_bento-card.is-sv.is-ink{background:#0B0C14}
+.ab_bento-card.is-sv.is-planet *,.ab_bento-card.is-sv.is-ink *{color:inherit}
+.ab_bento-card.is-sv.is-planet .ab_sv_dl_n,.ab_bento-card.is-sv.is-ink .ab_sv_dl_n{color:rgba(242,240,234,.65)}
+.ab_bento-card.is-sv.is-planet .ab_bento-card_text,.ab_bento-card.is-sv.is-ink .ab_bento-card_text{color:rgba(242,240,234,.8)}
+.ab_bento-card.is-sv.is-planet .ab_sv_dl_ic,.ab_bento-card.is-sv.is-ink .ab_sv_dl_ic{color:#F2F0EA;border-color:rgba(242,240,234,.3)}
+@media (prefers-reduced-motion:reduce){.sv-rail-wrap .sv-rail-more span{animation:none!important}}

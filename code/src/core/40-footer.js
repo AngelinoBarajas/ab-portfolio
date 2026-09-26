@@ -144,7 +144,7 @@
     var anim = hasGsap && !reduce;
     function open(){
       if (isOpen) return; isOpen = true; setOrigin();
-      menu.hidden = false; menu.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true'); btn.setAttribute('aria-label', 'Close menu');
+      menu.hidden = false; menu.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true'); btn.setAttribute('aria-label', 'Close menu'); document.documentElement.classList.add('menu-open');
       if (lenis) lenis.stop(); document.documentElement.style.overflow = 'hidden'; if (nav) nav.classList.remove('is-hidden');
       if (!anim){ if (links[0]) links[0].focus(); return; }
       gsap.fromTo(menu, { clipPath: circ(0) }, { clipPath: circ(radius()), duration: .8, ease: 'power3.inOut', onComplete: function(){ gsap.set(menu, { clearProps: 'clipPath' }); } });
@@ -154,7 +154,7 @@
       setTimeout(function(){ if (links[0]) links[0].focus({ preventScroll: true }); }, 300);
     }
     function close(focusBtn){
-      if (!isOpen) return; isOpen = false; btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', 'Open menu');
+      if (!isOpen) return; isOpen = false; btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', 'Open menu'); document.documentElement.classList.remove('menu-open');
       if (lenis) lenis.start(); document.documentElement.style.overflow = '';
       var fin = function(){ menu.classList.remove('is-open'); menu.hidden = true; gsap.set(menu, { clearProps: 'clipPath' }); if (focusBtn) btn.focus(); };
       if (!anim){ menu.classList.remove('is-open'); menu.hidden = true; if (focusBtn) btn.focus(); return; }

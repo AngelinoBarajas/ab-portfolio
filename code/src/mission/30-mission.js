@@ -111,12 +111,24 @@
     function set(lv, anim, fromDock){
       var prevY = null, anchor = null;
       // keep what the reader is looking at in place when content expands or collapses
-      if (anim){ var els = $$('main section, .ab_sys, .ab_anom'), vh = innerHeight * .35; for (var i = 0; i < els.length; i++){ var r = els[i].getBoundingClientRect(); if (r.bottom > vh){ anchor = els[i]; prevY = r.top; break; } } }
+      // the card nearest the reading line (35% down) is the anchor; whole sections only when no card is on screen
+      if (anim){
+        var line = innerHeight * .35, bd = 1e9;
+        $$('.ab_anom, .ab_sys').forEach(function(el){
+          var r = el.getBoundingClientRect(); if (r.bottom < 70 || r.top > innerHeight) return;
+          var dd = r.top <= line && r.bottom >= line ? 0 : Math.min(Math.abs(r.top - line), Math.abs(r.bottom - line));
+          if (dd < bd){ bd = dd; anchor = el; }
+        });
+        if (!anchor){ var secs = $$('main section'); for (var i = 0; i < secs.length; i++){ if (secs[i].getBoundingClientRect().bottom > line){ anchor = secs[i]; break; } } }
+        if (anchor) prevY = anchor.getBoundingClientRect().top;
+      }
       cur = lv; document.body.classList.toggle('eng', lv === 'eng'); paint();
       if (hint) hint.textContent = lv === 'eng' ? 'Technical breakdowns, stack details and code excerpts are on.' : 'Plain-English briefings. Switch to Engineer for the technical details.';
       try { localStorage.setItem('ab-crew', lv); } catch(e){}
-      if (anchor && prevY != null){ var dy = anchor.getBoundingClientRect().top - prevY; if (Math.abs(dy) > 1){ if (AB.lenis && AB.lenis.scrollTo) AB.lenis.scrollTo(scrollY + dy, { immediate: true, force: true }); else scrollBy(0, dy); } }
-      if (anim && window.ScrollTrigger) setTimeout(function(){ ScrollTrigger.refresh(); }, 50);
+      function keep(){ if (!anchor || prevY == null) return; var dy = anchor.getBoundingClientRect().top - prevY; if (Math.abs(dy) > 1){ if (AB.lenis && AB.lenis.scrollTo) AB.lenis.scrollTo(scrollY + dy, { immediate: true, force: true }); else scrollBy(0, dy); } }
+      keep();
+      // pins re-measure after the swap: hold the same card in place again afterwards
+      if (anim && window.ScrollTrigger) setTimeout(function(){ ScrollTrigger.refresh(); keep(); }, 50);
       if (anim && fromDock) toast(lv === 'eng' ? 'Engineer mode · code excerpts on' : 'Cadet mode · plain-English briefings');
     }
     sws.forEach(function(sw){ $$('[data-lv]', sw).forEach(function(b){ b.addEventListener('click', function(e){ e.preventDefault(); set(b.getAttribute('data-lv'), true, sw.parentNode === dock); }); }); });
@@ -138,7 +150,7 @@
   var PARAMS = txt('[data-field="params"]').split(/\n+/).map(function(s){ return s.trim(); }).filter(Boolean);
   (function(){
     var ul = $('#params'); if (!ul) return;
-    ul.innerHTML = PARAMS.map(function(p, i){ return '<li><span>P-' + pad2(i + 1) + '</span>' + esc(p) + '</li>'; }).join('');
+    ul.innerHTML = PARAMS.map(function(p, i){ return '<li><span>P-' + pad2(i + 1) + '</span><span class="ab_param_t">' + esc(p) + '</span></li>'; }).join('');
   })();
 
   var codeBlock = AB.codeBlock;

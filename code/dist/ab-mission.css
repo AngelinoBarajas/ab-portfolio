@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission.css v0.18.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission.css v0.19.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · ab-mission.css · Mission template (/work/[slug]) only. Script-built parts + states the Designer cannot express. */
 /* ---------- monitor internals (views are built by ab-mission; the monitor frame/decor lives in ab-core.css) ---------- */
 .ab_screen canvas{max-width:100%}
@@ -63,7 +63,18 @@
 .ab_chans button[aria-selected="true"]{border-color:var(--_color---brand--signal);color:var(--_color---text--primary);background:rgba(255,106,61,.08)}
 .ab_chans button[aria-selected="true"] .k{background:var(--_color---brand--signal);color:var(--_color---brand--on-signal);border-color:var(--_color---brand--signal)}
 .ab_chans button:focus-visible{outline:2px solid var(--_color---ui--select)}
-@media (max-width:479px){.ab_chans{flex-direction:row;overflow-x:auto;scrollbar-width:none}.ab_chans button{grid-template-columns:auto auto;white-space:nowrap}.ab_chans button .t{display:none}}
+/* phones: every channel on screen as an even row of keys (number + type); the monitor bar names the active one */
+@media (max-width:767px){
+  .ab_chans{display:grid;grid-template-columns:repeat(auto-fit,minmax(54px,1fr));gap:6px;overflow:visible}
+  .ab_chans button{grid-template-columns:1fr;justify-items:center;gap:5px;padding:9px 2px 8px;border:1px solid var(--_color---neutral--hair);text-align:center}
+  .ab_chans button > span:nth-child(2){display:none}
+  .ab_chans button .k{min-width:24px;font-size:12px}
+  .ab_chans button .t{display:block;font-size:9px;letter-spacing:.06em;white-space:nowrap}
+}
+/* briefing parameters: the text is one grid cell even with a glossary tip inside */
+.ab_param_t{min-width:0}
+/* the crew dock steps aside while the mobile menu is open */
+html.menu-open .crew-dock{opacity:0;visibility:hidden;pointer-events:none}
 /* ---------- briefing params ---------- */
 .ab_params li{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--_color---neutral--hair);color:var(--_color---text--secondary)}
 .ab_params li span{font-family:var(--_typography---font--mono);font-size:12px;color:var(--_color---brand--signal)}
