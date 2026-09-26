@@ -85,8 +85,8 @@
   addEventListener('scroll', function(){ if (tipCur) tipHide(); }, { passive: true });
 
   // auto-link: first mention of each term per section, at most one per paragraph, in body copy only (never headings, links, buttons, forms,
-  // hidden CMS sources or text that scripts rewrite)
-  var TIP_SKIP = 'a,button,h1,h2,h3,h4,h5,h6,label,input,textarea,select,code,pre,.gl,[data-no-gloss],[data-split],[data-leg],[data-dest-sum],[data-dest-title],[data-bind],[aria-hidden="true"],.w-dyn-bind-empty,[data-site-data],.ab_cms-source,.w-condition-invisible,.ab_toast,.gl-tip';
+  // chips/tags, hidden CMS sources or text that scripts rewrite)
+  var TIP_SKIP = 'a,button,h1,h2,h3,h4,h5,h6,label,input,textarea,select,code,pre,.gl,[data-no-gloss],[data-split],[data-leg],[data-dest-sum],[data-dest-title],[data-bind],[aria-hidden="true"],.w-dyn-bind-empty,[data-site-data],.ab_cms-source,.w-condition-invisible,.ab_toast,.gl-tip,[class*="chip"],[class*="_tag"],[class*="-tag"]';
   function tipRe(term){
     var e = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     return new RegExp('(^|[^A-Za-z0-9_-])(' + e + 's?)(?![A-Za-z0-9_-])', /[a-z]/.test(term) ? 'i' : '');
