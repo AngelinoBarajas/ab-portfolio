@@ -241,7 +241,7 @@
       tl.add(explode, '+=.25')
         .to(hud, { opacity: 0, duration: .4 }, '+=.5')
         .add(function(){ SFX.fanfare(); })
-        .fromTo(win, { opacity: 0, scale: .6 }, { opacity: 1, scale: 1, duration: .6, ease: 'back.out(2)' }, '<')
+        .fromTo(win, { opacity: 0, scale: .6 }, { opacity: 1, scale: 1, duration: .6, ease: 'back.out(2)', onStart: function(){ ended = true; } }, '<')
         .to(ship, { y: -40, duration: 1.2, ease: 'sine.inOut', yoyo: true, repeat: 1 }, '<')
         .to(win, { opacity: 0, y: -30, duration: .6 }, '+=3')
         .to(bars, { scaleY: 0, duration: .6, ease: 'power2.in' }, '<')

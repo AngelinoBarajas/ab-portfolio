@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.21.6 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.22.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -328,7 +328,8 @@ window.Webflow.push(function(){
           API.createController(document.getElementById('abScoreFrame'), { uri: TRACK, width: '100%', height: 80 }, function(c){
             ctrl = c;
             c.addListener('ready', function(){ if (want) try { c.play(); } catch (e){} });
-            c.addListener('playback_update', function(ev){ var d = ev && ev.data; if (!seeked && d && !d.isPaused && d.position < START * 1000){ seeked = true; try { c.seek(START); } catch (e){} } });
+            // full track (Spotify login): jump to 0:32. Logged-out listeners get a ~20s preview clip, which 0:32 would skip past: play it from its start
+            c.addListener('playback_update', function(ev){ var d = ev && ev.data; if (seeked || !d || d.isPaused || !d.duration) return; seeked = true; if (d.duration > (START + 10) * 1000 && d.position < START * 1000) try { c.seek(START); } catch (e){} });
           });
         };
         if (window.__abSpotifyAPI) make(window.__abSpotifyAPI);
@@ -720,7 +721,7 @@ window.Webflow.push(function(){
       tl.add(explode, '+=.25')
         .to(hud, { opacity: 0, duration: .4 }, '+=.5')
         .add(function(){ SFX.fanfare(); })
-        .fromTo(win, { opacity: 0, scale: .6 }, { opacity: 1, scale: 1, duration: .6, ease: 'back.out(2)' }, '<')
+        .fromTo(win, { opacity: 0, scale: .6 }, { opacity: 1, scale: 1, duration: .6, ease: 'back.out(2)', onStart: function(){ ended = true; } }, '<')
         .to(ship, { y: -40, duration: 1.2, ease: 'sine.inOut', yoyo: true, repeat: 1 }, '<')
         .to(win, { opacity: 0, y: -30, duration: .6 }, '+=3')
         .to(bars, { scaleY: 0, duration: .6, ease: 'power2.in' }, '<')
