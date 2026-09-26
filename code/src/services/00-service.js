@@ -54,6 +54,9 @@
   (function(){
     var rail = $('#svRail'); if (!rail || !rail.parentNode) return;
     var wrap = document.createElement('div'); wrap.className = 'sv-rail-wrap'; rail.parentNode.insertBefore(wrap, rail); wrap.appendChild(rail);
+    // the wrapper takes over the rail's outer margins (so the arrow centers on the chips), and moving the rail reset its scroll
+    var rcs = getComputedStyle(rail); wrap.style.marginTop = rcs.marginTop; wrap.style.marginBottom = rcs.marginBottom; rail.style.marginTop = rail.style.marginBottom = '0px';
+    if (CUR && CUR.el) rail.scrollLeft = Math.max(0, CUR.el.offsetLeft - 24);
     var more = document.createElement('button'); more.type = 'button'; more.className = 'sv-rail-more'; more.setAttribute('aria-label', 'Scroll to more services');
     more.innerHTML = '<span aria-hidden="true">→</span>'; wrap.appendChild(more);
     function upd(){
