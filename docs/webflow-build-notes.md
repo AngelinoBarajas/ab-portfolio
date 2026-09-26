@@ -467,3 +467,7 @@ Page `6ab75d8abdfdf7aa5d9e7c2d` (`/contact`, static; duplicate of About, About s
 **Findings:** stray duplicate `href` attributes again on WHTML links and on the Nav/Footer component links (a leftover `href="/#launch"` attribute would override a new link setting: remove it with every repoint). `ab_dbh_word` is `display:block` site-wide; Contact sets it `inline-block` in `ab-contact.css` (one line on desktop; inline-block, not inline, so the hero drag transforms still work). Core styles the nav active state only with `.is-active` (same-page sections), so inner pages show no active marker though Webflow sets `w--current`: logged for step 8 QA.
 
 **Testing:** local-dist harness (staging HTML + local `dist/ab-contact.*`, `?shim`), then staging 1440 / 1024 / 390: no console errors, no horizontal scroll; tuner (chips + drag snap), validation, meter, transmit (submit stubbed, no test entry), success + reset, `#call` on load and in-page, aside hover. Services hub + Home regression clean.
+
+### v0.12.1 (2026-09-26): dish beam no longer clipped
+
+The beam stopped at the dish SVG box on staging (fine in the prototype): Webflow's reset `svg:not(:root){overflow:hidden}` (0,1,1) beat `.abc-dish{overflow:visible}` (0,1,0). Now `.ab_ct-dish .abc-dish` / `.ab_ct-scope .abc-scope`. CSS link on the page → v0.12.1; JS stays on the registered 0.12.0 (only the banner differs).
