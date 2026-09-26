@@ -381,3 +381,9 @@ Designer steps for Angelino: rename the form (Form settings › Name, it's "Emai
 
 ### v0.8.2 (2026-09-25): Process phone rail
 - Rocket sat ~10px right of the dashed rail on phones (rail center 11px, diamonds 10px, rocket 20px). Rail `left:9px`, rocket `left:-7px`: all on one 10px center line. Only `ab-process.css` changed (page head link v0.8.2); prototype source updated too. Verified on staging at 390.
+
+### v0.9.0 (2026-09-25): mission stops + "not sure yet" budget
+- **Process · stops** (Angelino: clients often need several services): main destination + up to 2 stops. Planet click still switches the main; "+ Add a stop" (panel) then a planet adds one; the form chips are multi-select (first = Main badge). Chart draws a dashed flight path sun → main → stops (inside the spinning layer), stops get numbered dashed boxes; the panel lists stops (service link, Main, ×). Route cards keep the main leg and add a compact line per stop. Timeline presets combine (highest per factor, scope +1 per extra stop). "Flown before" = main's example, else a stop's. Track grows to fit taller cards. Saved as `ab:dest` = comma list of slugs.
+- **Process form**: 4th pick opens "+ More than three" → `More services` textarea; hidden field renamed **Destinations** (e.g. "Webflow development (main), Logo + brand identity"). Budget option "Not sure yet · still scouting". Embed source `webflow/build/process/form-fields.embed.html`.
+- **Home planner**: "Not sure yet · still scouting" chip under the budget ticks (script-injected): overrides the slider (dimmed), dashed ghost ring, "orbit TBD" readout, `Budget` field + brief carry it; moving the slider turns it off. Styles in `ab-core.css`.
+- Live: core CSS + ab-home + ab-process JS/CSS **v0.9.0**; core JS v0.8.1. Tested locally (all stop flows, max 3 + More, make main/remove, restore, track fit, planner chip) and on staging 1440/390, no console errors.
