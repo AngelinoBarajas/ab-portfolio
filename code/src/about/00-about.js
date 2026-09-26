@@ -341,7 +341,11 @@
       if (ctrl) try { ctrl.play(); } catch (err){}
     });
     td.addEventListener('pointerenter', function(){ hover = true; td.classList.add('is-close'); });
-    td.addEventListener('pointerleave', function(){ hover = false; td.classList.remove('is-close'); });
+    // leaving the card stops the score (Spotify's embed has no volume control, so it can't fade): pause + tuck the player away
+    function hush(){ if (!dockEl || !dockEl.classList.contains('is-on')) return; want = false; if (ctrl) try { ctrl.pause(); } catch (e){} dockEl.classList.remove('is-on'); }
+    td.addEventListener('pointerleave', function(e){ hover = false; td.classList.remove('is-close'); if (e.pointerType === 'mouse') hush(); });
+    // touch: no hover, so it pauses once the card has scrolled off screen
+    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ if (!es[0].isIntersecting) hush(); }).observe(td);
     if (coarse) td.addEventListener('click', function(){ hover = !hover; td.classList.toggle('is-close', hover); });
     function fmtH(s){ s = Math.floor(s); return pad2(Math.floor(s / 3600)) + ':' + pad2(Math.floor(s / 60) % 60) + ':' + pad2(s % 60); }
     function p3(n){ n = String(n); while (n.length < 3) n = '0' + n; return n; }
