@@ -30,7 +30,10 @@
   /* ---------- hero headline: on phones + tablets, size it so the longest word spans the column ---------- */
   (function(){
     if (!ht) return;
-    function fitHero(){
+    var fitW = 0;
+    function fitHero(e){
+      // the size depends on width only: a phone's address bar showing/hiding (height-only resize) must not refresh ScrollTrigger
+      if (e && e.type === 'resize' && innerWidth === fitW) return; fitW = innerWidth;
       if (innerWidth >= 1100){ ht.style.fontSize = ''; return; }
       var ws = $$('.w', ht), avail = ht.clientWidth; ht.style.fontSize = '100px';
       var widest = Math.max.apply(null, ws.map(function(w){ return w.getBoundingClientRect().width / ((hasGsap && gsap.getProperty(w, 'scaleX')) || 1); }));

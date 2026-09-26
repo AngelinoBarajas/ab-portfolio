@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.14.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.15.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -645,6 +645,8 @@ window.Webflow.push(function(){
 
   /* ---------- lenis (smooth scroll on the GSAP ticker) ---------- */
   var lenis = null;
+  // a phone's address bar showing/hiding is a height-only resize: never re-measure pins for it (they'd shift the page)
+  if (hasGsap && window.ScrollTrigger) ScrollTrigger.config({ ignoreMobileResize: true });
   if (hasGsap && !reduce && window.Lenis){
     lenis = new Lenis({ autoRaf: false, lerp: 0.11 });
     lenis.on('scroll', ScrollTrigger.update);
@@ -1206,7 +1208,11 @@ window.Webflow.push(function(){
     (o.items || [first]).forEach(function(el){ el.addEventListener('pointerdown', stop, { once: true }); });
     function place(){
       var c = host.getBoundingClientRect(), r = first.getBoundingClientRect();
-      hint.style.left = (o.at === 'end' ? r.right - c.left - 10 : r.left - c.left + Math.min(r.width * .6, 220)) + 'px';
+      var x = o.at === 'end' ? r.right - c.left - 10 : r.left - c.left + Math.min(r.width * .6, 220);
+      // keep the tag on screen (a long first word ends at the column edge on phones); the arrow still points at the anchor
+      var maxX = Math.min(c.width, innerWidth - 8 - c.left) - hint.offsetWidth, left = Math.max(Math.min(x, maxX), 8 - c.left);
+      hint.style.left = left + 'px';
+      hint.style.setProperty('--ax', Math.max(6, Math.min(hint.offsetWidth - 16, x - left + 10)) + 'px');
       hint.style.top = (r.top - c.top - (o.at === 'end' ? 6 : 30)) + 'px';
     }
     var shown = 0;

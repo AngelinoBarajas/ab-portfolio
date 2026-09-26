@@ -5,7 +5,13 @@
     // embedded viewers can report a 0-size viewport at load: wait for a real size before picking the layout
     if (innerWidth < 100 || innerHeight < 100){ var once = function(){ if (innerWidth < 100 || innerHeight < 100) return; removeEventListener('resize', once); initMission(); ScrollTrigger.refresh(); }; addEventListener('resize', once); return; }
     var modeOf = function(){ return innerWidth > 900 ? 'wide' : 'narrow'; }, mode0 = modeOf(), rzT;
-    addEventListener('resize', function(){ clearTimeout(rzT); rzT = setTimeout(function(){ if (modeOf() !== mode0) location.reload(); }, 400); });
+    // pin length from a viewport height that only updates when the width changes: on phones the address bar
+    // resizes innerHeight while scrolling, and a longer/shorter pin made everything below (the planner) jump
+    var pinW = innerWidth, pinH = innerHeight, touch = matchMedia('(pointer: coarse)').matches;
+    addEventListener('resize', function(){
+      if (!touch || innerWidth !== pinW){ pinW = innerWidth; pinH = innerHeight; }
+      clearTimeout(rzT); rzT = setTimeout(function(){ if (modeOf() !== mode0) location.reload(); }, 400);
+    });
     var lis = $$('.ab_process_step', mission);
     if (!lis.length) return;
     var steps = lis.map(function(li){
@@ -103,7 +109,7 @@
     var st = null;
     setP(0);
     if (!reduce){
-      st = ScrollTrigger.create({ trigger: mission, start: 'top top', end: function(){ return '+=' + Math.round(innerHeight * 2.6); }, pin: true, refreshPriority: 10,
+      st = ScrollTrigger.create({ trigger: mission, start: 'top top', end: function(){ return '+=' + Math.round(pinH * 2.6); }, pin: true, refreshPriority: 10,
         snap: { snapTo: SNAP, duration: { min: .25, max: .7 }, delay: .12, ease: 'power2.inOut' },
         onToggle: function(self){ var nav = $('#nav'); if (self.isActive && nav) nav.classList.remove('is-hidden'); },
         onUpdate: function(self){ gsap.to(proxy, { p: self.progress, duration: .45, ease: 'power2.out', overwrite: true, onUpdate: function(){ setP(proxy.p); } }); } });

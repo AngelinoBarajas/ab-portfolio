@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.14.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.15.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* =========================================================
    AB Portfolio · ab-core.css (site-wide)
    Only what the Webflow Designer can't express: pseudo-elements, state
@@ -158,7 +158,7 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 @media (min-width:768px) and (max-width:1100px){.ab_planet.is-hero-moon{top:330px}}
 .ab_drag-hint{position:absolute;z-index:6;display:flex;align-items:center;gap:6px;padding:5px 9px 5px 6px;background:var(--_color---brand--signal);color:var(--_color---brand--on-signal);font-family:var(--_typography---font--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;pointer-events:none;opacity:0;transform:translateY(-100%)}
 .ab_drag-hint svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.ab_drag-hint::after{content:"";position:absolute;left:10px;top:100%;border:5px solid transparent;border-top-color:var(--_color---brand--signal)}
+.ab_drag-hint::after{content:"";position:absolute;left:var(--ax,10px);top:100%;border:5px solid transparent;border-top-color:var(--_color---brand--signal)}
 
 /* ---------- selection UI ([data-selectable]) ---------- */
 :where([data-selectable]){position:relative}

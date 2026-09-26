@@ -60,7 +60,11 @@
     (o.items || [first]).forEach(function(el){ el.addEventListener('pointerdown', stop, { once: true }); });
     function place(){
       var c = host.getBoundingClientRect(), r = first.getBoundingClientRect();
-      hint.style.left = (o.at === 'end' ? r.right - c.left - 10 : r.left - c.left + Math.min(r.width * .6, 220)) + 'px';
+      var x = o.at === 'end' ? r.right - c.left - 10 : r.left - c.left + Math.min(r.width * .6, 220);
+      // keep the tag on screen (a long first word ends at the column edge on phones); the arrow still points at the anchor
+      var maxX = Math.min(c.width, innerWidth - 8 - c.left) - hint.offsetWidth, left = Math.max(Math.min(x, maxX), 8 - c.left);
+      hint.style.left = left + 'px';
+      hint.style.setProperty('--ax', Math.max(6, Math.min(hint.offsetWidth - 16, x - left + 10)) + 'px');
       hint.style.top = (r.top - c.top - (o.at === 'end' ? 6 : 30)) + 'px';
     }
     var shown = 0;

@@ -1,6 +1,8 @@
 
   /* ---------- lenis (smooth scroll on the GSAP ticker) ---------- */
   var lenis = null;
+  // a phone's address bar showing/hiding is a height-only resize: never re-measure pins for it (they'd shift the page)
+  if (hasGsap && window.ScrollTrigger) ScrollTrigger.config({ ignoreMobileResize: true });
   if (hasGsap && !reduce && window.Lenis){
     lenis = new Lenis({ autoRaf: false, lerp: 0.11 });
     lenis.on('scroll', ScrollTrigger.update);
