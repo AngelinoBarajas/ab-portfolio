@@ -15,6 +15,8 @@ npm run build      # src → dist, ES5 syntax check, minify, dist/sri.json
 3. Webflow MCP (`data_scripts_tool`): `register_hosted_script` with the **same display name** and the new version (`update_registered_script` returns 404), then `add_site_script` / `add_page_script` with that version. CSS: `set_site_freeform_code` head `<link>` with the new URL + integrity.
 4. Publish to **webflow.io only** and re-test.
 
+Registered (hosted) scripts only take `data-*` attributes: `defer`/`async` are rejected (400). `bundle(dir, out, guard, { split: true })` runs every module after the first as its own task (Home).
+
 Minified files are named `*.prod.js` / `*.prod.css`, not `*.min.*`: for a `.min.js` path jsDelivr may serve its own on-the-fly minified build instead of the committed file, which breaks SRI (hit on v0.1.0).
 
 ## Bundles

@@ -471,3 +471,13 @@ Page `6ab75d8abdfdf7aa5d9e7c2d` (`/contact`, static; duplicate of About, About s
 ### v0.12.1 (2026-09-26): dish beam no longer clipped
 
 The beam stopped at the dish SVG box on staging (fine in the prototype): Webflow's reset `svg:not(:root){overflow:hidden}` (0,1,1) beat `.abc-dish{overflow:visible}` (0,1,0). Now `.ab_ct-dish .abc-dish` / `.ab_ct-scope .abc-scope`. CSS link on the page → v0.12.1; JS stays on the registered 0.12.0 (only the banner differs).
+
+## Step 8 QA fixes (v0.13.0, 2026-09-26)
+
+Report + decisions: `docs/qa-report.md`. Live: `ab-core` JS + CSS, `ab-home`, `ab-about`, `ab-services`, `ab-hub` JS + CSS **v0.13.0** (others unchanged: work 0.4.0, mission 0.10.0 / CSS 0.11.0, process 0.10.0, 404 0.7.0, contact 0.12.0 / CSS 0.12.1).
+
+- **a11y:** hero toy words `tabindex=-1` (they're `aria-hidden`; the planet stays keyboard-nudgeable) · footer `#wordmark` `role=img` · About statement: sr-only text (`.ab_sr` in core) instead of `aria-label` on a `<p>` · hub `[data-hub-call]` `role=img` · Services template related-missions grid `role=list` · hub Explore links min 24px on phones · Mission level switch (`.ab_switch_btn`, Designer attribute) `role=button` · nav: `.ab_nav_link.w--current` shows the active marker (inner pages).
+- **CMS:** Services `webgl-data` Name → "Interactive 3D + data" (seed too). The Home bento kicker "WebGL + data" is static copy, left as approved.
+- **Perf:** site head gained `preconnect` (jsDelivr) + `preload` of the Archivo woff2 (`webflow-files-prod...fastly.net/.../Archivo-Variable.woff2`; update it if the font asset is replaced) · Home bundle built with `split` (each module after `00-hero` runs as its own task via MessageChannel; later modules must not share top-level names) · planet idle float pauses off screen · bounce ticker reads Lenis velocity, no per-frame `scrollY` · Home easing card measures once and pauses off screen · starfield 1x canvas on touch devices.
+- **MCP finding:** registered scripts accept only `data-*` attributes (`defer`/`async` → 400 `bad_request`). Deferring the bundles would mean loading them from freeform footer code instead of the registry (local A/B: FCP −0.7 s). Not done; offered to Angelino.
+- Backups before the head/script writes: `webflow/backup/site-head.live-2026-09-26.bak`, `site-scripts.live-2026-09-26.json`.
