@@ -57,7 +57,7 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 ## Custom code: how it's wired (details in `code/README.md`)
 
 - Source `code/src/` (`core/` site-wide, `home/` Home, `ab-core.css`) → `cd code && npm run build` → `dist/*.prod.js|css` + `dist/sri.json`. ES5 syntax is checked at build.
-- Deploy: bump `code/package.json` version, build, commit, `git tag -a vX.Y.Z`, push main + tag, **curl the jsDelivr copy and compare sha384 to `sri.json`** (purge if a new tag 404s), then Webflow MCP `data_scripts_tool`: `register_hosted_script` with the **same display name** (`ABCore` / `ABHome`) and the new version (`update_registered_script` 404s), `add_site_script` / `add_page_script` with that version, `set_site_freeform_code` head `<link>` for the CSS. Publish **webflow.io only** (`publishToWebflowSubdomain: true, customDomains: []`).
+- Deploy: bump `code/package.json` version, build, commit, `git tag -a vX.Y.Z`, push main + tag, **curl the jsDelivr copy and compare sha384 to `sri.json`**. **Since 2026-09-26 JS loads from freeform footer code with `defer`** (the script registry can't take `defer`): update the `<script defer src integrity>` tag in Site settings › Footer (GSAP, Lenis, `ab-core`) or the page's footer code (page bundles) via `set_site_freeform_code` / `set_page_freeform_code` (full-block replace: read first). Keep every bundle `defer`. Only `abwarpin` stays registered (header). CSS `<link>`s in site/page head as before. Publish **webflow.io only** (`publishToWebflowSubdomain: true, customDomains: []`).
 - Never name builds `*.min.js`: jsDelivr served its own minified copy for one and the SRI failed.
 - Current live versions: all **v0.1.4**. Site scripts (footer, in order): gsap, gsapscrolltrigger, gsapdraggable, gsapinertia, gsapsplittext, gsapscrambletext, gsapflip, lenis, abcore. Home page script: abhome.
 - Testing: the in-app browser pane is usually hidden, which freezes rAF, IntersectionObserver and screenshots. Shim rAF onto setTimeout + `gsap.ticker.sleep(); gsap.ticker.wake();` and verify with DOM checks; for reduced motion serve a copy of the staging HTML with a `matchMedia` override (worked via a `code-test` python http.server entry in the session launch.json). Don't submit the planner for real in tests (stub `form.requestSubmit`); the launch button stays disabled until Webflow's Turnstile finishes.
@@ -155,6 +155,8 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 - **v0.13.0 live on staging**: a11y fixes (Lighthouse a11y now 91–100), `webgl-data` renamed "Interactive 3D + data", perf fixes (Home init split, no per-frame layout reads, planet float pauses off screen, starfield 1x on touch, preconnect + Archivo preload). Perf scores ~unchanged (LCP ≈ 5 s held by the sync script chain + font swap): 3 remaining levers offered.
 - **SEO**: Home title/description, OG mirroring, hub description trimmed (staging). JSON-LD drafted for launch (`{{DOMAIN}}`) + Designer steps in `docs/seo-plan.md`.
 - MCP finding: registered scripts accept only `data-*` attributes (no `defer`).
+
+- **Deferred loading live**: all bundles moved from the registry to freeform footer code (`defer` + SRI). Mobile perf now Home 47, About 53, Contact 73, Process 62, hub 62, Service 57, Work 74, Mission 49 (QA start 39–72).
 
 ## Next session
 
