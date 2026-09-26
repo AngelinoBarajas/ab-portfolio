@@ -375,3 +375,6 @@ Designer steps for Angelino: rename the form (Form settings › Name, it's "Emai
 ### v0.8.0 (2026-09-25)
 - New `ab-process` bundle. Destination saved in `localStorage` `ab:dest` (restored silently). Core unchanged (v0.7.0).
 - Tested: local copy of staging with the dist build at 1440 / 1024 / 390 (headless shots + DOM checks), re-plot for all fields, custom-deploys empty example, silent restore; then staging 1440 / 1024 / 390: no console errors, no horizontal scroll, nav links, Home link.
+
+### v0.8.1 (2026-09-25): drag cue per visit
+- Angelino: no drag cue on Home. The cue worked; his browser had `ab:dragged` in localStorage (set the first time he dragged on Home, back in v0.1.4), so it never showed again. `AB.dragCue` now remembers in **sessionStorage**: the cue shows on every hero each visit until something on that hero is dragged. Core JS v0.8.1 (CSS stays v0.7.0). Verified on staging with the old flag set.
