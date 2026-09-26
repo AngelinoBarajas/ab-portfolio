@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.23.2 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.23.3 · github.com/AngelinoBarajas/ab-portfolio */
 /* =========================================================
    AB Portfolio · ab-core.css (site-wide)
    Only what the Webflow Designer can't express: pseudo-elements, state
@@ -737,6 +737,6 @@ section:hover > .ab_frame-label{color:var(--_color---ui--select)}
 .ab_chip{transition:background-color .2s,border-color .2s,color .2s}
 .ab_chip[aria-pressed="true"]{border-color:var(--_color---text--primary);color:var(--_color---text--primary);background-color:rgba(255,255,255,.06)}
 .ab_chip:focus-visible{outline:2px solid var(--_color---ui--select);outline-offset:2px}
-/* aside twinkle: a small ✦ that sparkles near an aside now and then (core/23-tips) */
-.ab-twinkle{position:fixed;z-index:60;margin:-9px 0 0 -7px;font-size:15px;line-height:1;color:#fff4e0;pointer-events:none;text-shadow:0 0 6px #fff,0 0 14px rgba(255,178,122,.9);animation:ab-twinkle 1.4s ease-in-out forwards}
-@keyframes ab-twinkle{0%{opacity:0;transform:scale(.2) rotate(0)}35%{opacity:1;transform:scale(1.15) rotate(40deg)}60%{opacity:.8;transform:scale(.8) rotate(70deg)}100%{opacity:0;transform:scale(.3) rotate(120deg)}}
+/* aside twinkle: a gold ✦ (+ two small ones) that sparkles near an aside (core/23-tips); dark outline so it reads on light sections too */
+.ab-twinkle{position:fixed;z-index:60;margin:-.55em 0 0 -.45em;line-height:1;color:#ffd166;pointer-events:none;opacity:0;text-shadow:0 0 1px #0b0c14,0 0 2px #0b0c14,0 0 8px #ffb27a,0 0 18px rgba(255,106,61,.85);animation:ab-twinkle 1.6s ease-in-out forwards}
+@keyframes ab-twinkle{0%{opacity:0;transform:scale(.2) rotate(0)}30%{opacity:1;transform:scale(1.25) rotate(35deg)}55%{opacity:.9;transform:scale(.85) rotate(60deg)}75%{opacity:1;transform:scale(1.05) rotate(80deg)}100%{opacity:0;transform:scale(.3) rotate(130deg)}}

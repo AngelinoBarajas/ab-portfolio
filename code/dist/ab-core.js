@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.23.2 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.23.3 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -641,24 +641,54 @@ window.Webflow.push(function(){
   };
   // after page scripts have written their copy (Mission [[terms]], Process legs…)
   setTimeout(function(){ tipLink(); }, 900);
-  // twinkles: every so often a small ✦ sparkles at a corner of one aside that's on screen (a hint there's
-  // something to hover / tap). Skipped for reduced motion, in hidden tabs and while a tip is open
+  // twinkles: a hint there's something to hover / tap. An aside in the page twinkles as it scrolls into view, then one
+  // on screen sparkles every 3-6s. The nav's asides (logo, clock) only get an occasional one, while the nav shows.
+  // Skipped for reduced motion, in hidden tabs, while a tip or the menu is open
   if (!reduce) (function(){
-    function spark(){
-      setTimeout(spark, 5200 + Math.random() * 5200);
-      if (document.hidden || tipCur || !ASIDES.length || document.documentElement.classList.contains('menu-open')) return;
-      var vis = [];
+    var navEl = document.getElementById('nav'), seen = [];
+    function inNav(el){ return navEl && navEl.contains(el); }
+    function navShown(){ return navEl && !navEl.classList.contains('is-hidden'); }
+    function onScreen(el){ var r = el.getBoundingClientRect(); return r.width > 4 && r.height > 4 && r.bottom > 80 && r.top < innerHeight - 30 && r.right > 0 && r.left < innerWidth ? r : null; }
+    function targets(){
+      var content = [], nav = [];
       ASIDES.forEach(function(a){ var els; try { els = document.querySelectorAll(a.t); } catch (e){ return; }
-        for (var i = 0; i < els.length; i++){ var r = els[i].getBoundingClientRect(); if (r.width > 4 && r.bottom > 70 && r.top < innerHeight - 20 && r.right > 0 && r.left < innerWidth) vis.push(r); } });
-      if (!vis.length) return;
-      var r = vis[Math.floor(Math.random() * vis.length)], s = document.createElement('span');
-      s.className = 'ab-twinkle'; s.setAttribute('aria-hidden', 'true'); s.textContent = '✦';
-      var cx = Math.random() < .5 ? r.left : r.right, cy = Math.random() < .5 ? r.top : r.bottom;
-      s.style.left = Math.round(Math.max(8, Math.min(innerWidth - 20, cx + (Math.random() * 10 - 5)))) + 'px';
-      s.style.top = Math.round(Math.max(8, Math.min(innerHeight - 20, cy + (Math.random() * 10 - 5)))) + 'px';
-      document.body.appendChild(s); setTimeout(function(){ s.remove(); }, 1500);
+        for (var i = 0; i < els.length; i++){ var el = els[i], nv = inNav(el), r = nv ? (navShown() && el.getBoundingClientRect()) : onScreen(el);
+          if (r && r.width > 4) (nv ? nav : content).push({ el: el, r: r }); } });
+      return { content: content, nav: nav };
     }
-    setTimeout(spark, 3500);
+    function blocked(){ return document.hidden || tipCur || document.documentElement.classList.contains('menu-open'); }
+    function one(x, y, size, delay){
+      var s = document.createElement('span'); s.className = 'ab-twinkle'; s.setAttribute('aria-hidden', 'true'); s.textContent = '✦';
+      s.style.left = Math.round(Math.max(10, Math.min(innerWidth - 24, x))) + 'px'; s.style.top = Math.round(Math.max(10, Math.min(innerHeight - 24, y))) + 'px';
+      s.style.fontSize = size + 'px'; s.style.animationDelay = delay + 's';
+      document.body.appendChild(s); setTimeout(function(){ s.remove(); }, 1900 + delay * 1000);
+    }
+    function burst(r){
+      var cx = Math.random() < .5 ? r.left : r.right, cy = Math.random() < .5 ? r.top : r.bottom;
+      // corner of a tall/wide thing: pull it a little inside so it reads as belonging to it
+      cx += (cx === r.left ? 1 : -1) * Math.min(14, r.width * .2); cy += (cy === r.top ? 1 : -1) * Math.min(12, r.height * .2);
+      one(cx, cy, 22, 0);
+      one(cx + (Math.random() < .5 ? -1 : 1) * (14 + Math.random() * 10), cy + (Math.random() < .5 ? -1 : 1) * (10 + Math.random() * 8), 11, .18);
+      one(cx + (Math.random() < .5 ? -1 : 1) * (8 + Math.random() * 14), cy + (Math.random() < .5 ? -1 : 1) * (14 + Math.random() * 8), 9, .34);
+    }
+    function tick(){
+      var t = targets(), pick = null;
+      if (!blocked()){
+        if (t.content.length) pick = t.content[Math.floor(Math.random() * t.content.length)];
+        else if (t.nav.length && Math.random() < .3) pick = t.nav[Math.floor(Math.random() * t.nav.length)];
+        if (pick) burst(pick.r);
+      }
+      setTimeout(tick, (t.content.length ? 3000 : 6000) + Math.random() * 3000);
+    }
+    setTimeout(tick, 2500);
+    // an aside in the page twinkles right away the first time it scrolls into view
+    if ('IntersectionObserver' in window) setTimeout(function(){
+      var io = new IntersectionObserver(function(es){ es.forEach(function(e){
+        if (!e.isIntersecting || seen.indexOf(e.target) > -1) return; seen.push(e.target);
+        setTimeout(function(){ var r = onScreen(e.target); if (r && !blocked()) burst(r); }, 350);
+      }); }, { threshold: .4 });
+      ASIDES.forEach(function(a){ try { Array.prototype.forEach.call(document.querySelectorAll(a.t), function(el){ if (!inNav(el)) io.observe(el); }); } catch (e){} });
+    }, 1200);
   })();
 
   /* ===== core/24-quests.js ===== */
