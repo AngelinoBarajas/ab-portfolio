@@ -407,6 +407,10 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 .ab_planner_addon-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust)}
 .ab_planner_chip.is-addon{border-style:dashed}
 .ab_planner_chip.is-addon[aria-pressed="true"]{border-style:solid}
+/* budget: "not sure yet" (still scouting) overrides the slider */
+.ab_planner_chip.is-unsure{--c:var(--dust);margin-top:14px;border-style:dashed}
+.ab_planner_chip.is-unsure[aria-pressed="true"]{--c:var(--signal);border-style:solid}
+.ab_planner_range.is-unsure{opacity:.35}
 @keyframes ab-shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
 .button.is-launch{overflow:visible}
 .ab_planner_flame{position:absolute;left:50%;bottom:-40px;width:18px;height:40px;transform:translateX(-50%);background:linear-gradient(var(--signal),transparent);opacity:0;filter:blur(2px);pointer-events:none}

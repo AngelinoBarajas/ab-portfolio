@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.8.2 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.9.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -691,6 +691,9 @@ window.Webflow.push(function(){
     // the budget scale lives here (the Designer embed may carry an older one): slider range, ticks, default
     bud.max = MAXB; bud.value = 1;
     var ticks = $('.ab_planner_ticks', form); if (ticks) ticks.innerHTML = BUD.map(function(b){ return '<span>' + esc(b) + '</span>'; }).join('');
+    // budget: "not sure yet" overrides the slider (people still scouting what to spend); moving the slider turns it off
+    var UNSURE = 'Not sure yet · still scouting', unsureBtn = $('.ab_planner_chip.is-unsure', form);
+    if (!unsureBtn && ticks){ unsureBtn = document.createElement('button'); unsureBtn.type = 'button'; unsureBtn.className = 'ab_planner_chip is-unsure'; unsureBtn.setAttribute('aria-pressed', 'false'); unsureBtn.textContent = UNSURE; ticks.parentNode.insertBefore(unsureBtn, ticks.nextSibling); }
     // add-ons ride along with any mission type; the Knowledge System add-on is added here if the embed lacks it
     var typesRow = $('#plTypes');
     if (typesRow && !$('[data-addon]', form)){
@@ -699,7 +702,7 @@ window.Webflow.push(function(){
       typesRow.parentNode.insertBefore(ad, typesRow.nextSibling);
     }
     if (!$('#plAddonsField', form) && typesRow){ var hf = document.createElement('input'); hf.type = 'hidden'; hf.name = 'Add-ons'; hf.id = 'plAddonsField'; hf.value = ''; typesRow.parentNode.appendChild(hf); }
-    var chips = $$('.ab_planner_chip:not([data-addon])', form), addons = $$('.ab_planner_chip[data-addon]', form);
+    var chips = $$('.ab_planner_chip:not([data-addon]):not(.is-unsure)', form), addons = $$('.ab_planner_chip[data-addon]', form);
     var fType = $('#plTypesField'), fBud = $('#plBudField'), fBrief = $('#plBriefField'), fAdd = $('#plAddonsField');
     chips.concat(addons).forEach(function(c){ c.setAttribute('aria-pressed', 'false'); });
     var sg = $('.pl-stars', form), s = '';
@@ -711,12 +714,13 @@ window.Webflow.push(function(){
       var sel = chips.map(function(c, k){ return c.getAttribute('aria-pressed') === 'true' ? k : -1; }).filter(function(k){ return k > -1; });
       var chk = $('input[name="Launch window"]:checked', form), w = chk ? num(chk.getAttribute('data-i'), 1) : 1, b = Math.round(num(bud.value, 2));
       var add = addons.filter(function(c){ return c.getAttribute('aria-pressed') === 'true'; }).map(function(c){ return c.getAttribute('data-addon'); });
-      return { sel: sel, types: sel.map(function(k){ return chips[k].textContent.trim(); }), cols: sel.map(function(k){ return chips[k].getAttribute('data-c'); }), w: w, b: Math.min(b, MAXB), add: add };
+      var un = !!(unsureBtn && unsureBtn.getAttribute('aria-pressed') === 'true'); b = Math.min(b, MAXB);
+      return { sel: sel, types: sel.map(function(k){ return chips[k].textContent.trim(); }), cols: sel.map(function(k){ return chips[k].getAttribute('data-c'); }), w: w, b: un ? 0 : b, bl: un ? UNSURE : BUD[b], unsure: un, add: add };
     }
     var cur = { x: 330, y: 70, r: 16 }, st0 = null;
     function arc(cx, cy, rx, ry, top){ return 'M' + (cx - rx).toFixed(1) + ' ' + cy.toFixed(1) + ' A' + rx.toFixed(1) + ' ' + ry.toFixed(1) + ' 0 0 ' + (top ? 1 : 0) + ' ' + (cx + rx).toFixed(1) + ' ' + cy.toFixed(1); }
-    function brief(){ var st = state(); return 'Mission brief\nName: ' + ($('#plName').value || '-') + '\nEmail: ' + ($('#plEmail').value || '-') + '\nMission type: ' + (st.types.join(', ') || '-') + '\nLaunch window: ' + WIN[st.w] + '\nBudget: ' + BUD[st.b] + '\nAdd-ons: ' + (st.add.join(', ') || '-') + '\nAbout: ' + ($('#plMsg').value || '-'); }
-    function fillHidden(){ var st = state(); if (fType) fType.value = st.types.join(', '); if (fBud) fBud.value = BUD[st.b]; if (fAdd) fAdd.value = st.add.join(', '); if (fBrief) fBrief.value = brief(); }
+    function brief(){ var st = state(); return 'Mission brief\nName: ' + ($('#plName').value || '-') + '\nEmail: ' + ($('#plEmail').value || '-') + '\nMission type: ' + (st.types.join(', ') || '-') + '\nLaunch window: ' + WIN[st.w] + '\nBudget: ' + st.bl + '\nAdd-ons: ' + (st.add.join(', ') || '-') + '\nAbout: ' + ($('#plMsg').value || '-'); }
+    function fillHidden(){ var st = state(); if (fType) fType.value = st.types.join(', '); if (fBud) fBud.value = st.bl; if (fAdd) fAdd.value = st.add.join(', '); if (fBrief) fBrief.value = brief(); }
     function draw(anim){
       var st = state(), n = st.sel.length; st0 = st;
       // window = distance, types = planet (first pick) + moons (the rest), budget = rings
@@ -730,8 +734,8 @@ window.Webflow.push(function(){
       var to = { x: X, y: Y, r: R };
       if (anim && hasGsap && !reduce) gsap.to(cur, { x: to.x, y: to.y, r: to.r, duration: .8, ease: 'elastic.out(1,.65)', overwrite: true, onUpdate: place });
       else { cur = to; place(); }
-      budOut.textContent = BUD[st.b]; bud.setAttribute('aria-valuetext', BUD[st.b]); bud.style.setProperty('--p', (st.b / MAXB * 100) + '%');
-      read.innerHTML = n ? 'Flight plan · <b>' + esc(st.types.join(' + ')) + '</b> · T−' + esc(WIN[st.w]) + ' · orbit ' + esc(BUD[st.b]) + (st.add.length ? ' · <b>+ ' + esc(st.add.join(' + ').toLowerCase()) + '</b>' : '') : 'Flight plan · choose a mission type';
+      budOut.textContent = st.unsure ? 'Not sure yet' : st.bl; bud.setAttribute('aria-valuetext', st.bl); bud.classList.toggle('is-unsure', st.unsure); if (!st.unsure) bud.style.setProperty('--p', (st.b / MAXB * 100) + '%');
+      read.innerHTML = n ? 'Flight plan · <b>' + esc(st.types.join(' + ')) + '</b> · T−' + esc(WIN[st.w]) + ' · orbit ' + esc(st.unsure ? 'TBD' : st.bl) + (st.add.length ? ' · <b>+ ' + esc(st.add.join(' + ').toLowerCase()) + '</b>' : '') : 'Flight plan · choose a mission type';
       fillHidden();
       if (!form.classList.contains('is-flying')) parkRocket();
       if (reduce || !hasGsap) moonTick();
@@ -743,6 +747,7 @@ window.Webflow.push(function(){
         var rx = cur.r + 6 + k * 7, ry = rx * .26, c = col[(k - 1) % col.length], tr = ' transform="rotate(-14 ' + cur.x.toFixed(1) + ' ' + cur.y.toFixed(1) + ')" stroke="' + c + '"';
         b += '<path d="' + arc(cur.x, cur.y, rx, ry, true) + '"' + tr + '/>'; f += '<path d="' + arc(cur.x, cur.y, rx, ry, false) + '"' + tr + ' opacity="' + (.9 - k * .15) + '"/>';
       }
+      if (st.unsure){ var grx = cur.r + 13, gtr = ' transform="rotate(-14 ' + cur.x.toFixed(1) + ' ' + cur.y.toFixed(1) + ')" stroke="' + col[0] + '" stroke-dasharray="2 4"'; b += '<path d="' + arc(cur.x, cur.y, grx, grx * .26, true) + '"' + gtr + ' opacity=".6"/>'; f += '<path d="' + arc(cur.x, cur.y, grx, grx * .26, false) + '"' + gtr + ' opacity=".6"/>'; }
       ringsB.innerHTML = b; ringsF.innerHTML = f;
     }
     // extra mission types orbit as small moons
@@ -763,7 +768,8 @@ window.Webflow.push(function(){
     function parkRocket(){ var L = path.getTotalLength(), p0 = path.getPointAtLength(0), p1 = path.getPointAtLength(6); rocket.setAttribute('transform', 'translate(' + p0.x.toFixed(1) + ' ' + p0.y.toFixed(1) + ') rotate(' + (Math.atan2(p1.y - p0.y, p1.x - p0.x) * 180 / Math.PI).toFixed(1) + ')'); done.style.strokeDasharray = L + ' ' + (L + 20); done.style.strokeDashoffset = L; done.style.opacity = 0; }
     chips.concat(addons).forEach(function(c){ c.style.setProperty('--c', c.getAttribute('data-c')); c.addEventListener('click', function(){ c.setAttribute('aria-pressed', c.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); draw(true); if (hasGsap && !reduce) gsap.fromTo(c, { scale: .95 }, { scale: 1, duration: .45, ease: 'elastic.out(1,.4)' }); }); });
     radios().forEach(function(r){ r.addEventListener('change', function(){ draw(true); }); });
-    bud.addEventListener('input', function(){ draw(true); });
+    bud.addEventListener('input', function(){ if (unsureBtn) unsureBtn.setAttribute('aria-pressed', 'false'); draw(true); });
+    if (unsureBtn) unsureBtn.addEventListener('click', function(){ unsureBtn.setAttribute('aria-pressed', unsureBtn.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); draw(true); });
     $$('#plName, #plEmail, #plMsg').forEach(function(inp){ inp.addEventListener('input', fillHidden); });
     var copyBtn = $('#plCopy');
     if (copyBtn) copyBtn.addEventListener('click', function(){ AB.copyText(brief(), 'Flight plan copied ✓', function(){ toast('Copy failed, select the text instead.'); }); });
@@ -778,7 +784,7 @@ window.Webflow.push(function(){
       if (!st.types.length){ var cc = $('#plTypes'); cc.classList.remove('is-shake'); void cc.offsetWidth; cc.classList.add('is-shake'); toast('Pick at least one mission type.'); chips[0].focus(); return; }
       var em = $('#plEmail'); if (em.value && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em.value)){ em.focus(); toast('That email address looks off.'); return; }
       fillHidden();
-      var sent = $('#plSentTxt'); if (sent) sent.textContent = 'Flight plan: ' + st.types.join(' + ') + ', ' + WIN[st.w].toLowerCase() + ', ' + BUD[st.b] + (st.add.length ? ', plus ' + st.add.join(' + ').toLowerCase() : '') + '. I’ll reply within one business day with next steps.';
+      var sent = $('#plSentTxt'); if (sent) sent.textContent = 'Flight plan: ' + st.types.join(' + ') + ', ' + WIN[st.w].toLowerCase() + ', ' + (st.unsure ? 'budget to be scouted together' : st.bl) + (st.add.length ? ', plus ' + st.add.join(' + ').toLowerCase() : '') + '. I’ll reply within one business day with next steps.';
       function release(){
         form.classList.remove('is-flying');
         var id = $('#plId'); if (id) id.textContent = 'MSN-07 · logged';

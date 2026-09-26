@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process.css v0.8.2 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process.css v0.9.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* Process (/process) · the flight planner. Loaded from the page <head>.
    Only what the Designer can't hold: font-stretch, outline text, script-built pieces (abp-*: chart planets + orbits,
    route path / ship / pad, gauge, chips, form fields), state classes (.is-on, aria-pressed), pseudos and reduced motion.
@@ -34,6 +34,35 @@
 .abp-dest.is-on .abp-sel{opacity:1;transform:none}
 .abp-dest:focus-visible{outline:none}
 .abp-dest:focus-visible .abp-sel{opacity:.6;transform:none}
+/* stops: flight path sun → main → stops, numbered dashed boxes, add-a-stop mode */
+.abp-chart-route{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:1}
+.abp-chart-route path{fill:none;stroke:var(--dest);stroke-width:1.5;stroke-dasharray:2 6;stroke-linecap:round;vector-effect:non-scaling-stroke;opacity:.85;filter:drop-shadow(0 0 4px var(--dest))}
+.abp-dest.is-stop .abp-sel{opacity:1;transform:none;border-style:dashed;border-color:var(--dest)}
+.abp-dest.is-stop .abp-sel::before,.abp-dest.is-stop .abp-sel::after{display:none}
+.abp-dest.is-stop .abp-tag{color:var(--_color---text--primary)}
+.abp-stopno{position:absolute;left:-14px;top:-14px;min-width:18px;height:18px;padding:0 4px;display:none;place-items:center;background:var(--dest);color:var(--_color---brand--on-signal);font-family:var(--_typography---font--mono);font-size:10px;font-weight:600;line-height:18px;text-align:center;z-index:2}
+.abp-dest.is-stop .abp-stopno{display:block}
+.ab_chart.is-adding .abp-dest:not(.is-on):not(.is-stop) .abp-pl{animation:abp-beckon 1.2s ease-in-out infinite}
+@keyframes abp-beckon{50%{transform:scale(1.18)}}
+.ab_chart.is-adding{cursor:crosshair}
+.abp-stops{margin-top:14px}
+.abp-stops:empty{display:none}
+.abp-stops-h{font-family:var(--_typography---font--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--_color---text--tertiary);margin-bottom:6px}
+.abp-stop{display:grid;grid-template-columns:8px 18px minmax(0,1fr) auto auto;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--_color---neutral--hair);font-size:14.5px}
+.abp-stop i{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.abp-stop-n{font-family:var(--_typography---font--mono);font-size:10.5px;color:var(--_color---text--tertiary)}
+.abp-stop a{color:var(--_color---text--primary);text-decoration:none;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.abp-stop a:hover{color:var(--_color---brand--signal)}
+.abp-stop-b{padding:4px 8px;border:1px solid var(--_color---neutral--hair-strong);background:none;color:var(--_color---text--tertiary);font-family:var(--_typography---font--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:color .2s,border-color .2s}
+.abp-stop-b:hover{color:var(--_color---text--primary);border-color:var(--_color---text--primary)}
+.abp-stop-b.is-x{font-size:14px;line-height:1;padding:3px 8px}
+.abp-add-stop{height:56px;padding:0 18px;border:1px dashed var(--_color---neutral--hair-strong);background:none;color:var(--_color---text--primary);font-family:var(--_typography---font--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:border-color .2s,color .2s,background .2s}
+.abp-add-stop:hover{border-color:var(--dest);color:var(--dest)}
+.abp-add-stop.is-on{border-style:solid;border-color:var(--dest);background:color-mix(in srgb,var(--dest) 14%,transparent)}
+.abp-add-stop[hidden]{display:none}
+.abp-leg-extra:empty{display:none}
+.abp-leg-stop{margin-top:8px;padding-top:8px;border-top:1px dashed var(--_color---neutral--hair);font-size:13px;color:var(--_color---text--secondary)}
+.abp-leg-stop b{font-family:var(--_typography---font--mono);font-size:10.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--c)}
 .ab_chart_panel{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .ab_chart_panel-short::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--dest);box-shadow:0 0 10px var(--dest)}
 .ab_chart_title{font-stretch:118%}
@@ -95,6 +124,12 @@
 .abp-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 11px;border:1px solid var(--_color---neutral--hair-strong);background:none;font-family:var(--_typography---font--mono);font-size:11px;letter-spacing:.04em;color:var(--_color---text--secondary);cursor:pointer;transition:background .2s,border-color .2s,color .2s}
 .abp-chip i{width:8px;height:8px;border-radius:50%;background:var(--c)}
 .abp-chip[aria-pressed="true"]{border-color:var(--_color---text--primary);color:var(--_color---text--primary);background:rgba(255,255,255,.06)}
+.abp-chip-main{display:none;margin-left:2px;padding:1px 5px;background:var(--_color---brand--signal);color:var(--_color---brand--on-signal);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase}
+.abp-chip.is-main .abp-chip-main{display:inline-block}
+.abp-chip.is-more{border-style:dashed}
+.abp-chip.is-more[aria-pressed="true"]{border-style:solid;border-color:var(--_color---brand--signal);color:var(--_color---brand--signal)}
+.abp-more{margin-top:12px}
+.abp-more[hidden]{display:none}
 .abp-row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
 .abp-form label{display:block;margin:0;font-weight:400}
 .abp-in{display:block;width:100%;height:auto;margin:0;padding:13px 14px;border:1px solid var(--_color---neutral--hair-strong);background:var(--_color---neutral--void);color:var(--_color---text--primary);font:inherit;font-size:16px;border-radius:0;transition:border-color .2s}
@@ -121,4 +156,4 @@ select.abp-in{appearance:none;-webkit-appearance:none;background-image:linear-gr
   .abp-tag{display:none}
   .abp-dest.is-on .abp-tag{display:block}
 }
-@media (prefers-reduced-motion:reduce){.abp-spin,.abp-counter,.abp-flame,.ab_rec_dot.is-live{animation:none}.abp-arc-on,.ab_crew_tick svg{transition:none}}
+@media (prefers-reduced-motion:reduce){.abp-spin,.abp-counter,.abp-flame,.ab_rec_dot.is-live,.ab_chart.is-adding .abp-dest .abp-pl{animation:none}.abp-arc-on,.ab_crew_tick svg{transition:none}}

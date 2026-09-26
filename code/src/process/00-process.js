@@ -30,8 +30,13 @@
     };
   }).filter(function(d){ return d.slug; });
 
-  var cur = 0, KEY = 'ab:dest';
-  try { var saved = localStorage.getItem(KEY); DEST.forEach(function(d, i){ if (d.slug === saved) cur = i; }); } catch (e){}
+  // the mission: sel[0] = main destination, sel[1..] = extra stops (3 at most; more goes in the form's "More than three")
+  var MAX_STOPS = 3, sel = [0], adding = false, KEY = 'ab:dest';
+  try {
+    var saved = (localStorage.getItem(KEY) || '').split(','), got = [];
+    saved.forEach(function(sl){ DEST.forEach(function(d, i){ if (d.slug === sl && got.indexOf(i) < 0 && got.length < MAX_STOPS) got.push(i); }); });
+    if (got.length) sel = got;
+  } catch (e){}
 
   function planetAttrs(el, d, seed){
     el.setAttribute('data-planet', d.p[0]); el.setAttribute('data-colors', d.p[1]); el.setAttribute('data-glow', d.p[3]); el.setAttribute('data-seed', seed); el.setAttribute('data-spin', '50');
@@ -49,21 +54,54 @@
   if (chart && DEST.length){
     ORB.forEach(function(r){ var o = document.createElement('span'); o.className = 'abp-orbit'; o.style.width = o.style.height = (r * 100) + '%'; chart.appendChild(o); });
     var spin = document.createElement('div'); spin.className = 'abp-spin'; chart.appendChild(spin);
+    // the mission's flight path: sun → main → stops (inside the spinning layer, so it turns with the planets)
+    var routeSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); routeSvg.setAttribute('class', 'abp-chart-route'); routeSvg.setAttribute('viewBox', '0 0 100 100'); routeSvg.setAttribute('preserveAspectRatio', 'none'); routeSvg.setAttribute('aria-hidden', 'true');
+    var routePath = document.createElementNS('http://www.w3.org/2000/svg', 'path'); routeSvg.appendChild(routePath); spin.appendChild(routeSvg);
     var step = 360 / DEST.length;
+    chart.setAttribute('role', 'group');
     DEST.forEach(function(d, i){
       var r = ORB[i % 4] / 2 * 100, a = (i * step + (i % 2 ? step * .45 : 0) - 90) * Math.PI / 180, s = [46, 52, 60, 66][i % 4];
-      var b = document.createElement('button'); b.type = 'button'; b.className = 'abp-dest'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', 'false');
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'abp-dest'; b.setAttribute('aria-pressed', 'false');
       b.setAttribute('aria-label', d.t1 + ' ' + d.t2); b.style.left = (50 + Math.cos(a) * r).toFixed(2) + '%'; b.style.top = (50 + Math.sin(a) * r).toFixed(2) + '%'; b.style.setProperty('--s', s + 'px');
-      b.innerHTML = '<span class="abp-counter"><span class="abp-pl ab_planet"></span><span class="abp-sel" aria-hidden="true"></span><span class="abp-tag">' + esc(d.short) + '</span></span>';
+      b.__x = 50 + Math.cos(a) * r; b.__y = 50 + Math.sin(a) * r;
+      b.innerHTML = '<span class="abp-counter"><span class="abp-pl ab_planet"></span><span class="abp-sel" aria-hidden="true"></span><span class="abp-tag">' + esc(d.short) + '</span><span class="abp-stopno" aria-hidden="true"></span></span>';
       var pl = $('.abp-pl', b); planetAttrs(pl, d, 20 + i); if (AB.buildPlanet) AB.buildPlanet(pl);
-      b.addEventListener('click', function(){ pick(i); });
+      b.addEventListener('click', function(){ chartPick(i); });
       b.addEventListener('keydown', function(e){
         var n = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0; if (!n) return;
-        e.preventDefault(); var j = (cur + n + DEST.length) % DEST.length; pick(j); dests[j].focus();
+        e.preventDefault(); var j = (i + n + DEST.length) % DEST.length; dests[j].focus();
       });
       spin.appendChild(b); dests.push(b);
     });
   }
+  // panel: the stops list + "Add a stop" (script UI; the destination copy itself comes from the CMS)
+  var panelBody = $('.ab_chart_panel-body'), stopsBox = null, addBtn = null;
+  if (panelBody && DEST.length){
+    stopsBox = document.createElement('div'); stopsBox.className = 'abp-stops'; stopsBox.setAttribute('aria-live', 'polite');
+    var sumEl = $('[data-dest-sum]', panelBody); panelBody.insertBefore(stopsBox, sumEl ? sumEl.nextSibling : null);
+    var acts = $('.ab_chart_actions', panelBody);
+    addBtn = document.createElement('button'); addBtn.type = 'button'; addBtn.className = 'abp-add-stop';
+    if (acts) acts.insertBefore(addBtn, acts.firstChild);
+    addBtn.addEventListener('click', function(){
+      if (sel.length >= MAX_STOPS){ if (toast) toast('Three stops max here · add the rest in the form'); return; }
+      adding = !adding; render(true);
+      if (adding && toast) toast('Pick a planet to add it as a stop');
+    });
+  }
+  // chart click: normally switches the main destination; in "add a stop" mode it adds one
+  function chartPick(i){
+    var at = sel.indexOf(i);
+    if (adding){
+      adding = false;
+      if (at > -1){ if (toast) toast(DEST[i].short + ' is already on the route'); render(true); return; }
+      sel.push(i); render(false, 'Stop added · ' + DEST[i].short); return;
+    }
+    if (at === 0) return;
+    if (at > 0) sel.splice(at, 1);
+    sel[0] = i; render(false, 'Course plotted · ' + DEST[i].t1 + ' ' + DEST[i].t2);
+  }
+  function removeStop(i){ var at = sel.indexOf(i); if (at < 0 || sel.length < 2) return; sel.splice(at, 1); render(false, 'Stop removed · ' + DEST[i].short); }
+  function makeMain(i){ var at = sel.indexOf(i); if (at < 1) return; sel.splice(at, 1); sel.unshift(i); render(false, 'Main destination · ' + DEST[i].short); }
 
   /* ---------- route: path, ship, launch pad ---------- */
   var track = $('[data-route-track]'), wps = $$('.ab_route_wp', track), nodes = wps.map(function(w){ return $('.ab_route_node', w); });
@@ -79,36 +117,74 @@
   ship.innerHTML = '<svg viewBox="0 0 44 44"><path class="abp-flame" d="M6 22 L-8 17 L-4 22 L-8 27 Z" fill="#FF6A3D"/><path d="M6 14 H26 L40 22 L26 30 H6 Z" fill="#F2F0EA"/><path d="M14 14 L10 6 H18 L22 14 Z M14 30 L10 38 H18 L22 30 Z" fill="#8A8FA3"/><circle cx="28" cy="22" r="3.5" fill="#4C8DFF"/></svg>';
   if (track){ track.insertBefore(svg, track.firstChild); track.appendChild(pad); track.appendChild(ship); if (AB.buildPlanet) AB.buildPlanet($('.abp-pad-pl', pad)); }
 
-  /* ---------- pick a destination: everything re-plots ---------- */
-  function pick(i, quiet){
+  /* ---------- render the mission (main + stops): everything re-plots ---------- */
+  var lastMain = 0, lastLegs = [];
+  function render(quiet, msg){
     if (!DEST.length) return;
-    cur = i; var d = DEST[i];
-    try { localStorage.setItem(KEY, d.slug); } catch (e){}
+    var i = sel[0], d = DEST[i], stops = sel.slice(1).map(function(k){ return DEST[k]; });
+    var label = d.short + (stops.length ? ' +' + stops.length : '');
+    try { localStorage.setItem(KEY, sel.map(function(k){ return DEST[k].slug; }).join(',')); } catch (e){}
     root.style.setProperty('--dest', d.c);
-    dests.forEach(function(b, j){ b.classList.toggle('is-on', j === i); b.setAttribute('aria-checked', j === i ? 'true' : 'false'); b.tabIndex = j === i ? 0 : -1; });
-    $$('.abp-chip').forEach(function(b, j){ b.setAttribute('aria-pressed', j === i ? 'true' : 'false'); });
-    $$('[data-dest-short]').forEach(function(e){ e.textContent = d.short; });
-    var field = $('[data-dest-field]'); if (field) field.value = d.name;
+    // chart: main = selection box, stops = numbered dashed boxes, path sun → main → stops
+    dests.forEach(function(b, j){
+      var at = sel.indexOf(j);
+      b.classList.toggle('is-on', at === 0); b.classList.toggle('is-stop', at > 0);
+      b.setAttribute('aria-pressed', at > -1 ? 'true' : 'false');
+      b.setAttribute('aria-label', DEST[j].t1 + ' ' + DEST[j].t2 + (at === 0 ? ', main destination' : at > 0 ? ', stop ' + (at + 1) : ''));
+      var no = $('.abp-stopno', b); if (no) no.textContent = at > 0 ? String(at + 1) : '';
+    });
+    if (chart) chart.classList.toggle('is-adding', adding);
+    if (routePath) routePath.setAttribute('d', 'M50 50' + sel.map(function(k){ return ' L' + dests[k].__x.toFixed(2) + ' ' + dests[k].__y.toFixed(2); }).join(''));
+    // text hooks
+    $$('[data-dest-short]').forEach(function(e){ e.textContent = label; });
     var title = $('[data-dest-title]'); if (title) title.innerHTML = '<span class="ab_chart_title-a">' + esc(d.t1) + '</span> <span class="ab_chart_title-b t-outline">' + esc(d.t2) + '</span>';
     var sum = $('[data-dest-sum]'); if (sum && d.sum) sum.textContent = d.sum;
     var plan = $('[data-dest-plan]'); if (plan && d.plan.length) plan.innerHTML = d.plan.map(function(p, k){ return '<div class="ab_chart_plan-item"><div class="ab_chart_plan-no">Stage 0' + (k + 1) + '</div><div class="ab_chart_plan-name">' + esc(p) + '</div></div>'; }).join('');
     var link = $('[data-dest-link]'); if (link) link.href = '/services/' + d.slug;
-    var hp = $('[data-process-planet]'); if (hp){ hp.setAttribute('data-label', 'Destination · ' + d.short); if (!quiet || i !== 0) repaint(hp, d, 11 + i); }
+    // panel stops: each with a service link, "make main" and remove
+    if (stopsBox){
+      stopsBox.innerHTML = stops.length ? '<div class="abp-stops-h">Stops on this mission</div>' + sel.slice(1).map(function(k, n){
+        var s = DEST[k];
+        return '<div class="abp-stop" style="--c:' + s.c + '"><i aria-hidden="true"></i><span class="abp-stop-n">' + (n + 2) + '</span><a href="/services/' + esc(s.slug) + '">' + esc(s.t1 + ' ' + s.t2) + '</a>' +
+          '<button type="button" class="abp-stop-b" data-main="' + k + '" aria-label="Make ' + esc(s.short) + ' the main destination">Main</button>' +
+          '<button type="button" class="abp-stop-b is-x" data-remove="' + k + '" aria-label="Remove ' + esc(s.short) + '">×</button></div>';
+      }).join('') : '';
+      $$('[data-main]', stopsBox).forEach(function(b){ b.addEventListener('click', function(){ makeMain(+b.getAttribute('data-main')); }); });
+      $$('[data-remove]', stopsBox).forEach(function(b){ b.addEventListener('click', function(){ removeStop(+b.getAttribute('data-remove')); }); });
+    }
+    if (addBtn){
+      addBtn.hidden = sel.length >= MAX_STOPS && !adding;
+      addBtn.textContent = adding ? 'Pick a planet… (cancel)' : '+ Add a stop';
+      addBtn.classList.toggle('is-on', adding);
+    }
+    var hp = $('[data-process-planet]'); if (hp){ hp.setAttribute('data-label', 'Destination · ' + d.short); if (i !== lastMain) repaint(hp, d, 11 + i); lastMain = i; }
+    // route: main leg in full, each stop adds a compact line; "flown before" = main's example, else a stop's
+    var ex = d.ex; if (!ex) stops.forEach(function(s){ if (!ex && s.ex) ex = s.ex; });
     wps.forEach(function(w, k){
       var lab = $('[data-leg-label]', w); if (lab) lab.textContent = 'For ' + d.short;
       var t = $('[data-leg]', w);
-      if (t && d.legs[k]){
+      if (t && d.legs[k] && lastLegs[k] !== d.legs[k]){
         if (quiet || reduce || !hasGsap || !window.ScrambleTextPlugin) t.textContent = d.legs[k];
         else gsap.to(t, { duration: .6, scrambleText: { text: d.legs[k], chars: 'lowerCase', speed: .6 }, delay: k * .04 });
+        lastLegs[k] = d.legs[k];
       }
+      var legBox = t && t.parentNode, extra = legBox && $('.abp-leg-extra', legBox);
+      if (legBox && !extra){ extra = document.createElement('div'); extra.className = 'abp-leg-extra'; legBox.appendChild(extra); }
+      if (extra) extra.innerHTML = stops.map(function(s){ return s.legs[k] ? '<div class="abp-leg-stop" style="--c:' + s.c + '"><b>+ ' + esc(s.short) + '</b> · ' + esc(s.legs[k]) + '</div>' : ''; }).join('');
       var a = $('[data-flown]', w); if (!a) return;
       var what = a.getAttribute('data-flown-what') || 'it';
-      if (d.ex){ a.classList.remove('is-none'); a.href = '/work/' + d.ex[0]; a.removeAttribute('aria-disabled'); a.textContent = 'See ' + what + ' · ' + d.ex[1] + ' →'; }
+      if (ex){ a.classList.remove('is-none'); a.href = '/work/' + ex[0]; a.removeAttribute('aria-disabled'); a.textContent = 'See ' + what + ' · ' + ex[1] + ' →'; }
       else { a.classList.add('is-none'); a.removeAttribute('href'); a.setAttribute('aria-disabled', 'true'); a.textContent = 'No mission flown here yet · yours could be first'; }
     });
-    d.eta.forEach(function(v, f){ setFactor(f, v); });
+    // timeline: the highest preset per factor across the mission; every extra stop stretches the scope one notch
+    var comb = d.eta.map(function(v, f){ var m = v; stops.forEach(function(s){ if (s.eta[f] > m) m = s.eta[f]; }); return m; });
+    if (comb.length) comb[0] = Math.min(2, comb[0] + stops.length);
+    comb.forEach(function(v, f){ setFactor(f, v); });
     eta(quiet);
-    if (!quiet && toast) toast('Course plotted · ' + d.t1 + ' ' + d.t2);
+    syncForm();
+    if (!quiet && msg && toast) toast(msg);
+    // stops change card heights: re-fit the route (after the scramble has settled)
+    if (!quiet && typeof build === 'function'){ clearTimeout(render.__t); render.__t = setTimeout(function(){ build(); if (window.ScrollTrigger) ScrollTrigger.refresh(); }, 700); }
   }
 
   /* ---------- what moves the timeline ---------- */
@@ -154,7 +230,11 @@
     wide = innerWidth > 767;
     wps.forEach(function(w, i){ w.style.left = w.style.top = ''; w.style.removeProperty('--ny'); if (nodes[i]) nodes[i].style.left = nodes[i].style.top = ''; });
     ship.style.transform = ship.style.top = '';
+    track.style.height = '';
     if (!wide){ track.style.width = ''; return; }
+    // grow the track when cards get taller (a mission with stops adds lines to every card)
+    var tallest = 0; wps.forEach(function(w){ tallest = Math.max(tallest, w.offsetHeight); });
+    if (CARD_TOP + tallest + 40 > track.offsetHeight) track.style.height = (CARD_TOP + tallest + 40) + 'px';
     var step = Math.max(380, innerWidth * .3), x0 = Math.min(260, innerWidth * .18), W = x0 + step * wps.length + innerWidth * .35, h = track.offsetHeight;
     track.style.width = W + 'px'; svg.setAttribute('width', W); svg.setAttribute('height', h); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + h);
     pts = [[x0 * .45, 110]];
@@ -216,10 +296,35 @@
   });
 
   /* ---------- launch form: destination chips (Webflow Forms posts it) ---------- */
-  var chips = $('[data-chips]');
+  // multi-select: the first pick is the main destination; up to 3 here, "More than three" opens a field for the rest
+  var chips = $('[data-chips]'), moreBox = $('[data-more]'), moreChip = null;
   if (chips && DEST.length){
-    chips.innerHTML = DEST.map(function(d, i){ return '<button type="button" class="abp-chip" data-i="' + i + '" aria-pressed="false" style="--c:' + d.c + '"><i aria-hidden="true"></i>' + esc(d.short) + '</button>'; }).join('');
-    $$('.abp-chip', chips).forEach(function(b){ b.addEventListener('click', function(){ pick(+b.getAttribute('data-i')); }); });
+    chips.innerHTML = DEST.map(function(d, i){ return '<button type="button" class="abp-chip" data-i="' + i + '" aria-pressed="false" style="--c:' + d.c + '"><i aria-hidden="true"></i>' + esc(d.short) + '<span class="abp-chip-main">Main</span></button>'; }).join('') +
+      (moreBox ? '<button type="button" class="abp-chip is-more" aria-pressed="false" aria-controls="abpMore">+ More than three</button>' : '');
+    $$('.abp-chip[data-i]', chips).forEach(function(b){ b.addEventListener('click', function(){
+      var i = +b.getAttribute('data-i'), at = sel.indexOf(i);
+      if (at > -1){
+        if (sel.length < 2){ if (toast) toast('Keep at least one destination'); return; }
+        sel.splice(at, 1); render(false, 'Stop removed · ' + DEST[i].short); return;
+      }
+      if (sel.length >= MAX_STOPS){ setMore(true); if (toast) toast('Three stops max here · list the rest below'); return; }
+      sel.push(i); render(false, 'Stop added · ' + DEST[i].short);
+    }); });
+    moreChip = $('.abp-chip.is-more', chips);
+    if (moreChip) moreChip.addEventListener('click', function(){ setMore(moreChip.getAttribute('aria-pressed') !== 'true'); });
+  }
+  function setMore(on){
+    if (!moreBox || !moreChip) return;
+    moreChip.setAttribute('aria-pressed', on ? 'true' : 'false'); moreBox.hidden = !on;
+    if (on){ var ta = $('textarea', moreBox); if (ta) setTimeout(function(){ ta.focus(); }, 50); }
+  }
+  function syncForm(){
+    $$('.abp-chip[data-i]').forEach(function(b){
+      var at = sel.indexOf(+b.getAttribute('data-i'));
+      b.setAttribute('aria-pressed', at > -1 ? 'true' : 'false'); b.classList.toggle('is-main', at === 0 && sel.length > 1);
+    });
+    var field = $('[data-dest-field]');
+    if (field) field.value = sel.map(function(k, n){ return DEST[k].name + (n === 0 && sel.length > 1 ? ' (main)' : ''); }).join(', ');
   }
   var form = $('.ab_launch_form form');
   if (form){
@@ -233,8 +338,8 @@
     });
   }
 
-  // restore the last destination silently (no scramble, no toast)
-  if (DEST.length) pick(cur, true);
+  // restore the last mission silently (no scramble, no toast)
+  if (DEST.length) render(true);
   else eta(true);
   setTimeout(build, 60);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ build(); if (window.ScrollTrigger) ScrollTrigger.refresh(); });
