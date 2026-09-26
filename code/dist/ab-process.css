@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process.css v0.9.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process.css v0.9.1 · github.com/AngelinoBarajas/ab-portfolio */
 /* Process (/process) · the flight planner. Loaded from the page <head>.
    Only what the Designer can't hold: font-stretch, outline text, script-built pieces (abp-*: chart planets + orbits,
    route path / ship / pad, gauge, chips, form fields), state classes (.is-on, aria-pressed), pseudos and reduced motion.
@@ -69,6 +69,8 @@
 
 /* route */
 .section_process-route{overflow:hidden}
+/* desktop: the section pins at the top, so its top padding follows the viewport height (the cards need the room) */
+@media screen and (min-width:768px){.section_process-route{padding-top:clamp(48px,8vh,120px)}}
 .ab_route_track{will-change:transform}
 .abp-path{position:absolute;left:0;top:0;height:100%;overflow:visible;pointer-events:none}
 .abp-line{fill:none;stroke:rgba(255,255,255,.16);stroke-width:1.5;stroke-dasharray:3 7}

@@ -68,6 +68,8 @@
 
 /* route */
 .section_process-route{overflow:hidden}
+/* desktop: the section pins at the top, so its top padding follows the viewport height (the cards need the room) */
+@media screen and (min-width:768px){.section_process-route{padding-top:clamp(48px,8vh,120px)}}
 .ab_route_track{will-change:transform}
 .abp-path{position:absolute;left:0;top:0;height:100%;overflow:visible;pointer-events:none}
 .abp-line{fill:none;stroke:rgba(255,255,255,.16);stroke-width:1.5;stroke-dasharray:3 7}

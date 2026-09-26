@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process v0.9.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process v0.9.1 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abProcessInit) return;
@@ -230,7 +230,7 @@ window.Webflow.push(function(){
 
   /* ---------- the flight: pinned sideways (≥768) or a vertical rail (phones) ---------- */
   var hudN = $('[data-hud-n]'), hudL = $('[data-hud-l]'), countN = $('[data-count-n]');
-  var pts = [], len = 0, st = null, wide = false, lastK = -2, CARD_TOP = 200;
+  var pts = [], len = 0, st = null, wide = false, lastK = -2, CARD_TOP = 200, pinOver = 0, routeSec = $('.section_process-route');
   function layout(){
     if (!track) return;
     wide = innerWidth > 767;
@@ -238,16 +238,21 @@ window.Webflow.push(function(){
     ship.style.transform = ship.style.top = '';
     track.style.height = '';
     if (!wide){ track.style.width = ''; return; }
-    // grow the track when cards get taller (a mission with stops adds lines to every card)
+    // fit the pinned flight to the viewport: the path band above the cards shrinks (200 → 140px) so every card shows
+    // whole; on very short screens the pin starts a little later (the heading slides up, the cards stay in view)
     var tallest = 0; wps.forEach(function(w){ tallest = Math.max(tallest, w.offsetHeight); });
-    if (CARD_TOP + tallest + 40 > track.offsetHeight) track.style.height = (CARD_TOP + tallest + 40) + 'px';
+    var above = routeSec ? track.getBoundingClientRect().top - routeSec.getBoundingClientRect().top : 0;
+    CARD_TOP = Math.round(Math.max(140, Math.min(200, innerHeight - 28 - above - tallest)));
+    pinOver = Math.max(0, Math.round(above + CARD_TOP + tallest + 28 - innerHeight));
+    track.style.height = (CARD_TOP + tallest + 40) + 'px';
+    var f = CARD_TOP / 200;
     var step = Math.max(380, innerWidth * .3), x0 = Math.min(260, innerWidth * .18), W = x0 + step * wps.length + innerWidth * .35, h = track.offsetHeight;
     track.style.width = W + 'px'; svg.setAttribute('width', W); svg.setAttribute('height', h); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + h);
-    pts = [[x0 * .45, 110]];
-    wps.forEach(function(w, i){ pts.push([x0 + step * i + step * .35, i % 2 ? 140 : 60]); });
+    pts = [[x0 * .45, 110 * f]];
+    wps.forEach(function(w, i){ pts.push([x0 + step * i + step * .35, (i % 2 ? 140 : 60) * f]); });
     var d = 'M' + pts[0][0] + ' ' + pts[0][1];
     for (var i = 1; i < pts.length; i++){ var p = pts[i - 1], q = pts[i], mx = (p[0] + q[0]) / 2; d += ' C' + mx + ' ' + p[1] + ' ' + mx + ' ' + q[1] + ' ' + q[0] + ' ' + q[1]; }
-    d += ' S' + (W - 40) + ' 100 ' + W + ' 80';
+    d += ' S' + (W - 40) + ' ' + 100 * f + ' ' + W + ' ' + 80 * f;
     line.setAttribute('d', d); lit.setAttribute('d', d); len = line.getTotalLength();
     lit.style.strokeDasharray = len; lit.style.strokeDashoffset = len;
     pad.style.left = pts[0][0] + 'px'; pad.style.top = pts[0][1] + 'px';
@@ -280,7 +285,7 @@ window.Webflow.push(function(){
     if (!hasGsap || !window.ScrollTrigger) return;
     if (wide){
       var dist = function(){ return track.scrollWidth - innerWidth + 40; };
-      st = ScrollTrigger.create({ trigger: '.section_process-route', start: 'top top', end: function(){ return '+=' + dist(); }, pin: true, scrub: reduce ? true : .6, invalidateOnRefresh: true,
+      st = ScrollTrigger.create({ trigger: '.section_process-route', start: function(){ return 'top+=' + pinOver + ' top'; }, end: function(){ return '+=' + dist(); }, pin: true, scrub: reduce ? true : .6, invalidateOnRefresh: true,
         onUpdate: function(self){ gsap.set(track, { x: -dist() * self.progress }); fly(self.progress * 1.02); } });
       fly(0);
     } else {
@@ -289,8 +294,9 @@ window.Webflow.push(function(){
           var k = -1, mid = innerHeight * .6; wps.forEach(function(w, i){ if (w.getBoundingClientRect().top < mid) k = i; }); stage(k); } });
     }
   }
-  var rsT, lastW = innerWidth;
-  addEventListener('resize', function(){ if (innerWidth === lastW) return; lastW = innerWidth; clearTimeout(rsT); rsT = setTimeout(function(){ build(); if (window.ScrollTrigger) ScrollTrigger.refresh(); }, 250); });
+  // desktop re-fits on height changes too; phones ignore them (the URL bar resizes the viewport while scrolling)
+  var rsT, lastW = innerWidth, lastH = innerHeight;
+  addEventListener('resize', function(){ if (innerWidth === lastW && (!wide || innerHeight === lastH)) return; lastW = innerWidth; lastH = innerHeight; clearTimeout(rsT); rsT = setTimeout(function(){ build(); if (window.ScrollTrigger) ScrollTrigger.refresh(); }, 250); });
 
   /* ---------- crew: boxes tick in as the lists scroll into view ---------- */
   $$('.ab_crew_tick').forEach(function(t){ t.innerHTML = '<svg viewBox="0 0 12 12"><path d="M1.5 6.5l3 3 6-7"/></svg>'; });
