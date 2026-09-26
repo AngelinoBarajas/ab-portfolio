@@ -9,6 +9,7 @@
 // src/services/*.js → dist/ab-services.js + .prod.js (Services template › Before </body>); src/ab-services.css → template <head> <link>
 // src/about/*.js → dist/ab-about.js + .prod.js (About page › Before </body>); src/ab-about.css → page <head> <link>
 // src/process/*.js → dist/ab-process.js + .prod.js (Process page › Before </body>); src/ab-process.css → page <head> <link>
+// src/hub/*.js → dist/ab-hub.js + .prod.js (Services hub /services › Before </body>); src/ab-hub.css → page <head> <link>
 // src/404/*.js → dist/ab-404.js + .prod.js (404 utility page › Before </body>); src/ab-404.css → page <head> <link>
 // vendor/*.js (510 globe, Aguirre case map): served as-is from the repo, loaded lazily by ab-mission
 // src/ab-core.css → dist/ab-core.css + .prod.css (aliases mapped to Webflow variable names)
@@ -84,11 +85,13 @@ await bundle('services', 'ab-services', '__abServicesInit');
 await bundle('about', 'ab-about', '__abAboutInit');
 await bundle('404', 'ab-404', '__ab404Init');
 await bundle('process', 'ab-process', '__abProcessInit');
+await bundle('hub', 'ab-hub', '__abHubInit');
 css('ab-core');
 css('ab-mission');
 css('ab-services');
 css('ab-about');
 css('ab-404');
 css('ab-process');
+css('ab-hub');
 writeFileSync(join(DIST, 'sri.json'), JSON.stringify(sri, null, 2) + '\n');
 console.log('SRI hashes → dist/sri.json');

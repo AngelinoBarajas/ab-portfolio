@@ -1,0 +1,7 @@
+.ab_hub-row{position:relative;display:flex;align-items:center;padding:5px 8px;border:1px solid transparent}
+.ab_hub-row_name{margin-top:0;margin-bottom:0}
+.ab_hub-row_sum{margin-top:0;margin-bottom:0}
+.ab_hub-go{position:relative;z-index:2;display:inline-flex;flex:none;align-items:center;gap:6px;margin-left:auto;padding:0 8px;border:1px solid var(--hair2);color:var(--dust);text-decoration:none}
+.ab_hub-go:hover{border-color:var(--signal);background-color:var(--signal);color:var(--on-signal)}
+.ab_hub-go_t{font-family:var(--mono);font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase}
+.ab_hub-go_a{position:relative}

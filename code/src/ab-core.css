@@ -705,3 +705,24 @@ section:hover > .ab_frame-label{color:var(--select)}
 .gl-tip.is-aside b{color:var(--select)}
 .gl-tip b i{font-style:normal}
 @media (prefers-reduced-motion:reduce){.gl-tip,.gl-tip.show{transition:none;transform:none}}
+
+/* ---------- mission-control monitor (Mission debrief channels, Services hub manifest): frame screws, REC, CRT decor ---------- */
+.ab_mon::before,.ab_mon::after{content:"";position:absolute;width:6px;height:6px;border-radius:50%;background:#2a2e44;box-shadow:inset 0 1px 1px rgba(0,0,0,.6);top:6px}
+.ab_mon::before{left:6px}.ab_mon::after{right:6px}
+.ab_mon_rec::before{content:"";width:8px;height:8px;border-radius:50%;background:#ff4b3a;box-shadow:0 0 8px #ff4b3a;animation:ab-blink 1.2s steps(1) infinite}
+.ab_mon_tc{font-variant-numeric:tabular-nums}.ab_tele_v{font-variant-numeric:tabular-nums}
+.mon-bar .rec{display:inline-flex;align-items:center;gap:7px;color:#ff4b3a}
+.mon-bar .tc{font-variant-numeric:tabular-nums;color:var(--soft)}
+.scan{position:absolute;inset:0;z-index:20;pointer-events:none;background:repeating-linear-gradient(to bottom,rgba(255,255,255,.035) 0 1px,transparent 1px 3px);mix-blend-mode:overlay}
+.vig{position:absolute;inset:0;z-index:21;pointer-events:none;box-shadow:inset 0 0 80px rgba(0,0,0,.55);background:radial-gradient(120% 90% at 50% 50%,transparent 60%,rgba(0,0,0,.35))}
+.roll{position:absolute;left:0;right:0;height:18%;z-index:22;pointer-events:none;background:linear-gradient(transparent,rgba(255,255,255,.05),transparent);animation:ab-roll 7s linear infinite}
+@keyframes ab-roll{from{top:-20%}to{top:110%}}
+.brk{position:absolute;width:18px;height:18px;border:1.5px solid rgba(242,240,234,.55);z-index:24;pointer-events:none}
+.brk.tl{left:10px;top:10px;border-right:0;border-bottom:0}.brk.tr{right:10px;top:10px;border-left:0;border-bottom:0}
+.brk.bl{left:10px;bottom:10px;border-right:0;border-top:0}.brk.br{right:10px;bottom:10px;border-left:0;border-top:0}
+.osd{position:absolute;left:16px;top:14px;z-index:24;pointer-events:none;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:#fff;text-transform:uppercase;background:rgba(7,8,13,.72);padding:4px 8px}
+@media (prefers-reduced-motion:reduce){.roll,.ab_mon_rec::before{animation:none}}
+/* ---------- square mono chip (.ab_chip: hub diagnostics, pass tools; layout in the Designer) ---------- */
+.ab_chip{transition:background-color .2s,border-color .2s,color .2s}
+.ab_chip[aria-pressed="true"]{border-color:var(--star);color:var(--star);background-color:rgba(255,255,255,.06)}
+.ab_chip:focus-visible{outline:2px solid var(--select);outline-offset:2px}

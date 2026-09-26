@@ -1,0 +1,59 @@
+.section_hub-hero{position:relative;z-index:4}
+.ab_dbh.is-hub{padding-bottom:0}
+.ab_planet.is-dbh.is-hub{left:auto;right:clamp(10px,7vw,130px);top:clamp(170px,14vw,230px);width:clamp(130px,16vw,260px);z-index:2}
+.ab_hub-hero_grid{position:relative;z-index:4;display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(16px,2vw,24px)}
+.ab_hub-hero_copy{position:relative;min-width:0}
+.ab_dbh_title.is-hub{font-size:clamp(52px,8.6vw,150px)}
+.ab_dbh_sum.is-hub{max-width:44ch;margin-top:0;justify-self:start}
+.ab_hub-sym{position:relative;z-index:4;display:flex;flex-wrap:wrap;align-items:baseline;gap:12px 20px;margin-top:clamp(32px,4.5vw,56px)}
+.ab_hub-sym_label{display:inline-flex;flex:none;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--signal)}
+.ab_hub-sym_dot{width:8px;height:8px;border-radius:50%;background-color:#ff4d3a}
+.ab_hub-sym_chips{display:flex;flex:1;flex-wrap:wrap;gap:8px;min-width:0}
+.ab_chip{display:inline-flex;align-items:center;gap:8px;padding:8px 11px;border:1px solid var(--hair2);font-family:var(--mono);font-size:11px;line-height:1.35;letter-spacing:0.04em;color:var(--soft);cursor:pointer}
+.ab_chip:hover{border-color:var(--star);color:var(--star)}
+.ab_chip.is-diag{background-color:transparent}
+.ab_chip.is-diag.is-reset{border-style:dashed;color:var(--dust);text-transform:uppercase;letter-spacing:0.08em}
+.ab_hub-board{position:relative;margin-top:clamp(18px,2vw,26px)}
+.ab_mc.is-hub{z-index:2}
+.ab_mon.is-hub{z-index:2}
+.ab_hub-wide{position:relative}
+.ab_screen.is-hub{aspect-ratio:auto;color:var(--star)}
+.ab_hub-scr{position:relative;z-index:2;padding:48px clamp(10px,1.4vw,18px) clamp(14px,1.6vw,20px)}
+.ab_hub-prompt{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--soft)}
+.ab_hub-slot{position:relative;height:14px;margin:12px 10% 2px;background-color:#030305}
+.ab_hub-slot_line{position:absolute;left:10%;right:10%;top:6px;height:2px;background-color:var(--signal);opacity:0}
+.ab_hub-slot_label{position:absolute;right:0;top:-16px;font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dust)}
+.ab_console.is-hub{position:relative}
+.ab_hub-keys{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+.ab_hub-print{position:relative;z-index:6;margin-top:-4px}
+.ab_hub-pass{position:relative;display:grid;grid-template-columns:minmax(0,1fr) clamp(200px,18vw,240px);width:78%;margin-left:auto;margin-right:auto;border:1px solid rgba(255,255,255,0.14);color:var(--star)}
+.ab_hub-pass_main{position:relative;padding:clamp(18px,2vw,26px)}
+.ab_hub-pass_top{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dust)}
+.ab_hub-pass_ok{display:inline-flex;align-items:center;gap:7px;color:var(--live)}
+.ab_hub-pass_b{color:var(--star);font-weight:500}
+.ab_hub-pass_route{display:flex;align-items:center;gap:clamp(10px,1.4vw,18px);margin-top:clamp(12px,1.6vw,18px)}
+.ab_hub-pass_end{display:flex;flex-direction:column;line-height:1.1}
+.ab_hub-pass_small{font-family:var(--mono);font-size:9.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dust)}
+.ab_hub-pass_code{margin-top:4px;font-family:var(--display);font-size:clamp(26px,2.8vw,42px);font-weight:900;letter-spacing:-0.01em}
+.ab_hub-pass_arc{display:flex;flex:1;align-items:center;gap:8px;min-width:60px}
+.ab_hub-pass_dash{flex:1;height:0;border-top:1.5px dashed rgba(242,240,234,0.35)}
+.ab_planet.is-pass{position:relative;left:auto;right:auto;top:auto;flex:none;width:clamp(44px,4.4vw,64px)}
+.ab_hub-pass_link{position:relative;display:block;color:inherit;text-decoration:none}
+.ab_hub-pass_title{margin-top:clamp(14px,1.8vw,20px);margin-bottom:0;font-family:var(--display);font-size:clamp(26px,2.6vw,40px);font-weight:900;line-height:0.92;letter-spacing:-0.02em;text-transform:uppercase}
+.ab_hub-pass_t1{display:block}
+.ab_hub-pass_t2{display:block}
+.ab_hub-pass_open{display:inline-block;margin-top:6px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dust)}
+.ab_hub-pass_sum{max-width:62ch;margin-top:10px;margin-bottom:0;font-size:15px;line-height:1.55;color:var(--soft)}
+.ab_hub-pass_facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin-top:16px;border:1px solid rgba(255,255,255,0.08);background-color:rgba(255,255,255,0.08)}
+.ab_hub-pass_fact{padding:9px 11px;background-color:rgba(7,8,13,0.45)}
+.ab_hub-pass_k{font-family:var(--mono);font-size:9.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dust)}
+.ab_hub-pass_v{margin-top:3px;font-size:13px;font-weight:500;line-height:1.3}
+.ab_hub-pass_tools{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.ab_chip.is-tool{padding:4px 8px;border-color:rgba(255,255,255,0.16);font-size:10.5px;letter-spacing:0.06em;text-transform:uppercase;cursor:default}
+.ab_hub-pass_stub{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:clamp(18px,2vw,26px) clamp(16px,1.6vw,22px);border-left:1px dashed rgba(255,255,255,0.18);background-color:rgba(7,8,13,0.3)}
+.ab_hub-pass_stub-t{margin-top:14px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dust)}
+.ab_hub-pass_qr{display:block;width:100%;max-width:150px;aspect-ratio:1;padding:8px;border:1px solid rgba(255,255,255,0.12);background-color:rgba(242,240,234,0.06)}
+.ab_hub-pass_stub-f{font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dust)}
+.ab_hub-pass_stub-code{font-weight:600}
+.button.is-primary.is-stub{width:100%;margin-top:auto;justify-content:space-between;padding:12px 14px;font-size:12px;letter-spacing:0.04em;white-space:nowrap}
+@media screen and (max-width: 767px){.ab_planet.is-dbh.is-hub{right:-24px;top:118px;width:120px}.ab_dbh_title.is-hub{font-size:clamp(52px,17vw,96px)}.ab_hub-sym{flex-direction:column;align-items:stretch}.ab_hub-keys{grid-template-columns:repeat(4,minmax(0,1fr))}.ab_hub-pass{grid-template-columns:minmax(0,1fr);width:94%}.ab_hub-slot{margin-left:3%;margin-right:3%}.ab_planet.is-pass{width:40px}}

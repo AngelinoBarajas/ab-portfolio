@@ -1,0 +1,4 @@
+{
+ "html": "<div class=\"ab_chip is-diag\" data-diag=\"\"><p class=\"ab_chip_text\" data-field=\"solve-1-problem\">Every text change needs a developer.</p></div>",
+ "css": ".ab_chip_text{margin-top:0;margin-bottom:0}\n"
+}
