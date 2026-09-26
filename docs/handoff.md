@@ -1,4 +1,4 @@
-# Session handoff (2026-09-26, end of the 404 + Process page session)
+# Session handoff (2026-09-26, end of the Process review + site-wide tips session)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -12,7 +12,7 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 | 4. CMS | ✅ 13 collections, all references resolved. IDs in `docs/webflow-cms-ids.json`. Added this session: Tools › **Pen + paper**, Mission Channels › Aguirre **Site plan**, AB Identity **Sketches** + **Illustrator** |
 | 3b. Global styles | ✅ 29 classes + tag styles (Body, H1–H6, p) |
 | 5. Components | 🟡 Nav, Footer, Frame label, Bento card, FAQ item, **Next card** (no props yet) done (group "Global"). Mission card is a page-level Collection item (nested Types list rules out a component). Remaining: code block, crew dock |
-| 6. Pages | 🟡 Approved 2026-09-25: Home, Work, Mission template, Services template, Knowledge System mission, About, **404** (utility page `6ab6e4a645ff2d1bd12b1c3e`). **Process** (`/process`, page `6ab701e2df00b2e38832af5b`, new page) built + on staging v0.9.0, **awaiting OK + tweaks**. Next new page: **Services hub** |
+| 6. Pages | 🟡 Approved 2026-09-25: Home, Work, Mission template, Services template, Knowledge System mission, About, **404** (utility page `6ab6e4a645ff2d1bd12b1c3e`). **Process** (`/process`, page `6ab701e2df00b2e38832af5b`) **approved 2026-09-26**. Next new page: **Services hub** |
 | 7. Custom code | 🟡 Live on staging: `ab-core` JS + CSS **v0.10.2** (site-wide tips) · `ab-home` **v0.9.0** · `ab-process` JS + CSS **v0.10.0** (route fit, touchdown finale, hero planet drag, countdown frame, tips hooks) · `ab-404` JS v0.7.0 + CSS v0.7.1 · `ab-about` JS + CSS v0.6.2 · `ab-mission` JS + CSS **v0.10.0** · `ab-work` + `ab-services` (+ CSS) v0.4.0 · head inline script `abwarpin` 0.3.2. Build/deploy steps in `code/README.md`; per-version notes in `docs/webflow-build-notes.md` (up to v0.10.2) |
 | 8. Brand | ✅ New **AB planet monogram** (`logo/ab-logo.svg`, asset `6ab6bba8167f1da71a4bf9a8`) in Nav + Footer; inlined + animated by `core/22-logo.js` (warp spin-in, fill; black-hole hover; no glow). One geometry source: `AB.markSVG` / `AB.MARK` in `core/21-mark.js`. Favicon/webclip PNGs in `logo/` (upload pending) |
 
@@ -108,12 +108,17 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 - **Copy**: "interactive 3D that's useful to clients/visitors" instead of "building globes" (About, Home bento + FAQ, Services › webgl-data, Tools › Three.js). 510 Visuals keeps its globe copy.
 - **404** approved (v0.7.0/0.7.1): utility pages can't hold CMS lists → core caches site data (`ab:site`) and fetches `/` once if needed.
 
+## This session (2026-09-26, Process review + site-wide tips) in one list
+
+- **Process approved** after his tweaks: v0.9.1 route cards fit the viewport (path band shrinks, pin starts later on short screens) · v0.9.2 **touchdown finale** (route ends at the main destination planet, stops as moons, rocket lands, shockwave + confetti, "Mission live" + CTA), hero planet ~3× behind the countdown, launch form frame unclipped · v0.9.3 hero planet draggable again (pointer passthrough on the hero grid) · v0.9.4 countdown Figma frame on hover (hover proxy).
+- **Site-wide tips approved** (v0.10.0–v0.10.2): CMS **Glossary** gained Kind (Term/Aside) + Target (selector); 15 new terms + 16 witty asides; hidden Glossary list in every page's site-data block; `core/23-tips.js` (`AB.tip`) auto-links terms (first per section, one per paragraph, body copy only) and attaches asides (✦, selection blue). Mission tip code moved to core. Details: build notes › Site-wide tips.
+- Lessons: lowering a draggable's z-index under a full-width text layer kills the drag; `pointer-events:none` on a `[data-selectable]` frame kills its hover box (memory: lesson_z-index-drop-kills-drag). Headless Chrome shots of these pages come back blank; DOM measurements in the pane are the check.
+
 ## Next session
 
-1. **Process page review + tweaks** (Angelino): walk it with him at 1440 / 1024 / 390, apply his tweaks the same way (source in `code/src/process/00-process.js`, `code/src/ab-process.css`, Designer copy/classes via `webflow/build/process/make.py`), bump + deploy, stop for his OK. Known candidates: crew section top spacing (inherits the light-section padding), whether the "flown before" link should match mission combinations (needs a hidden Missions list with their Services), the form's name in Webflow (still "Email Form").
-2. **New page: Services hub** (`/services`, static; a static page can share a slug with a collection, like `/work`). Same pipeline as Process: plan + divergence gate → HTML prototype in `prototypes/` (reuse the About/Process shell via a `_parts` assembler) → his OK → Webflow build → code → staging checks → stop for OK. The Services collection (8 items: title 1/2, summary, best for, planet, tools, pairs with, missions, FAQ, stages, deliverables, process legs…) is the data source. Then repoint Nav "Services" (now `/#capabilities`) and the footer service column heading to `/services`.
-3. Then **step 8 QA** (every page vs its prototype at 1440 / 1024 / 390, console, horizontal scroll, reduced motion, Lighthouse, links + warp transitions). Ask before any publish beyond webflow.io.
-4. Offered, not decided: stronger Interstellar "Hover to fly close" on About.
+1. **New page: Services hub** (`/services`, static; a static page can share a slug with a collection, like `/work`). Pipeline (page-pipeline skill): plan + divergence gate → **show Angelino** → HTML prototype in `prototypes/` (reuse the About/Process shell via a `_parts` assembler) → his OK → Webflow build (Services CMS as the data source; code bundle only where Webflow can't) → staging checks 1440 / 1024 / 390 → stop for OK. The Services collection (8 items: title 1/2, short name, summary, best for, planet type/colors/ring/glow, tools, pairs with, related missions, FAQ, stages, deliverables, process legs 1–6, timeline preset, process example) is the data source. Must feel unique, not a template grid. Then repoint Nav "Services" (now `/#capabilities`), the mobile menu and the footer service column heading to `/services`. Add asides for the new page to the Glossary CMS if fitting.
+2. Then **step 8 QA** (every page vs its prototype at 1440 / 1024 / 390, console, horizontal scroll, reduced motion, Lighthouse, links + warp transitions). Ask before any publish beyond webflow.io.
+3. Offered, not decided: stronger Interstellar "Hover to fly close" on About. Process prototype (`prototypes/process.html`) predates v0.9.1–v0.9.4 (fixed 200px route band, no touchdown).
 
 ## Home review edits already done (v0.1.4, from `ab-portfolio-hp-edits.docx`)
 

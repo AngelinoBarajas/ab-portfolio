@@ -350,7 +350,7 @@ MCP findings:
 - Live: core JS/CSS + home JS **v0.7.0**, 404 JS v0.7.0 + CSS v0.7.1; about v0.6.2, mission v0.5.1/0.5.0, work + services v0.4.0 unchanged.
 - Tested: local dist copy (1440/1024/390, reduced motion via matchMedia override, resize reset), then staging 1440/1024/390: no horizontal scroll, planet centered, radar finds the page on ping 3, no console errors other than the page's own 404 status. Per-hero cue verified: About shows it after Work was dragged; Work stays quiet.
 
-## Process page (built 2026-09-25, awaiting Angelino's OK)
+## Process page (built 2026-09-25, approved by Angelino 2026-09-26)
 
 Page `6ab701e2df00b2e38832af5b` (`/process`, static; duplicate of About, About sections removed). New page Angelino asked for: one route, eight destinations. Prototype `prototypes/process.html` (assembled from `prototypes/_parts/` by `_parts/assemble.py`). Build files `webflow/build/process/` (`make.py`, `form-fields.embed.html`). Code `ab-process` JS + CSS v0.8.0 (page footer script `abprocess` + head `<link>`).
 
