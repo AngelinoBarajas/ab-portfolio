@@ -98,7 +98,8 @@
 
   // radar: ping for the missing page (the third ping finds it)
   var radar = $('[data-radar]', hero), pings = 0, found = false;
-  var KNOWN = ['/work', '/about', '/services/webflow-development', '/work/510-visuals', '/services/motion', '/work/daniel-aguirre-law', '/services/branding', '/work/ab-identity', '/services/webgl-data'];
+  // radar blip labels: pages only (no client missions, so a hidden client never shows up here)
+  var KNOWN = ['/work', '/about', '/services', '/services/webflow-development', '/process', '/services/motion', '/contact', '/services/branding', '/services/webgl-data'];
   function rm(el){ if (el.parentNode) el.parentNode.removeChild(el); }
   function blip(x, y, cls, label){
     var b = document.createElement('span'); b.className = 'lblip' + (cls ? ' ' + cls : ''); b.style.left = x + '%'; b.style.top = y + '%'; if (label) b.title = label;

@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process v0.13.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process v0.14.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abProcessInit) return;
@@ -23,6 +23,8 @@ window.Webflow.push(function(){
   var DOT = { 'webflow-development': '#146EF5', 'webgl-data': '#5eead4', motion: '#0AE448', branding: '#FF6A3D', 'custom-deploys': '#C9C7C0', 'cms-integrations': '#8fb1ff', 'design-systems': '#7c5cff', performance: '#ffd166' };
 
   /* ---------- destinations from the CMS ---------- */
+  // missions switched to "Hide from site" (hidden list [data-hidden-missions]) never show as a "flown before" example
+  var HIDDEN = $$('[data-hidden-missions] .w-dyn-item [data-field="slug"]').map(function(n){ return n.textContent.trim(); });
   var DEST = $$('[data-dest-source] .w-dyn-item').map(function(it){
     function f(k){ var n = $('[data-field="' + k + '"]', it); return n ? n.textContent.trim() : ''; }
     var slug = f('slug');
@@ -32,7 +34,7 @@ window.Webflow.push(function(){
       plan: [f('stage-1'), f('stage-2'), f('stage-3'), f('stage-4')].filter(Boolean),
       legs: [1, 2, 3, 4, 5, 6].map(function(n){ return f('process-leg-' + n); }),
       eta: (f('timeline-preset') || '1,1,1,1,1,1').split(',').map(function(v){ return Math.max(0, Math.min(2, parseInt(v, 10) || 0)); }),
-      ex: f('example-slug') ? [f('example-slug'), f('example-name')] : null
+      ex: f('example-slug') && HIDDEN.indexOf(f('example-slug')) < 0 ? [f('example-slug'), f('example-name')] : null
     };
   }).filter(function(d){ return d.slug; });
 

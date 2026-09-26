@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.13.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.14.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* =========================================================
    AB Portfolio · ab-core.css (site-wide)
    Only what the Webflow Designer can't express: pseudo-elements, state
@@ -110,6 +110,9 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 /* ---------- nav ---------- */
 .ab_nav_bar{-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:transform .4s ease}
 .ab_nav_component.is-hidden .ab_nav_bar{transform:translateY(-130%)}
+/* Home testimonials: the CMS list wrappers stay out of the quote grid; its empty state never shows */
+.ab_quotes .w-dyn-list,.ab_quotes .w-dyn-items,.ab_quotes .w-dyn-item{display:contents}
+.ab_quotes .w-dyn-empty{display:none}
 .ab_sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .ab_nav_link::before{content:"";position:absolute;left:-13px;top:50%;width:6px;height:6px;margin-top:-3px;background:var(--_color---brand--signal);transform:scale(0) rotate(45deg);transition:transform .3s cubic-bezier(.2,.9,.2,1.4)}
 .ab_nav_link::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--_color---brand--signal);transform:scaleX(0);transform-origin:right;transition:transform .35s cubic-bezier(.7,0,.2,1)}
