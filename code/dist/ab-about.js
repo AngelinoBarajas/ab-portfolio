@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.21.5 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.21.6 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -362,8 +362,7 @@ window.Webflow.push(function(){
     new IntersectionObserver(function(es){ var was = vis; vis = es[0].isIntersecting; if (vis && !was) requestAnimationFrame(tick); }).observe(td);
   })();
 
-  /* ---------- Between launches cards: spotlight + tilt from core (AB.cardFx); the bookshelf stays flat ---------- */
-  $$('.section_about-off .ab_bento-card.is-shelf').forEach(function(c){ c.setAttribute('data-no-tilt', ''); });
+  /* ---------- Between launches cards: spotlight + tilt from core (AB.cardFx), bookshelf included (Angelino, 2026-09-26) ---------- */
   if (AB.cardFx) $$('.section_about-off .ab_bento-card').forEach(AB.cardFx);
 
   /* ---------- crew of three: hover speeds the orbits up smoothly (playbackRate, so nobody jumps to a new spot;
