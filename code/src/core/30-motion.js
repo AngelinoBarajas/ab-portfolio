@@ -96,13 +96,15 @@
         (function hook(){
           if (!p.__body){ if (tries++ < 60) setTimeout(hook, 100); return; }
           var b = p.__body, size = p.getBoundingClientRect().width || 100, weight = gsap.utils.clamp(.45, 1.6, 140 / size);
-          gsap.to(b, { yPercent: gsap.utils.random(-3, 3), rotation: gsap.utils.random(-2, 2), duration: gsap.utils.random(3, 5.5), ease: 'sine.inOut', yoyo: true, repeat: -1, delay: i * .3 });
+          var fl = gsap.to(b, { yPercent: gsap.utils.random(-3, 3), rotation: gsap.utils.random(-2, 2), duration: gsap.utils.random(3, 5.5), ease: 'sine.inOut', yoyo: true, repeat: -1, delay: i * .3 });
+          if (window.IntersectionObserver) onView(p, function(on){ if (on) fl.resume(); else fl.pause(); });
           bouncers.push({ w: weight, qy: gsap.quickTo(b, 'y', { duration: 1.3, ease: 'elastic.out(1, 0.32)' }), qs: gsap.quickTo(b, 'scaleY', { duration: 1, ease: 'elastic.out(1, 0.4)' }), qx: gsap.quickTo(b, 'scaleX', { duration: 1, ease: 'elastic.out(1, 0.4)' }), last: 0 });
         })();
       });
-      var lastScroll = scrollY, vel = 0;
+      var lastScroll = scrollY, curScroll = lastScroll, vel = 0;
+      if (!lenis) addEventListener('scroll', function(){ curScroll = scrollY; }, { passive: true });
       gsap.ticker.add(function(){
-        var v = lenis ? lenis.velocity : (scrollY - lastScroll); lastScroll = scrollY;
+        var v = lenis ? lenis.velocity : (curScroll - lastScroll); lastScroll = curScroll;
         vel += (v - vel) * .25;
         bouncers.forEach(function(b){
           var ty = gsap.utils.clamp(-46, 46, -vel * 2.4 * b.w);

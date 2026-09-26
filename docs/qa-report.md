@@ -40,3 +40,9 @@ LCP 4.4–5.7 s, TBT 90–1,450 ms (Home worst: 9.1 s main-thread work, 1.9 s JS
 1. Services › `webgl-data` CMS **Name** is still "WebGL + data" (hero shows "Interactive 3D + data"); it feeds the browser tab title and form values. Fix: rename the item to "Interactive 3D + data".
 2. Known placeholders (his inputs): email `hello@[your-domain]`, socials, testimonials (`[Name]` + quote on Home), Home FAQ `[X–Y weeks]`, headshot, favicon + webclip upload, metrics numbers.
 3. Designer: rename the Process and Contact forms ("Email Form"); confirm the Forms notification email.
+
+## Decisions (Angelino, 2026-09-26)
+
+- Fix batch **A1–A5, A8 + D1: apply all.**
+- Performance: **defer + cap** (keep every effect; non-hero scenes at first scroll/idle, cap canvas resolution on phones, preload the display font; target 70+ mobile).
+- Then the **SEO pass** (seo-schema-builder); Angelino does the 2 Designer collection-link settings + the sitemap toggle.

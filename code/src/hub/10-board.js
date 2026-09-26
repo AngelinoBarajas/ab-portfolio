@@ -60,6 +60,7 @@
     return { n: n, cols: cols };
   }
   var callRow = $('[data-hub-call]');
+  if (callRow && callRow.hasAttribute('aria-label')) callRow.setAttribute('role', 'img');
   function tileSize(){
     if (screen && rows[0]){
       var u = units(rows[0]), go = $('.ab_hub-go', rows[0]), goW = go ? go.offsetWidth : 0, list = $('[data-hub-rows]', screen), w = (list ? list.clientWidth : screen.clientWidth) - 36 - goW;

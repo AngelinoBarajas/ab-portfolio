@@ -4,6 +4,7 @@
      AB.missionCard adds covers, number, status and link the same way ab-work does. */
   (function(){
     var grid = $('#svMissions'); if (!grid) return;
+    grid.setAttribute('role', 'list');
     var slugs = $$('[data-related-source] .w-dyn-item [data-field="slug"]').map(function(p){ return p.textContent.trim(); }).filter(Boolean);
     function empty(n){
       if (n >= 3) return;

@@ -43,12 +43,23 @@ const banner = (name) => `/*! AB Portfolio · ${name} v${pkg.version} · github.
 function hash(buf) { return 'sha384-' + createHash('sha384').update(buf).digest('base64'); }
 function write(file, text) { writeFileSync(join(DIST, file), text); sri[file] = hash(Buffer.from(text)); }
 
-async function bundle(dir, out, guard) {
-  const parts = readdirSync(join(SRC, dir)).filter((f) => f.endsWith('.js')).sort()
-    .map((f) => `  /* ===== ${dir}/${f} ===== */\n` + readFileSync(join(SRC, dir, f), 'utf8'));
+// split: the first module runs inline (it holds the shared helpers); every later module becomes its own task,
+// yielded through a MessageChannel (not throttled in background tabs), so page init is several short tasks instead
+// of one long one (Lighthouse TBT). Later modules must not share top-level names (checked for home 2026-09-26).
+async function bundle(dir, out, guard, opts = {}) {
+  const files = readdirSync(join(SRC, dir)).filter((f) => f.endsWith('.js')).sort();
+  const parts = files.map((f, i) => {
+    const body = `  /* ===== ${dir}/${f} ===== */\n` + readFileSync(join(SRC, dir, f), 'utf8');
+    return opts.split && i > 0 ? `  __steps.push(function(){\n${body}\n  });` : body;
+  });
+  const run = opts.split
+    ? `\n  (function(){\n    var i = 0, ch = window.MessageChannel ? new MessageChannel() : null;\n` +
+      `    function next(){ if (i >= __steps.length){ if (window.ScrollTrigger) ScrollTrigger.refresh(); return; } __steps[i++](); if (ch) ch.port2.postMessage(0); else setTimeout(next, 0); }\n` +
+      `    if (ch) ch.port1.onmessage = next;\n    next();\n  })();`
+    : '';
   const code = banner(out) +
     `window.Webflow = window.Webflow || [];\nwindow.Webflow.push(function(){\n  if (window.${guard}) return;\n  window.${guard} = true;\n` +
-    parts.join('\n') + `\n});\n`;
+    (opts.split ? '  var __steps = [];\n' : '') + parts.join('\n') + run + `\n});\n`;
   try { parse(code, { ecmaVersion: 5 }); }
   catch (e) {
     const line = code.split('\n')[e.loc.line - 1];
@@ -79,7 +90,7 @@ function css(name) {
 }
 
 await bundle('core', 'ab-core', '__abCoreInit');
-await bundle('home', 'ab-home', '__abHomeInit');
+await bundle('home', 'ab-home', '__abHomeInit', { split: true });
 await bundle('work', 'ab-work', '__abWorkInit');
 await bundle('mission', 'ab-mission', '__abMissionInit');
 await bundle('services', 'ab-services', '__abServicesInit');

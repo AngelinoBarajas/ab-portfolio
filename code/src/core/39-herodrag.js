@@ -16,7 +16,7 @@
         words.forEach(function(w, i){ var s = document.createElement('span'); s.className = 'w'; s.textContent = w; title.appendChild(s); if (i < words.length - 1) title.appendChild(document.createTextNode(' ')); });
         items = $$('.w', title);
       }
-      items.forEach(function(el){ el.classList.add('is-toy'); el.setAttribute('aria-hidden', 'true'); el.tabIndex = 0; });
+      items.forEach(function(el){ el.classList.add('is-toy'); el.setAttribute('aria-hidden', 'true'); el.tabIndex = -1; });
       var planet = $('.ab_planet[data-drag]', hero);
       if (planet && !planet.hasAttribute('data-parallax')) items.push(planet);
       items.forEach(function(el){

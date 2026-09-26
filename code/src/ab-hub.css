@@ -355,3 +355,4 @@ html:has(.section_hub-hero),.main-wrapper:has(.section_hub-hero){overflow-anchor
   .ab_hub-prompt::after,.ab_hub-call_row .hb-caret,.ab_hub-planner.is-ping,.hb-pl-tag,.hb-arc.is-lit,.ab_hub-row.is-now .hb-c-status .hb-fl,.hb-key.is-now i,.hb-port.is-rec::before,.ab_hub-pass_ok::before,.section_hub-hero .ab_rec_dot.is-live,.ab_hub-sym_dot,.hbf-flame,.hbf-moon,.hbf-moon em,.section_hub-flight.is-landed .hbf-shock,.hb-map-hint::before{animation:none}
   .ab_planet.hb-peek{transition:none}
 }
+@media (max-width:767px){.ab_hub-go{min-width:24px;min-height:24px}}

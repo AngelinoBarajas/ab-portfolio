@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-hub v0.12.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-hub v0.13.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHubInit) return;
@@ -166,6 +166,7 @@ window.Webflow.push(function(){
     return { n: n, cols: cols };
   }
   var callRow = $('[data-hub-call]');
+  if (callRow && callRow.hasAttribute('aria-label')) callRow.setAttribute('role', 'img');
   function tileSize(){
     if (screen && rows[0]){
       var u = units(rows[0]), go = $('.ab_hub-go', rows[0]), goW = go ? go.offsetWidth : 0, list = $('[data-hub-rows]', screen), w = (list ? list.clientWidth : screen.clientWidth) - 36 - goW;

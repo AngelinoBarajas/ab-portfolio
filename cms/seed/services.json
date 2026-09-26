@@ -72,7 +72,7 @@
   },
   {
     "slug": "webgl-data",
-    "name": "WebGL + data",
+    "name": "Interactive 3D + data",
     "title-1": "Interactive",
     "title-2": "3D + data",
     "summary": "Interactive 3D and data in Webflow, fed by the CMS: product viewers, explorable spaces, maps and charts visitors can turn, zoom and use to decide.",

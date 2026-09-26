@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-services v0.12.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-services v0.13.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abServicesInit) return;
@@ -167,6 +167,7 @@ window.Webflow.push(function(){
      AB.missionCard adds covers, number, status and link the same way ab-work does. */
   (function(){
     var grid = $('#svMissions'); if (!grid) return;
+    grid.setAttribute('role', 'list');
     var slugs = $$('[data-related-source] .w-dyn-item [data-field="slug"]').map(function(p){ return p.textContent.trim(); }).filter(Boolean);
     function empty(n){
       if (n >= 3) return;

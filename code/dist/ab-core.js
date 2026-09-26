@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.12.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.13.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -238,7 +238,7 @@ window.Webflow.push(function(){
     var timers = { shooting: rnd(2, 5), meteors: rnd(6, 12), comets: rnd(14, 24), satellites: rnd(8, 16), flares: rnd(3, 6), ufo: rnd(50, 90) };
     var gaps = { shooting: [5, 11], meteors: [11, 22], comets: [45, 75], satellites: [22, 38], flares: [4, 9], ufo: [120, 200] };
     function resize(){
-      dpr = Math.min(window.devicePixelRatio || 1, 1.5); w = innerWidth; h = innerHeight;
+      dpr = coarse ? 1 : Math.min(window.devicePixelRatio || 1, 1.5); w = innerWidth; h = innerHeight;
       c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       var n = Math.min(900, Math.round(w * h / 2400)); stars = [];
       for (var i = 0; i < n; i++){
@@ -740,13 +740,15 @@ window.Webflow.push(function(){
         (function hook(){
           if (!p.__body){ if (tries++ < 60) setTimeout(hook, 100); return; }
           var b = p.__body, size = p.getBoundingClientRect().width || 100, weight = gsap.utils.clamp(.45, 1.6, 140 / size);
-          gsap.to(b, { yPercent: gsap.utils.random(-3, 3), rotation: gsap.utils.random(-2, 2), duration: gsap.utils.random(3, 5.5), ease: 'sine.inOut', yoyo: true, repeat: -1, delay: i * .3 });
+          var fl = gsap.to(b, { yPercent: gsap.utils.random(-3, 3), rotation: gsap.utils.random(-2, 2), duration: gsap.utils.random(3, 5.5), ease: 'sine.inOut', yoyo: true, repeat: -1, delay: i * .3 });
+          if (window.IntersectionObserver) onView(p, function(on){ if (on) fl.resume(); else fl.pause(); });
           bouncers.push({ w: weight, qy: gsap.quickTo(b, 'y', { duration: 1.3, ease: 'elastic.out(1, 0.32)' }), qs: gsap.quickTo(b, 'scaleY', { duration: 1, ease: 'elastic.out(1, 0.4)' }), qx: gsap.quickTo(b, 'scaleX', { duration: 1, ease: 'elastic.out(1, 0.4)' }), last: 0 });
         })();
       });
-      var lastScroll = scrollY, vel = 0;
+      var lastScroll = scrollY, curScroll = lastScroll, vel = 0;
+      if (!lenis) addEventListener('scroll', function(){ curScroll = scrollY; }, { passive: true });
       gsap.ticker.add(function(){
-        var v = lenis ? lenis.velocity : (scrollY - lastScroll); lastScroll = scrollY;
+        var v = lenis ? lenis.velocity : (curScroll - lastScroll); lastScroll = curScroll;
         vel += (v - vel) * .25;
         bouncers.forEach(function(b){
           var ty = gsap.utils.clamp(-46, 46, -vel * 2.4 * b.w);
@@ -1160,7 +1162,7 @@ window.Webflow.push(function(){
         words.forEach(function(w, i){ var s = document.createElement('span'); s.className = 'w'; s.textContent = w; title.appendChild(s); if (i < words.length - 1) title.appendChild(document.createTextNode(' ')); });
         items = $$('.w', title);
       }
-      items.forEach(function(el){ el.classList.add('is-toy'); el.setAttribute('aria-hidden', 'true'); el.tabIndex = 0; });
+      items.forEach(function(el){ el.classList.add('is-toy'); el.setAttribute('aria-hidden', 'true'); el.tabIndex = -1; });
       var planet = $('.ab_planet[data-drag]', hero);
       if (planet && !planet.hasAttribute('data-parallax')) items.push(planet);
       items.forEach(function(el){
@@ -1253,7 +1255,7 @@ window.Webflow.push(function(){
     // wordmark: scale to fit the row; letters rise toward the cursor, click to launch one
     var wm = $('#wordmark'); if (!wm) return;
     function fitWM(){ wm.style.fontSize = '100px'; var p = wm.parentNode, r = p.clientWidth - parseFloat(getComputedStyle(p).paddingLeft) * 2; wm.style.fontSize = Math.min(200, 100 * r / wm.scrollWidth * .995) + 'px'; }
-    var txt = wm.textContent.trim(); wm.setAttribute('aria-label', txt); wm.textContent = '';
+    var txt = wm.textContent.trim(); wm.setAttribute('role', 'img'); wm.setAttribute('aria-label', txt); wm.textContent = '';
     txt.split(/\s+/).forEach(function(word, wi, arr){
       var ws = document.createElement('span'); ws.className = 'wl-word';
       word.split('').forEach(function(ch){ var s = document.createElement('span'); s.className = 'wl'; s.setAttribute('aria-hidden', 'true'); s.textContent = ch; ws.appendChild(s); });

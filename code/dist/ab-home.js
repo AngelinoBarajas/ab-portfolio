@@ -1,8 +1,9 @@
-/*! AB Portfolio · ab-home v0.12.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.13.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
   window.__abHomeInit = true;
+  var __steps = [];
   /* ===== home/00-hero.js ===== */
   /* ---------- shared helpers from ab-core.js ---------- */
   var AB = window.AB;
@@ -117,6 +118,7 @@ window.Webflow.push(function(){
     AB.dragCue({ host: comp, first: first, items: $$('[data-drag], #sat', hero), key: 'ab:dragged', at: 'end', tug: -5 });
   })();
 
+  __steps.push(function(){
   /* ===== home/10-work.js ===== */
 
   /* =========================================================
@@ -372,6 +374,8 @@ window.Webflow.push(function(){
     updateMM();
   })();
 
+  });
+  __steps.push(function(){
   /* ===== home/20-services.js ===== */
 
   /* ---------- services bento (spotlight + tilt come from core AB.cardFx) ---------- */
@@ -433,7 +437,9 @@ window.Webflow.push(function(){
       var eases = ['expo.out', 'power3.inOut', 'elastic.out(1,0.4)', 'back.out(2.2)', 'bounce.out'], ei = 0;
       v.innerHTML = '<div class="v-ease"><svg viewBox="0 0 200 120" preserveAspectRatio="none"><path d="M0 110H200M0 10H200" stroke="currentColor" stroke-opacity=".15" fill="none" vector-effect="non-scaling-stroke"/><path class="cv" fill="none" stroke="#FF6A3D" stroke-width="2" vector-effect="non-scaling-stroke"/><circle class="dt" r="5" fill="#FF6A3D"/></svg><div class="track"><i></i></div></div><button type="button">expo.out ↻</button>';
       var cv = $('.cv', v), dt = $('.dt', v), sq = $('.track i', v), btn = $('button', v), tr = $('.track', v), tw;
-      var lo = 0, hi = 1;
+      var lo = 0, hi = 1, trH = 0, seen = true;
+      function measure(){ trH = tr.clientHeight; }
+      measure(); addEventListener('resize', measure);
       function Y(val){ return 108 - (val - lo) / (hi - lo) * 96; }
       function play(){
         var E = gsap.parseEase(eases[ei]), d = '';
@@ -442,12 +448,13 @@ window.Webflow.push(function(){
         for (var i = 0; i <= 60; i++){ var t = i / 60; d += (i ? 'L' : 'M') + (t * 200).toFixed(1) + ' ' + Y(E(t)).toFixed(1); }
         cv.setAttribute('d', d); btn.textContent = eases[ei] + ' ↻';
         var o = { t: 0 }; if (tw) tw.kill();
-        tw = gsap.to(o, { t: 1, duration: 1.6, ease: 'none', repeat: -1, repeatDelay: .6, onUpdate: function(){ var e = E(o.t); dt.setAttribute('cx', o.t * 200); dt.setAttribute('cy', Y(e)); sq.style.bottom = ((e - lo) / (hi - lo) * (tr.clientHeight - 14)) + 'px'; } });
-        if (reduce) tw.progress(1).pause();
+        tw = gsap.to(o, { t: 1, duration: 1.6, ease: 'none', repeat: -1, repeatDelay: .6, onUpdate: function(){ var e = E(o.t); dt.setAttribute('cx', o.t * 200); dt.setAttribute('cy', Y(e)); sq.style.bottom = ((e - lo) / (hi - lo) * (trH - 14)) + 'px'; } });
+        if (reduce) tw.progress(1).pause(); else if (!seen) tw.pause();
       }
       function next(){ ei = (ei + 1) % eases.length; play(); }
       btn.addEventListener('click', next); $('svg', v).addEventListener('click', next); $('svg', v).style.cursor = 'pointer';
       play();
+      if (!reduce && window.IntersectionObserver) onView(v, function(on){ seen = on; if (!tw) return; if (on){ measure(); tw.resume(); } else tw.pause(); });
     },
     logo: function(v){
       v.innerHTML = '<div class="v-logo"><svg viewBox="-110 -110 220 220">' +
@@ -496,6 +503,8 @@ window.Webflow.push(function(){
   };
   $$('.ab_bento-card[data-visual]').forEach(function(card){ var f = VIZ[card.getAttribute('data-visual')], v = $('.ab_bento-card_viz', card); if (f && v) f(v); });
 
+  });
+  __steps.push(function(){
   /* ===== home/30-process.js ===== */
 
   /* ---------- mission sequence (Process: 6 static steps → pinned flight path) ---------- */
@@ -618,6 +627,8 @@ window.Webflow.push(function(){
     el.next.addEventListener('click', function(){ go(cur + 1); });
   })();
 
+  });
+  __steps.push(function(){
   /* ===== home/40-stack.js ===== */
 
   /* ---------- orbit (Tools Collection List → chips on two rings), shared system in ab-core ---------- */
@@ -666,6 +677,8 @@ window.Webflow.push(function(){
     });
   })();
 
+  });
+  __steps.push(function(){
   /* ===== home/50-planner.js ===== */
 
   /* ---------- launch: mission planner (native Webflow form #planner) ---------- */
@@ -825,4 +838,11 @@ window.Webflow.push(function(){
     draw(false);
   })();
 
+  });
+  (function(){
+    var i = 0, ch = window.MessageChannel ? new MessageChannel() : null;
+    function next(){ if (i >= __steps.length){ if (window.ScrollTrigger) ScrollTrigger.refresh(); return; } __steps[i++](); if (ch) ch.port2.postMessage(0); else setTimeout(next, 0); }
+    if (ch) ch.port1.onmessage = next;
+    next();
+  })();
 });

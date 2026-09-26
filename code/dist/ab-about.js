@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.12.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.13.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -218,8 +218,8 @@ window.Webflow.push(function(){
       var hl = n.nodeType === 1 && n.classList.contains('ab_ms_hl');
       String(n.textContent).split(/(\s+)/).forEach(function(w){ if (w) parts.push({ w: w, hl: hl }); });
     });
-    ms.setAttribute('aria-label', ms.textContent.replace(/\s+/g, ' ').trim());
-    ms.innerHTML = parts.map(function(p){ return /^\s+$/.test(p.w) ? ' ' : '<span class="ab_ms_wd' + (p.hl ? ' is-hl' : '') + '" aria-hidden="true">' + esc(p.w) + '</span>'; }).join('') +
+    var said = ms.textContent.replace(/\s+/g, ' ').trim(); ms.removeAttribute('aria-label');
+    ms.innerHTML = '<span class="ab_sr">' + esc(said) + '</span>' + parts.map(function(p){ return /^\s+$/.test(p.w) ? ' ' : '<span class="ab_ms_wd' + (p.hl ? ' is-hl' : '') + '" aria-hidden="true">' + esc(p.w) + '</span>'; }).join('') +
       '<svg class="ab_ms_heart" viewBox="0 0 16 14" aria-hidden="true"><path fill="currentColor" d="M2 0h4v2h4V0h4v2h2v5h-2v2h-2v2H6v-2H4V9H2V7H0V2h2z"/></svg>';
     var words = $$('.ab_ms_wd', ms), heart = $('.ab_ms_heart', ms);
     ms.classList.add('is-ready');

@@ -26,7 +26,7 @@
     // wordmark: scale to fit the row; letters rise toward the cursor, click to launch one
     var wm = $('#wordmark'); if (!wm) return;
     function fitWM(){ wm.style.fontSize = '100px'; var p = wm.parentNode, r = p.clientWidth - parseFloat(getComputedStyle(p).paddingLeft) * 2; wm.style.fontSize = Math.min(200, 100 * r / wm.scrollWidth * .995) + 'px'; }
-    var txt = wm.textContent.trim(); wm.setAttribute('aria-label', txt); wm.textContent = '';
+    var txt = wm.textContent.trim(); wm.setAttribute('role', 'img'); wm.setAttribute('aria-label', txt); wm.textContent = '';
     txt.split(/\s+/).forEach(function(word, wi, arr){
       var ws = document.createElement('span'); ws.className = 'wl-word';
       word.split('').forEach(function(ch){ var s = document.createElement('span'); s.className = 'wl'; s.setAttribute('aria-hidden', 'true'); s.textContent = ch; ws.appendChild(s); });

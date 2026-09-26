@@ -159,7 +159,7 @@
     var timers = { shooting: rnd(2, 5), meteors: rnd(6, 12), comets: rnd(14, 24), satellites: rnd(8, 16), flares: rnd(3, 6), ufo: rnd(50, 90) };
     var gaps = { shooting: [5, 11], meteors: [11, 22], comets: [45, 75], satellites: [22, 38], flares: [4, 9], ufo: [120, 200] };
     function resize(){
-      dpr = Math.min(window.devicePixelRatio || 1, 1.5); w = innerWidth; h = innerHeight;
+      dpr = coarse ? 1 : Math.min(window.devicePixelRatio || 1, 1.5); w = innerWidth; h = innerHeight;
       c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       var n = Math.min(900, Math.round(w * h / 2400)); stars = [];
       for (var i = 0; i < n; i++){
