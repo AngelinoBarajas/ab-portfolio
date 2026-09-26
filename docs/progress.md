@@ -19,6 +19,6 @@
 - [x] 6g. Process (`/process`, new page): **approved by Angelino 2026-09-26** (page `6ab701e2df00b2e38832af5b`, code v0.10.0 after review tweaks v0.9.1–v0.9.4)
 - [x] Site-wide tips (CMS Glossary terms + asides, core v0.10.2): **approved by Angelino 2026-09-26**
 - [~] 6h. Services hub (`/services`, new page): prototype approved 2026-09-26; built in Webflow (page `6ab74df0ae2408ea9be939c7`, code v0.11.0), **approved by Angelino 2026-09-26** (incl. the 4 hub glossary asides)
-- [~] 6i. Contact page (`/contact`, new page): prototype approved 2026-09-26; built in Webflow (page `6ab75d8abdfdf7aa5d9e7c2d`, code v0.12.0), on staging, **awaiting Angelino's OK** (+ 3 draft asides)
-- [ ] 8. QA ← next. At 1440 / 1024 / 390, reduced motion, Lighthouse
+- [x] 6i. Contact page (`/contact`, new page): **approved by Angelino 2026-09-26** incl. the 3 asides (page `6ab75d8abdfdf7aa5d9e7c2d`, code v0.12.0 JS / v0.12.1 CSS)
+- [~] 8. QA ← in progress (started 2026-09-26). At 1440 / 1024 / 390, reduced motion, Lighthouse
 - [ ] 9. Angelino approves → publish

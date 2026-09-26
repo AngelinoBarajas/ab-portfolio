@@ -448,7 +448,7 @@ Page `6ab74df0ae2408ea9be939c7` (`/services`, static; duplicate of Process, Proc
 
 **Testing:** local-dist harness (staging HTML + local `dist`, `?shim`, `?hide=<css>` to bring lower sections to the top for headless shots since scrolled headless shots render blank, `?rm` reduced motion, `?fly=0,5,2&p=0.45`), then staging 1440 / 1024 / 390: no console errors, no horizontal scroll; arm/print, diagnostics, planner → launch → pin → abort, logbook turns, reduced motion; Mission monitor + Process regression clean.
 
-## Contact page (built 2026-09-26, awaiting Angelino's OK)
+## Contact page (built 2026-09-26, approved by Angelino 2026-09-26)
 
 Page `6ab75d8abdfdf7aa5d9e7c2d` (`/contact`, static; duplicate of About, About sections removed). Prototype `prototypes/contact.html` (parts `prototypes/_parts/contact.*`), plan + divergence gate `docs/contact-plan.md`. Build files `webflow/build/contact/` (`make.py` → hero/others html+css → `prep.py`; `form-fields.embed.html`). Code `ab-contact` JS + CSS **v0.12.0** (page footer script `abcontact` + head `<link>`).
 
@@ -462,7 +462,7 @@ Page `6ab75d8abdfdf7aa5d9e7c2d` (`/contact`, static; duplicate of About, About s
 
 **Links (split by intent, Angelino 2026-09-26):** Nav Contact, mobile menu Contact, Footer Navigate › Contact → Contact page (page link, `w--current`); Nav "Book a call", hub final-call "Book a call", hub flight-dock "Book a call" (`ab-hub` 30-flight.js) → `/contact#call`. Every "Plan a mission" / "Start a project" / "Plot the course" CTA and 404 route 4 stay on `/#launch`. `#call` also works as an in-page hash change (Book a call clicked while already on /contact).
 
-**Glossary asides (drafts, awaiting his OK):** Signal strength (`.ab_ct-meter`), Same desk (`.abc-go-n`), Voice channel (`[data-ct-station]`).
+**Glossary asides (approved as written):** Signal strength (`.ab_ct-meter`), Same desk (`.abc-go-n`), Voice channel (`[data-ct-station]`).
 
 **Findings:** stray duplicate `href` attributes again on WHTML links and on the Nav/Footer component links (a leftover `href="/#launch"` attribute would override a new link setting: remove it with every repoint). `ab_dbh_word` is `display:block` site-wide; Contact sets it `inline-block` in `ab-contact.css` (one line on desktop; inline-block, not inline, so the hero drag transforms still work). Core styles the nav active state only with `.is-active` (same-page sections), so inner pages show no active marker though Webflow sets `w--current`: logged for step 8 QA.
 

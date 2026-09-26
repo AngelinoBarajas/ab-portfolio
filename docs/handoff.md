@@ -145,7 +145,7 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 - **Code v0.12.0**: new `ab-contact` JS + CSS (SRI verified, registered `abcontact`); `ab-hub` 0.12.0 (flight-dock Book a call → `/contact#call`). Core unchanged (v0.11.0).
 - **Links**: Nav/mobile/Footer Contact → `/contact`; Nav + hub Book a call → `/contact#call`; Plan-a-mission CTAs stay on `/#launch`.
 - **3 Glossary asides drafted** (Signal strength, Same desk, Voice channel), live on staging for his review.
-- Published **webflow.io only**; verified 1440 / 1024 / 390, no console errors, no horizontal scroll; hub + Home regression clean. **Awaiting his OK.**
+- Published **webflow.io only**; verified 1440 / 1024 / 390, no console errors, no horizontal scroll; hub + Home regression clean. v0.12.1 fixed the clipped beam. **Approved 2026-09-26** (page + asides).
 - For step 8 QA: inner pages show no nav active marker (core only styles `.is-active`; Webflow's `w--current` is unstyled).
 
 ## Next session
