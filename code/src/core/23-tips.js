@@ -84,7 +84,7 @@
   });
   addEventListener('scroll', function(){ if (tipCur) tipHide(); }, { passive: true });
 
-  // auto-link: first mention of each term per section, in body copy only (never headings, links, buttons, forms,
+  // auto-link: first mention of each term per section, at most one per paragraph, in body copy only (never headings, links, buttons, forms,
   // hidden CMS sources or text that scripts rewrite)
   var TIP_SKIP = 'a,button,h1,h2,h3,h4,h5,h6,label,input,textarea,select,code,pre,.gl,[data-no-gloss],[data-split],[data-leg],[data-dest-sum],[data-dest-title],[data-bind],[aria-hidden="true"],.w-dyn-bind-empty,[data-site-data],.ab_cms-source,.w-condition-invisible,.ab_toast,.gl-tip';
   function tipRe(term){
@@ -100,14 +100,16 @@
       if (!seen){ seen = sec.__glSeen = {}; $$('.gl', sec).forEach(function(g){ seen[g.getAttribute('data-term')] = 1; }); }
       var walker = document.createTreeWalker(p, NodeFilter.SHOW_TEXT, null, false), nodes = [], n;
       while ((n = walker.nextNode())) if (!(n.parentNode.closest && n.parentNode.closest(TIP_SKIP))) nodes.push(n);
+      // one link per paragraph keeps dense copy readable
+      var linked = !!$('.gl', p);
       nodes.forEach(function(node){
-        for (var i = 0; i < res.length; i++){
+        for (var i = 0; i < res.length && !linked; i++){
           var term = res[i][0]; if (seen[term]) continue;
           var m = res[i][1].exec(node.nodeValue); if (!m) continue;
           var start = m.index + m[1].length, word = m[2];
           var after = node.splitText(start); after.nodeValue = after.nodeValue.slice(word.length);
           var b = document.createElement('button'); b.type = 'button'; b.className = 'gl'; b.setAttribute('data-term', term); b.textContent = word;
-          node.parentNode.insertBefore(b, after); seen[term] = 1; node = after;
+          node.parentNode.insertBefore(b, after); seen[term] = 1; linked = true;
         }
       });
     });
