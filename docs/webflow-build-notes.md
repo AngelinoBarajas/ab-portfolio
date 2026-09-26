@@ -552,3 +552,11 @@ Phones = `max-width:767px` in `ab-process.css`.
 - **Boss fight, cinematic + sound** (v0.21.0): letterbox bars, "Player one VS The Scope Creep" title card, camera pull-back + shake, the boss charges a beam (screen dims) and the ship barrel-rolls past it, slow motion (global timeScale .3) on the final shot, white-out explosion, fanfare. Sound is synthesized live (Web Audio: original battle loop, laser, hit, roar, charge, beam, boom, fanfare), toggle in the corner, off by default, remembered (`ab:boss-sound`). Skip restores timeScale and closes the audio context.
 - **Service pages**: rail arrow + fades above the rail (the rail is z 4 in the Designer); standout tiles renamed `sv-planet` / `sv-ink` (`is-planet` collided with a Webflow combo that sets padding 0), light checkbox on the dark tiles.
 - **Lesson**: script-made class names must be unique on this site: `is-planet` and `ab_td_play` both already existed as Designer classes and silently restyled the new elements. Prefix script-only classes (`abx-`, `sv-`, `hb-`).
+
+## v0.21.4 – v0.22.0 (2026-09-26, awaiting Angelino's OK)
+
+- **Interstellar play button**: bottom-right corner of the card on wide screens (≥1200); under the hint line below that (the corner overlapped the text at 1024).
+- **Score actually plays**: logged-out Spotify listeners get a 19.8s preview; seeking to 0:32 jumped past its end and it stopped instantly. Now 0:32 only when the full track is available (duration > 42s), the preview plays from its start. Verified with a real click: position ticks 0 → 9.5s.
+- **Boss credits**: tap anywhere closes from the moment "You won" shows (was only after the 22s crawl).
+- **Bookshelf** now tilts like the other Between launches cards (the `data-no-tilt` exclusion is gone).
+- **Mobile menu current page** (core CSS): the Contact link's orange combo (`is-contact`) is neutralized; the current page (`w--current`) is orange with a "You are here" tag. Desktop nav already marks `w--current`.

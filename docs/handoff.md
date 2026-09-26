@@ -172,7 +172,7 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 - Contact / debriefs / service pages: see batch 5.
 - Testing note: the local-dist test server can't be added this session (auto mode blocked editing the shared launch.json); staging was the test bed.
 
-**Open question for Angelino:** Interstellar play button. The score can't be hosted (copyright); the button can open the official track in a Spotify or YouTube embed. Needs the track link he wants.
+- Follow-ups v0.20.0 – v0.22.0: Interstellar score player (Cornfield Chase via Spotify embed), cinematic boss fight with synthesized sound, service rail/tile fixes, bookshelf tilt, mobile menu "You are here". Live: core JS 0.19.0 + core CSS 0.22.0, about 0.22.0 (CSS 0.21.6), services 0.21.2.
 
 ## Next session
 
