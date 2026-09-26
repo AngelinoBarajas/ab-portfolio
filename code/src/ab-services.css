@@ -76,12 +76,13 @@
 .sv-rail-more:hover,.sv-rail-more:focus-visible{border-color:var(--signal);color:var(--signal);outline:none}
 @keyframes sv-nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
 /* what's included: standout tiles */
-.ab_bento-card.is-sv.is-planet,.ab_bento-card.is-sv.is-ink{color:#F2F0EA;border-color:transparent}
-.ab_bento-card.is-sv.is-planet{background:radial-gradient(120% 95% at 100% 0%,var(--p2) 0%,var(--p1) 26%,var(--p0) 62%,#07080D 100%);box-shadow:0 24px 50px -24px var(--pg)}
-.ab_bento-card.is-sv.is-planet::after{content:"";position:absolute;right:-60px;top:-44px;width:220px;height:74px;border:1.5px solid rgba(242,240,234,.35);border-radius:50%;transform:rotate(-18deg);pointer-events:none}
-.ab_bento-card.is-sv.is-ink{background:#0B0C14}
-.ab_bento-card.is-sv.is-planet *,.ab_bento-card.is-sv.is-ink *{color:inherit}
-.ab_bento-card.is-sv.is-planet .ab_sv_dl_n,.ab_bento-card.is-sv.is-ink .ab_sv_dl_n{color:rgba(242,240,234,.65)}
-.ab_bento-card.is-sv.is-planet .ab_bento-card_text,.ab_bento-card.is-sv.is-ink .ab_bento-card_text{color:rgba(242,240,234,.8)}
-.ab_bento-card.is-sv.is-planet .ab_sv_dl_ic,.ab_bento-card.is-sv.is-ink .ab_sv_dl_ic{color:#F2F0EA;border-color:rgba(242,240,234,.3)}
+.ab_bento-card.is-sv.sv-planet,.ab_bento-card.is-sv.sv-ink{color:#F2F0EA;border-color:transparent}
+.ab_bento-card.is-sv.sv-planet{background:radial-gradient(120% 95% at 100% 0%,var(--p2) 0%,var(--p1) 26%,var(--p0) 62%,#07080D 100%);box-shadow:0 24px 50px -24px var(--pg)}
+.ab_bento-card.is-sv.sv-planet::after{content:"";position:absolute;right:-60px;top:-44px;width:220px;height:74px;border:1.5px solid rgba(242,240,234,.35);border-radius:50%;transform:rotate(-18deg);pointer-events:none}
+.ab_bento-card.is-sv.sv-ink{background:#0B0C14}
+.ab_bento-card.is-sv.sv-planet *,.ab_bento-card.is-sv.sv-ink *{color:inherit}
+.ab_bento-card.is-sv.sv-planet .ab_sv_dl_n,.ab_bento-card.is-sv.sv-ink .ab_sv_dl_n{color:rgba(242,240,234,.65)}
+.ab_bento-card.is-sv.sv-planet .ab_bento-card_text,.ab_bento-card.is-sv.sv-ink .ab_bento-card_text{color:rgba(242,240,234,.8)}
+.ab_bento-card.is-sv.sv-planet .ab_sv_dl_ic,.ab_bento-card.is-sv.sv-ink .ab_sv_dl_ic{color:#F2F0EA;border-color:rgba(242,240,234,.3)}
 @media (prefers-reduced-motion:reduce){.sv-rail-wrap .sv-rail-more span{animation:none!important}}
+.ab_bento-card.is-sv.sv-planet::before,.ab_bento-card.is-sv.sv-ink::before{border-color:rgba(242,240,234,.45)}
