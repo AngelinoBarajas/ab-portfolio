@@ -383,6 +383,20 @@
     });
   }
 
+  // hero countdown: it lets the pointer through to the planet behind it, so :hover never fires; show its Figma frame
+  // when the pointer is over its box instead (not while something is being dragged)
+  var cnt = $('.ab_count[data-selectable]'), heroSec = $('.section_process-hero');
+  if (cnt && heroSec && window.matchMedia && matchMedia('(hover: hover)').matches){
+    heroSec.addEventListener('pointermove', function(e){
+      var r = cnt.getBoundingClientRect(), on = !e.buttons && e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+      if (on !== cnt.classList.contains('is-hover')){
+        cnt.classList.toggle('is-hover', on);
+        var sz = on && $('.sel-size', cnt); if (sz && !cnt.getAttribute('data-size')) sz.textContent = Math.round(cnt.offsetWidth) + ' × ' + Math.round(cnt.offsetHeight);
+      }
+    });
+    heroSec.addEventListener('pointerleave', function(){ cnt.classList.remove('is-hover'); });
+  }
+
   // restore the last mission silently (no scramble, no toast)
   if (DEST.length) render(true);
   else eta(true);

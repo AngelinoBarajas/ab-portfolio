@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process v0.9.3 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process v0.9.4 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abProcessInit) return;
@@ -387,6 +387,20 @@ window.Webflow.push(function(){
       var rocket = $('.abp-rocket'); if (!rocket || reduce || !hasGsap) return;
       gsap.timeline().set(rocket, { opacity: 1, y: 0 }).to(rocket, { y: -form.offsetHeight - 160, duration: 1.1, ease: 'power2.in' }).set(rocket, { opacity: 0 });
     });
+  }
+
+  // hero countdown: it lets the pointer through to the planet behind it, so :hover never fires; show its Figma frame
+  // when the pointer is over its box instead (not while something is being dragged)
+  var cnt = $('.ab_count[data-selectable]'), heroSec = $('.section_process-hero');
+  if (cnt && heroSec && window.matchMedia && matchMedia('(hover: hover)').matches){
+    heroSec.addEventListener('pointermove', function(e){
+      var r = cnt.getBoundingClientRect(), on = !e.buttons && e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+      if (on !== cnt.classList.contains('is-hover')){
+        cnt.classList.toggle('is-hover', on);
+        var sz = on && $('.sel-size', cnt); if (sz && !cnt.getAttribute('data-size')) sz.textContent = Math.round(cnt.offsetWidth) + ' × ' + Math.round(cnt.offsetHeight);
+      }
+    });
+    heroSec.addEventListener('pointerleave', function(){ cnt.classList.remove('is-hover'); });
   }
 
   // restore the last mission silently (no scramble, no toast)
