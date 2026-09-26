@@ -527,3 +527,21 @@ Phones = `max-width:767px` in `ab-process.css`.
 - **Re-plot route** at every touchdown: Process dock link `#chart`, hub Mission live button `#trajectory`. Script-built links bind their own warp + jump (core only binds anchors present at load); the hub keeps the trajectory set.
 - **Logbook turns (hub, all sizes)**: two-sided sheet. Front = a copy of the page being turned, back = the next mission's facing page, the page underneath is already the new one; nothing swaps mid-turn, no fade. `rotationY` on the spine (desktop), `rotationX` on the page line (phones, pages forced equal with `grid-template-rows:1fr 1fr`). 0.8s `power2.inOut`.
 - Verified on staging 375 + 1440: no console errors, no horizontal scroll.
+
+## Mobile review batch 4: About + Next cards (v0.18.0, 2026-09-26, awaiting Angelino's OK)
+
+- **Badge hint** (phones): wraps and centers inside the screen; touch copy "Tap to flip · swipe sideways to swing".
+- **Signature underline** (all sizes, mission statement + badge back): the path is sized to the rendered "Angelino" (`getComputedTextLength`, after fonts) and arcs up to the right; a shooting star (glowing head + short tail, `ab_sig-star` / `ab_sig-tail`) draws it 1.5s after the name writes itself.
+- **Flight log icons** (phones): top-right corner, tag + title padded clear of it.
+- **Interstellar**: the Endurance (12-module ring ship, SVG) orbits at the black hole's edge; "fly close" (hover / tap) pulls it in to the horizon and speeds its orbit (WAAPI `playbackRate`) while the near clock races. Hint: "Hover/Tap to fly the Endurance close · 1 hour there = 7 years here".
+- **Philosophy**: a tap anywhere on the card asks the next question (links excepted).
+- **Player one secret** (`about/10-boss.js`): LV 20 (or the Konami cheat) opens a full-screen pixel boss fight: The Scope Creep drops in, 10 shots drain its HP, it fires back three times, explodes; "You won" + win line; then a credits crawl (tilted via a wrapper: GSAP clears the individual `rotate` property on elements it animates). Skip ×, Esc, or a tap after the crawl closes it; the card then reads "Boss defeated · GG". Reduced motion: a still result + credits list. **Credits copy for Angelino's review** (in the file's `CREDITS` array).
+- **Next cards** (core `38-next.js`, site-wide): when the planet sits close to the Go button (< 140px, e.g. phones), the rocket launches from under the button and skims the card's floor up to the planet; otherwise the old arc with its swing scaled to the distance.
+
+## Mobile review batch 5: Contact, debriefs, service pages (v0.19.0 / v0.19.1, 2026-09-26, awaiting Angelino's OK)
+
+- **Anchor landing (core, site-wide)**: arriving with a hash (`/#launch`, `/process#launch`) landed ~1,500px short because pins and late layout grow the page after the browser's jump. Core re-aims at 150ms / 900ms / 2s after load (ScrollTrigger refresh + `scrollToTarget`) unless the visitor has scrolled. Fixes Contact "Open the mission planner".
+- **Contact**: the signal line (`[data-ct-scope]`) moves into the form under the tuner on phones (`.is-inform`, moved back ≥768); "See the flight plan" → Process page (was `/process#launch`, the form).
+- **Debriefs**: crew dock hides while the mobile menu is open (core sets `html.menu-open`); channel selector on phones = an even row of keys (number + type), all on screen; P-03 fixed (param text in `.ab_param_t`, so a glossary tip button isn't its own grid cell); Cadet/Engineer toggle anchors the Solved/System card nearest the reading line (35%) and re-anchors after the ScrollTrigger refresh (the card stays put: measured 250 → 250 → 250).
+- **Service pages**: the rail gets fading edges + a nudging → button (scrolls it; flips to ← at the end) in `.sv-rail-wrap`; the wrapper takes the rail's margins; the current service's chip is scrolled into view after wrapping (moving an element resets its scrollLeft). "What's included": tile 1 wears the service's planet colors (from its rail chip `data-colors`, with an orbit ring), tile 5 is dark.
+- Verified on staging at 375: no console errors, no horizontal scroll.

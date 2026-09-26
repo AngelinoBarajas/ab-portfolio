@@ -162,9 +162,21 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 
 - **Aguirre hidden** (switch on) and **client removal made one-step**: Hide from site now covers every surface (runbook `docs/remove-a-client.md`; Webflow blocks Unpublish on referenced items). v0.14.0. Work breadcrumb /home → /#work kept (his call).
 
+## This session (2026-09-26, mobile review batches 1-5) in one list
+
+- Batches logged in `docs/webflow-build-notes.md` › Mobile review batch 1-5 (v0.15.0 → v0.19.1). All published to webflow.io only, each awaiting Angelino's OK.
+- Home: drag cue clamps on screen; planner no longer jumps (address-bar resize re-measured the process pin); bento CTAs → /work, /process (Start a project stays /#launch).
+- Services hub: diagnostics grid, pass prints under the monitor (console hidden on phones), planner no auto-scroll, flight header + touchdown fit, two-sided logbook page turns (all sizes), final call layout, Re-plot route at touchdown.
+- Process: countdown as a compact clock, smaller chart planets, centered touchdown + Re-plot route, sticky compact timeline gauge on phones.
+- About: badge hint, shooting-star signature, flight log icons, the Endurance on the Interstellar card, philosophy tap-anywhere, LV 20 boss fight + credits.
+- Contact / debriefs / service pages: see batch 5.
+- Testing note: the local-dist test server can't be added this session (auto mode blocked editing the shared launch.json); staging was the test bed.
+
+**Open question for Angelino:** Interstellar play button. The score can't be hosted (copyright); the button can open the official track in a Spotify or YouTube embed. Needs the track link he wants.
+
 ## Next session
 
-Verified 2026-09-26 on staging: every page serves core CSS v0.14.0 + core JS v0.13.1 through the registry (no `defer`, no footer script tags); page bundles: home v0.14.0, process v0.14.0, 404 v0.14.0, work v0.4.0, about v0.13.0, hub/services v0.13.0, contact v0.12.0, mission v0.10.0.
+Live on staging after the mobile review: core JS v0.19.0 + core CSS v0.15.0; page bundles: home 0.15.0, hub 0.17.0 (CSS 0.17.1), process 0.17.1, about 0.19.0, contact 0.19.0, mission 0.19.0, services 0.19.1 (CSS 0.19.0). Earlier note: every page served core CSS v0.14.0 + core JS v0.13.1 through the registry (no `defer`, no footer script tags); page bundles: home v0.14.0, process v0.14.0, 404 v0.14.0, work v0.4.0, about v0.13.0, hub/services v0.13.0, contact v0.12.0, mission v0.10.0.
 
 1. **Angelino's mobile review.** He clicks through every page on his phone and sends tweaks. Per batch: read the page's build notes + code, fix, test 390 / 1024 / 1440 (no console errors, no horizontal scroll), deploy via jsDelivr + Webflow's registry (`register_hosted_script` same name + new version, `add_site_script` / `add_page_script`; CSS `<link>` with SRI), publish webflow.io only, stop for his OK.
 2. His Designer steps (`docs/seo-plan.md`): sitemap on, Mission + Services template SEO bound to [Name]/[Summary], Home board frame link + Work card link → Current Missions page, rename the Process + Contact forms and confirm the notification email.
