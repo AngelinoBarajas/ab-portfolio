@@ -134,6 +134,11 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 - Published to **webflow.io only**. Verified local-dist + staging at 1440 / 1024 / 390: no console errors, no horizontal scroll, all interactions; Mission + Process regression clean.
 - MCP finding worth keeping: a Collection List nested inside a Collection item with source `{collectionId}` renders the item's own multi-ref (works via MCP).
 
+## This session (2026-09-26, Contact prototype) in one list
+
+- Direction + divergence gate decided with Angelino: `docs/contact-plan.md` (general door, "Open a channel" concept, reason stations + Name/Email/Message, links split by intent).
+- Prototype `prototypes/contact.html` (`_parts/contact.*`, `assemble.py contact`; assemble now points shell Contact links at contact.html and Book a call at contact.html#call). Verified 1440/1024/375: no horizontal scroll, tuner/drag/validation/transmit/`#call` work. **Awaiting his approval**; nothing pushed to Webflow.
+
 ## Next session
 
 1. **New standalone Contact page** (`/contact`, Angelino's ask 2026-09-26). Run page-pipeline from stage 2 (Direct): divergence gate + direction questions for him, then an HTML prototype in `prototypes/` (the `_parts/assemble.py` shell pattern), approval, then Webflow. Today every "Contact" / "Book a call" link (Nav, mobile menu `/contact` label, Footer, CTAs) goes to Home `#launch` (the planner form); decide with him what moves to `/contact` and what stays. Forms: Home planner + Process form post to the same notification email (still unconfirmed in Site settings › Forms). Reuse the native-form + Embed fields pattern (`webflow/build/process/form-fields.embed.html`).

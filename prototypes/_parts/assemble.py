@@ -3,7 +3,7 @@
 usage: python prototypes/_parts/assemble.py            (all pages)
        python prototypes/_parts/assemble.py hub        (one page)
 Shell ranges (about.html, 1-based, inclusive): page CSS 1525-1752, page render 2508-2620, page interactions 3168-3310.
-Nav/footer "Process" links point at process.html, "Services" at services-hub.html.
+Nav/footer "Process" links point at process.html, "Services" at services-hub.html, "Contact" at contact.html ("Book a call" at contact.html#call).
 """
 import io, os, re, sys
 
@@ -21,6 +21,10 @@ PAGES = {
                 main='<main id="hub" class="db hb-page"></main>', title='Launch Control',
                 desc='Launch control: eight services, one pilot: Webflow development, interactive 3D + data, motion, brand identity, custom builds, CMS integrations, design systems and performance.',
                 active='services-hub.html'),
+    'contact': dict(css='contact.css', render='contact-render.js', ix='contact-ix.js', out='contact.html',
+                    main='<main id="contact" class="db ct-page"></main>', title='Open a Channel',
+                    desc='Contact Angelino Barajas: questions, help with an existing site, collaborations, hiring or a call. Tune the frequency and send the signal; replies within one business day.',
+                    active='contact.html'),
 }
 SHIM = ('<script>if(location.search.indexOf("shim")>-1){window.requestAnimationFrame=function(f){return setTimeout(function(){f(performance.now())},16)};'
         'window.cancelAnimationFrame=clearTimeout;}'
@@ -35,6 +39,11 @@ def build(key):
     # site links: Process page + Services hub
     h = h.replace('href="home.html#log"', 'href="process.html"')
     h = h.replace('href="home.html#capabilities"', 'href="services-hub.html"')
+    # contact: Contact links -> contact.html, Book a call -> contact.html#call; Plan a mission CTAs stay on the Home planner
+    h = h.replace('<a href="home.html#launch" data-scramble>Contact</a>', '<a href="contact.html" data-scramble>Contact</a>')
+    h = h.replace('<a class="btn btn-primary btn-cta" href="home.html#launch">', '<a class="btn btn-primary btn-cta" href="contact.html#call">')
+    h = h.replace('<a href="home.html#launch">Contact<span', '<a href="contact.html">Contact<span')
+    h = h.replace('<a href="home.html#launch">Contact</a>', '<a href="contact.html">Contact</a>')
     h = h.replace('<span class="mono foot-h">Services</span>', '<a class="mono foot-h" href="services-hub.html">Services</a>')
     h = h.replace('<title>Pilot Dossier</title>', '<meta charset="utf-8">' + chr(10) + '<meta name="viewport" content="width=device-width, initial-scale=1">' + chr(10) + '<title>' + P['title'] + '</title>', 1)
     h = re.sub(r'<meta name="description" content="[^"]*">', '<meta name="description" content="' + P['desc'] + '">', h, count=1)
