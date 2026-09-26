@@ -120,8 +120,16 @@
   // touchdown: the mission's main destination waits at the end of the route (stops orbit it as moons); landing sets off a small celebration
   var dock = document.createElement('div'); dock.className = 'abp-dock';
   dock.innerHTML = '<div class="abp-dock-sys" aria-hidden="true"><div class="abp-dock-moons"></div><div class="ab_planet abp-dock-pl"></div><div class="abp-burst"></div></div>' +
-    '<div class="abp-dock-txt"><div class="abp-dock-l">Touchdown · <span data-dest-short>Website</span></div><div class="abp-dock-h">Mission <span class="t-outline">live</span></div><a class="abp-dock-cta" href="#launch">Plan this mission →</a></div>';
+    '<div class="abp-dock-txt"><div class="abp-dock-l">Touchdown · <span data-dest-short>Website</span></div><div class="abp-dock-h">Mission <span class="t-outline">live</span></div><div class="abp-dock-acts"><a class="abp-dock-cta" href="#launch">Plan this mission →</a><a class="abp-dock-cta is-replot" href="#chart">↺ Re-plot route</a></div></div>';
   var dockPl = $('.abp-dock-pl', dock), moons = $('.abp-dock-moons', dock), lastDock = -1;
+  // touchdown links are script-built (core binds same-page anchors at load), so they warp + jump here: back to the star chart, or on to the form
+  $$('.abp-dock-cta', dock).forEach(function(a){
+    a.addEventListener('click', function(e){
+      var t = document.getElementById(a.getAttribute('href').slice(1)); if (!t) return;
+      e.preventDefault(); e.stopPropagation();
+      if (AB.warp && AB.scrollToTarget) AB.warp(function(){ AB.scrollToTarget(t); }); else t.scrollIntoView();
+    });
+  });
   if (track){ track.insertBefore(svg, track.firstChild); track.appendChild(pad); track.appendChild(dock); track.appendChild(ship); if (AB.buildPlanet) AB.buildPlanet($('.abp-pad-pl', pad)); }
 
   /* ---------- render the mission (main + stops): everything re-plots ---------- */

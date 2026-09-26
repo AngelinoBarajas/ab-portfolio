@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process.css v0.16.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process.css v0.17.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* Process (/process) · the flight planner. Loaded from the page <head>.
    Only what the Designer can't hold: font-stretch, outline text, script-built pieces (abp-*: chart planets + orbits,
    route path / ship / pad, gauge, chips, form fields), state classes (.is-on, aria-pressed), pseudos and reduced motion.
@@ -22,7 +22,7 @@
 .abp-spin{position:absolute;inset:0;animation:abp-spin 160s linear infinite}
 .ab_chart:hover .abp-spin,.ab_chart:focus-within .abp-spin,.ab_chart:hover .abp-counter,.ab_chart:focus-within .abp-counter{animation-play-state:paused}
 @keyframes abp-spin{to{transform:rotate(360deg)}}
-.abp-dest{position:absolute;width:var(--s,54px);height:var(--s,54px);margin:calc(var(--s,54px) / -2) 0 0 calc(var(--s,54px) / -2);padding:0;border:0;background:none;cursor:pointer;border-radius:50%;z-index:3;color:inherit;font:inherit}
+.abp-dest{--sz:calc(var(--s,54px) * var(--ps,1));position:absolute;width:var(--sz);height:var(--sz);margin:calc(var(--sz) / -2) 0 0 calc(var(--sz) / -2);padding:0;border:0;background:none;cursor:pointer;border-radius:50%;z-index:3;color:inherit;font:inherit}
 .abp-counter{position:absolute;inset:0;animation:abp-spin 160s linear infinite reverse}
 .abp-dest .abp-pl{position:absolute;left:0;top:0;right:auto;width:100%;transition:transform .35s cubic-bezier(.2,.9,.2,1.3)}
 .abp-dest:hover .abp-pl,.abp-dest:focus-visible .abp-pl{transform:scale(1.15)}
@@ -115,6 +115,10 @@
 .abp-dock-cta{margin-top:4px;font-family:var(--_typography---font--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--_color---brand--signal);border-bottom:1px solid transparent;opacity:0;transition:opacity .4s .3s,border-color .2s;pointer-events:none}
 .abp-dock.is-landed .abp-dock-cta{opacity:1;pointer-events:auto}
 .abp-dock-cta:hover{border-color:var(--_color---brand--signal)}
+.abp-dock-acts{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;margin-top:4px}
+.abp-dock-acts .abp-dock-cta{margin-top:0}
+.abp-dock-cta.is-replot{color:var(--_color---text--secondary)}
+.abp-dock-cta.is-replot:hover{color:var(--_color---text--primary);border-color:var(--_color---text--primary)}
 .abp-ship.is-landed .abp-flame{opacity:0}
 /* hero: the big planet sits behind the text grid (z 4) and the countdown. The grid, countdown and crumb/REC row let the
    pointer through so the planet stays draggable; the copy column (title toys, buttons) still takes it. Phones: the
@@ -128,11 +132,29 @@
 .ab_process-hero_grid>*:not(.ab_count){pointer-events:auto}
 @media screen and (max-width:767px){.ab_process-hero_grid>.ab_process-hero_copy{pointer-events:none}.ab_process-hero_copy a,.ab_process-hero_copy button,.ab_process-hero_copy .is-toy{pointer-events:auto}}
 @media screen and (max-width:767px){
-  .abp-dock{position:relative;left:auto;top:auto;width:auto;flex-direction:row;align-items:center;gap:18px;margin-top:6px;text-align:left}
-  .abp-dock-sys{--dock:110px;flex:none}
-  .abp-dock-txt{margin-top:0;align-items:flex-start}
-  .abp-dock-h{font-size:28px}
+  /* touchdown: planet centered on the screen (the track's 36px rail padding is offset), text + links centered under it */
+  .abp-dock{position:relative;left:auto;top:auto;width:auto;flex-direction:column;align-items:center;text-align:center;margin:56px 0 24px -20px}
+  .abp-dock-sys{--dock:150px;flex:none}
+  .abp-dock-txt{margin-top:22px;align-items:center}
+  .abp-dock-h{font-size:34px}
+  .abp-dock-acts{margin-top:10px}
+  /* hero: the countdown becomes a compact mission clock under the crumb, beside the planet, instead of trailing the buttons */
+  .ab_process-hero_grid>.ab_count{order:-1;justify-self:start;margin:4px 0 26px}
+  .ab_count_number{font-size:78px;line-height:.9}
+  .ab_count_meta{flex-direction:column;align-items:flex-start;gap:4px;margin-top:8px}
+  /* star chart: smaller planets so the orbits breathe */
+  .ab_chart{--ps:.85}
+  /* timeline: the gauge rides along (sticky, compact) above the dials so the needle moves in view as options are tapped */
+  .ab_eta_grid{display:flex;flex-direction:column;gap:14px}
+  .ab_eta_gauge{order:-1;position:sticky;top:84px;z-index:6;display:grid;grid-template-columns:128px minmax(0,1fr);gap:8px 14px;align-items:center;padding:12px 14px;background-color:rgba(11,12,22,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+  .ab_eta_dial{grid-row:span 1;margin:0;width:auto}
+  .ab_eta_out{margin:0}
+  .ab_eta_title{font-size:22px;line-height:1}
+  .ab_eta_text{font-size:12.5px;line-height:1.4;margin-top:4px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .ab_eta_adds{grid-column:1 / -1;margin:0}
+  .ab_eta_note,.abp-tickl{display:none}
 }
+@media screen and (max-width:479px){.ab_chart{--ps:.72}}
 @media (prefers-reduced-motion:reduce){.abp-dock-moons i{animation:none}.abp-dock.is-landed .abp-dock-sys::after{animation:none}.abp-dock-h,.abp-dock-pl{transition:none}}
 
 /* crew */

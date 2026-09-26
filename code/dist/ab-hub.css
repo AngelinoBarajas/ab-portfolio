@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-hub.css v0.16.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-hub.css v0.17.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · ab-hub.css · Services hub (/services) only. States, pseudo-elements, glass and script-built parts the Designer can't hold.
    Webflow classes: ab_hub-* (+ ab_mc/ab_mon/ab_screen/ab_console .is-hub, ab_chip). Script-built parts use hb-* classes. */
 /* the planner panel grows a lot when a main is picked; native scroll anchoring then jumps the page (and fights Lenis) */
@@ -304,8 +304,12 @@ html:has(.section_hub-hero),.main-wrapper:has(.section_hub-hero){overflow-anchor
 .hb-pp-mrz{position:absolute!important;left:clamp(16px,2.2vw,28px);right:clamp(16px,2.2vw,28px);bottom:clamp(12px,1.6vw,20px);font-family:var(--_typography---font--mono);font-size:clamp(8.5px,.8vw,11px);letter-spacing:.14em;color:var(--_color---text--tertiary);line-height:1.5;white-space:nowrap;overflow:hidden}
 .hb-pp-r-h{font-family:var(--_typography---font--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--_color---text--tertiary);display:flex;justify-content:space-between}
 .hb-pp-none{position:absolute;inset:40% 10% auto;text-align:center;font-family:var(--_typography---font--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--_color---text--tertiary)}
-.hb-pp-turn{position:absolute;top:0;bottom:0;width:50%;left:50%;background:linear-gradient(160deg,rgba(44,52,84,.92),rgba(14,16,30,.95));border-left:1px solid rgba(255,255,255,.14);transform-origin:0 50%;opacity:0;pointer-events:none;box-shadow:0 0 30px rgba(0,0,0,.35);-webkit-backface-visibility:hidden;backface-visibility:hidden;will-change:transform,opacity}
-.hb-pp-turn.is-back{left:0;transform-origin:100% 50%;border-left:0;border-right:1px solid rgba(255,255,255,.14)}
+.hb-pp-turn{position:absolute;top:0;bottom:0;width:50%;left:50%;z-index:4;transform-origin:0 50%;-webkit-transform-style:preserve-3d;transform-style:preserve-3d;visibility:hidden;pointer-events:none;will-change:transform}
+.hb-pp-turn.is-back{left:0;transform-origin:100% 50%}
+.hb-pp-turn.is-on{visibility:visible}
+/* the sheet's two faces: opaque so the page underneath never shows through mid-turn */
+.hb-pp-turn .hb-pp-face{position:absolute;inset:0;min-height:0;overflow:hidden;-webkit-backface-visibility:hidden;backface-visibility:hidden;background:linear-gradient(160deg,#20263d,#0c0e19);box-shadow:0 10px 40px rgba(0,0,0,.45);border:0}
+.hb-pp-turn .hb-pp-face.is-rev{transform:rotateY(180deg)}
 .hb-patches{position:absolute!important;inset:clamp(40px,4vw,54px) clamp(10px,1.4vw,18px) clamp(10px,1.4vw,18px)}
 /* mission badges: digital, glowing tiles on the glass logbook; they drift a little against the tilt */
 .hb-patch{--shape:polygon(25% 2%,75% 2%,100% 50%,75% 98%,25% 98%,0 50%);position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:clamp(78px,7.2vw,100px);aspect-ratio:1.12;color:var(--_color---text--primary);text-decoration:none;transform:translate(-50%,-50%);
@@ -352,8 +356,10 @@ html:has(.section_hub-hero),.main-wrapper:has(.section_hub-hero){overflow-anchor
   .hb-pp-page.is-l{border-right:0;border-bottom:1px dashed rgba(255,255,255,.16);min-height:300px}
   .hb-pp-page.is-r{min-height:340px}
   /* page turns go top to bottom: the sheet hinges on the line between the two stacked pages (script sets its top/height) */
-  .hb-pp-turn{left:0;right:0;width:auto;transform-origin:50% 0;border-left:0;border-top:1px solid rgba(255,255,255,.14)}
-  .hb-pp-turn.is-back{left:0;transform-origin:50% 100%;border-right:0;border-top:0;border-bottom:1px solid rgba(255,255,255,.14)}
+  .ab_hub-log{grid-auto-rows:1fr}
+  .hb-pp-turn{left:0;right:0;width:auto;transform-origin:50% 0}
+  .hb-pp-turn.is-back{left:0;transform-origin:50% 100%}
+  .hb-pp-turn .hb-pp-face.is-rev{transform:rotateX(180deg)}
   /* flight plan header: Edit + Abort wrap inside the column */
   .ab_hub-flight_acts{flex:1 1 100%;min-width:0;max-width:100%}
   .ab_hub-flight_acts .button{flex:1 1 auto;justify-content:center}

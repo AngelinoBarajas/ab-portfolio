@@ -40,11 +40,13 @@
     dock.innerHTML = '<span class="hbf-shock" aria-hidden="true"></span>' +
       st.map(function(o, k){ return '<span class="hbf-moon" style="--c:' + o.c + ';--a:' + (k * 150 + 25) + 'deg" aria-hidden="true"><i></i><em>' + esc(o.code) + '</em></span>'; }).join('') +
       '<div class="hbf-live"><span>Touchdown · ' + esc(m.code) + '</span><b>Mission <span class="t-outline">live</span></b>' +
-      '<div class="hbf-live-a">' + btnHTML('is-primary', PROC + '#launch', 'Request this mission', '→', ' data-req') + btnHTML('is-ghost', '/contact#call', 'Book a call') + '</div></div>';
+      '<div class="hbf-live-a">' + btnHTML('is-primary', PROC + '#launch', 'Request this mission', '→', ' data-req') + btnHTML('is-ghost', '/contact#call', 'Book a call') + btnHTML('is-ghost is-replot', '#trajectory', 'Re-plot route', '↺', ' data-replot') + '</div></div>';
     dock.insertBefore(planetEl(m, 90, 'hbf-dock-pl'), dock.children[1] || null);
     track.appendChild(dock);
     $$('.ab_planet', track).forEach(build);
     // the Process page reads ab:dest (main first, then stops) and pre-fills its star chart + form
+    // re-plot: warp back up to the planner on this page (the trajectory stays set; the flight plan stays below until relaunched)
+    $('[data-replot]', dock).addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); warp(function(){ goTo($('#trajectory'), true, 20); }, true); });
     $('[data-req]', dock).addEventListener('click', function(){ try { localStorage.setItem('ab:dest', fsel.map(function(j){ return HUB[j].slug; }).join(',')); } catch (err){} });
   }
   function flayout(){

@@ -14,41 +14,45 @@
       return esc(l1) + '<br>' + esc(l2);
     };
     var SLOTS = [[27, 17], [73, 20], [27, 51], [73, 54], [27, 85], [73, 87]];
-    var fillSpread = function(k){
+    var htmlL = function(k){
       var f = FLIGHTS[k], ph = /placeholder/i.test(f.status);
-      pp.style.setProperty('--mc', f.c);
-      pageL.innerHTML = '<div class="hb-pp-no"><span>Mission ' + esc(f.no) + '</span><span>Crew logbook</span></div>' +
+      return '<div class="hb-pp-no"><span>Mission ' + esc(f.no) + '</span><span>Crew logbook</span></div>' +
         '<h3 class="hb-pp-name">' + esc(f.name) + '</h3><p class="hb-pp-client">' + esc(f.client) + '</p>' +
         '<dl class="hb-pp-dl"><div><dt>Status</dt><dd' + (ph ? ' class="is-ph"' : '') + '>' + esc(f.status) + '</dd></div><div><dt>Patches</dt><dd>' + f.svc.length + ' service' + (f.svc.length === 1 ? '' : 's') + '</dd></div></dl>' +
         '<a class="hb-pp-open" href="' + misHref(f.slug) + '">' + (ph ? 'See the archive' : 'Open the debrief') + ' <span aria-hidden="true">→</span></a>' +
         '<div class="hb-pp-mrz" aria-hidden="true">' + logLine(f) + '</div>';
-      var r = rnd(hash(f.slug));
-      pageR.innerHTML = '<div class="hb-pp-r-h"><span>Patches earned</span><span>' + pad(k + 1) + '</span></div><div class="hb-patches">' +
+    };
+    var htmlR = function(k){
+      var f = FLIGHTS[k], r = rnd(hash(f.slug));
+      return '<div class="hb-pp-r-h"><span>Patches earned</span><span>' + pad(k + 1) + '</span></div><div class="hb-patches">' +
         (f.svc.length ? f.svc.map(function(s, j){
           var sl = SLOTS[j % SLOTS.length], x = sl[0] + (r() - .5) * 6, y = sl[1] + (r() - .5) * 4;
           return '<a class="hb-patch" href="' + SVC + s.slug + '" style="left:' + x.toFixed(1) + '%;top:' + y.toFixed(1) + '%;--c:' + s.c + '" aria-label="' + esc(s.t1 + ' ' + s.t2) + ' service"><small>Verified</small><b>' + esc(s.code) + '</b><em>' + esc(s.short) + '</em></a>';
         }).join('') : '<p class="hb-pp-none">No patches yet</p>') + '</div>';
-      if (nEl) nEl.textContent = pad(k + 1) + ' / ' + pad(FLIGHTS.length);
     };
-    // page turns: nothing re-animates (the glare + tilt follow the pointer instead)
+    var meta = function(k){ pp.style.setProperty('--mc', FLIGHTS[k].c); if (nEl) nEl.textContent = pad(k + 1) + ' / ' + pad(FLIGHTS.length); };
+    var fillSpread = function(k){ pageL.innerHTML = htmlL(k); pageR.innerHTML = htmlR(k); meta(k); };
+    // page turns: a real two-sided sheet. Its front is the page being turned (identical to the page under it, so nothing pops),
+    // its back is the next mission's facing page; the page underneath already shows the new content. Desktop turns on the
+    // spine (side to side), phones on the line between the stacked pages (top to bottom). Nothing swaps mid-turn.
     var turn = function(n){
       if (busy) return;
-      var k = (spread + n + FLIGHTS.length) % FLIGHTS.length, flat = innerWidth <= 700;
+      var k = (spread + n + FLIGHTS.length) % FLIGHTS.length, flat = innerWidth <= 700, fwd = n > 0;
       if (reduce || !hasGsap){ spread = k; fillSpread(k); return; }
       busy = true;
-      sheet.classList.toggle('is-back', n < 0);
-      // phones stack the pages, so the sheet turns top to bottom: forward lifts the lower page up over the spine, back drops the upper one
-      var ax = flat ? 'rotationX' : 'rotationY', sgn = flat ? -1 : 1, from = {}, mid = {}, end = { opacity: 0, duration: .32, ease: 'power2.out' };
-      if (flat){ var pg = n > 0 ? pageR : pageL; sheet.style.top = pg.offsetTop + 'px'; sheet.style.height = pg.offsetHeight + 'px'; sheet.style.bottom = 'auto'; }
-      else { sheet.style.top = sheet.style.height = sheet.style.bottom = ''; }
-      from[ax] = 0; from.opacity = 1;
-      mid[ax] = (n > 0 ? -90 : 90) * sgn; mid.duration = .32; mid.ease = 'power2.in';
-      end[ax] = (n > 0 ? -180 : 180) * sgn;
-      gsap.timeline({ onComplete: function(){ busy = false; gsap.set(sheet, { opacity: 0, rotationX: 0, rotationY: 0 }); } })
-        .set(sheet, from)
-        .to(sheet, mid)
-        .add(function(){ spread = k; fillSpread(k); })
-        .to(sheet, end);
+      var under = fwd ? pageR : pageL, over = fwd ? pageL : pageR, back = fwd ? htmlL(k) : htmlR(k);
+      sheet.classList.toggle('is-back', !fwd);
+      if (flat){ sheet.style.top = under.offsetTop + 'px'; sheet.style.height = under.offsetHeight + 'px'; sheet.style.bottom = 'auto'; }
+      else sheet.style.top = sheet.style.height = sheet.style.bottom = '';
+      sheet.innerHTML = '<div class="hb-pp-page ' + (fwd ? 'is-r' : 'is-l') + ' hb-pp-face">' + under.innerHTML + '</div>' +
+        '<div class="hb-pp-page ' + (fwd ? 'is-l' : 'is-r') + ' hb-pp-face is-rev">' + back + '</div>';
+      under.innerHTML = fwd ? htmlR(k) : htmlL(k);
+      spread = k; meta(k);
+      var ax = flat ? 'rotationX' : 'rotationY', from = { rotationX: 0, rotationY: 0 }, to = { duration: .8, ease: 'power2.inOut',
+        onComplete: function(){ over.innerHTML = back; sheet.classList.remove('is-on'); sheet.innerHTML = ''; gsap.set(sheet, { rotationX: 0, rotationY: 0 }); busy = false; } };
+      to[ax] = flat ? (fwd ? 180 : -180) : (fwd ? -180 : 180);
+      sheet.classList.add('is-on');
+      gsap.fromTo(sheet, from, to);
     };
     glass(pp, function(){ return busy; });
     var prevB = $('[data-log-prev]'), nextB = $('[data-log-next]');
