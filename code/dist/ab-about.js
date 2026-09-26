@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.19.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.20.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -305,6 +305,40 @@ window.Webflow.push(function(){
       var orbRate = function(r){ if (!orb.getAnimations) return; orb.getAnimations().forEach(function(a){ if (hasGsap){ var o = { r: a.playbackRate }; gsap.to(o, { r: r, duration: 1.2, ease: 'power2.out', onUpdate: function(){ a.playbackRate = o.r; } }); } else a.playbackRate = r; }); };
       if (window.MutationObserver) new MutationObserver(function(){ orbRate(td.classList.contains('is-close') ? 3.2 : 1); }).observe(td, { attributes: true, attributeFilter: ['class'] });
     }
+    // the score: flying close shows a play button; it opens the official track (Spotify embed) in a small player docked
+    // to the corner, so it keeps playing while the visitor scrolls. Starts at 0:32 (Spotify decides what a logged-out
+    // listener hears: often a preview clip)
+    var viz = $('.ab_bento-card_viz.is-td', td) || td;
+    var TRACK = 'spotify:track:6pWgRkpqVfxnj3WuIcJ7WP', START = 32;
+    var play = document.createElement('button'); play.type = 'button'; play.className = 'ab_td_play';
+    play.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>Play the score</span>';
+    play.setAttribute('aria-label', 'Play the Interstellar score, Cornfield Chase, from 0:32');
+    viz.appendChild(play);
+    var dockEl = null, ctrl = null, seeked = false;
+    function scoreDock(){
+      if (dockEl){ dockEl.classList.add('is-on'); return; }
+      dockEl = document.createElement('div'); dockEl.className = 'ab_score is-on'; dockEl.setAttribute('role', 'region'); dockEl.setAttribute('aria-label', 'Interstellar score player');
+      dockEl.innerHTML = '<div class="ab_score_h"><span>Now playing · Interstellar</span><button type="button" class="ab_score_x" aria-label="Close the player">×</button></div><div class="ab_score_f"><div id="abScoreFrame"></div></div>';
+      document.body.appendChild(dockEl);
+      $('.ab_score_x', dockEl).addEventListener('click', function(){ if (ctrl) try { ctrl.pause(); } catch (e){} dockEl.classList.remove('is-on'); });
+      var make = function(API){
+        API.createController(document.getElementById('abScoreFrame'), { uri: TRACK, width: '100%', height: 80 }, function(c){
+          ctrl = c;
+          c.addListener('ready', function(){ try { c.play(); } catch (e){} });
+          c.addListener('playback_update', function(ev){ var d = ev && ev.data; if (!seeked && d && !d.isPaused && d.position < START * 1000){ seeked = true; try { c.seek(START); } catch (e){} } });
+        });
+      };
+      if (window.__abSpotifyAPI) make(window.__abSpotifyAPI);
+      else {
+        window.onSpotifyIframeApiReady = function(API){ window.__abSpotifyAPI = API; make(API); };
+        var s = document.createElement('script'); s.src = 'https://open.spotify.com/embed/iframe-api/v1'; s.async = true; document.head.appendChild(s);
+      }
+    }
+    play.addEventListener('click', function(e){
+      e.stopPropagation();
+      if (ctrl && dockEl){ dockEl.classList.add('is-on'); seeked = false; try { ctrl.play(); } catch (err){} return; }
+      scoreDock();
+    });
     td.addEventListener('pointerenter', function(){ hover = true; td.classList.add('is-close'); });
     td.addEventListener('pointerleave', function(){ hover = false; td.classList.remove('is-close'); });
     if (coarse) td.addEventListener('click', function(){ hover = !hover; td.classList.toggle('is-close', hover); });
