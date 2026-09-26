@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.23.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.23.2 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -306,14 +306,16 @@ window.Webflow.push(function(){
       var orbRate = function(r){ if (!orb.getAnimations) return; orb.getAnimations().forEach(function(a){ if (hasGsap){ var o = { r: a.playbackRate }; gsap.to(o, { r: r, duration: 1.2, ease: 'power2.out', onUpdate: function(){ a.playbackRate = o.r; } }); } else a.playbackRate = r; }); };
       if (window.MutationObserver) new MutationObserver(function(){ var c = td.classList.contains('is-close'); orbRate(c ? 3.2 : 1); if (c && AB.quest) AB.quest('endurance'); }).observe(td, { attributes: true, attributeFilter: ['class'] });
       // side quest: near the horizon, five fast taps on the black hole fire the thrusters and the Endurance breaks free
-      var taps = [], freeing = false;
+      var taps = [], freeing = false, pushT = 0;
+      function push(n){ orb.style.setProperty('--push', n); orb.classList.toggle('is-thrust', n > 0); }
       hole.addEventListener('click', function(e){
         if (!td.classList.contains('is-close') || freeing) return;
         e.stopPropagation();
         var now = Date.now(); taps = taps.filter(function(t){ return now - t < 2200; }); taps.push(now);
-        if (hasGsap && !reduce) gsap.fromTo(orb, { scale: 1 }, { scale: 1.06, duration: .08, yoyo: true, repeat: 1 });
+        // each tap fires the thrusters: the ship climbs a little further out; stop tapping and it sinks back
+        push(Math.min(4, taps.length)); clearTimeout(pushT); pushT = setTimeout(function(){ taps = []; push(0); }, 2200);
         if (taps.length < 5) return;
-        taps = []; freeing = true; orb.classList.add('is-escape');
+        clearTimeout(pushT); taps = []; freeing = true; push(0); orb.classList.add('is-escape');
         toast('Full thrust. The Endurance broke free of the horizon.');
         if (AB.quest) AB.quest('escape');
         setTimeout(function(){ orb.classList.remove('is-escape'); freeing = false; }, 3200);
