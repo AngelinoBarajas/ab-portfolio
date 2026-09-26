@@ -400,3 +400,7 @@ Designer steps for Angelino: rename the form (Form settings › Name, it's "Emai
 - **Launch form frame**: `.ab_launch_form` had overflow hidden, which clipped its selection frame (handles, name tag, size label). Overflow removed in the Designer; the submit rocket now flies up out of the card instead of being cut at its edge.
 - Live: `ab-process` JS + CSS **v0.9.2**. Local test 1440 / 1024 (with 2 stops) / 390, then staging 1440 / 1024 / 390: no console errors, no horizontal scroll, landing + HUD verified. Build sources `webflow/build/process/hero.css` + `launch.css` synced. Prototype not updated.
 
+### v0.9.3 (2026-09-26): hero planet draggable again
+- Angelino: the hero planet stopped dragging after v0.9.2. Cause: `.ab_process-hero_grid` has z-index 4 and spans the hero; the old planet (z 5) sat above it, the new one (z 1, behind the countdown) sits under it. A z-index can't fix it (the countdown lives inside the grid), so pointer passthrough in `ab-process.css`: grid, `.ab_count` and the crumb/REC row (`.ab_dbh_top`, its links excepted) `pointer-events:none`; the copy column keeps it; on phones (where the copy column overlaps the planet) only its toys, buttons and links take it.
+- Verified hit-testing 25/25 points on the planet at 1440 / 1024 / 390, title toys + crumb + both buttons still clickable, simulated drags move the planet on staging (mouse at 1440, touch at 390). No console errors. Lesson: lowering a draggable's z-index under a full-width text layer silently kills the drag; check `elementFromPoint` on it after any z change.
+
