@@ -516,3 +516,14 @@ All in `ab-hub` (JS 0.16.0, CSS 0.16.1); phones = `max-width:700px` unless noted
 - **Logbook on phones**: the page turn is back, top to bottom: the sheet hinges on the line between the stacked pages (`rotationX`; forward lifts the lower page, back drops the upper one). Replaces the sideways slide.
 - **Final call**: the monitor spans the column, ON REQUEST lines up under AB-09, buttons stack full width with Book a call first.
 - Verified on staging: 375 (all 8 items), 1024 + 1440 (wide route, rotateY page turn, console + chip row unchanged): no console errors, no horizontal scroll. jsDelivr served "file not found" for a few seconds after the v0.16.1 tag; retry before comparing SRI.
+
+## Mobile review batch 3: Process + re-plot + logbook (v0.17.0 / v0.17.1, 2026-09-26, awaiting Angelino's OK)
+
+Phones = `max-width:767px` in `ab-process.css`.
+- **Hero countdown**: on phones the T−6 block moves above the title (`order:-1`) as a compact mission clock (78px number, meta stacked) beside the planet, instead of trailing the two CTAs.
+- **Star chart**: planet size = `--s × --ps` (`.abp-dest` `--sz`); `--ps` .85 ≤767, .72 ≤479. Desktop 1.
+- **Touchdown (phones)**: column layout, 150px planet centered on screen (`margin-left:-20px` offsets the rail padding), text + links centered; lands at `end: 'bottom 80%'` so the links are on screen when it lands.
+- **Timeline gauge (phones)**: the grid becomes a flex column, the gauge moves first and sticks under the nav (`top:84px`) as a compact 2-column readout (dial · bucket title + 3-line text, adds below; note + tick labels hidden), so the needle is in view while tapping the dials.
+- **Re-plot route** at every touchdown: Process dock link `#chart`, hub Mission live button `#trajectory`. Script-built links bind their own warp + jump (core only binds anchors present at load); the hub keeps the trajectory set.
+- **Logbook turns (hub, all sizes)**: two-sided sheet. Front = a copy of the page being turned, back = the next mission's facing page, the page underneath is already the new one; nothing swaps mid-turn, no fade. `rotationY` on the spine (desktop), `rotationX` on the page line (phones, pages forced equal with `grid-template-rows:1fr 1fr`). 0.8s `power2.inOut`.
+- Verified on staging 375 + 1440: no console errors, no horizontal scroll.
