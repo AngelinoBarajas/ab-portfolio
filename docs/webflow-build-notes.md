@@ -387,3 +387,10 @@ Designer steps for Angelino: rename the form (Form settings › Name, it's "Emai
 - **Process form**: 4th pick opens "+ More than three" → `More services` textarea; hidden field renamed **Destinations** (e.g. "Webflow development (main), Logo + brand identity"). Budget option "Not sure yet · still scouting". Embed source `webflow/build/process/form-fields.embed.html`.
 - **Home planner**: "Not sure yet · still scouting" chip under the budget ticks (script-injected): overrides the slider (dimmed), dashed ghost ring, "orbit TBD" readout, `Budget` field + brief carry it; moving the slider turns it off. Styles in `ab-core.css`.
 - Live: core CSS + ab-home + ab-process JS/CSS **v0.9.0**; core JS v0.8.1. Tested locally (all stop flows, max 3 + More, make main/remove, restore, track fit, planner chip) and on staging 1440/390, no console errors.
+
+### v0.9.1 (2026-09-26): route cards never cut off on desktop
+- Angelino: the pinned route cut off the bottom of the cards (1440×800: cards ended at 862px). The route now fits the viewport: the path band above the cards shrinks from 200px to 140px as needed (`CARD_TOP` computed in `layout()`, path/pad y values scale with it), and when even that isn't enough (short screens, cards with stops) the pin starts later (`start: 'top+=' + pinOver + ' top'`) so the heading slides up and the cards stay whole. Desktop top padding follows viewport height (`clamp(48px,8vh,120px)` ≥768 in `ab-process.css`). Desktop re-fits on height-only resizes too.
+- Measured (card bottom / viewport): 1440×800 772/800 (heading fully visible), 1280×720 691/720, 1024×768 739/768, 1920×1080 unchanged (200px band), 1440×800 with 2 stops (489px cards) 772/800. Phones unchanged (vertical rail).
+- Live: `ab-process` JS + CSS **v0.9.1** (core JS v0.8.1, core CSS + ab-home v0.9.0 unchanged). Staging verified at 1440 / 1024 / 390, no console errors, no horizontal scroll. Prototype `_parts/process-ix.js` not changed (still the fixed 200px band).
+- Testing note: headless Chrome screenshots of this page come back blank (even with the rAF shim and `.ab_warp-flash` hidden); DOM measurements in the pane were used instead.
+
