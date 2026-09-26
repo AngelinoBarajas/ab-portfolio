@@ -21,4 +21,6 @@
 - [~] 6h. Services hub (`/services`, new page): prototype approved 2026-09-26; built in Webflow (page `6ab74df0ae2408ea9be939c7`, code v0.11.0), **approved by Angelino 2026-09-26** (incl. the 4 hub glossary asides)
 - [x] 6i. Contact page (`/contact`, new page): **approved by Angelino 2026-09-26** incl. the 3 asides (page `6ab75d8abdfdf7aa5d9e7c2d`, code v0.12.0 JS / v0.12.1 CSS)
 - [~] 8. QA: audit done + fixes live (v0.13.0, `docs/qa-report.md`), SEO metadata on staging (`docs/seo-plan.md`); open: perf decision, Designer steps (sitemap, template SEO, collection links, form names), OG image, JSON-LD at launch. At 1440 / 1024 / 390, reduced motion, Lighthouse
+- [x] 8b. Mobile review (2026-09-26): batches 1-5 + follow-ups shipped to staging (v0.15.0 → v0.23.4), incl. side quests (16 easter eggs + quest log). Details: `docs/webflow-build-notes.md`
+- [ ] 8c. SEO + schema pass on every page (next session; `docs/seo-plan.md`)
 - [ ] 9. Angelino approves → publish

@@ -174,14 +174,22 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 
 - Follow-ups v0.20.0 – v0.22.0: Interstellar score player (Cornfield Chase via Spotify embed), cinematic boss fight with synthesized sound, service rail/tile fixes, bookshelf tilt, mobile menu "You are here". Live: core JS 0.19.0 + core CSS 0.22.0, about 0.22.0 (CSS 0.21.6), services 0.21.2.
 
+## This session (2026-09-26, mobile review wrap-up + side quests) in one list
+
+- Mobile review batches 1-5 + follow-ups shipped (v0.15.0 → v0.23.4), all on webflow.io only; every item is logged in `docs/webflow-build-notes.md` (Mobile review batch 1-5, then the version notes after them). Angelino's last word: record it and move on to SEO.
+- **Side quests** (v0.23.0+): 16 easter eggs logged per browser (`core/24-quests.js`, `AB.quest('id')`), quest log on About › Player one (`about/20-quests.js`), gold crew badge at 16/16, aside twinkles (`core/23-tips.js`). New egg: Endurance escape (5 fast taps on the black hole while close). Cheat code works by swipe on phones (Player one game screen; the screen echoes the input).
+- **About extras**: Interstellar score (Spotify embed of "Cornfield Chase", desktop only, pauses on hover-off / scroll-away), cinematic boss fight with synthesized sound (toggle, off by default), bookshelf tilts.
+- **Site-wide**: mobile menu marks the current page ("You are here"); cross-page anchors (`/#launch`, `/process#launch`) re-aim after layout settles; crew dock hides under the open menu; Next-card rocket path handles tight cards.
+- Lessons (memory): script-made class names collided with Designer classes (`is-planet`, `ab_td_play`): prefix script classes (`abx-`, `sv-`, `hb-`); address-bar resize + innerHeight pins jump content; Webflow 429s after several publishes in a row (wait a minute).
+- Open for Angelino's review: the boss credits copy (`about/10-boss.js`) and the quest titles/hints (`core/24-quests.js`).
+
 ## Next session
 
-Live on staging after the mobile review: core JS v0.19.0 + core CSS v0.15.0; page bundles: home 0.15.0, hub 0.17.0 (CSS 0.17.1), process 0.17.1, about 0.19.0, contact 0.19.0, mission 0.19.0, services 0.19.1 (CSS 0.19.0). Earlier note: every page served core CSS v0.14.0 + core JS v0.13.1 through the registry (no `defer`, no footer script tags); page bundles: home v0.14.0, process v0.14.0, 404 v0.14.0, work v0.4.0, about v0.13.0, hub/services v0.13.0, contact v0.12.0, mission v0.10.0.
+Live on staging: core JS **0.23.3** + core CSS **0.23.3**; home 0.23.0, hub JS 0.23.0 (CSS 0.17.1), process JS 0.23.0 (CSS 0.17.1), about JS **0.23.4** (CSS 0.23.2), contact 0.19.0, mission JS 0.23.0 (CSS 0.19.0), services JS 0.21.2 (CSS 0.21.2), work 0.4.0, 404 0.14.0. All via the registry (+ CSS `<link>` with SRI in site/page heads).
 
-1. **Angelino's mobile review.** He clicks through every page on his phone and sends tweaks. Per batch: read the page's build notes + code, fix, test 390 / 1024 / 1440 (no console errors, no horizontal scroll), deploy via jsDelivr + Webflow's registry (`register_hosted_script` same name + new version, `add_site_script` / `add_page_script`; CSS `<link>` with SRI), publish webflow.io only, stop for his OK.
-2. His Designer steps (`docs/seo-plan.md`): sitemap on, Mission + Services template SEO bound to [Name]/[Summary], Home board frame link + Work card link → Current Missions page, rename the Process + Contact forms and confirm the notification email.
-3. Before launch: OG image (1200×630), JSON-LD with the real domain, placeholders (email, socials, testimonials, `[X–Y weeks]`, headshot, favicon). Perf levers left (not decided): CSS-sized hero titles, Mission scenes after first paint.
-4. Offered, not decided: stronger Interstellar "Hover to fly close" on About.
+1. **SEO + schema on every page** (next): start from `docs/seo-plan.md`. Audit every static page + both CMS templates (titles, descriptions, OG, canonical, headings, alt text, crawlable links), fill what the MCP can, list the Designer-only steps, write JSON-LD for every page type (drafts exist, `{{DOMAIN}}` until the domain is known), make the OG image, check sitemap + robots. Use the `seo-schema-builder` skill.
+2. His Designer steps (`docs/seo-plan.md`): sitemap on, Mission + Services template SEO bound to [Name]/[Summary], Home board frame link + Work card link → Current Missions page, rename the Process + Contact forms, confirm the notification email.
+3. Before launch: domain, placeholders (email, socials, testimonials, `[X–Y weeks]`, headshot, favicon), publish. Perf levers left (not decided): CSS-sized hero titles, Mission scenes after first paint.
 
 ## Home review edits already done (v0.1.4, from `ab-portfolio-hp-edits.docx`)
 
