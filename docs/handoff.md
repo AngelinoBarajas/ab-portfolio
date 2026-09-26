@@ -164,9 +164,12 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 
 ## Next session
 
-1. ~~New standalone Contact page~~ built 2026-09-26 (see above); pending his OK, the asides, and Designer: rename the form "Email Form" → Contact. Original brief: Run page-pipeline from stage 2 (Direct): divergence gate + direction questions for him, then an HTML prototype in `prototypes/` (the `_parts/assemble.py` shell pattern), approval, then Webflow. Today every "Contact" / "Book a call" link (Nav, mobile menu `/contact` label, Footer, CTAs) goes to Home `#launch` (the planner form); decide with him what moves to `/contact` and what stays. Forms: Home planner + Process form post to the same notification email (still unconfirmed in Site settings › Forms). Reuse the native-form + Embed fields pattern (`webflow/build/process/form-fields.embed.html`).
-2. Then **step 8 QA** (every page vs its prototype at 1440 / 1024 / 390, console, horizontal scroll, reduced motion, Lighthouse, links + warp transitions). Ask before any publish beyond webflow.io.
-3. Offered, not decided: stronger Interstellar "Hover to fly close" on About. Process prototype (`prototypes/process.html`) predates v0.9.1–v0.9.4.
+Verified 2026-09-26 on staging: every page serves core CSS v0.14.0 + core JS v0.13.1 through the registry (no `defer`, no footer script tags); page bundles: home v0.14.0, process v0.14.0, 404 v0.14.0, work v0.4.0, about v0.13.0, hub/services v0.13.0, contact v0.12.0, mission v0.10.0.
+
+1. **Angelino's mobile review.** He clicks through every page on his phone and sends tweaks. Per batch: read the page's build notes + code, fix, test 390 / 1024 / 1440 (no console errors, no horizontal scroll), deploy via jsDelivr + Webflow's registry (`register_hosted_script` same name + new version, `add_site_script` / `add_page_script`; CSS `<link>` with SRI), publish webflow.io only, stop for his OK.
+2. His Designer steps (`docs/seo-plan.md`): sitemap on, Mission + Services template SEO bound to [Name]/[Summary], Home board frame link + Work card link → Current Missions page, rename the Process + Contact forms and confirm the notification email.
+3. Before launch: OG image (1200×630), JSON-LD with the real domain, placeholders (email, socials, testimonials, `[X–Y weeks]`, headshot, favicon). Perf levers left (not decided): CSS-sized hero titles, Mission scenes after first paint.
+4. Offered, not decided: stronger Interstellar "Hover to fly close" on About.
 
 ## Home review edits already done (v0.1.4, from `ab-portfolio-hp-edits.docx`)
 
