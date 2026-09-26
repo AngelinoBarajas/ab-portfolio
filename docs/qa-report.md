@@ -64,3 +64,20 @@ LCP 4.4–5.7 s, TBT 90–1,450 ms (Home worst: 9.1 s main-thread work, 1.9 s JS
 - Performance moved within Lighthouse's run-to-run noise (±6): the per-frame + DPR + split fixes help real devices (smoother, less battery) more than the lab score. The lab score is held by **LCP ≈ 5 s**, which is first paint waiting on Webflow's jQuery + webflow.js + the synchronous GSAP/Lenis/core chain, then the display-font swap.
 - Remaining levers (need Angelino's call): (1) load the bundles from freeform footer code with `defer` instead of Webflow's script registry (registry rejects `defer`; local A/B −0.7 s FCP); (2) size the hero titles in CSS so the font swap / Home fit doesn't create a late LCP; (3) Mission: start the monitor scenes after first paint (heaviest template, 44).
 - SEO scores stay 54–66 on staging only because webflow.io is `noindex`.
+
+## After deferred loading (Angelino chose "Defer via footer code", 2026-09-26)
+
+All bundles now load from freeform footer code with `defer` (details: build notes › Deferred script loading). Staging re-check: 22 URLs at 1440 + 7 at 390, every bundle + Lenis initialize, ScrollTrigger counts unchanged, no horizontal scroll, no new console errors.
+
+| Page | Perf: QA start → v0.13 → deferred | LCP | TBT |
+|---|---|---|---|
+| Home | 39 → 45 → **47** | 5.4 s | 960 ms |
+| About | 55 → 53 → **53** | 5.1 s | 680 ms |
+| Contact | 72 → 70 → **73** | 4.7 s | 90 ms |
+| Process | 53 → 56 → **62** | 5.0 s | 390 ms |
+| Services hub | 60 → 57 → **62** | 5.6 s | 300 ms |
+| Service item | 52 → 56 → **57** | 5.1 s | 590 ms |
+| Work | 63 → 70 → **74** | 4.8 s | 110 ms |
+| Mission | 50 → 44 → **49** | 6.1 s | 610 ms |
+
+First paint is still ~4 s in the lab: what's left in front of it is Webflow's own synchronous jQuery + webflow.js and the render-blocking CSS (Webflow's + `ab-core.css`, 67 KB), which the site can't defer. Remaining levers: CSS-sized hero titles (late LCP from the font swap / Home fit) and starting Mission's monitor scenes after first paint. Lab numbers use a throttled mid-range phone; real devices on Wi-Fi/5G are much faster.
