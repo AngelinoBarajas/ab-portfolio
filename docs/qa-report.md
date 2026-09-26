@@ -83,3 +83,19 @@ All bundles now load from freeform footer code with `defer` (details: build note
 First paint is still ~4 s in the lab: what's left in front of it is Webflow's own synchronous jQuery + webflow.js and the render-blocking CSS (Webflow's + `ab-core.css`, 67 KB), which the site can't defer. Remaining levers: CSS-sized hero titles (late LCP from the font swap / Home fit) and starting Mission's monitor scenes after first paint. Lab numbers use a throttled mid-range phone; real devices on Wi-Fi/5G are much faster.
 
 **Reverted (2026-09-26):** Angelino chose to keep Webflow's script registry ("everything through jsDelivr like before"); the deferred numbers above no longer apply, the v0.13.0 column does.
+
+## Button audit (2026-09-26, staging, after scripts ran)
+
+Every visible link / button / submit on all 22 URLs, read after the page scripts set their hrefs.
+
+- **Nav + footer**: identical on every page. Contact → `/contact`, Book a call → `/contact#call`, Work/Services/Process/About → their pages, footer services → `/services/<slug>`, footer Services heading → `/services`.
+- **All internal targets load (200) and every `#section` target exists** on its page (22 targets checked).
+- **External**: 510visuals.com and danielaguirre.law both 200. Note: danielaguirre.law currently serves the firm's holding page until the attorney signs off, so the Aguirre mission's "Live" link lands there.
+- **Intent**: every Plan a mission / Start a project / Plot the course / planner CTA → the Home planner (`/#launch`) or the Process form; Book a call → `/contact#call`; service/mission cards → the right item pages. Home "See the work ↓" and Process "Plot the course ↓" are in-page jumps by design.
+- **`#` links with a script handler** (by design): email copy, social links (toast until Site Settings has URLs), placeholder mission cards (toast), Mission Cadet/Engineer switch (verified: toggles, no jump).
+
+**Fixed:**
+1. Services template breadcrumb "services" went to `/#capabilities` (Home) → now the Services hub `/services` (Designer link + `webflow/build/services/make.py`).
+2. 404 page: the footer "back to top" logo pointed at a `#top` that page doesn't have → core v0.13.1 treats `#top` as scroll-to-top everywhere.
+
+**Left as is (flag to Angelino):** the Work page breadcrumb "/home" goes to `/#work` (Home's work board) while every other "/home" goes to `/`.
