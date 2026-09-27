@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.24.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.24.1 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -723,7 +723,7 @@ window.Webflow.push(function(){
       var running = false, isOver = false, keys = {}, touch = null, shots = [], foes = [];
       var W = 0, H = 0, SB = null, MB = null, sx = 0, sy = 0, tilt = 0, bx = 0, bt = 0, HPV = 100, lives = 3, inv = 0, cool = 0;
       var tAim = 0, tSpread = 0, tBeam = 0, beamSt = null, enraged = false, helpOn = false;
-      var DMG = 3;
+      var DMG = 2;
       function base(el){ var a = arena.getBoundingClientRect(), r = el.getBoundingClientRect(); return { x: r.left - a.left - (+gsap.getProperty(el, 'x') || 0), y: r.top - a.top - (+gsap.getProperty(el, 'y') || 0), w: r.width, h: r.height }; }
       function measure(){ W = arena.offsetWidth; H = arena.offsetHeight; SB = base(ship); MB = base(mon); }
       function shipC(){ return { x: SB.x + sx + SB.w / 2, y: SB.y + sy + SB.h * .55 }; }
