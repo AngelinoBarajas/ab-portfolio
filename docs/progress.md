@@ -22,5 +22,7 @@
 - [x] 6i. Contact page (`/contact`, new page): **approved by Angelino 2026-09-26** incl. the 3 asides (page `6ab75d8abdfdf7aa5d9e7c2d`, code v0.12.0 JS / v0.12.1 CSS)
 - [~] 8. QA: audit done + fixes live (v0.13.0, `docs/qa-report.md`), SEO metadata on staging (`docs/seo-plan.md`); open: perf decision, Designer steps (sitemap, template SEO, collection links, form names), OG image, JSON-LD at launch. At 1440 / 1024 / 390, reduced motion, Lighthouse
 - [x] 8b. Mobile review (2026-09-26): batches 1-5 + follow-ups shipped to staging (v0.15.0 → v0.23.4), incl. side quests (16 easter eggs + quest log). Details: `docs/webflow-build-notes.md`
-- [ ] 8c. SEO + schema pass on every page (next session; `docs/seo-plan.md`)
+- [~] 8c. SEO + schema pass (2026-09-26): metadata, OG images, Missions SEO fields live on staging; JSON-LD drafted for launch; Designer steps open (`docs/seo-plan.md` §6)
+- [x] 8d. About extras: touch thrusters fix (v0.23.5), playable boss fight + anime finisher (v0.24.1)
+- [ ] 8e. Knowledge System integrated into the site (next session) + first Insights (10 drafts in `content/insights/drafts/`, awaiting review)
 - [ ] 9. Angelino approves → publish

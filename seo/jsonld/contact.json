@@ -1,0 +1,39 @@
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "ContactPage",
+   "@id": "{{DOMAIN}}/contact#page",
+   "url": "{{DOMAIN}}/contact",
+   "name": "Contact · Open a channel",
+   "description": "Questions, help with an existing site, collaborations, hiring or a call.",
+   "isPartOf": {
+    "@id": "{{DOMAIN}}/#website"
+   },
+   "inLanguage": "en-US",
+   "breadcrumb": {
+    "@id": "{{DOMAIN}}/contact#breadcrumb"
+   },
+   "about": {
+    "@id": "{{DOMAIN}}/#person"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "@id": "{{DOMAIN}}/contact#breadcrumb",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Home",
+     "item": "{{DOMAIN}}/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Contact"
+    }
+   ]
+  }
+ ]
+}

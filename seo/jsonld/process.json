@@ -1,0 +1,39 @@
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebPage",
+   "@id": "{{DOMAIN}}/process#page",
+   "url": "{{DOMAIN}}/process",
+   "name": "Process · The flight plan",
+   "description": "Six stages from discovery call to launch, re-plotted for each kind of project.",
+   "isPartOf": {
+    "@id": "{{DOMAIN}}/#website"
+   },
+   "inLanguage": "en-US",
+   "breadcrumb": {
+    "@id": "{{DOMAIN}}/process#breadcrumb"
+   },
+   "about": {
+    "@id": "{{DOMAIN}}/#person"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "@id": "{{DOMAIN}}/process#breadcrumb",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Home",
+     "item": "{{DOMAIN}}/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Process"
+    }
+   ]
+  }
+ ]
+}

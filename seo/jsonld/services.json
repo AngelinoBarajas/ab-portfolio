@@ -1,0 +1,65 @@
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "CollectionPage",
+   "@id": "{{DOMAIN}}/services#page",
+   "url": "{{DOMAIN}}/services",
+   "name": "Services · Launch control",
+   "description": "Eight services from one designer-developer: Webflow builds, interactive 3D + data, motion, brand identity, custom code, CMS integrations, design systems and performance.",
+   "isPartOf": {
+    "@id": "{{DOMAIN}}/#website"
+   },
+   "inLanguage": "en-US",
+   "breadcrumb": {
+    "@id": "{{DOMAIN}}/services#breadcrumb"
+   },
+   "provider": {
+    "@id": "{{DOMAIN}}/#person"
+   },
+   "hasPart": [
+    {
+     "@id": "{{DOMAIN}}/services/webflow-development#service"
+    },
+    {
+     "@id": "{{DOMAIN}}/services/webgl-data#service"
+    },
+    {
+     "@id": "{{DOMAIN}}/services/motion#service"
+    },
+    {
+     "@id": "{{DOMAIN}}/services/branding#service"
+    },
+    {
+     "@id": "{{DOMAIN}}/services/custom-deploys#service"
+    },
+    {
+     "@id": "{{DOMAIN}}/services/cms-integrations#service"
+    },
+    {
+     "@id": "{{DOMAIN}}/services/design-systems#service"
+    },
+    {
+     "@id": "{{DOMAIN}}/services/performance#service"
+    }
+   ]
+  },
+  {
+   "@type": "BreadcrumbList",
+   "@id": "{{DOMAIN}}/services#breadcrumb",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Home",
+     "item": "{{DOMAIN}}/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Services"
+    }
+   ]
+  }
+ ]
+}

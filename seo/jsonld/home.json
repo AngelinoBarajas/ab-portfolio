@@ -1,0 +1,101 @@
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebSite",
+   "@id": "{{DOMAIN}}/#website",
+   "url": "{{DOMAIN}}/",
+   "name": "Angelino Barajas",
+   "description": "Webflow designer and developer: interactive 3D, CMS-driven sites and motion.",
+   "inLanguage": "en-US",
+   "publisher": {
+    "@id": "{{DOMAIN}}/#person"
+   }
+  },
+  {
+   "@type": "Person",
+   "@id": "{{DOMAIN}}/#person",
+   "name": "Angelino Barajas",
+   "url": "{{DOMAIN}}/",
+   "jobTitle": "Webflow designer and developer",
+   "description": "Self-taught designer and developer with a philosophy degree, building Webflow sites with interactive 3D, CMS-driven content and motion.",
+   "knowsAbout": [
+    "Webflow development",
+    "Interactive 3D",
+    "WebGL",
+    "Motion design",
+    "GSAP",
+    "Brand identity",
+    "CMS integrations",
+    "Design systems",
+    "Web performance"
+   ],
+   "makesOffer": [
+    {
+     "@type": "Offer",
+     "itemOffered": {
+      "@id": "{{DOMAIN}}/services/webflow-development#service"
+     }
+    },
+    {
+     "@type": "Offer",
+     "itemOffered": {
+      "@id": "{{DOMAIN}}/services/webgl-data#service"
+     }
+    },
+    {
+     "@type": "Offer",
+     "itemOffered": {
+      "@id": "{{DOMAIN}}/services/motion#service"
+     }
+    },
+    {
+     "@type": "Offer",
+     "itemOffered": {
+      "@id": "{{DOMAIN}}/services/branding#service"
+     }
+    },
+    {
+     "@type": "Offer",
+     "itemOffered": {
+      "@id": "{{DOMAIN}}/services/custom-deploys#service"
+     }
+    },
+    {
+     "@type": "Offer",
+     "itemOffered": {
+      "@id": "{{DOMAIN}}/services/cms-integrations#service"
+     }
+    },
+    {
+     "@type": "Offer",
+     "itemOffered": {
+      "@id": "{{DOMAIN}}/services/design-systems#service"
+     }
+    },
+    {
+     "@type": "Offer",
+     "itemOffered": {
+      "@id": "{{DOMAIN}}/services/performance#service"
+     }
+    }
+   ],
+   "mainEntityOfPage": {
+    "@id": "{{DOMAIN}}/about#page"
+   }
+  },
+  {
+   "@type": "WebPage",
+   "@id": "{{DOMAIN}}/#page",
+   "url": "{{DOMAIN}}/",
+   "name": "Angelino Barajas · Webflow designer + developer",
+   "isPartOf": {
+    "@id": "{{DOMAIN}}/#website"
+   },
+   "about": {
+    "@id": "{{DOMAIN}}/#person"
+   },
+   "inLanguage": "en-US"
+  }
+ ]
+}

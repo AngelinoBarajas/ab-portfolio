@@ -1,0 +1,42 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=JetBrains+Mono:wght@400;500&display=block" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1200px;height:630px;overflow:hidden;background:#07080D}
+.card{position:relative;width:1200px;height:630px;background:radial-gradient(ellipse 70% 90% at 88% 108%,rgba(124,92,255,.22),transparent 60%),#07080D;color:#F2F0EA;font-family:"Archivo",sans-serif}
+.stars{position:absolute;inset:0}
+.frame{position:absolute;left:56px;top:56px;right:56px;bottom:56px;border:1px solid rgba(76,141,255,.55)}
+.frame i{position:absolute;width:9px;height:9px;background:#07080D;border:1px solid #4C8DFF}
+.frame i:nth-child(1){left:-5px;top:-5px}.frame i:nth-child(2){right:-5px;top:-5px}
+.frame i:nth-child(3){left:-5px;bottom:-5px}.frame i:nth-child(4){right:-5px;bottom:-5px}
+.label{position:absolute;left:56px;top:30px;font:500 13px/1 "JetBrains Mono",monospace;color:#4C8DFF;letter-spacing:.02em}
+.inner{position:absolute;left:96px;top:92px;right:96px;bottom:92px;display:flex;flex-direction:column}
+.mark{width:150px;height:auto;display:block}
+.eyebrow{margin-top:34px;font:500 17px/1 "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:#C9C7C0}
+.eyebrow b{color:#FF6A3D;font-weight:500}
+h1{margin-top:22px;font-weight:900;font-stretch:112%;font-size:104px;line-height:.86;letter-spacing:-.03em;text-transform:uppercase}
+h1 .o{color:transparent;-webkit-text-stroke:2px rgba(242,240,234,.7)}
+h1 .a{color:#FF6A3D}
+.foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font:500 16px/1 "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:#8A8FA3}
+.foot .name{color:#F2F0EA}
+/* site planet CSS (from code/src/ab-core.css) */
+{{PLANET_CSS}}
+.ab_planet{position:absolute}
+.ab_planet .tex{animation:none;transition:none}
+{{PLANET_POS}}
+</style></head>
+<body><div class="card">
+<svg class="stars" viewBox="0 0 1200 630" width="1200" height="630">{{STARS}}</svg>
+{{PLANET}}
+<div class="label">AB / {{TAG}}</div>
+<div class="frame"><i></i><i></i><i></i><i></i></div>
+<div class="inner">
+  <svg class="mark" viewBox="0 0 490.16 241.75" aria-hidden="true">{{MARK}}</svg>
+  <div class="eyebrow"><b>●</b>&nbsp; {{EYEBROW}}</div>
+  <h1>{{L1}}<br>{{L2}}</h1>
+  <div class="foot"><span class="name">Angelino Barajas</span></div>
+</div>
+</div>
+<script>{{PLANET_JS}}</script></body></html>

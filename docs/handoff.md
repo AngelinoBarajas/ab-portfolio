@@ -1,4 +1,4 @@
-# Session handoff (2026-09-26, Services hub built + approved)
+# Session handoff (2026-09-26, SEO pass + playable boss; next: Knowledge System integration)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -183,13 +183,29 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 - Lessons (memory): script-made class names collided with Designer classes (`is-planet`, `ab_td_play`): prefix script classes (`abx-`, `sv-`, `hb-`); address-bar resize + innerHeight pins jump content; Webflow 429s after several publishes in a row (wait a minute).
 - Open for Angelino's review: the boss credits copy (`about/10-boss.js`) and the quest titles/hints (`core/24-quests.js`).
 
-## Next session
+## This session (2026-09-26, SEO + schema pass, touch fix, playable boss) in one list
+
+- **SEO pass** (full record: `docs/seo-plan.md`): audit of every page + both templates; approved titles/descriptions live on staging (Work, Services, Process, About); OG images on every static page and the Services template.
+- **OG cards** made by `og/build.py` with the site's own planet code (Home giant / Work archive / Services hub planets) + an AB Identity social image drawn by `AB.markSVG`. Assets: og-site `6ab8149fe5d9f17124004a93`, og-work `6ab814a0d770c2fa20d32575`, og-services `6ab814a1ceb091fbb0a8b148`, og-ab-identity `6ab814a242efee0d9ed421e6`.
+- **Missions CMS** gained **Meta description**, **Robots** (`noindex` on Aguirre + the 3 placeholders) and **Social image** (JPEG 1200×630 per real mission). Cover alts (510, Aguirre) + 6 globe-pin alts filled.
+- **JSON-LD** for every page type in `seo/jsonld/` (`python seo/make_jsonld.py [https://domain]`); pushed at launch. Designer steps in `docs/seo-plan.md` §6 (template SEO bindings + head code, crawlable mission links, form names, sitemap on).
+- **v0.23.5**: Interstellar thrusters work on touch (hover handlers ignore touch pointers).
+- **v0.24.0 / v0.24.1**: the boss fight is playable (arrows/WASD + Space; drag + hold on phones; aimed shots, dodgeable beam, enrage + spread, 3 shields, retry) with an anime finisher (pilot cut-in, 必殺技 · FINAL DEPLOY, mega beam, impact frames). Build notes › v0.24.0.
+- **10 Insights drafts** for review: `content/insights/drafts/` (README has the table). Not in Webflow.
+
+## Next session: integrate the Knowledge System into this site
+
+Angelino wants the complete Knowledge System integrated into the AB Portfolio and styled on brand. Start by reading:
+
+1. `docs/knowledge-system-plan.md` (the model: Topics vocabulary in 6 categories, Insights library, Related Topics on existing collections, FAQs, video-first entries, JSON-LD from the same fields, Voice Kit + approval gate).
+2. `X:/Claude-Skills/cks-site/` (the hand-coded Knowledge System product site: index, how-it-works, voice-kit, pricing, styles) for the pieces to carry over, and `docs/kip-cks-mission-plan.md` (another session's draft for the kip + CKS missions, still waiting on Angelino's OK; don't clash with it).
+3. `content/insights/drafts/` (10 articles waiting for his review; import only the ones marked `approved`).
+
+Constraints to plan around: Services is at the 60-field cap (Related Topics on Services may need the Hub-manifest trick: a side collection); Webflow Components can't hold Collection Lists; every CMS-driven link must be a real `href` (Current page / reference), not script-only; noindex/sitemap flags need the paid plan; follow the page-pipeline stages (prototype first, his OK, then Webflow), design in the site's language (void/deep panels, Figma-canvas frame labels, one orange accent, planets).
+
+Still open before launch: Designer steps in `docs/seo-plan.md` §6, placeholders (email, socials, testimonials, `[X–Y weeks]`, headshot, favicon), the domain, then the launch swaps in `docs/seo-plan.md` §4–5 and the publish.
 
 Live on staging: core JS **0.23.3** + core CSS **0.23.3**; home 0.23.0, hub JS 0.23.0 (CSS 0.17.1), process JS 0.23.0 (CSS 0.17.1), about JS **0.24.1** (CSS 0.24.0), contact 0.19.0, mission JS 0.23.0 (CSS 0.19.0), services JS 0.21.2 (CSS 0.21.2), work 0.4.0, 404 0.14.0. All via the registry (+ CSS `<link>` with SRI in site/page heads).
-
-1. **SEO + schema on every page** (next): start from `docs/seo-plan.md`. Audit every static page + both CMS templates (titles, descriptions, OG, canonical, headings, alt text, crawlable links), fill what the MCP can, list the Designer-only steps, write JSON-LD for every page type (drafts exist, `{{DOMAIN}}` until the domain is known), make the OG image, check sitemap + robots. Use the `seo-schema-builder` skill.
-2. His Designer steps (`docs/seo-plan.md`): sitemap on, Mission + Services template SEO bound to [Name]/[Summary], Home board frame link + Work card link → Current Missions page, rename the Process + Contact forms, confirm the notification email.
-3. Before launch: domain, placeholders (email, socials, testimonials, `[X–Y weeks]`, headshot, favicon), publish. Perf levers left (not decided): CSS-sized hero titles, Mission scenes after first paint.
 
 ## Home review edits already done (v0.1.4, from `ab-portfolio-hp-edits.docx`)
 
