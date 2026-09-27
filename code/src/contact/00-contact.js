@@ -220,12 +220,12 @@
         .set(packet, { scale: 1 }, 1.25)
         .add(hand, 1.3);
     });
-    // success (Webflow's .w-form-done): toast + "Open another channel" brings the form back
+    // success (Webflow's .w-form-done): core/41-forms keeps the form's height and plays the shared reveal; here a toast,
+    // and "Open another channel" brings the form back
     if (done && window.MutationObserver){
       new MutationObserver(function(){
         if (getComputedStyle(done).display !== 'none' && !done.__shown){
           done.__shown = true; if (toast) toast('Signal received · ' + ST[cur].f.toFixed(1) + ' · ' + ST[cur].k);
-          if (hasGsap && !reduce) gsap.from($$('.ab_ct-sent > *', done), { y: 16, opacity: 0, duration: .6, stagger: .08, ease: 'power3.out' });
         }
       }).observe(done, { attributes: true, attributeFilter: ['style'] });
     }

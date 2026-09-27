@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.26.6 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.27.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -844,16 +844,12 @@ window.Webflow.push(function(){
         .set(fl, { opacity: 0 }).add(release);
     });
 
-    // success panel (Webflow's .w-form-done): animate in when Webflow shows it; "Plot another mission" brings the form back
-    if (doneEl && hasGsap && !reduce && window.MutationObserver){
-      new MutationObserver(function(){
-        if (getComputedStyle(doneEl).display !== 'none' && !doneEl.__shown){ doneEl.__shown = true; gsap.from($$('.ab_planner_sent-inner > *', doneEl), { y: 16, opacity: 0, duration: .6, stagger: .08, ease: 'power3.out' }); }
-      }).observe(doneEl, { attributes: true, attributeFilter: ['style'] });
-    }
+    // success panel (Webflow's .w-form-done): core/41-forms keeps the form's height and plays the shared reveal;
+    // "Plot another mission" brings the form back
     var resetBtn = $('#plReset');
     if (resetBtn) resetBtn.addEventListener('click', function(){
       form.reset(); chips.concat(addons).forEach(function(c){ c.setAttribute('aria-pressed', 'false'); }); ensureWindow(); bud.value = 1;
-      if (doneEl){ doneEl.style.display = 'none'; doneEl.__shown = false; }
+      if (doneEl) doneEl.style.display = 'none';
       form.style.display = '';
       var id = $('#plId'); if (id) id.textContent = 'MSN-07 · unassigned';
       draw(false); resetLaunch();

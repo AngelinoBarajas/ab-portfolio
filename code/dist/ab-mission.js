@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission v0.26.6 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission v0.27.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abMissionInit) return;

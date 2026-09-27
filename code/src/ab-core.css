@@ -748,3 +748,16 @@ section:hover > .ab_frame-label{color:var(--select)}
 .is-test-flight.ab_arc_chip[aria-pressed="true"]{color:var(--on-signal)}
 .ab_tf-stamp{position:absolute;right:0;top:14px;z-index:2;display:flex;align-items:center;padding:4px 10px 4px 8px;background:rgba(7,8,13,.82);color:var(--star);border:1px dashed var(--signal);border-right:0;font-size:10px;letter-spacing:.14em;text-transform:uppercase;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 .ab_tf-stamp .ab_tf-ico{color:var(--signal)}
+/* forms: shared success + failure (core/41-forms.js). The block keeps the form's height (min-height inline) and centers
+   its copy; display:flex is set inline only while shown, never here (a class display beats Webflow's display:none). */
+.w-form-done.abx-sent{flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.abx-sig{position:relative;display:inline-block;width:12px;height:12px;margin:0 0 16px;vertical-align:middle}
+.abx-sig b{position:absolute;inset:3px;background:var(--signal)}
+.abx-sig i{position:absolute;inset:0;border:1px solid var(--signal);opacity:0}
+.abx-sent.is-in .abx-sig i{animation:abxPing 1.6s cubic-bezier(.2,.7,.2,1) .2s 3}
+.abx-sent.is-in .abx-sig i + i{animation-delay:.75s}
+@keyframes abxPing{0%{transform:scale(.6);opacity:.9}100%{transform:scale(3.4);opacity:0}}
+.abx-scan{position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,var(--signal) 50%,transparent);opacity:0;pointer-events:none}
+.abx-sent.is-in .abx-scan{animation:abxScan 1.1s cubic-bezier(.4,0,.2,1) .05s 1}
+@keyframes abxScan{0%{top:0;opacity:0}12%{opacity:1}100%{top:100%;opacity:0}}
+@media (prefers-reduced-motion:reduce){.abx-sig i,.abx-scan{animation:none!important}}
