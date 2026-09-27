@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-knowledge v0.25.4 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-knowledge v0.25.5 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abKnowledgeInit) return;
@@ -350,10 +350,10 @@ window.Webflow.push(function(){
         '<circle class="st' + (i % 3 ? '' : ' tw') + '" cx="' + p[0] + '" cy="' + p[1] + '" r="' + r + '"/>' +
         '<text class="tl" x="' + (p[0] + (right ? r + 9 : -(r + 9))) + '" y="' + (p[1] + 4) + '" text-anchor="' + (right ? 'start' : 'end') + '">' + esc(t.name) + '</text></a>';
     }).join('');
-    mount.innerHTML = '<div class="ab_ks-chart"><div class="ab_ks-chart_h"><span>Chart · ' + TOPICS.length + ' stars · ' + XL.length + ' shared-observation routes</span><span>Star size = <b>links</b> · dashed = <b>shares an observation</b></span></div>' +
+    mount.innerHTML = '<div class="ab_ks-chart" data-lenis-prevent-wheel=""><div class="ab_ks-chart_h"><span>Chart · ' + TOPICS.length + ' stars · ' + XL.length + ' shared-observation routes</span><span>Star size = <b>links</b> · dashed = <b>shares an observation</b></span></div>' +
       '<div class="ab_ks-map" data-ks-map=""><svg viewBox="-110 20 1510 760" role="img" aria-label="Star chart of ' + TOPICS.length + ' topics in six constellations">' + g + xl + cons + stars + '</svg></div>' +
-      '<div class="ab_ks-read" data-ks-read="" aria-live="polite"></div>' +
-      '<div class="ab_ks-chart_f">' + CATS.map(function(c){ return '<span data-cat="' + c.key + '">' + c.code + ' · ' + esc(c.name) + '</span>'; }).join('') + '</div></div>';
+      '<div class="ab_ks-read" data-ks-read="" data-lenis-prevent="" aria-live="polite"></div>' +
+      '<div class="ab_ks-chart_f" role="group" aria-label="Fly to a constellation"><span class="ab_ks-chart_fl">Fly to</span>' + CATS.map(function(c){ return '<button type="button" class="ab_ks-chip is-cons" data-cat="' + c.key + '" aria-pressed="false"><b>' + c.code + '</b>' + esc(c.name) + '</button>'; }).join('') + '</div></div>';
 
     var map = $('[data-ks-map]', mount), read = $('[data-ks-read]', mount), links_ = $$('a', map), xls = $$('.xl', map), sel = null, lastType = 'mouse';
     function show(a){
@@ -443,6 +443,24 @@ window.Webflow.push(function(){
     map.addEventListener('click', function(e){ if (moved){ e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
     // keyboard: + / − / 0 while the chart has focus
     map.tabIndex = -1;
+
+    /* ---------- legend chips: fly to a constellation (zoom in on it and read its best-linked star); again = reset ---------- */
+    var chips = $$('.ab_ks-chart_f [data-cat]', mount);
+    function flyTo(to){ if (hasGsap && !reduce) gsap.to(v, { x: to.x, y: to.y, w: to.w, h: to.h, duration: .8, ease: 'power3.inOut', onUpdate: apply, overwrite: true }); else { v.x = to.x; v.y = to.y; v.w = to.w; v.h = to.h; apply(); } }
+    chips.forEach(function(b){
+      b.addEventListener('click', function(){
+        var key = b.getAttribute('data-cat'), on = b.getAttribute('aria-pressed') !== 'true';
+        chips.forEach(function(x){ x.setAttribute('aria-pressed', x === b && on); });
+        map.classList.toggle('is-focus', on); map.setAttribute('data-focus', on ? key : '');
+        if (!on){ flyTo({ x: V0.x, y: V0.y, w: V0.w, h: V0.h }); return; }
+        var c = CENTER[key], w = V0.w / 2.3, h = w * V0.h / V0.w;
+        flyTo({ x: c[0] - w * .5 + 20, y: c[1] - h * .5 - 25, w: w, h: h });
+        var best = links_.filter(function(a){ return a.getAttribute('data-cat') === key; }).sort(function(x, y){ return links(TOPIC[y.getAttribute('data-slug')]) - links(TOPIC[x.getAttribute('data-slug')]); })[0];
+        if (best) show(best);
+      });
+    });
+    // the reset button also clears the focused constellation
+    ui.querySelector('[data-z="reset"]').addEventListener('click', function(){ chips.forEach(function(x){ x.setAttribute('aria-pressed', 'false'); }); map.classList.remove('is-focus'); map.setAttribute('data-focus', ''); });
     map.addEventListener('keydown', function(e){ if (e.key === '+' || e.key === '=') zoomAt(1.6, null, null, true); else if (e.key === '-') zoomAt(1 / 1.6, null, null, true); else if (e.key === '0') ui.querySelector('[data-z="reset"]').click(); });
   })();
 
