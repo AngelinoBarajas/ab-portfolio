@@ -592,7 +592,7 @@ Testing: the pane stops delivering rAF when hidden; shim rAF onto setTimeout + `
 
 ## Knowledge System · the Observatory (built 2026-09-27, published to webflow.io, awaiting Angelino's review)
 
-Plan + decisions: `docs/knowledge-integration-plan.md`. Prototypes: `prototypes/observatory.html`, `observation.html`, `topics.html`, `topic.html`, `ks-rows.html` (parts `_parts/ks*`). Build files: `webflow/build/knowledge/` (`make.py` → `prep.py`). Code: `ab-knowledge` JS + CSS **v0.25.3** (`code/src/knowledge/`, `code/src/ab-knowledge.css`), page footer script `abknowledge` + head `<link>` on 7 pages.
+Plan + decisions: `docs/knowledge-integration-plan.md`. Prototypes: `prototypes/observatory.html`, `observation.html`, `topics.html`, `topic.html`, `ks-rows.html` (parts `_parts/ks*`). Build files: `webflow/build/knowledge/` (`make.py` → `prep.py`). Code: `ab-knowledge` JS + CSS **v0.25.5** (`code/src/knowledge/`, `code/src/ab-knowledge.css`), page footer script `abknowledge` + head `<link>` on 7 pages.
 
 | Page | Webflow | Script (ab-knowledge) |
 |---|---|---|
@@ -615,3 +615,8 @@ Plan + decisions: `docs/knowledge-integration-plan.md`. Prototypes: `prototypes/
 1. **Crawlable card links**: `/observatory` › observation card Link Block → *Current Observation page*; `/observatory` + `/topics` topic index links → *Current Topic page* (today the HTML href is `/observatory` / `/topics`; the script fixes it for people).
 2. **Template SEO**: Observatory template › SEO title `[Name] · Observatory · Angelino Barajas`, description `[Meta description]`; Topics template › `[Name] · Topics · Angelino Barajas`, `[Meta description]`. OG "same as SEO" + og-site image.
 3. Optional: rename CMS field display names to Title Case (API created them lowercase).
+
+### v0.25.4 – v0.25.5 (2026-09-27, Angelino review)
+- Card hover scan: transform sweep on the compositor, always ends invisible (background-position sweep froze mid-card).
+- Star chart: pans at any zoom (clamped so ~40% of the chart stays in frame), tiling grid pattern + background stars so the grid never ends; readout panel no longer resizes the frame (`contain:size` ≥992px, long titles ellipsized); legend = constellation chips that fly/zoom to a constellation and fade the others (click again or ⟲ to reset).
+- Mission cards on topic pages: names wrap/fit (`overflow-wrap:anywhere`, smaller clamp).
