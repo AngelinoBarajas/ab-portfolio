@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-knowledge v0.25.2 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-knowledge v0.25.3 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abKnowledgeInit) return;
@@ -374,6 +374,72 @@ window.Webflow.push(function(){
     });
     var top = links_.slice().sort(function(x, y){ return links(TOPIC[y.getAttribute('data-slug')]) - links(TOPIC[x.getAttribute('data-slug')]); })[0];
     if (top) show(top);
+
+    /* ---------- pan + zoom: drag to pan, pinch or Ctrl/⌘ + wheel to zoom, +/−/reset buttons, double-click zooms in.
+       Plain wheel still scrolls the page (the chart never traps it). Works on the SVG viewBox, so labels stay crisp. ---------- */
+    var svg = $('svg', map), V0 = { x: -110, y: 20, w: 1510, h: 760 }, v = { x: V0.x, y: V0.y, w: V0.w, h: V0.h }, MAXZ = 4;
+    var ui = document.createElement('div'); ui.className = 'ab_ks-zoom';
+    ui.innerHTML = '<button type="button" data-z="in" aria-label="Zoom in">+</button><button type="button" data-z="out" aria-label="Zoom out">−</button><button type="button" data-z="reset" aria-label="Reset view">⟲</button><span class="ab_ks-zoom_z" aria-hidden="true">1.0×</span>';
+    map.appendChild(ui);
+    var hint = document.createElement('div'); hint.className = 'ab_ks-zoom_hint'; hint.textContent = (AB.coarse ? 'Drag to pan · pinch to zoom' : 'Drag to pan · Ctrl + scroll or double-click to zoom'); map.appendChild(hint);
+    var zl = $('.ab_ks-zoom_z', ui);
+    function clamp(){
+      v.w = Math.max(V0.w / MAXZ, Math.min(V0.w, v.w)); v.h = v.w * V0.h / V0.w;
+      v.x = Math.max(V0.x, Math.min(V0.x + V0.w - v.w, v.x)); v.y = Math.max(V0.y, Math.min(V0.y + V0.h - v.h, v.y));
+    }
+    function apply(){ clamp(); svg.setAttribute('viewBox', v.x.toFixed(1) + ' ' + v.y.toFixed(1) + ' ' + v.w.toFixed(1) + ' ' + v.h.toFixed(1)); var z = V0.w / v.w; zl.textContent = z.toFixed(1) + '×'; map.classList.toggle('is-zoomed', z > 1.01); }
+    // screen point → chart units
+    function toChart(cx, cy){ var r = svg.getBoundingClientRect(); return { x: v.x + (cx - r.left) / r.width * v.w, y: v.y + (cy - r.top) / r.height * v.h, fx: (cx - r.left) / r.width, fy: (cy - r.top) / r.height }; }
+    function zoomAt(f, cx, cy, animate){
+      var p = cx == null ? { x: v.x + v.w / 2, y: v.y + v.h / 2, fx: .5, fy: .5 } : toChart(cx, cy);
+      var nw = Math.max(V0.w / MAXZ, Math.min(V0.w, v.w / f)), nh = nw * V0.h / V0.w, to = { x: p.x - p.fx * nw, y: p.y - p.fy * nh, w: nw, h: nh };
+      if (animate && hasGsap && !reduce){ gsap.to(v, { x: to.x, y: to.y, w: to.w, h: to.h, duration: .45, ease: 'power3.out', onUpdate: apply, overwrite: true }); }
+      else { v.x = to.x; v.y = to.y; v.w = to.w; v.h = to.h; apply(); }
+    }
+    ui.addEventListener('click', function(e){
+      var b = e.target.closest('button'); if (!b) return; var z = b.getAttribute('data-z');
+      if (z === 'reset'){ if (hasGsap && !reduce) gsap.to(v, { x: V0.x, y: V0.y, w: V0.w, h: V0.h, duration: .5, ease: 'power3.out', onUpdate: apply, overwrite: true }); else { v = { x: V0.x, y: V0.y, w: V0.w, h: V0.h }; apply(); } }
+      else zoomAt(z === 'in' ? 1.6 : 1 / 1.6, null, null, true);
+    });
+    // Ctrl/⌘ + wheel and trackpad pinch (arrives as ctrl+wheel) zoom; plain wheel is left to the page
+    map.addEventListener('wheel', function(e){ if (!e.ctrlKey && !e.metaKey) return; e.preventDefault(); e.stopPropagation(); zoomAt(Math.exp(-e.deltaY * .0025), e.clientX, e.clientY); }, { passive: false });
+    map.setAttribute('data-lenis-prevent-wheel', '');
+    map.addEventListener('dblclick', function(e){ e.preventDefault(); zoomAt(1.8, e.clientX, e.clientY, true); });
+    // drag to pan (mouse, pen, one finger) + two-finger pinch; a drag never counts as a click on a star
+    var pts = {}, start = null, moved = false, pinch = null;
+    function count(){ return Object.keys(pts).length; }
+    svg.addEventListener('pointerdown', function(e){
+      if (e.button && e.button !== 0) return;
+      pts[e.pointerId] = { x: e.clientX, y: e.clientY }; moved = false;
+      if (count() === 1) start = { cx: e.clientX, cy: e.clientY, x: v.x, y: v.y };
+      if (count() === 2){ var k = Object.keys(pts), a = pts[k[0]], b = pts[k[1]]; pinch = { d: Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)), w: v.w }; }
+    });
+    addEventListener('pointermove', function(e){
+      if (!pts[e.pointerId]) return;
+      pts[e.pointerId] = { x: e.clientX, y: e.clientY };
+      if (count() === 2 && pinch){
+        var k = Object.keys(pts), a = pts[k[0]], b = pts[k[1]], d = Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+        if (d > 0){ zoomAt(v.w / (pinch.w * pinch.d / d), (a.x + b.x) / 2, (a.y + b.y) / 2); moved = true; }
+        return;
+      }
+      if (!start) return;
+      var dx = e.clientX - start.cx, dy = e.clientY - start.cy;
+      if (!moved && Math.abs(dx) + Math.abs(dy) < 5) return;
+      if (!moved){ moved = true; map.classList.add('is-panning'); try { svg.setPointerCapture(e.pointerId); } catch (x) {} }
+      var r = svg.getBoundingClientRect();
+      v.x = start.x - dx / r.width * v.w; v.y = start.y - dy / r.height * v.h; apply();
+    });
+    function up(e){
+      if (!pts[e.pointerId]) return; delete pts[e.pointerId];
+      if (count() < 2) pinch = null;
+      if (!count()){ start = null; map.classList.remove('is-panning'); }
+    }
+    addEventListener('pointerup', up); addEventListener('pointercancel', up);
+    // swallow the click that ends a drag, so panning over a star doesn't open it
+    map.addEventListener('click', function(e){ if (moved){ e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
+    // keyboard: + / − / 0 while the chart has focus
+    map.tabIndex = -1;
+    map.addEventListener('keydown', function(e){ if (e.key === '+' || e.key === '=') zoomAt(1.6, null, null, true); else if (e.key === '-') zoomAt(1 / 1.6, null, null, true); else if (e.key === '0') ui.querySelector('[data-z="reset"]').click(); });
   })();
 
   /* ===== knowledge/40-topic.js ===== */

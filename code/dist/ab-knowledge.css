@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-knowledge.css v0.25.2 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-knowledge.css v0.25.3 · github.com/AngelinoBarajas/ab-portfolio */
 /* =========================================================
    KNOWLEDGE SYSTEM · the Observatory (/observatory, /observatory/*, /topics, /topics/*) + rows on Mission,
    Service and Home. Webflow gives each ab_ks-* class a stub rule; the look lives here (approved prototype:
@@ -297,3 +297,20 @@ a.ab_ks-tstat:hover b{color:var(--_color---brand--signal)}
 .ab_ks-meta_i{display:inline-flex;gap:.5em}
 .ab_crumb_current.ab_ks-inl{margin-left:.35em}
 .ab_dbh_eyebrow .ab_ks-inl + .ab_ks-inl{margin-left:.5em}
+/* star chart: pan + zoom */
+.ab_ks-map{overflow:hidden;outline:none}
+.ab_ks-map svg{cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none}
+.ab_ks-map svg text{-webkit-user-select:none;user-select:none;pointer-events:none}
+.ab_ks-map.is-panning svg{cursor:grabbing}
+.ab_ks-map.is-panning a{pointer-events:none}
+.ab_ks-zoom{position:absolute;top:12px;right:12px;display:flex;align-items:center;border:1px solid var(--_color---neutral--hair-strong);background:rgba(7,8,13,.82);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);z-index:2}
+.ab_ks-zoom button{width:34px;height:34px;border:0;border-right:1px solid var(--_color---neutral--hair-strong);background:none;color:var(--_color---text--primary);font-family:var(--_typography---font--mono);font-size:16px;cursor:pointer;transition:background .2s,color .2s}
+.ab_ks-zoom button:hover,.ab_ks-zoom button:focus-visible{background:var(--_color---brand--signal);color:var(--_color---brand--on-signal)}
+.ab_ks-zoom_z{padding:0 10px;font-family:var(--_typography---font--mono);font-size:11px;letter-spacing:.08em;color:var(--_color---text--tertiary);min-width:48px;text-align:center}
+.ab_ks-zoom_hint{position:absolute;left:14px;bottom:10px;font-family:var(--_typography---font--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--_color---text--tertiary);pointer-events:none;transition:opacity .4s}
+.ab_ks-map.is-zoomed .ab_ks-zoom_hint{opacity:0}
+/* mission cards on topic pages: names always fit their column */
+.ab_ks-mis{grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr))}
+.ab_ks-mcard > div{min-width:0}
+.ab_ks-mcard_h{font-size:clamp(19px,1.55vw,24px);line-height:1.02;overflow-wrap:anywhere;hyphens:auto}
+.ab_ks-mcard_k{display:block;line-height:1.5;letter-spacing:.1em}
