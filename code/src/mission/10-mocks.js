@@ -169,7 +169,8 @@
       return s + '</svg>';
     }
     var LOGO = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;display:block" aria-hidden="true"><rect x="2.5" y="6" width="19" height="5" rx="1.2" fill="#EF5B3F"/><rect x="2.5" y="13" width="19" height="5" rx="1.2" fill="#139E8A"/><rect x="6" y="2.5" width="5" height="19" rx="1.2" fill="#F2A93B" stroke="#fff" stroke-width="1.4"/><rect x="13" y="2.5" width="5" height="19" rx="1.2" fill="#2F5BEA" stroke="#fff" stroke-width="1.4"/><rect x="12.3" y="6" width="6.4" height="5" fill="#EF5B3F"/><path d="M12.3 6V11M18.7 6V11" stroke="#fff" stroke-width="1.4"/><rect x="5.3" y="13" width="6.4" height="5" fill="#139E8A"/><path d="M5.3 13V18M11.7 13V18" stroke="#fff" stroke-width="1.4"/></svg>';
-    var F = '"Schibsted Grotesk",Inter,sans-serif';
+    // unquoted on purpose: these go inside style="..." attributes, where a double quote would end the attribute
+    var F = 'Schibsted Grotesk,Inter,sans-serif';
     function chip(t, c){ return '<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:999px;border:1px solid rgba(11,27,43,.14);font:600 8px ' + F + '"><i style="width:6px;height:6px;border-radius:50%;background:' + c + '"></i>' + t + '</span>'; }
     MOCKS.cks = {
       accent: '#EF5B3F', cks: true,
