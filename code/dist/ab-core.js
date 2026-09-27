@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.25.5 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.26.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -1132,6 +1132,19 @@ window.Webflow.push(function(){
     return '';
   }
   function cardTxt(sel, root){ var n = $(sel, root); return n ? n.textContent.trim() : ''; }
+  // "Test flight" (Mission Type): a proof of concept flown before a client mission depends on it. Its chip becomes a badge
+  // (dashed, with a little rocket) wherever types are listed; returns whether the mission is one.
+  var TF_ICO = '<svg class="ab_tf-ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M9.6 2.4c2.1-.6 3.5-.4 3.9 0 .4.4.6 1.8 0 3.9L9 10.8 5.2 7z"/><path d="M5.2 7 2.6 7.5 1.6 9.4h2.6M9 10.8l-.5 2.6-1.9 1V11.8"/><path class="tr" d="M4.2 11.8 1.5 14.5"/><circle cx="10.6" cy="5.4" r="1"/></svg>';
+  function testFlight(chips){
+    var hit = false;
+    (chips || []).forEach(function(c){
+      if (!/^test flight$/i.test(c.textContent.trim())) return;
+      hit = true; if (c.classList.contains('is-test-flight')) return;
+      c.classList.add('is-test-flight'); c.insertAdjacentHTML('afterbegin', TF_ICO);
+      c.setAttribute('title', 'Test flight: a proof of concept, self-initiated');
+    });
+    return hit;
+  }
   function cardColor(node, prop){ return node ? rgbToHex(getComputedStyle(node)[prop]) : ''; }
 
   function missionCard(card, i){
@@ -1158,6 +1171,12 @@ window.Webflow.push(function(){
     var pl = $('.ab_planet', card); if (pl){ pl.setAttribute('data-seed', i * 7 + 3); if (!pl.getAttribute('data-ring')) pl.removeAttribute('data-ring'); else pl.setAttribute('data-tilt', '-16'); if (!pl.getAttribute('data-glow')) pl.setAttribute('data-glow', 'transparent'); }
     var st = $('.ab_status', card); if (st) st.setAttribute('data-state', m.placeholder ? 'phd' : m.live ? 'live' : 'ship');
     card.setAttribute('data-types', m.types.join('|'));
+    m.test = testFlight($$('.ab_mission-card_tag', card));
+    if (m.test){
+      card.classList.add('is-test-flight');
+      var cover = $('.ab_mission-card_cover', card);
+      if (cover && !$('.ab_tf-stamp', cover)) cover.insertAdjacentHTML('beforeend', '<span class="ab_tf-stamp text-style-mono">' + TF_ICO + 'Test flight</span>');
+    }
     if (a.__sel){ var tag = $('.sel-tag', a.__sel); if (tag) tag.textContent = 'Frame / ' + m.slug; }
     if (m.placeholder){
       card.classList.add('is-ph'); a.setAttribute('href', '#'); a.setAttribute('data-ph', '');
@@ -1168,7 +1187,7 @@ window.Webflow.push(function(){
     }
     return m;
   }
-  Object.assign(AB, { missionCard: missionCard });
+  Object.assign(AB, { missionCard: missionCard, testFlight: testFlight });
 
   /* ===== core/37-code.js ===== */
   /* ---------- code blocks (CMS snippets on the Mission template systems/problems and the Services "under the hood"; one Copy handler site-wide) ---------- */

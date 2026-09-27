@@ -155,6 +155,94 @@
   MOCKS['ab-identity'] = { accent: '#FF6A3D', sketch: true, vector: true };
   // Knowledge System: seven coded scenes (21-knowledge.js), generic example content
   MOCKS['knowledge-system'] = { accent: '#a597ff', graph: true, library: true, voice: true, setup: true, video: true, schema: true, portable: true };
+  // CKS: the product site for the Knowledge System. Five coded demos (22-cks.js, key `cks`) plus the website trio
+  // (figma / phone / flow). `live`: once getcks.io answers (its favicon loads), the live channels show the real page.
+  (function(){
+    // the hero loom, redrawn as SVG: warp lines plus eight bands of weft threads in the four thread colors
+    function loom(w, h, n){
+      var c = ['#F2A93B', '#EF5B3F', '#139E8A', '#2F5BEA'], g = w * .62 / n, s = '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;display:block" aria-hidden="true">', i, y;
+      for (y = 6; y < h; y += 10) s += '<path d="M0 ' + y + 'H' + w + '" stroke="rgba(11,27,43,.13)" stroke-width=".7"/>';
+      for (i = 0; i < n; i++){
+        var xt = w * .36 + i * g, xb = w * .02 + i * g;
+        s += '<path d="M' + xt.toFixed(1) + ' -6C' + (xt + w * .22).toFixed(1) + ' ' + (h * .38).toFixed(1) + ' ' + (xb - w * .12).toFixed(1) + ' ' + (h * .62).toFixed(1) + ' ' + xb.toFixed(1) + ' ' + (h + 6) + '" fill="none" stroke="' + c[Math.floor(i / (n / 8)) % 4] + '" stroke-width="' + (g * .62).toFixed(2) + '" stroke-dasharray="7 1.6"/>';
+      }
+      return s + '</svg>';
+    }
+    var LOGO = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;display:block" aria-hidden="true"><rect x="2.5" y="6" width="19" height="5" rx="1.2" fill="#EF5B3F"/><rect x="2.5" y="13" width="19" height="5" rx="1.2" fill="#139E8A"/><rect x="6" y="2.5" width="5" height="19" rx="1.2" fill="#F2A93B" stroke="#fff" stroke-width="1.4"/><rect x="13" y="2.5" width="5" height="19" rx="1.2" fill="#2F5BEA" stroke="#fff" stroke-width="1.4"/><rect x="12.3" y="6" width="6.4" height="5" fill="#EF5B3F"/><path d="M12.3 6V11M18.7 6V11" stroke="#fff" stroke-width="1.4"/><rect x="5.3" y="13" width="6.4" height="5" fill="#139E8A"/><path d="M5.3 13V18M11.7 13V18" stroke="#fff" stroke-width="1.4"/></svg>';
+    var F = '"Schibsted Grotesk",Inter,sans-serif';
+    function chip(t, c){ return '<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:999px;border:1px solid rgba(11,27,43,.14);font:600 8px ' + F + '"><i style="width:6px;height:6px;border-radius:50%;background:' + c + '"></i>' + t + '</span>'; }
+    MOCKS.cks = {
+      accent: '#EF5B3F', cks: true,
+      live: { base: 'https://getcks.io/', probe: 'favicon.svg', pages: { 'cks-styles': 'styles.html', 'cks-sketch': 'sketch.html' } },
+      file: 'CKS — Product site', page: 'Home', frame: 'Desktop · Hero', url: 'getcks.io',
+      bg: '#F7F5F0', accent2: '#2F5BEA', hover: 'cta',
+      comment: { on: 'heading', by: 'Review', text: 'The headline fights the loom for attention.', reply: 'Faded the weave behind the copy and pushed the pattern right.' },
+      els: [
+        { id: 'loom', name: 'Canvas / loom', icon: 'img', type: 'Embed', x: 470, y: 0, w: 530, h: 625, wire: 'img',
+          props: { fill: 'Canvas · 2D' },
+          html: '<div style="position:absolute;inset:0;overflow:hidden">' + loom(530, 625, 40) + '<div style="position:absolute;inset:0;background:linear-gradient(90deg,#F7F5F0 0%,rgba(247,245,240,.6) 22%,rgba(247,245,240,0) 48%)"></div></div>' },
+        { id: 'nav', name: 'Nav / header', icon: 'comp', type: 'Component', x: 30, y: 14, w: 940, h: 40, wire: 'nav',
+          props: { fill: '#FFFFFF' },
+          html: '<div style="height:100%;border-radius:10px;background:rgba(255,255,255,.94);box-shadow:0 1px 0 rgba(11,27,43,.08);display:flex;align-items:center;gap:22px;padding:0 6px 0 14px;font:600 9.5px ' + F + ';color:#0B1B2B">' + LOGO + '<b style="font:800 13px ' + F + ';margin-left:-14px">CKS</b><span>Product ▾</span><span>Resources ▾</span><span>Pricing</span><span style="margin-left:auto;padding:6px 10px;border:1px solid rgba(11,27,43,.14);border-radius:999px;color:#5F6B78;font-weight:500">Search · Ctrl K</span><span style="background:#0B1B2B;color:#fff;padding:9px 13px;border-radius:999px">Book an install</span></div>' },
+        { id: 'heading', name: 'H1 / Turn what you know', icon: 'text', type: 'Text', x: 40, y: 104, w: 470, h: 250, wire: 'lines:4:big',
+          props: { fill: '#0B1B2B', font: 'Schibsted Grotesk', weight: 'ExtraBold', size: '76', lh: '102%', ls: '-3.5%' },
+          html: '<div style="font:800 51px/1.02 ' + F + ';letter-spacing:-.035em;color:#0B1B2B">Turn what you know into a site people and AI can follow.</div>' },
+        { id: 'lede', name: 'Lede / what CKS does', icon: 'text', type: 'Text', x: 40, y: 368, w: 420, h: 92, wire: 'lines:5',
+          props: { fill: '#3E4C5B', font: 'Schibsted Grotesk', weight: 'Regular', size: '18', lh: '155%' },
+          html: '<p style="margin:0;font:400 11.5px/1.55 ' + F + ';color:#3E4C5B">Your point of view lives in your head, your decks and your calls. CKS captures it on your website, where clients can <em style="font-family:Newsreader,Georgia,serif">find it, learn from it and trust it</em>, tied together by one shared vocabulary.</p>' },
+        { id: 'cta', name: 'Buttons / hero', icon: 'comp', type: 'Component', x: 40, y: 478, w: 320, h: 38, wire: 'btn',
+          props: { fill: '#0B1B2B', font: 'Schibsted Grotesk', weight: 'Bold', size: '15' },
+          html: '<div style="display:flex;gap:8px;height:100%"><span class="hv" style="flex:1;border-radius:999px;background:#0B1B2B;color:#fff;font:700 10px ' + F + ';display:flex;align-items:center;justify-content:center">See it match your site ›</span><span style="flex:1;border-radius:999px;border:1px solid rgba(11,27,43,.25);color:#0B1B2B;font:700 10px ' + F + ';display:flex;align-items:center;justify-content:center">Book an install ›</span></div>' },
+        { id: 'entry', name: 'Card / one entry, tagged once', icon: 'comp', type: 'Component', x: 612, y: 400, w: 350, h: 180, wire: 'row:4',
+          props: { fill: '#FFFFFF', font: 'Schibsted Grotesk', weight: 'Bold', size: '17' },
+          html: '<div style="height:100%;background:#fff;border-radius:12px;box-shadow:0 30px 60px -30px rgba(11,27,43,.45),0 0 0 1px rgba(11,27,43,.1);padding:12px 14px;display:flex;flex-direction:column;gap:9px;font-family:' + F + '"><div style="display:flex;gap:8px;align-items:center;font:600 8.5px ' + F + ';color:#5F6B78"><b style="color:#0B1B2B">New insight</b>by you<span style="margin-left:auto;color:#0B6F61;background:#E3F4F1;border-radius:999px;padding:3px 8px">● Published</span></div><b style="font:800 15px ' + F + ';color:#0B1B2B">Onboarding is a design problem</b><div style="display:flex;gap:5px;flex-wrap:wrap">' + chip('Client onboarding', '#F2A93B') + chip('Service design', '#EF5B3F') + chip('Journey mapping', '#139E8A') + '</div><div style="margin-top:auto;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(11,27,43,.1);padding-top:8px">' + [['3', 'topic pages'], ['2', 'projects'], ['1', 'service'], ['9', 'links built']].map(function(s){ return '<div><b style="font:800 14px ' + F + ';color:#0B1B2B">' + s[0] + '</b><div style="font:500 7px ' + F + ';color:#5F6B78">' + s[1] + '</div></div>'; }).join('') + '</div></div>' }
+      ],
+      mobile: {
+        bg: '#F7F5F0', statusFg: '#0B1B2B',
+        nav: '<div class="cxm-nav" style="position:absolute;left:10px;right:10px;top:42px;height:38px;border-radius:12px;background:rgba(255,255,255,.94);box-shadow:0 6px 18px rgba(11,27,43,.1);display:flex;align-items:center;gap:8px;padding:0 8px 0 12px;z-index:4;color:#0B1B2B;transition:background .5s,color .5s">' + LOGO + '<b style="font:800 12px ' + F + '">CKS</b><span style="margin-left:auto;display:flex;gap:6px;align-items:center"><span style="width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(11,27,43,.14)"><svg viewBox="0 0 20 20" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M12.6 12.6 17 17"/></svg></span><span class="m-theme" style="width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(11,27,43,.14)"><svg viewBox="0 0 20 20" style="width:12px;height:12px;fill:currentColor"><path d="M10 3a7 7 0 100 14 5.5 5.5 0 010-14z"/></svg></span><span class="m-burger"><i></i><i></i><i></i></span></span></div>',
+        menu: '<div style="position:absolute;inset:0;background:#F7F5F0;padding:100px 22px 0;color:#0B1B2B;font-family:' + F + '"><span class="m-close" style="position:absolute;right:16px;top:50px">&#10005;</span>' +
+          ['How it works', 'Styles', 'Voice Kit', 'Sketch your system', 'Pricing'].map(function(l){ return '<div style="font:800 22px/1 ' + F + ';letter-spacing:-.02em;padding:13px 0;border-bottom:1px solid rgba(11,27,43,.1)">' + l + '</div>'; }).join('') +
+          '<div style="margin-top:22px;background:#0B1B2B;color:#fff;font:700 11px ' + F + ';padding:14px;text-align:center;border-radius:999px">Book an install</div></div>',
+        html: '<div class="cxm" style="padding:88px 18px 40px">' +
+          '<div class="cxm-loom">' + loom(300, 150, 28) + '</div>' +
+          '<div style="font:800 29px/1.03 ' + F + ';letter-spacing:-.035em;margin-bottom:10px">Turn what you know into a site people and AI can follow.</div>' +
+          '<p style="font:400 10.5px/1.55 ' + F + ';color:var(--i2);margin:0 0 14px">Your point of view lives in your head, your decks and your calls. CKS captures it on your website, tied together by one shared vocabulary.</p>' +
+          '<div style="display:flex;gap:6px;margin-bottom:26px"><span style="flex:1;text-align:center;background:#0B1B2B;color:#fff;border-radius:999px;padding:11px 6px;font:700 9.5px ' + F + '">See it match your site</span><span style="flex:1;text-align:center;border:1px solid var(--l);border-radius:999px;padding:11px 6px;font:700 9.5px ' + F + '">Book an install</span></div>' +
+          '<div class="m-story" style="font:800 19px/1.08 ' + F + ';letter-spacing:-.02em;margin-bottom:10px">Most sites list what you do. Few show how it connects.</div>' +
+          '<div style="display:flex;gap:4px;margin-bottom:10px">' + ['Scattered', 'Name', 'Tag once', 'Connected'].map(function(s, i){ return '<span class="cxm-st s' + i + (i === 3 ? ' m-st3' : '') + '">' + s + '</span>'; }).join('') + '</div>' +
+          '<div class="cxm-b"><svg viewBox="0 0 262 190" preserveAspectRatio="none"><path d="M55 40Q90 60 131 78" stroke="#F2A93B"/><path d="M205 40Q170 60 131 78" stroke="#F2A93B"/><path d="M55 150Q90 120 131 78" stroke="#F2A93B"/><path d="M205 150Q170 125 131 78" stroke="#139E8A"/></svg>' +
+            '<span class="t" style="left:50%;top:41%;background:#F2A93B">Client onboarding</span>' +
+            [['Onboarding redesign', 8, 12, 9, 12, -5], ['Riverside Clinic', 150, 18, 159, 12, 4], ['Onboarding is a design problem', 30, 118, 9, 128, 3], ['The first 30 days', 144, 132, 159, 128, -6]].map(function(c, i){ return '<span class="c cc' + i + '" style="left:' + c[1] + 'px;top:' + c[2] + 'px;transform:rotate(' + c[5] + 'deg)">' + c[0] + '</span>'; }).join('') + '</div>' +
+          '<div class="m-map" style="font:800 19px/1.08 ' + F + ';letter-spacing:-.02em;margin:24px 0 10px">Follow the threads. Then add your own.</div>' +
+          [['Client onboarding', '#C7832A', '4 pieces'], ['Service design', '#EF5B3F', '5 pieces'], ['Journey mapping', '#139E8A', '4 pieces'], ['Client handoffs', '#2F5BEA', '4 pieces']].map(function(t){ return '<div class="cxm-card" style="display:flex;align-items:center;gap:8px;padding:9px 10px;margin-bottom:6px;font:700 10px ' + F + '"><i style="width:9px;height:9px;border-radius:50%;background:' + t[1] + '"></i>' + t[0] + '<span style="margin-left:auto;font:500 8.5px ' + F + ';color:var(--i2)">' + t[2] + ' ›</span></div>'; }).join('') +
+          '<div style="margin-top:22px;font:800 19px/1.08 ' + F + ';letter-spacing:-.02em;margin-bottom:10px">Three ways to install it.</div>' +
+          [['Foundation', '#F2A93B', '$4,000'], ['Library', '#EF5B3F', '$9,000'], ['Full System', '#2F5BEA', '$16,000']].map(function(p){ return '<div class="cxm-card" style="padding:10px 12px;margin-bottom:6px;border-top:3px solid ' + p[1] + ';display:flex;justify-content:space-between;font:800 11px ' + F + '">' + p[0] + '<span style="font-weight:600;color:var(--i2)">From ' + p[2] + '</span></div>'; }).join('') +
+          '</div>',
+        notes: [
+          { t: 'The loom rides above the headline', d: 'On a phone the weave becomes a band over the copy, so the headline never has to fight it.' },
+          { t: 'Light or dark, one token swap', d: 'Every color is a variable, so dark mode is a swap at the top of the stylesheet, not a second design.' },
+          { t: 'The story becomes step buttons', d: 'No pinned scroll on a small screen. Tap a step and the loose pages weave together.' },
+          { t: 'The map turns into a list', d: 'Under 700px the knowledge map shows the same topics as a list you can tap through.' }
+        ],
+        steps: [
+          { note: 0, hold: 1.8 },
+          { note: 1, hold: .3 }, { tap: '.m-theme', toggle: 'dark', hold: 1.9 }, { tap: '.m-theme', toggle: 'dark', hold: .5 },
+          { note: 2, scroll: '.m-story', off: 110, hold: .4 }, { tap: '.m-st3', add: 'woven', hold: 2.6 },
+          { note: 3, scroll: '.m-map', off: 120, hold: 2.2 },
+          { note: -1, scroll: 0, remove: 'woven', hold: .6 }
+        ]
+      },
+      flow: { file: 'CKS — Site plan', fg: '#F7F5F0', accent: '#F2A93B',
+        groups: [
+          { name: 'Plan', steps: ['One link that sells', 'Example vocabulary'], solid: '<path d="M22 8h16v10H22zM8 42h14v10H8zM38 42h14v10H38zM30 18v12M15 42V30h30v12"/>',
+            copy: ['A product site that explains, demonstrates and prices the Knowledge System, so a proposal needs one link.', 'Six categories of example vocabulary, reused by the story, the map and the sketch tool.'] },
+          { name: 'Design', steps: ['The loom', 'Five personalities'], solid: '<path d="M8 12h44M8 24h44M8 36h44M8 48h44M16 6v48M28 6v48M40 6v48"/>',
+            copy: ['A woven hero in four thread colors. The mark, the loom and the map all share them.', 'Every component reads the same design tokens, so five sample sites can wear one set of markup.'] },
+          { name: 'Build', steps: ['Plain HTML, CSS, JS', 'GitHub → Hostinger'], solid: '<path d="M22 18L10 31l12 13M38 18l12 13-12 13M34 12l-8 38"/>',
+            copy: ['Pages generated from templates by one Python script, and each demo loads only on its own page.', 'Pushed to GitHub, checked, then deployed to Hostinger over FTPS by GitHub Actions.'] }
+        ] }
+    };
+  })();
   MOCKS['daniel-aguirre-law'].cms = {
     site: 'Daniel Aguirre Law', collection: 'Case Results', url: 'danielaguirre.law',
     eyebrow: 'PROVEN NATIONWIDE', title: 'Immigration cases won, family by family.',

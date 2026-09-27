@@ -30,6 +30,9 @@
 
   /* ---------- types (hero chips) → identity missions get their own wording ---------- */
   var TYPES = $$('[data-meta-types] .ab_meta_chip').map(function(c){ return c.textContent.trim(); }).filter(Boolean);
+  // "Test flight" (a proof of concept) is a status, not a discipline: badge its chip, keep it out of the discipline counts
+  var TEST = AB.testFlight ? AB.testFlight($$('[data-meta-types] .ab_meta_chip')) : false;
+  TYPES = TYPES.filter(function(t){ return !/^test flight$/i.test(t); });
   var isLogo = TYPES.indexOf('Logo') > -1 || TYPES.indexOf('Branding') > -1;
   // a system mission (content system with no website of its own, e.g. the Knowledge System add-on)
   var isSystem = !isLogo && TYPES.indexOf('Content system') > -1 && TYPES.indexOf('Website') < 0;
@@ -39,7 +42,8 @@
     var it = $('[data-channel]', item) || item;
     var imgs = $$('img', it).filter(function(im){ return !im.classList.contains('w-dyn-bind-empty'); }).map(function(im){ return im.getAttribute('src') || ''; }).filter(function(s){ return s && !/placeholder/i.test(s); });
     var cid = it.getAttribute('data-id') || ('ch' + i);
-    return { id: cid, kind: ({ sketch: 'sketch', vector: 'vector', graph: 'graph', library: 'library', voice: 'voice', setup: 'setup', video: 'video', schema: 'schema', portable: 'portable' })[cid] || (it.getAttribute('data-kind') || 'img').toLowerCase(), mode: (it.getAttribute('data-mode') || '').toLowerCase(),
+    // coded scenes are picked by channel id (the CMS Kind option can't gain values via the API); cks-* ids are their own kind
+    return { id: cid, kind: (/^cks-/.test(cid) ? cid : ({ sketch: 'sketch', vector: 'vector', graph: 'graph', library: 'library', voice: 'voice', setup: 'setup', video: 'video', schema: 'schema', portable: 'portable' })[cid]) || (it.getAttribute('data-kind') || 'img').toLowerCase(), mode: (it.getAttribute('data-mode') || '').toLowerCase(),
       label: it.getAttribute('data-label') || ('Channel ' + (i + 1)), caption: it.getAttribute('data-caption') || '', src: imgs[0] || '', before: imgs[0] || '', after: imgs[1] || imgs[0] || '' };
   });
   var PINS = $$('[data-pins-source] .w-dyn-item').map(function(item){
@@ -64,16 +68,42 @@
     var sl2 = $('[data-mission-lede="solved"]'); if (sl2) sl2.textContent = 'What the system does for the people who run the site and the people who read it.';
     var sh2 = $('[data-mission-sys-h]'); if (sh2) sh2.innerHTML = 'System <span class="t-outline">parts</span>';
   }
+  // a mission whose monitor runs its site's own demos (MOCKS[slug].live) says so
+  if (M.mock && M.mock.live){ var ml3 = $('[data-mission-lede="monitor"]'); if (ml3) ml3.textContent = 'Switch channels to try the site’s own demos: match any style, weave the story, grow the map, sketch a vocabulary, publish once.'; }
   document.title = txt('#heroTitle') + ' · Mission debrief · Angelino Barajas';
 
-  /* ---------- live links: hide them when the mission has no live URL ---------- */
+  /* ---------- live check: a mission whose site isn't up yet (mock.live) asks it for a small file first ---------- */
+  // An <img> load can't be blocked by CORS: the favicon loading means the real site is up (a parked domain 404s it).
+  // The answer is cached for the session. 40-monitor waits on the same promise before showing the live channels.
+  M.liveCheck = (function(){
+    var L = M.mock && M.mock.live; if (!L) return null;
+    var key = 'ab:live:' + L.base;
+    try { var c = sessionStorage.getItem(key); if (c) return Promise.resolve(c === '1'); } catch(e){}
+    return new Promise(function(res){
+      var im = new Image(), done = false;
+      function fin(ok){ if (done) return; done = true; try { sessionStorage.setItem(key, ok ? '1' : '0'); } catch(e){} res(ok); }
+      im.onload = function(){ fin(true); }; im.onerror = function(){ fin(false); };
+      setTimeout(function(){ fin(false); }, 6000);
+      im.src = L.base + L.probe + '?probe=' + Date.now();
+    });
+  })();
+
+  /* ---------- live links: hide them when the mission has no live URL (or its site isn't up yet) ---------- */
   (function(){
     var any = false;
+    function unlink(a){
+      if (a.classList.contains('ab_meta_live')){ var s = document.createElement('span'); s.className = a.className; s.innerHTML = a.innerHTML; a.parentNode.replaceChild(s, a); var ar = $('.ab_meta_live-arrow', s); if (ar) ar.remove(); return s; }
+      a.remove(); return null;
+    }
     $$('[data-mission-live]').forEach(function(a){
       var h = a.getAttribute('href') || '';
-      if (h && h !== '#' && !/^\/?$/.test(h)){ any = true; M.live = h; a.target = '_blank'; a.rel = 'noopener'; return; }
-      if (a.classList.contains('ab_meta_live')){ var s = document.createElement('span'); s.className = a.className; s.innerHTML = a.innerHTML; a.parentNode.replaceChild(s, a); var ar = $('.ab_meta_live-arrow', s); if (ar) ar.remove(); }
-      else a.remove();
+      if (h && h !== '#' && !/^\/?$/.test(h)){
+        any = true; M.live = h; a.target = '_blank'; a.rel = 'noopener';
+        // pre-launch: keep the link out of sight until the site answers; if it doesn't, it reads "launching soon"
+        if (M.liveCheck){ a.style.visibility = 'hidden'; M.liveCheck.then(function(ok){ if (ok){ a.style.visibility = ''; return; } var s = unlink(a); if (s){ s.style.visibility = ''; var lt = $('.ab_meta_live-text', s); if (lt) lt.textContent = 'Launching soon'; } }); }
+        return;
+      }
+      unlink(a);
     });
     var host = $('[data-mf="host"]'); if (host) host.textContent = M.live ? M.live.replace(/^https?:\/\//, '').replace(/\/$/, '') : isSystem ? 'Add-on · any Webflow site' : 'Self-initiated identity';
   })();

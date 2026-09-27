@@ -739,3 +739,12 @@ section:hover > .ab_frame-label{color:var(--select)}
 /* aside twinkle: a gold ✦ (+ two small ones) that sparkles near an aside (core/23-tips); dark outline so it reads on light sections too */
 .ab-twinkle{position:fixed;z-index:60;margin:-.55em 0 0 -.45em;line-height:1;color:#ffd166;pointer-events:none;opacity:0;text-shadow:0 0 1px #0b0c14,0 0 2px #0b0c14,0 0 8px #ffb27a,0 0 18px rgba(255,106,61,.85);animation:ab-twinkle 1.6s ease-in-out forwards}
 @keyframes ab-twinkle{0%{opacity:0;transform:scale(.2) rotate(0)}30%{opacity:1;transform:scale(1.25) rotate(35deg)}55%{opacity:.9;transform:scale(.85) rotate(60deg)}75%{opacity:1;transform:scale(1.05) rotate(80deg)}100%{opacity:0;transform:scale(.3) rotate(130deg)}}
+
+/* ---------- test flight: a proof of concept (Mission Type "Test flight"): dashed badge + a little rocket ---------- */
+.ab_tf-ico{width:12px;height:12px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round;margin-right:5px;vertical-align:-2px}
+.ab_tf-ico circle{fill:currentColor;stroke:none}
+.ab_tf-ico .tr{stroke-dasharray:1.2 1.6}
+.is-test-flight.ab_mission-card_tag,.is-test-flight.ab_meta_chip,.is-test-flight.ab_arc_chip{display:inline-flex;align-items:center;border-style:dashed!important;border-color:var(--signal)!important;color:var(--signal)}
+.is-test-flight.ab_arc_chip[aria-pressed="true"]{color:var(--on-signal)}
+.ab_tf-stamp{position:absolute;right:0;top:14px;z-index:2;display:flex;align-items:center;padding:4px 10px 4px 8px;background:rgba(7,8,13,.82);color:var(--star);border:1px dashed var(--signal);border-right:0;font-size:10px;letter-spacing:.14em;text-transform:uppercase;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.ab_tf-stamp .ab_tf-ico{color:var(--signal)}

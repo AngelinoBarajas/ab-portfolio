@@ -20,15 +20,18 @@
         '<div class="app"><div class="stk">' + smallMark('#0B0C14') + '</div>Sticker</div>';
       return v + '</div>';
     }
-    var TYPE = { 'live-globe': 'Live', 'live-map': 'Live', 'wipe': 'Compare', 'mobile': 'Phone', 'img': 'Still', 'logo': 'Vector', 'apps': 'Mockups', 'figma': 'Build', 'phone': 'Phone', 'flow': 'Plan', 'exploded': 'Layers', 'cms': 'CMS', 'sketch': 'Sketch', 'vector': 'Vector', 'graph': 'Graph', 'library': 'Library', 'voice': 'AI + you', 'setup': 'CMS', 'video': 'Video', 'schema': 'Schema', 'portable': 'Model' };
-    var KIND = { 'live-globe': 'LIVE · three.js r128', 'live-map': 'LIVE · d3 v7', 'wipe': 'COMPARE · figma ↔ webflow', 'figma': 'MOCKUP · figma → webflow', 'phone': 'MOCKUP · mobile', 'flow': 'MOCKUP · figjam → build', 'exploded': 'BREAKDOWN · layers', 'cms': 'MOCKUP · cms → site', 'mobile': 'STILL · mobile', 'img': 'STILL', 'logo': 'VECTOR · svg', 'apps': 'MOCKUPS', 'sketch': 'SKETCH · pen + paper', 'vector': 'MOCKUP · illustrator', 'graph': 'MOCKUP · knowledge graph', 'library': 'MOCKUP · insights library', 'voice': 'MOCKUP · voice kit → review', 'setup': 'MOCKUP · cms → site', 'video': 'MOCKUP · video + chapters', 'schema': 'MOCKUP · json-ld → search + ai', 'portable': 'MOCKUP · content model' };
+    var TYPE = { 'live-globe': 'Live', 'live-map': 'Live', 'wipe': 'Compare', 'mobile': 'Phone', 'img': 'Still', 'logo': 'Vector', 'apps': 'Mockups', 'figma': 'Build', 'phone': 'Phone', 'flow': 'Plan', 'exploded': 'Layers', 'cms': 'CMS', 'sketch': 'Sketch', 'vector': 'Vector', 'graph': 'Graph', 'library': 'Library', 'voice': 'AI + you', 'setup': 'CMS', 'video': 'Video', 'schema': 'Schema', 'portable': 'Model',
+      'cks-styles': 'Try it', 'cks-story': 'Scroll', 'cks-map': 'Explore', 'cks-sketch': 'Try it', 'cks-publish': 'Demo' };
+    var KIND = { 'live-globe': 'LIVE · three.js r128', 'live-map': 'LIVE · d3 v7', 'wipe': 'COMPARE · figma ↔ webflow', 'figma': 'MOCKUP · figma → webflow', 'phone': 'MOCKUP · mobile', 'flow': 'MOCKUP · figjam → build', 'exploded': 'BREAKDOWN · layers', 'cms': 'MOCKUP · cms → site', 'mobile': 'STILL · mobile', 'img': 'STILL', 'logo': 'VECTOR · svg', 'apps': 'MOCKUPS', 'sketch': 'SKETCH · pen + paper', 'vector': 'MOCKUP · illustrator', 'graph': 'MOCKUP · knowledge graph', 'library': 'MOCKUP · insights library', 'voice': 'MOCKUP · voice kit → review', 'setup': 'MOCKUP · cms → site', 'video': 'MOCKUP · video + chapters', 'schema': 'MOCKUP · json-ld → search + ai', 'portable': 'MOCKUP · content model',
+      'cks-styles': 'DEMO · design tokens, live', 'cks-story': 'DEMO · scroll story', 'cks-map': 'DEMO · knowledge map', 'cks-sketch': 'DEMO · sketch tool', 'cks-publish': 'DEMO · cms → site + json-ld' };
     screen.innerHTML = CH.map(channelView).join('') + '<div class="scan"></div><div class="roll"></div><div class="vig"></div><canvas class="noise" id="noise" width="160" height="100"></canvas>' +
       '<i class="brk tl"></i><i class="brk tr"></i><i class="brk bl"></i><i class="brk br"></i><div class="osd" id="osd">CH 1</div>';
     chans.innerHTML = CH.map(function(c, i){ return '<button type="button" role="tab" data-ch="' + esc(c.id) + '" aria-selected="' + (i ? 'false' : 'true') + '"><span class="k">' + (i + 1) + '</span><span>' + esc(c.label) + '</span><span class="t">' + (TYPE[c.kind] || '') + '</span></button>'; }).join('');
     chans.style.setProperty('--n', CH.length);
     var views = $$('.view', screen), chBtns = $$('button', chans), osd = $('#osd'), monLabel = $('#monLabel'), monCap = $('#monCap'), monKind = $('#monKind');
     // coded scenes need this mission's mockup spec for that kind; one broken scene never stops the monitor
-    var NEED = { figma: 'els', phone: 'mobile', flow: 'flow', exploded: 'explode', cms: 'cms', sketch: 'sketch', vector: 'vector', graph: 'graph', library: 'library', voice: 'voice', setup: 'setup', video: 'video', schema: 'schema', portable: 'portable' };
+    var NEED = { figma: 'els', phone: 'mobile', flow: 'flow', exploded: 'explode', cms: 'cms', sketch: 'sketch', vector: 'vector', graph: 'graph', library: 'library', voice: 'voice', setup: 'setup', video: 'video', schema: 'schema', portable: 'portable',
+      'cks-styles': 'cks', 'cks-story': 'cks', 'cks-map': 'cks', 'cks-sketch': 'cks', 'cks-publish': 'cks' };
     views.forEach(function(v, k){
       var c = CH[k], key = NEED[c.kind]; if (!key) return;
       if (!(M.mock && M.mock[key])){ v.innerHTML = '<div class="boot">Mockup coming soon</div>'; return; }
@@ -50,7 +53,8 @@
       chBtns.forEach(function(b, k){ b.setAttribute('aria-selected', k === i ? 'true' : 'false'); });
       monLabel.textContent = c.label; monCap.textContent = c.caption; monKind.textContent = KIND[c.kind] || '';
       $('#tCh').textContent = (i + 1) + ' / ' + CH.length;
-      $('#tSrc').textContent = c.kind.indexOf('live') === 0 ? 'Live code' : c.kind === 'wipe' ? 'Figma + site' : /^(figma|phone|flow|exploded|cms|sketch|vector|graph|library|voice|setup|video|schema|portable)$/.test(c.kind) ? 'Mockup' : c.kind === 'logo' || c.kind === 'apps' ? 'Vector' : 'Screenshot';
+      $('#tSrc').textContent = c.kind.indexOf('live') === 0 ? 'Live code' : liveOn(c) ? 'Live site' : /^cks-/.test(c.kind) ? 'Coded demo' : c.kind === 'wipe' ? 'Figma + site' : /^(figma|phone|flow|exploded|cms|sketch|vector|graph|library|voice|setup|video|schema|portable)$/.test(c.kind) ? 'Mockup' : c.kind === 'logo' || c.kind === 'apps' ? 'Vector' : 'Screenshot';
+      if (liveOn(c)){ monKind.textContent = 'LIVE · ' + LIVE.host; chBtns[i].querySelector('.t').textContent = 'Live'; }
       osd.textContent = 'CH ' + (i + 1) + ' · ' + c.label;
       if (!silent){ staticBurst(); if (!reduce && hasGsap) gsap.fromTo(osd, { opacity: 0 }, { opacity: 1, duration: .1, repeat: 3, yoyo: true }); }
       boot(c, views[i]);
@@ -94,6 +98,7 @@
     });
     // live channels: the real production code, loaded on first view (vendor copies in this repo)
     function boot(c, view){
+      if (liveOn(c) && monVisible) liveSite(c, view);
       if (booted[c.id] || !view.classList.contains('on') || (!monVisible && c.kind.indexOf('live') === 0)) return;
       var bootEl = $('.boot', view);
       if (c.kind === 'live-globe'){
@@ -136,5 +141,34 @@
       gsap.fromTo(mk, { scale: .05, rotation: -720, opacity: 0, svgOrigin: '240 121' }, { scale: 1, rotation: 0, opacity: 1, duration: 1.1, ease: 'expo.out', delay: d });
       gsap.fromTo(ps, { fillOpacity: 0, stroke: 'currentColor', strokeWidth: 5, strokeOpacity: 1 }, { fillOpacity: 1, strokeOpacity: 0, duration: .6, stagger: .12, ease: 'power2.out', delay: d + .9 });
     }
+    /* live sites: a mission whose real site isn't up yet (mock.live) runs coded demos; once the site answers
+       (M.liveCheck in 30-mission), the live channels show the real page in an iframe, the coded demo one tap away.
+       Phones keep the demo (battery + data) and get a link out instead. */
+    var LIVE = null;
+    function liveOn(c){ return !!(LIVE && LIVE.ok && LIVE.pages[c.id]); }
+    function liveSite(c, view){
+      if (view.__live) return; view.__live = true;
+      var url = LIVE.base + LIVE.pages[c.id], sc = SCENE.get(c.id);
+      if (coarse){ view.insertAdjacentHTML('beforeend', '<a class="cx-open" href="' + esc(url) + '" target="_blank" rel="noopener">Open the live site ↗</a>'); return; }
+      var box = document.createElement('div'); box.className = 'cx-live';
+      box.innerHTML = '<iframe title="' + esc(c.label) + ', live on ' + esc(LIVE.host) + '" src="' + esc(url) + '" loading="lazy" referrerpolicy="no-referrer"></iframe>';
+      var bar = document.createElement('div'); bar.className = 'cx-live-bar';
+      bar.innerHTML = '<a href="' + esc(url) + '" target="_blank" rel="noopener"><i></i>Live · ' + esc(LIVE.host) + ' ↗</a><button type="button">Show the coded demo</button>';
+      view.appendChild(box); view.appendChild(bar);
+      var fr = $('iframe', box), btn = $('button', bar);
+      // the page renders at desktop width, scaled down to the screen
+      function fit(){ var W = view.clientWidth, H = view.clientHeight; if (!W) return; var k = Math.min(1, W / 1280); fr.style.width = W / k + 'px'; fr.style.height = H / k + 'px'; fr.style.transform = 'scale(' + k + ')'; }
+      fit(); if (window.ResizeObserver) new ResizeObserver(fit).observe(view);
+      // one class flips between the real page and the coded demo (which pauses while hidden)
+      function show(live){ view.classList.toggle('is-live', live); btn.textContent = live ? 'Show the coded demo' : 'Show the live site'; if (sc){ if (live && sc.hold) sc.hold(); if (!live && sc.resume) sc.resume(); } }
+      btn.addEventListener('click', function(){ show(!view.classList.contains('is-live')); });
+      show(true);
+    }
+    if (M.liveCheck) M.liveCheck.then(function(ok){
+      if (!ok) return;
+      var L = M.mock.live; LIVE = { ok: true, base: L.base, pages: L.pages || {}, host: L.base.replace(/^https?:\/\//, '').replace(/\/$/, '') };
+      CH.forEach(function(c, k){ if (liveOn(c)){ var t = chBtns[k].querySelector('.t'); if (t) t.textContent = 'Live'; } });
+      setCh(curCh, true);
+    });
     setCh(0, true);
   })();

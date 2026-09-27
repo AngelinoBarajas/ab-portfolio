@@ -38,6 +38,8 @@
     if (b) b.textContent = n;
     if (!n && t !== 'all'){ var item = c.closest('.w-dyn-item') || c; item.style.display = 'none'; }
     c.setAttribute('aria-pressed', t === 'all' ? 'true' : 'false');
+    // proofs of concept get the test-flight badge look on their filter chip too
+    if (/^test flight$/i.test(t || '')){ c.classList.add('is-test-flight'); c.insertAdjacentHTML('afterbegin', '<svg class="ab_tf-ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M9.6 2.4c2.1-.6 3.5-.4 3.9 0 .4.4.6 1.8 0 3.9L9 10.8 5.2 7z"/><path d="M5.2 7 2.6 7.5 1.6 9.4h2.6M9 10.8l-.5 2.6-1.9 1V11.8"/><path class="tr" d="M4.2 11.8 1.5 14.5"/><circle cx="10.6" cy="5.4" r="1"/></svg>'); c.setAttribute('title', 'Test flights: proofs of concept, self-initiated'); }
   });
 
   /* ---------- list view (built from the cards) ---------- */

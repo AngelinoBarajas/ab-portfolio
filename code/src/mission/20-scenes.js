@@ -64,6 +64,9 @@
         if (sc.paused) sc.tl.pause(); else { sc.started = true; sc.tl.play(); }
       });
       box.appendChild(pp);
+      // a visitor taking over an interactive scene pauses the loop (the play button hands it back)
+      sc.hold = function(){ sc.started = true; if (sc.paused) return; sc.paused = true; sc.tl.pause(); pp.innerHTML = ICON_PLAY; pp.setAttribute('aria-label', 'Play animation'); };
+      sc.resume = function(){ sc.started = true; sc.paused = false; pp.innerHTML = ICON_PAUSE; pp.setAttribute('aria-label', 'Pause animation'); sc.tl.play(); };
       (phases || []).forEach(function(p, i){
         var b = mk('button', 'scn-ph', '<i></i>' + esc(p.t)); b.type = 'button';
         b.addEventListener('click', function(){ sc.started = true; sc.tl.seek(p.at); if (sc.onSeek) sc.onSeek(); if (!sc.paused) sc.tl.play(); mark(); });
@@ -665,7 +668,9 @@
 
     // other scene files (21-knowledge.js) register builders here and share the helpers
     function add(kind, fn){ EXT[kind] = fn; }
+    // rebuild in place, keeping the playhead (a scene measured before its web font arrived calls this once it has)
+    function rebuild(sc){ var t = sc.tl ? sc.tl.time() : 0; if (sc.tl) sc.tl.kill(); build(sc); if (sc.started){ sc.tl.seek(Math.min(t, sc.tl.duration() - .1)); if (sc.onSeek) sc.onSeek(); } sync(sc); }
     return { mount: mount, activate: activate, add: add, get: function(id){ return scenes[id]; },
-      kit: { mk: mk, q: q, qa: qa, esc: esc, controls: controls, CURSOR: CURSOR, reduce: reduce } };
+      kit: { mk: mk, q: q, qa: qa, esc: esc, controls: controls, CURSOR: CURSOR, reduce: reduce, rebuild: rebuild } };
   })();
 
