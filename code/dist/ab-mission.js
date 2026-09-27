@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission v0.26.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission v0.26.1 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abMissionInit) return;
@@ -2211,7 +2211,8 @@ window.Webflow.push(function(){
   (function(){
     var any = false;
     function unlink(a){
-      if (a.classList.contains('ab_meta_live')){ var s = document.createElement('span'); s.className = a.className; s.innerHTML = a.innerHTML; a.parentNode.replaceChild(s, a); var ar = $('.ab_meta_live-arrow', s); if (ar) ar.remove(); return s; }
+      // (the built hero marks its arrow as a bare aria-hidden span, the prototype as .ab_meta_live-arrow)
+      if (a.classList.contains('ab_meta_live')){ var s = document.createElement('span'); s.className = a.className; s.innerHTML = a.innerHTML; a.parentNode.replaceChild(s, a); var ar = $('.ab_meta_live-arrow', s) || $('span[aria-hidden]', s); if (ar) ar.remove(); return s; }
       a.remove(); return null;
     }
     $$('[data-mission-live]').forEach(function(a){
@@ -2219,7 +2220,7 @@ window.Webflow.push(function(){
       if (h && h !== '#' && !/^\/?$/.test(h)){
         any = true; M.live = h; a.target = '_blank'; a.rel = 'noopener';
         // pre-launch: keep the link out of sight until the site answers; if it doesn't, it reads "launching soon"
-        if (M.liveCheck){ a.style.visibility = 'hidden'; M.liveCheck.then(function(ok){ if (ok){ a.style.visibility = ''; return; } var s = unlink(a); if (s){ s.style.visibility = ''; var lt = $('.ab_meta_live-text', s); if (lt) lt.textContent = 'Launching soon'; } }); }
+        if (M.liveCheck){ a.style.visibility = 'hidden'; M.liveCheck.then(function(ok){ if (ok){ a.style.visibility = ''; return; } var s = unlink(a); if (s){ s.style.visibility = ''; var lt = $('.ab_meta_live-text', s) || $('[data-field="status"]', s); if (lt) lt.textContent = 'Launching soon'; } }); }
         return;
       }
       unlink(a);

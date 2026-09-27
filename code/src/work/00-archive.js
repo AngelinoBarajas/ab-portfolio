@@ -23,7 +23,8 @@
     M.forEach(function(m){ m.types.forEach(function(t){ types[t] = (types[t] || 0) + 1; }); var y = parseInt(m.year, 10); if (y) years.push(y); if (m.live) live++; if (!m.placeholder) real++; });
     function set(k, v){ $$('[data-arc="' + k + '"]').forEach(function(e){ e.textContent = v; }); }
     set('total-pad', pad2(N)); set('real', real); set('live', live);
-    var nt = Object.keys(types).length; if (nt) set('types', nt);
+    // Test flight is a status (proof of concept), not a discipline
+    var nt = Object.keys(types).filter(function(t){ return !/^test flight$/i.test(t); }).length; if (nt) set('types', nt);
     if (years.length){ var y0 = Math.min.apply(null, years), y1 = Math.max.apply(null, years); set('years', y0 === y1 ? y0 : y0 + '–' + y1); }
     $$('[data-arc="total"]').forEach(function(e){ e.textContent = N; e.setAttribute('data-count', N); });
     // CTA card: the next free mission number
