@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-knowledge v0.25.3 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-knowledge v0.25.4 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abKnowledgeInit) return;
@@ -329,10 +329,13 @@ window.Webflow.push(function(){
 
   if (VIEW === 'chart') (function(){
     var mount = $('[data-ks-chart]'); if (!mount || !TOPICS.length) return;
-    var g = '<g class="grid">';
-    for (var gx = 0; gx <= 1400; gx += 100) g += '<line x1="' + gx + '" y1="0" x2="' + gx + '" y2="780"/>';
-    for (var gy = 0; gy <= 780; gy += 90) g += '<line x1="0" y1="' + gy + '" x2="1400" y2="' + gy + '"/>';
-    g += '<circle cx="660" cy="390" r="230"/><circle cx="660" cy="390" r="440"/></g>';
+    // the grid is a tiling pattern over a huge rect, so it never ends when the view is panned past the chart
+    var g = '<defs><pattern id="abKsGrid" width="100" height="90" patternUnits="userSpaceOnUse"><path class="gp" d="M100 0H0V90"/></pattern></defs>' +
+      '<g class="grid"><rect x="-5000" y="-4000" width="11400" height="8800" fill="url(#abKsGrid)"/><circle cx="660" cy="390" r="230"/><circle cx="660" cy="390" r="440"/><circle cx="660" cy="390" r="760"/>';
+    // faint background stars across the whole pannable area (deterministic, so every visit looks the same)
+    var sd = 7; function rnd(){ sd = (sd * 16807) % 2147483647; return sd / 2147483647; }
+    for (var bs = 0; bs < 260; bs++){ var bx = -1400 + rnd() * 4200, by = -700 + rnd() * 2200, br = rnd(); g += '<circle class="bg-st" cx="' + bx.toFixed(0) + '" cy="' + by.toFixed(0) + '" r="' + (br < .85 ? .8 : 1.4) + '" opacity="' + (.15 + rnd() * .35).toFixed(2) + '"/>'; }
+    g += '</g>';
     var xl = XL.map(function(k){ var p = k.split('|'), a = POS[p[0]], b = POS[p[1]], mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2 - 40;
       return '<path class="xl" data-a="' + p[0] + '" data-b="' + p[1] + '" d="M' + a.join(' ') + ' Q' + mx + ' ' + my + ' ' + b.join(' ') + '"/>'; }).join('');
     var cons = CATS.map(function(c){
@@ -385,9 +388,10 @@ window.Webflow.push(function(){
     var zl = $('.ab_ks-zoom_z', ui);
     function clamp(){
       v.w = Math.max(V0.w / MAXZ, Math.min(V0.w, v.w)); v.h = v.w * V0.h / V0.w;
-      v.x = Math.max(V0.x, Math.min(V0.x + V0.w - v.w, v.x)); v.y = Math.max(V0.y, Math.min(V0.y + V0.h - v.h, v.y));
+      // pan is free at any zoom, but at least ~40% of the chart stays in frame so you can't get lost in empty space
+      v.x = Math.max(V0.x - v.w * .6, Math.min(V0.x + V0.w - v.w * .4, v.x)); v.y = Math.max(V0.y - v.h * .6, Math.min(V0.y + V0.h - v.h * .4, v.y));
     }
-    function apply(){ clamp(); svg.setAttribute('viewBox', v.x.toFixed(1) + ' ' + v.y.toFixed(1) + ' ' + v.w.toFixed(1) + ' ' + v.h.toFixed(1)); var z = V0.w / v.w; zl.textContent = z.toFixed(1) + '×'; map.classList.toggle('is-zoomed', z > 1.01); }
+    function apply(){ clamp(); svg.setAttribute('viewBox', v.x.toFixed(1) + ' ' + v.y.toFixed(1) + ' ' + v.w.toFixed(1) + ' ' + v.h.toFixed(1)); var z = V0.w / v.w; zl.textContent = z.toFixed(1) + '×'; map.classList.toggle('is-zoomed', z > 1.01); map.classList.toggle('is-moved', z > 1.01 || Math.abs(v.x - V0.x) > 2 || Math.abs(v.y - V0.y) > 2); }
     // screen point → chart units
     function toChart(cx, cy){ var r = svg.getBoundingClientRect(); return { x: v.x + (cx - r.left) / r.width * v.w, y: v.y + (cy - r.top) / r.height * v.h, fx: (cx - r.left) / r.width, fy: (cy - r.top) / r.height }; }
     function zoomAt(f, cx, cy, animate){

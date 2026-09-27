@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-knowledge.css v0.25.3 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-knowledge.css v0.25.4 · github.com/AngelinoBarajas/ab-portfolio */
 /* =========================================================
    KNOWLEDGE SYSTEM · the Observatory (/observatory, /observatory/*, /topics, /topics/*) + rows on Mission,
    Service and Home. Webflow gives each ab_ks-* class a stub rule; the look lives here (approved prototype:
@@ -314,3 +314,7 @@ a.ab_ks-tstat:hover b{color:var(--_color---brand--signal)}
 .ab_ks-mcard > div{min-width:0}
 .ab_ks-mcard_h{font-size:clamp(19px,1.55vw,24px);line-height:1.02;overflow-wrap:anywhere;hyphens:auto}
 .ab_ks-mcard_k{display:block;line-height:1.5;letter-spacing:.1em}
+/* star chart: tiling grid + background stars (pannable past the edges) */
+.ab_ks-map .gp{fill:none;stroke:rgba(255,255,255,.05);stroke-width:1;vector-effect:non-scaling-stroke}
+.ab_ks-map .grid circle.bg-st{fill:#F2F0EA;stroke:none}
+.ab_ks-map.is-moved .ab_ks-zoom_hint{opacity:0}
