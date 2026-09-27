@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-knowledge v0.25.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-knowledge v0.25.1 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abKnowledgeInit) return;
@@ -381,7 +381,7 @@ window.Webflow.push(function(){
   if (VIEW === 'topic') (function(){
     var T = TOPIC[CUR_SLUG]; if (!T) return;
     if (CUR.getAttribute('data-cat')) T.cat = catKey(CUR.getAttribute('data-cat'));
-    var C = CAT[T.cat], tNotes = notesFor(T.slug), tMis = MIS /* the Missions list on this template resolves to the topic's own Missions field */, tFaq = FAQ.filter(function(q){ return q.topics.indexOf(T.slug) > -1; });
+    var C = CAT[T.cat], tNotes = notesFor(T.slug), tMis = misFor(T.slug) /* Topic › Missions (nested list on this template's Topics source) */, tFaq = FAQ.filter(function(q){ return q.topics.indexOf(T.slug) > -1; });
     var sibs = TOPICS.filter(function(t){ return t.cat === T.cat; });
 
     var eb = $('[data-ks-eyebrow]'); if (eb) eb.textContent = C.code + ' · ' + C.name + ' · constellation ' + pad2(C.i + 1) + ' of 06';
