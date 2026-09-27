@@ -195,7 +195,7 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 
 ## Next session: integrate the Knowledge System into this site
 
-**2026-09-26 update: prototype built, waiting on Angelino's OK.** Plan + decisions: `docs/knowledge-integration-plan.md`. Prototypes: `prototypes/insights.html`, `insight.html#<slug>`, `topics.html`, `topic.html#<slug>`, `ks-rows.html` (parts `_parts/ks*`, data from `_parts/ks_data.py`). Draft vocabulary: `cms/seed/_draft-topics.json`. Nothing in Webflow yet.
+**2026-09-27: BUILT + published to webflow.io (awaiting Angelino's review).** Named **the Observatory** (`/observatory`, `/observatory/[slug]`, `/topics`, `/topics/[slug]`), Home section **Incoming signals**, no AI disclosure, no Aguirre relations. ab-knowledge **v0.25.3**. Full record + Designer steps: `docs/webflow-build-notes.md` › Knowledge System. Earlier: Plan + decisions: `docs/knowledge-integration-plan.md`. Prototypes: `prototypes/insights.html`, `insight.html#<slug>`, `topics.html`, `topic.html#<slug>`, `ks-rows.html` (parts `_parts/ks*`, data from `_parts/ks_data.py`). Draft vocabulary: `cms/seed/_draft-topics.json`. Nothing in Webflow yet.
 
 Angelino wants the complete Knowledge System integrated into the AB Portfolio and styled on brand. Start by reading:
 
