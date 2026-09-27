@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission v0.26.5 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission v0.26.6 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abMissionInit) return;
@@ -2525,9 +2525,10 @@ window.Webflow.push(function(){
       if (/pric|plan|package/i.test(p)) return s + [6, 37, 68].map(function(l, i){ return g(i === 1 ? 'a' : 'o', l, 22, 26, 68) + g('f', l + 4, 34, 18, 7) + g('m', l + 4, 50, 14, 5) + g('m', l + 4, 60, 16, 5); }).join('');
       if (/contact|book|call|form/i.test(p)) return s + g('o', 22, 24, 56, 11) + g('o', 22, 40, 56, 11) + g('o', 22, 56, 56, 11) + g('a', 22, 74, 22, 12);
       if (/blog|insight|news|what.s new|changelog|observ|article/i.test(p)) return s + [24, 45, 66].map(function(t){ return g('a', 6, t, 10, 8) + g('f', 20, t, 64, 8) + g('m', 20, t + 10, 40, 5); }).join('');
+      // (before the grid rule, so 'How it works' isn't read as work)
+      if (/how|process|service|install|guide|expertise|practice|hub/i.test(p)) return s + [8, 40, 72].map(function(l, i){ return g('r ' + (i ? 'f' : 'a'), l, 26, 13, 28) + g('m', l - 2, 64, 22, 6) + g('m', l - 2, 76, 16, 5); }).join('');
       if (/project|work|portfolio|result|case|inspiration|gallery/i.test(p)) return s + [6, 37, 68].map(function(l, i){ return g(i % 2 ? 'a' : 'img', l, 22, 26, 30) + g('img', l, 58, 26, 30); }).join('');
       if (/template|detail/i.test(p)) return s + g('img', 6, 20, 88, 36) + g('f', 6, 62, 64, 8) + g('m', 6, 76, 50, 6);
-      if (/how|process|service|install|guide|expertise|practice|hub/i.test(p)) return s + [8, 40, 72].map(function(l, i){ return g('r ' + (i ? 'f' : 'a'), l, 26, 13, 28) + g('m', l - 2, 64, 22, 6) + g('m', l - 2, 76, 16, 5); }).join('');
       if (/style|token|brand|color/i.test(p)) return s + [0, 1, 2, 3, 4].map(function(i){ return g(['a', 'f', 'img', 'm', 'o'][i], 6 + i * 18, 28, 14, 56); }).join('');
       if (/voice|audio|podcast/i.test(p)) return s + [30, 60, 85, 45, 95, 70, 40, 80, 55, 35, 65, 50].map(function(h, i){ return g(i % 3 ? 'f' : 'a', 8 + i * 7.3, 60 - h * .4, 4, h * .6); }).join('');
       if (/sketch|idea|board/i.test(p)) return s + g('a', 8, 26, 24, 38) + g('img', 38, 30, 24, 38) + g('f', 68, 24, 24, 38) + g('m', 8, 78, 80, 5);
