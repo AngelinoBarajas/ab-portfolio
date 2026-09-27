@@ -185,7 +185,7 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 
 ## Next session
 
-Live on staging: core JS **0.23.3** + core CSS **0.23.3**; home 0.23.0, hub JS 0.23.0 (CSS 0.17.1), process JS 0.23.0 (CSS 0.17.1), about JS **0.23.4** (CSS 0.23.2), contact 0.19.0, mission JS 0.23.0 (CSS 0.19.0), services JS 0.21.2 (CSS 0.21.2), work 0.4.0, 404 0.14.0. All via the registry (+ CSS `<link>` with SRI in site/page heads).
+Live on staging: core JS **0.23.3** + core CSS **0.23.3**; home 0.23.0, hub JS 0.23.0 (CSS 0.17.1), process JS 0.23.0 (CSS 0.17.1), about JS **0.23.5** (CSS 0.23.2), contact 0.19.0, mission JS 0.23.0 (CSS 0.19.0), services JS 0.21.2 (CSS 0.21.2), work 0.4.0, 404 0.14.0. All via the registry (+ CSS `<link>` with SRI in site/page heads).
 
 1. **SEO + schema on every page** (next): start from `docs/seo-plan.md`. Audit every static page + both CMS templates (titles, descriptions, OG, canonical, headings, alt text, crawlable links), fill what the MCP can, list the Designer-only steps, write JSON-LD for every page type (drafts exist, `{{DOMAIN}}` until the domain is known), make the OG image, check sitemap + robots. Use the `seo-schema-builder` skill.
 2. His Designer steps (`docs/seo-plan.md`): sitemap on, Mission + Services template SEO bound to [Name]/[Summary], Home board frame link + Work card link → Current Missions page, rename the Process + Contact forms, confirm the notification email.
