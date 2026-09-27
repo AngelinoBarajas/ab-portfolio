@@ -234,9 +234,11 @@
   $$('#tel .ab_tel_item').forEach(function(t){
     var n = $('.ab_tel_n', t), v = n && n.getAttribute('data-count'), suf = txt('[data-field="suffix"]', t);
     if (!n || v == null) return;
-    n.setAttribute('data-suffix', suf || '');
+    // word units get a (non-breaking) space, 6 hrs; symbols stay attached, 98% (the count-up reads data-suffix too)
+    var sp = suf && /^[a-z]/i.test(suf) ? String.fromCharCode(160) + suf : (suf || '');
+    n.setAttribute('data-suffix', sp);
     if (v === '' || isNaN(+v)){ n.removeAttribute('data-count'); n.textContent = suf || '∞'; n.classList.remove('w-dyn-bind-empty'); t.classList.add('is-symbol'); }
-    else n.textContent = v + (suf || '');
+    else n.textContent = v + sp;
   });
 
   /* ---------- stack orbit (Tools the mission ran on) ---------- */
