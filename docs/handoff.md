@@ -2,6 +2,12 @@
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
+## Latest (2026-09-27, CKS debrief)
+
+- **CKS mission debrief (#05) built + published to webflow.io** (`/work/cks`, code v0.26.1). Details: `docs/webflow-build-notes.md` › CKS mission debrief. Awaiting Angelino's review.
+- **Test flight** Mission Type = proof-of-concept badge (cards, filter chip, debrief hero). CKS has it; add it to kip when kip is built.
+- On getcks.io launch the monitor swaps to the live site by itself; only the Status field needs flipping to Live.
+
 ## Where things stand
 
 | Step | Status |
