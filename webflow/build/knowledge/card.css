@@ -1,0 +1,15 @@
+.ab_ks-card{display:flex;flex-direction:column}
+.ab_ks-scan{position:relative}
+.ab_ks-card_top{display:flex;justify-content:space-between}
+.ab_ks-card_code{display:flex}
+.ab_ks-card_no{position:relative}
+.ab_ks-card_sep{position:relative}
+.ab_ks-card_theme{position:relative}
+.ab_ks-card_min{display:flex}
+.ab_ks-card_mins{position:relative}
+.ab_ks-card_minl{position:relative}
+.ab_ks-card_h{position:relative}
+.ab_ks-card_p{position:relative}
+.ab_ks-card_foot{display:flex;justify-content:space-between}
+.ab_ks-tags{display:flex}
+.ab_ks-go{position:relative}

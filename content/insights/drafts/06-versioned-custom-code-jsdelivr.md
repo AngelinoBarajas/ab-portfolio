@@ -1,5 +1,5 @@
 ---
-status: draft · for Angelino's review
+status: approved
 title: Versioned custom code for Webflow: GitHub, jsDelivr and SRI
 slug: webflow-custom-code-github-jsdelivr
 theme: Build notes

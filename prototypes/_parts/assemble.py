@@ -26,6 +26,17 @@ PAGES = {
                     desc='Contact Angelino Barajas: questions, help with an existing site, collaborations, hiring or a call. Tune the frequency and send the signal; replies within one business day.',
                     active='contact.html'),
 }
+# Knowledge System pages: one CSS/render/ix set, the view picks the page; render = generated data + renderer
+KS_DESC = {
+    'library': ('observatory.html', 'The Observatory', 'The Observatory: notes from real Webflow builds: structured data, smooth scroll, interactive 3D, touch bugs, versioned code, and the ideas behind the work. Organized by topic, not by date.'),
+    'article': ('observation.html', 'Observation', 'An observation from the Angelino Barajas Observatory.'),
+    'chart': ('topics.html', 'Star Chart', 'The shared vocabulary behind this site: 27 topics in six constellations, each linked to the notes, missions and services that prove it.'),
+    'topic': ('topic.html', 'Topic', 'A topic from the site vocabulary, with every note, mission and service tagged with it.'),
+    'rows': ('ks-rows.html', 'Template Rows', 'Review page: the rows the Knowledge System adds to the Mission, Service and Home pages.'),
+}
+for _v, (_out, _t, _d) in KS_DESC.items():
+    PAGES['ks-' + _v] = dict(css='ks.css', render=['ks-data.js', 'ks-render.js'], ix='ks-ix.js', out=_out, ks=True,
+                             main='<main id="ks" class="db ks-page" data-view="' + _v + '"></main>', title=_t, desc=_d, active='observatory.html')
 SHIM = ('<script>if(location.search.indexOf("shim")>-1){window.requestAnimationFrame=function(f){return setTimeout(function(){f(performance.now())},16)};'
         'window.cancelAnimationFrame=clearTimeout;}'
         'var _q=new URLSearchParams(location.search);if(_q.get("at")){document.documentElement.setAttribute("data-shot",_q.get("at"));}</script>')  # test-only: hidden pane freezes rAF; ?at=<frame> hides the sections above it for headless shots
@@ -33,7 +44,8 @@ SHIM = ('<script>if(location.search.indexOf("shim")>-1){window.requestAnimationF
 
 def build(key):
     P = PAGES[key]
-    out = L[:1524] + [part(P['css']), ''] + L[1752:2507] + [part(P['render'])] + L[2620:3167] + [part(P['ix'])] + L[3310:]
+    rend = P['render'] if isinstance(P['render'], list) else [P['render']]
+    out = L[:1524] + [part(P['css']), ''] + L[1752:2507] + [part(r) for r in rend] + L[2620:3167] + [part(P['ix'])] + L[3310:]
     h = '\n'.join(out)
     h = h.replace('<main id="about" class="db ab-page"></main>', P['main'])
     # site links: Process page + Services hub
@@ -53,6 +65,12 @@ def build(key):
     h = h.replace('<a href="' + P['active'] + '" data-scramble>', '<a href="' + P['active'] + '" class="is-active" aria-current="page" data-scramble>', 1)
     h = h.replace('<a href="#top">About</a>', '<a href="about.html">About</a>')
     h = h.replace('>Globes, maps + 3D<', '>Interactive 3D + data<')
+    if P.get('ks'):
+        # site-wide: Observatory joins the nav (before Contact) and the footer
+        h = h.replace('<a href="contact.html" data-scramble>Contact</a>', '<a href="observatory.html" data-scramble>Observatory</a>\n      <a href="contact.html" data-scramble>Contact</a>', 1)
+        h = h.replace('<a href="observatory.html" data-scramble>', '<a href="observatory.html" class="is-active" aria-current="page" data-scramble>', 1)
+        h = h.replace('<a href="contact.html">Contact<span', '<a href="observatory.html">Observatory<span class="mono">/observatory</span></a>\n    <a href="contact.html">Contact<span', 1)
+        h = h.replace('<a href="contact.html">Contact</a>', '<a href="observatory.html">Observatory</a><a href="topics.html">Star chart</a><a href="contact.html">Contact</a>', 1)
     io.open(os.path.join(PROTO, P['out']), 'w', encoding='utf-8', newline='\n').write(h)
     print(P['out'], len(h.split('\n')), 'lines')
 

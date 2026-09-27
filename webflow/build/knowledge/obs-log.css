@@ -1,0 +1,5 @@
+.section_ks-log{position:relative}
+.ab_ks-pad{padding-top:clamp(70px,9vw,130px);padding-bottom:clamp(70px,9vw,130px)}
+.ab_ks-ctrl{position:relative}
+.ab_ks-listwrap{position:relative}
+.ab_ks-empty{display:none}

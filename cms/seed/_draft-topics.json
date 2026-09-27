@@ -1,0 +1,57 @@
+{
+  "_note": "Signed off by Angelino 2026-09-26. No Aguirre relations until that site is public. Starter vocabulary for the Topics collection: 27 terms in 6 categories. Relations to Missions and FAQs are stored on THEIR side in Webflow (Missions.topics, FAQ.topics); they're listed here only so the prototype and the import script can read one file. Topic.services lives on the Topic (Services is at the 60-field cap).",
+  "categories": [
+    { "key": "who",   "code": "WHO",   "name": "Who I build for",  "blurb": "The people and teams the work is for." },
+    { "key": "what",  "code": "WHAT",  "name": "What I build",     "blurb": "The things that end up on the site." },
+    { "key": "how",   "code": "HOW",   "name": "How it gets built", "blurb": "The steps and habits behind every build." },
+    { "key": "watch", "code": "WATCH", "name": "What I watch for", "blurb": "The problems I check for before anything ships." },
+    { "key": "ideas", "code": "IDEAS", "name": "Why before how",   "blurb": "Ideas from philosophy and science that shape the work." },
+    { "key": "known", "code": "KNOWN", "name": "Known for",        "blurb": "The signature pieces people ask about." }
+  ],
+  "topics": [
+    { "slug": "creative-studios", "name": "Creative studios", "category": "who", "definition": "Studios whose work is visual and physical, where the site has to show scale and craft rather than describe it.", "services": ["webflow-development", "webgl-data", "motion"], "missions": ["510-visuals"], "faq": [] },
+    { "slug": "service-businesses", "name": "Service businesses", "category": "who", "definition": "Firms that sell expertise, like law, finance or consulting, where trust and clear answers do the selling.", "services": ["webflow-development", "cms-integrations", "performance"], "missions": ["knowledge-system"], "faq": [] },
+    { "slug": "mission-led-teams", "name": "Mission-led teams", "category": "who", "definition": "Nonprofits and companies doing good, who need a site that explains the mission and is easy for a small team to keep up.", "services": ["webflow-development", "branding"], "missions": [], "faq": [] },
+    { "slug": "agencies-partners", "name": "Agencies + partners", "category": "who", "definition": "Studios and agencies that bring me in for the interactive, 3D or CMS-heavy part of a bigger project.", "services": ["webgl-data", "motion", "cms-integrations"], "missions": [], "faq": [] },
+
+    { "slug": "webflow-cms", "name": "Webflow CMS", "category": "what", "definition": "Collections, fields and templates shaped around how a team publishes, so pages build themselves from content.", "services": ["webflow-development", "cms-integrations"], "missions": ["510-visuals", "knowledge-system"], "faq": ["cms-integrations-2", "cms-integrations-3", "webflow-development-1"] },
+    { "slug": "interactive-3d", "name": "Interactive 3D", "category": "what", "definition": "Globes, maps and scenes visitors can turn, zoom and use to decide, fed by the CMS instead of hard-coded.", "services": ["webgl-data", "performance"], "missions": ["510-visuals"], "faq": ["webgl-data-1", "webgl-data-2", "webgl-data-3"] },
+    { "slug": "motion-scroll", "name": "Motion + scroll", "category": "what", "definition": "Scroll systems, reveals and drag physics built with GSAP and Lenis, with easing tuned by hand.", "services": ["motion"], "missions": ["510-visuals", "ab-identity"], "faq": ["motion-2"] },
+    { "slug": "brand-identity", "name": "Brand identity", "category": "what", "definition": "A mark, color and type built on a grid, so the brand holds up from a favicon to a billboard.", "services": ["branding"], "missions": ["ab-identity"], "faq": ["branding-1", "branding-2", "branding-3"] },
+    { "slug": "design-systems", "name": "Design systems", "category": "what", "definition": "Variables, components and type scales defined once, so page ten is as sharp as page one.", "services": ["design-systems", "webflow-development"], "missions": ["ab-identity", "510-visuals"], "faq": ["design-systems-1", "design-systems-2", "design-systems-3"] },
+
+    { "slug": "discovery", "name": "Discovery", "category": "how", "definition": "The first conversation: goals, audience and what a win looks like, before anyone opens Figma.", "services": ["webflow-development", "branding"], "missions": [], "faq": ["home-4"] },
+    { "slug": "prototyping", "name": "Prototyping", "category": "how", "definition": "The key pieces built as a clickable prototype and reviewed together before the real build starts.", "services": ["webflow-development", "webgl-data", "motion"], "missions": ["510-visuals", "ab-identity"], "faq": [] },
+    { "slug": "custom-code", "name": "Custom code", "category": "how", "definition": "Plain JavaScript for what Webflow can't do natively, kept in a repo instead of pasted into settings.", "services": ["webflow-development", "custom-deploys"], "missions": ["510-visuals"], "faq": ["home-1", "custom-deploys-1"] },
+    { "slug": "versioned-deploys", "name": "Versioned deploys", "category": "how", "definition": "Every release tagged in GitHub and loaded from jsDelivr with an integrity hash, so any change can be rolled back.", "services": ["custom-deploys", "webflow-development"], "missions": ["510-visuals"], "faq": ["custom-deploys-3"] },
+    { "slug": "handoff", "name": "Handoff", "category": "how", "definition": "A walkthrough and a written guide, so the team owns the site, the files and the code after launch.", "services": ["webflow-development", "design-systems"], "missions": ["510-visuals", "ab-identity"], "faq": ["home-2", "custom-deploys-2"] },
+
+    { "slug": "mobile-performance", "name": "Mobile performance", "category": "watch", "definition": "Heavy visuals that still load fast on a phone: lazy loading, paused loops and a Lighthouse pass on every page.", "services": ["performance", "webgl-data"], "missions": ["510-visuals"], "faq": ["home-3", "motion-1", "performance-1", "performance-2", "performance-3"] },
+    { "slug": "tap-vs-hover", "name": "Tap vs hover", "category": "watch", "definition": "A tap fires hover events too. Interactive pieces have to tell a finger from a mouse or they break on phones.", "services": ["motion", "webflow-development"], "missions": [], "faq": [] },
+    { "slug": "reduced-motion", "name": "Reduced motion", "category": "watch", "definition": "Respecting the system setting that asks for less movement, without turning the site into a static page.", "services": ["motion"], "missions": ["510-visuals", "ab-identity"], "faq": ["motion-3"] },
+    { "slug": "crawlable-links", "name": "Crawlable links", "category": "watch", "definition": "Every page you want found needs a real link in the HTML. Script-only navigation is invisible to search and AI tools.", "services": ["webflow-development", "performance"], "missions": [], "faq": [] },
+    { "slug": "scope-creep", "name": "Scope creep", "category": "watch", "definition": "The slow drift of a project past its goal. Named early, it becomes a decision instead of a surprise.", "services": ["webflow-development"], "missions": [], "faq": [] },
+    { "slug": "perceived-speed", "name": "Perceived speed", "category": "watch", "definition": "How fast a site feels, which is not always how fast it is. Loading states and motion change the clock in your head.", "services": ["performance", "motion"], "missions": [], "faq": [] },
+
+    { "slug": "philosophy-at-work", "name": "Philosophy at work", "category": "ideas", "definition": "Old questions about purpose and meaning, used as working tools for building websites.", "services": [], "missions": [], "faq": [] },
+    { "slug": "science-of-time", "name": "Science of time", "category": "ideas", "definition": "Physics and psychology of time, and what they say about waiting on a screen.", "services": [], "missions": [], "faq": [] },
+    { "slug": "better-questions", "name": "Asking better questions", "category": "ideas", "definition": "The habit of asking why before how, so the brief describes the problem and not just the wish list.", "services": ["webflow-development"], "missions": [], "faq": [] },
+    { "slug": "saying-no", "name": "Saying no", "category": "ideas", "definition": "Turning down a good idea so the great one ships. The kindest thing a project can hear, early.", "services": [], "missions": [], "faq": [] },
+
+    { "slug": "search-ai-answers", "name": "Search + AI answers", "category": "known", "definition": "Structured data, clear answers and connected pages, so search engines and AI assistants can tell what a site knows.", "services": ["cms-integrations", "webflow-development"], "missions": ["knowledge-system"], "faq": [] },
+    { "slug": "knowledge-system", "name": "Knowledge System", "category": "known", "definition": "A connected content system: a shared vocabulary, a library of answers and pages that link themselves when you tag an entry.", "services": ["cms-integrations", "webflow-development", "design-systems"], "missions": ["knowledge-system"], "faq": [] },
+    { "slug": "micro-interaction", "name": "Micro-interaction", "category": "known", "definition": "The small responses to a cursor, a tap or a scroll that make a site feel made by a person.", "services": ["motion"], "missions": ["510-visuals", "ab-identity"], "faq": [] }
+  ],
+  "insight_topics": {
+    "01": ["search-ai-answers", "webflow-cms", "knowledge-system"],
+    "02": ["crawlable-links", "webflow-cms", "custom-code"],
+    "03": ["motion-scroll", "mobile-performance", "custom-code"],
+    "04": ["interactive-3d", "mobile-performance", "custom-code"],
+    "05": ["tap-vs-hover", "micro-interaction", "mobile-performance"],
+    "06": ["versioned-deploys", "custom-code", "handoff"],
+    "07": ["reduced-motion", "motion-scroll", "micro-interaction"],
+    "08": ["philosophy-at-work", "better-questions", "discovery"],
+    "09": ["science-of-time", "perceived-speed", "motion-scroll"],
+    "10": ["philosophy-at-work", "scope-creep", "saying-no"]
+  }
+}

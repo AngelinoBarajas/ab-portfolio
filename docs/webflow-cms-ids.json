@@ -13,7 +13,9 @@
     "problems-solved": "6ab602e7cdd6733ca05a1525",
     "mission-stats": "6ab602e737a7a5146894d7c4",
     "globe-pins": "6ab602ea9acd0bbe05c86651",
-    "hub-manifest": "6ab74ea1e8e50b019e128d17"
+    "hub-manifest": "6ab74ea1e8e50b019e128d17",
+    "topics": "6ab88c3ca4f6b80de4d18207",
+    "observatory": "6ab88c3cea14ac23bad45867"
   },
   "nameFields": {
     "mission-types": "3c63e3bc9a292997a2e0605c51e6f4c5",
@@ -65,7 +67,8 @@
     "faq": {
       "answer": "78cbd3a23acf3998ed4d053ec6d37102",
       "scope": "a879297b1f0360f7ce40257ffb7b0433",
-      "sort": "525c425a2faa21a90bb9eef5eae21f12"
+      "sort": "525c425a2faa21a90bb9eef5eae21f12",
+      "topics": "6850f2b3e1be9c915e9719d36ed8c9cd"
     },
     "missions": {
       "number": "4cd057b7173c94143d2b2d5c5146218d",
@@ -100,7 +103,8 @@
       "next-mission": "47f726049663a05e0a0ee74341b99ed0",
       "featured": "5b91793dc7aa74f180f85b84b09b10c6",
       "sort": "f86752136aad85c3529fc7ab6d1cac12",
-      "services": "81a2a7eff9aad1c6938688b06979c0e8"
+      "services": "81a2a7eff9aad1c6938688b06979c0e8",
+      "topics": "e7797c6fe8687e4f4521ce163eca343a"
     },
     "services": {
       "title-1": "b23f8b5fde7d1056bd23fd26db12002a",
@@ -213,6 +217,30 @@
       "service": "be2e9b2ce4429189e4eed23e7bbe8bd0",
       "code": "2622730eeeb0f74841f5a8bf54a8468c",
       "pair-notes": "be57ef010dfe71d871a17c604b811d69"
+    },
+    "topics": {
+      "category": "34cc75be0d6a07b713dda84cd1263f80",
+      "definition": "1ac75ae9f72fa50e035aeeee017b5074",
+      "services": "924de41ca52ba6c03724c367864be8cd",
+      "sort": "b09ef6124a72d80c8776338cbabc78ab",
+      "meta-description": "c05fa185146cb9777cb1888eeca57ac4",
+      "name": "2180b434dbbe7e710205fff702272fc2",
+      "slug": "f0f60ba94aef7a8401d8574824b66562"
+    },
+    "observatory": {
+      "name": "852033c691c37a67c0b0de0e8f523498",
+      "slug": "d31ce9c314b3c07c367a6928569c8db7",
+      "code": "31d27a35d4e6dfb7e1bae0a3d370c6ce",
+      "theme": "a4d87919e689b6c4b92abb042de183f6",
+      "short-answer": "ea58f5d51b42ec8b85ccefdc1d44c914",
+      "body": "3a026cec085e46d340661d4b22e43ec2",
+      "topics": "cd5e6162b941d58effdaecab7a99c674",
+      "services": "324e191ff986a3d7aaf92e5b6b46fe02",
+      "missions": "86e088c31823fded6eee11d6004560f1",
+      "reading-time": "55c8cefed840a973749333c8f994e058",
+      "featured-on-home": "9a45e41866d559ca947d0366d24f533a",
+      "sort": "214b929c2f9b86038159d7ebadf6fa68",
+      "meta-description": "8c07c1922ca8eb3336315871562557d8"
     }
   },
   "items": {
@@ -313,6 +341,49 @@
       "cms-integrations": "6ab74ec5d13db97bb82b88e0",
       "design-systems": "6ab74ec5d13db97bb82b88e2",
       "performance": "6ab74ec5d13db97bb82b88e4"
+    },
+    "topics": {
+      "creative-studios": "6ab88ca0900a2b6a0707cb7d",
+      "service-businesses": "6ab88ca0900a2b6a0707cb7f",
+      "mission-led-teams": "6ab88ca0900a2b6a0707cb81",
+      "agencies-partners": "6ab88ca0900a2b6a0707cb83",
+      "webflow-cms": "6ab88ca0900a2b6a0707cb85",
+      "interactive-3d": "6ab88ca0900a2b6a0707cb87",
+      "motion-scroll": "6ab88ca0900a2b6a0707cb89",
+      "brand-identity": "6ab88ca0900a2b6a0707cb8b",
+      "design-systems": "6ab88ca0900a2b6a0707cb8d",
+      "discovery": "6ab88ca0900a2b6a0707cb8f",
+      "prototyping": "6ab88ca0900a2b6a0707cb91",
+      "custom-code": "6ab88ca0900a2b6a0707cb93",
+      "versioned-deploys": "6ab88ca0900a2b6a0707cb95",
+      "handoff": "6ab88ca0900a2b6a0707cb97",
+      "mobile-performance": "6ab88ca0900a2b6a0707cb99",
+      "tap-vs-hover": "6ab88ca0900a2b6a0707cb9b",
+      "reduced-motion": "6ab88ca0900a2b6a0707cb9d",
+      "crawlable-links": "6ab88ca0900a2b6a0707cb9f",
+      "scope-creep": "6ab88ca0900a2b6a0707cba1",
+      "perceived-speed": "6ab88ca0900a2b6a0707cba3",
+      "philosophy-at-work": "6ab88ca0900a2b6a0707cba5",
+      "science-of-time": "6ab88ca0900a2b6a0707cba7",
+      "better-questions": "6ab88ca0900a2b6a0707cba9",
+      "saying-no": "6ab88ca0900a2b6a0707cbab",
+      "search-ai-answers": "6ab88ca0900a2b6a0707cbad",
+      "knowledge-system": "6ab88ca0900a2b6a0707cbaf",
+      "micro-interaction": "6ab88ca0900a2b6a0707cbb1"
+    }
+  },
+  "options": {
+    "topics.category": {
+      "who": "36126d486b6d8c4fd5b9039279f3cba3",
+      "what": "04a7b1cd57287279bab0459dc22e327e",
+      "how": "94b02790854e096f509a3fe6e1a1222f",
+      "watch": "7674f3b31826cddef3e99f65e888ebe2",
+      "ideas": "6a0a81df0a481f2b21655c57387598bc",
+      "known": "be6b72f1686593b6131f66c48f2b9706"
+    },
+    "observatory.theme": {
+      "Build notes": "4b0092c451ac19fa10b30b785e05a661",
+      "Why before how": "c7bb6077816439c84bdf6b09d6049071"
     }
   }
 }

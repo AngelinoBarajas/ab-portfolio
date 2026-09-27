@@ -1,0 +1,4 @@
+{
+ "html": "<section class=\"section_ks-chart\" id=\"chart\" data-frame=\"star-chart-map\" aria-label=\"Star chart\"><span class=\"ab_frame-label\" data-frame-label=\"\" aria-hidden=\"true\">▢ star-chart-map</span><div class=\"padding-global\"><div class=\"container-large\"><div class=\"ab_ks-chartwrap\" data-ks-chart=\"\"></div></div></div></section>",
+ "css": ".section_ks-chart{position:relative}\n.ab_ks-chartwrap{position:relative}\n"
+}

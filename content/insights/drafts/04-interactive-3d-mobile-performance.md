@@ -1,5 +1,5 @@
 ---
-status: draft · for Angelino's review
+status: approved
 title: Interactive 3D in Webflow that doesn't wreck your mobile score
 slug: interactive-3d-webflow-performance
 theme: Build notes

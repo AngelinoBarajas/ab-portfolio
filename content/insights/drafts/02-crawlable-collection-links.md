@@ -1,5 +1,5 @@
 ---
-status: draft · for Angelino's review
+status: approved
 title: Your Webflow project pages might be invisible to Google. Check your links.
 slug: crawlable-collection-links-webflow
 theme: Build notes

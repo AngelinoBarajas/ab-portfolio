@@ -1,5 +1,5 @@
 ---
-status: draft · for Angelino's review
+status: approved
 title: Tap is not hover: the touch bug hiding in interactive Webflow builds
 slug: tap-is-not-hover-touch-bugs
 theme: Build notes

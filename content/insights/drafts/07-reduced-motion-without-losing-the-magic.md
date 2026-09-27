@@ -1,5 +1,5 @@
 ---
-status: draft · for Angelino's review
+status: approved
 title: Reduced motion without losing the magic
 slug: reduced-motion-without-losing-the-magic
 theme: Build notes

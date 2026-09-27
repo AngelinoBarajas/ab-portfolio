@@ -1,5 +1,5 @@
 ---
-status: draft · for Angelino's review
+status: approved
 title: Smooth scroll without the stutter: Lenis + GSAP in Webflow
 slug: lenis-gsap-webflow-smooth-scroll
 theme: Build notes

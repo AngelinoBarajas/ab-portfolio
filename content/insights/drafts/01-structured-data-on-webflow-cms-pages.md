@@ -1,5 +1,5 @@
 ---
-status: draft · for Angelino's review
+status: approved
 title: How to add structured data to Webflow CMS pages (no plugin)
 slug: structured-data-webflow-cms
 theme: Build notes
