@@ -193,9 +193,15 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 - **v0.24.0 / v0.24.1**: the boss fight is playable (arrows/WASD + Space; drag + hold on phones; aimed shots, dodgeable beam, enrage + spread, 3 shields, retry) with an anime finisher (pilot cut-in, 必殺技 · FINAL DEPLOY, mega beam, impact frames). Build notes › v0.24.0.
 - **10 Insights drafts** for review: `content/insights/drafts/` (README has the table). Not in Webflow.
 
-## Next session: integrate the Knowledge System into this site
+## Next session: Designer steps (all pending)
 
-**2026-09-27: BUILT + published to webflow.io (awaiting Angelino's review).** Named **the Observatory** (`/observatory`, `/observatory/[slug]`, `/topics`, `/topics/[slug]`), Home section **Incoming signals**, no AI disclosure, no Aguirre relations. ab-knowledge **v0.25.3**. Full record + Designer steps: `docs/webflow-build-notes.md` › Knowledge System. Earlier: Plan + decisions: `docs/knowledge-integration-plan.md`. Prototypes: `prototypes/insights.html`, `insight.html#<slug>`, `topics.html`, `topic.html#<slug>`, `ks-rows.html` (parts `_parts/ks*`, data from `_parts/ks_data.py`). Draft vocabulary: `cms/seed/_draft-topics.json`. Nothing in Webflow yet.
+**Start here:** `docs/designer-steps.md`, one consolidated checklist (crawlable links, template SEO/OG, template head code, alt/headshot, forms, site settings, optional cleanups). Walk Angelino through one step at a time, verify each on a webflow.io publish, tick the box. Staging only; ask before every publish or delete.
+
+Knowledge System status: **live on staging at ab-knowledge v0.25.5** (all 7 pages), reviewed + approved by Angelino 2026-09-27 (hover scan, pan/zoom star chart, chip legend, card title wrap).
+
+## Previous: integrate the Knowledge System into this site
+
+**2026-09-27: BUILT + published to webflow.io (awaiting Angelino's review).** Named **the Observatory** (`/observatory`, `/observatory/[slug]`, `/topics`, `/topics/[slug]`), Home section **Incoming signals**, no AI disclosure, no Aguirre relations. ab-knowledge **v0.25.3** (now v0.25.5). Full record + Designer steps: `docs/webflow-build-notes.md` › Knowledge System. Earlier: Plan + decisions: `docs/knowledge-integration-plan.md`. Prototypes: `prototypes/insights.html`, `insight.html#<slug>`, `topics.html`, `topic.html#<slug>`, `ks-rows.html` (parts `_parts/ks*`, data from `_parts/ks_data.py`). Draft vocabulary: `cms/seed/_draft-topics.json`. Nothing in Webflow yet.
 
 Angelino wants the complete Knowledge System integrated into the AB Portfolio and styled on brand. Start by reading:
 
