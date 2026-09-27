@@ -358,10 +358,12 @@
       scoreDock(true);
       if (ctrl) try { ctrl.play(); } catch (err){}
     });
-    td.addEventListener('pointerenter', function(){ hover = true; td.classList.add('is-close'); });
+    // hover is mouse/pen only: a touch tap fires enter + leave before its click, and the leave would drop is-close
+    // just before the black hole's thruster tap checks it (touch uses the click toggle below)
+    td.addEventListener('pointerenter', function(e){ if (e.pointerType === 'touch') return; hover = true; td.classList.add('is-close'); });
     // leaving the card stops the score (Spotify's embed has no volume control, so it can't fade): pause + tuck the player away
     function hush(){ if (!dockEl || !dockEl.classList.contains('is-on')) return; want = false; if (ctrl) try { ctrl.pause(); } catch (e){} dockEl.classList.remove('is-on'); }
-    td.addEventListener('pointerleave', function(e){ hover = false; td.classList.remove('is-close'); if (e.pointerType === 'mouse') hush(); });
+    td.addEventListener('pointerleave', function(e){ if (e.pointerType === 'touch') return; hover = false; td.classList.remove('is-close'); if (e.pointerType === 'mouse') hush(); });
     // touch: no hover, so it pauses once the card has scrolled off screen
     if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ if (!es[0].isIntersecting) hush(); }).observe(td);
     if (coarse) td.addEventListener('click', function(){ hover = !hover; td.classList.toggle('is-close', hover); });
