@@ -464,17 +464,17 @@ body.eng .crew-dock .dot{background:#7cc4ff;box-shadow:0 0 10px #7cc4ff}
 /* ---------- manifest internals ---------- */
 .ab_mf_site .vs-t{position:relative;border:1px solid var(--hair);background:var(--panel);padding:8px;display:flex;flex-direction:column;gap:7px;opacity:.35;transform:translateY(6px);transition:opacity .5s var(--d),transform .5s cubic-bezier(.2,.9,.2,1.2) var(--d),border-color .3s}
 .vs-w{height:54px;border:1px dashed var(--hair2);padding:6px;display:flex;flex-direction:column;gap:4px;position:relative}
-.vs-w:not(.is-art) i{display:block;height:5px;background:var(--star);opacity:.75;width:80%;transition:width .45s cubic-bezier(.2,.9,.2,1.2)}
-.vs-w:not(.is-art) i.s{width:50%;opacity:.3;height:4px}
-.vs-w:not(.is-art) b{position:absolute;right:6px;bottom:6px;width:22px;height:10px;background:var(--signal);transition:width .35s,background .3s}
+.vs-w:not(.is-art):not(.g) i{display:block;height:5px;background:var(--star);opacity:.75;width:80%;transition:width .45s cubic-bezier(.2,.9,.2,1.2)}
+.vs-w:not(.is-art):not(.g) i.s{width:50%;opacity:.3;height:4px}
+.vs-w:not(.is-art):not(.g) b{position:absolute;right:6px;bottom:6px;width:22px;height:10px;background:var(--signal);transition:width .35s,background .3s}
 .vs-t > span{font-family:var(--mono);font-size:10.5px;letter-spacing:.02em;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:16px}
 .vs-t > em{position:absolute;right:6px;bottom:6px;width:14px;height:14px;display:grid;place-items:center;background:var(--signal);color:var(--on-signal);font-style:normal;font-size:9px;transform:scale(0);transition:transform .35s cubic-bezier(.2,.9,.2,1.6) calc(var(--d) + .35s)}
 .ab_mf_site.on .vs-t{opacity:1;transform:none}
 .ab_mf_site.on .vs-t > em{transform:scale(1)}
 .ab_mf_site .vs-t:hover{transform:translateY(-4px) scale(1.04)!important;border-color:var(--select);box-shadow:0 10px 22px -10px rgba(11,12,20,.35);z-index:2}
-.vs-t:hover .vs-w:not(.is-art){border-color:var(--select);border-style:solid;background:rgba(47,107,255,.05)}
-.vs-t:hover .vs-w:not(.is-art) i:nth-child(1){width:55%}.vs-t:hover .vs-w:not(.is-art) i:nth-child(2){width:92%}.vs-t:hover .vs-w:not(.is-art) i.s{width:74%}
-.vs-t:hover .vs-w:not(.is-art) b{width:34px;background:var(--select)}
+.vs-t:hover .vs-w:not(.is-art):not(.g){border-color:var(--select);border-style:solid;background:rgba(47,107,255,.05)}
+.vs-t:hover .vs-w:not(.is-art):not(.g) i:nth-child(1){width:55%}.vs-t:hover .vs-w:not(.is-art):not(.g) i:nth-child(2){width:92%}.vs-t:hover .vs-w:not(.is-art):not(.g) i.s{width:74%}
+.vs-t:hover .vs-w:not(.is-art):not(.g) b{width:34px;background:var(--select)}
 .vs-t.is-tour{border-color:var(--signal)}
 .vs-t:hover::after{content:attr(data-p);position:absolute;left:-1px;top:-19px;font-family:var(--mono);font-size:10px;background:var(--select);color:#fff;padding:2px 6px;white-space:nowrap;z-index:3}
 .vs-cur{position:absolute;left:0;top:0;z-index:4;width:16px;opacity:0;pointer-events:none}
@@ -1541,3 +1541,42 @@ body.eng .crew-dock .dot{background:#7cc4ff;box-shadow:0 0 10px #7cc4ff}
 .stg.is-p .cx-fj-st{padding:8px 9px 8px 22px}.stg.is-p .cx-fj-st b{font-size:16px}.stg.is-p .cx-fj-st p{font-size:9px}
 .stg.is-p .cx-fj-leg{left:16px;right:16px;flex-wrap:wrap;justify-content:center}
 .stg.is-p .cx-fj-lane span{font-size:10px}
+
+/* ---------- manifest tiles: a tiny version of each page, three looks (30-mission TSTYLE) ---------- */
+.vs-w.g{height:62px;padding:0;border:1px solid var(--hair2);background:var(--tb,#f4f2ec);overflow:hidden;transition:border-color .3s,background .5s}
+.vs-w.g i{position:absolute;display:block;background:var(--tf,#1a1d2a);transition:background .45s ease calc(var(--d) + .55s),outline-color .45s ease calc(var(--d) + .55s),transform .35s cubic-bezier(.2,.9,.2,1.4)}
+.vs-w.g i.m{background:var(--tm,#b9b6ad)}.vs-w.g i.a{background:var(--ta,var(--signal))}.vs-w.g i.img{background:var(--ti,linear-gradient(135deg,#9aa4c8,#e2e4ee))}
+.vs-w.g i.o{background:transparent;outline:1px solid var(--tm,#b9b6ad);outline-offset:-1px}
+.vs-w.g i.r{border-radius:50%}
+.vs-t:hover .vs-w.g{border-color:var(--select)}
+.vs-t:hover .vs-w.g i.a{transform:scale(1.12)}
+.vs-t:hover .vs-w.g i.img{transform:scale(1.04)}
+/* build: every block starts as a dashed wireframe, then fills with the brand's colors, tile by tile */
+.ab_mf_site[data-style="build"]:not(.on) .vs-w.g{background:#fbfaf6}
+.ab_mf_site[data-style="build"]:not(.on) .vs-w.g i{background:transparent!important;outline:1px dashed #9a978e;outline-offset:-1px}
+/* woven (CKS): paper tiles, a thread stitched across each one in turn */
+.ab_mf_site[data-style="woven"] .vs-w.g{border-radius:6px;border-color:rgba(11,27,43,.14)}
+.ab_mf_site[data-style="woven"] .vs-w.g i{border-radius:2px}
+.ab_mf_site[data-style="woven"] .vs-w.g::after{content:"";position:absolute;left:-2px;right:-2px;top:0;height:4px;background:repeating-linear-gradient(90deg,var(--th) 0 7px,transparent 7px 9px);transform:scaleX(0);transform-origin:0 50%;transition:transform .5s ease calc(var(--d) * 2 + .6s);z-index:2;opacity:.9}
+.ab_mf_site[data-style="woven"].on .vs-w.g::after{transform:scaleX(1)}
+.ab_mf_site[data-style="woven"] .vs-t:hover .vs-w.g::after{height:6px}
+/* blueprint: white lines on blueprint blue */
+.ab_mf_site[data-style="blueprint"] .vs-w.g{background:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px) 0 0/8px 8px,linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px) 0 0/8px 8px,#1d4f8f;border-color:#1d4f8f}
+.ab_mf_site[data-style="blueprint"] .vs-w.g i{background:transparent;outline:1px solid rgba(255,255,255,.85);outline-offset:-1px}
+.ab_mf_site[data-style="blueprint"] .vs-w.g i.a{background:rgba(255,255,255,.3)}
+.ab_mf_site[data-style="blueprint"] .vs-t:hover .vs-w.g i{background:rgba(255,255,255,.18)}
+/* ---------- status card: the mission's planet with a probe in orbit ---------- */
+.ab_mf_status > .mf-orbit{position:absolute;right:4%;bottom:6%;width:56%;max-width:280px;height:auto;z-index:0;pointer-events:none;overflow:visible}
+.ab_bento-card.is-mf > .mf-orbit{position:absolute;z-index:0}
+.mf-orbit .mfo-st{fill:#F2F0EA;opacity:.35}
+.mf-orbit .mfo-orb{fill:none;stroke:rgba(242,240,234,.3);stroke-width:1;stroke-dasharray:3 4}.mf-orbit .mfo-orb.mfo-fr{stroke:rgba(242,240,234,.55);stroke-dasharray:none;stroke-width:1.2}
+.mf-orbit .mfo-plsh{fill:rgba(7,8,13,.45)}
+.mf-orbit .mfo-sat rect{fill:#F2F0EA}.mf-orbit .mfo-sat .mfo-pn{fill:#4C8DFF}
+.mf-orbit.is-live .mfo-sat rect{fill:#3BE38A}
+.mf-orbit .mfo-sig{fill:none;stroke:#3BE38A;stroke-width:1.2;vector-effect:non-scaling-stroke;opacity:0;transform-box:fill-box;transform-origin:center;animation:ab-mfsig 2.4s ease-out infinite}
+.mf-orbit .mfo-sig.mfo-s2{animation-delay:.8s}.mf-orbit .mfo-sig.mfo-s3{animation-delay:1.6s}
+.mf-orbit.is-shipped .mfo-orb{stroke-dasharray:none;stroke:rgba(242,240,234,.18)}
+.mf-orbit .mfo-flag path{fill:none;stroke:#F2F0EA;stroke-width:1.3}.mf-orbit .mfo-flag .mfo-fl{fill:#FF6A3D;stroke:none}
+@keyframes ab-mfsig{0%{transform:scale(.8);opacity:.9}100%{transform:scale(4.4);opacity:0}}
+.ab_tel_u{font-size:.36em;letter-spacing:0;margin-left:.14em;font-weight:600;opacity:.75;vertical-align:.12em}
+@media (prefers-reduced-motion:reduce){.mf-orbit .mfo-sig{animation:none;opacity:.5}}

@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission v0.26.4 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission v0.26.5 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abMissionInit) return;
@@ -2435,11 +2435,20 @@ window.Webflow.push(function(){
   $$('#tel .ab_tel_item').forEach(function(t){
     var n = $('.ab_tel_n', t), v = n && n.getAttribute('data-count'), suf = txt('[data-field="suffix"]', t);
     if (!n || v == null) return;
-    // word units get a (non-breaking) space, 6 hrs; symbols stay attached, 98% (the count-up reads data-suffix too)
-    var sp = suf && /^[a-z]/i.test(suf) ? String.fromCharCode(160) + suf : (suf || '');
-    n.setAttribute('data-suffix', sp);
+    var word = suf && /^[a-z]/i.test(suf);
+    n.setAttribute('data-suffix', word ? '' : (suf || ''));
     if (v === '' || isNaN(+v)){ n.removeAttribute('data-count'); n.textContent = suf || '∞'; n.classList.remove('w-dyn-bind-empty'); t.classList.add('is-symbol'); }
-    else n.textContent = v + sp;
+    else if (word){
+      // a word unit (hrs, min) sits small beside the number so big values fit their column; this bundle counts it up
+      // itself (core's counter skips an element once data-count is gone)
+      var unit = '<small class="ab_tel_u">' + esc(suf) + '</small>', target = +v;
+      n.removeAttribute('data-count'); n.innerHTML = target + unit;
+      if (!reduce && hasGsap && window.ScrollTrigger){
+        var o = { v: 0 }; n.innerHTML = '0' + unit;
+        ScrollTrigger.create({ trigger: n, start: 'top 90%', once: true, onEnter: function(){ gsap.to(o, { v: target, duration: 1.6, ease: 'power3.out', onUpdate: function(){ n.innerHTML = Math.round(o.v) + unit; } }); } });
+      }
+    }
+    else n.textContent = v + (suf || '');
   });
 
   /* ---------- stack orbit (Tools the mission ran on) ---------- */
@@ -2499,8 +2508,39 @@ window.Webflow.push(function(){
       [/schema|structured|json/i, '<span class="kx-json"><b>{</b> <em>"@type"</em>: <i>"Article"</i> <b>}</b></span>']
     ];
     function art(p){ var L = isSystem ? SART : ART; for (var i = 0; i < L.length; i++) if (L[i][0].test(p)) return L[i][1]; return ''; }
+    // website missions: every tile draws a tiny version of its page (a hero, a grid, three price tiers, dated rows…),
+    // in one of three looks per mission: build (wireframe fills in with the brand's colors), woven (CKS paper, a thread
+    // stitched tile to tile) or blueprint (the fallback)
+    var TSTYLE = {
+      '510-visuals': ['build', '#1c1e24', '#d0e0e3', '#5eead4', 'linear-gradient(135deg,#5a8a94,#1c2227)', '#4a5a60'],
+      'daniel-aguirre-law': ['build', '#FCF6EC', '#1a2840', '#891E2D', 'linear-gradient(135deg,#A88B5C,#efe2c8)', '#c9bda8'],
+      'cks': ['woven', '#F7F5F0', '#0B1B2B', '#EF5B3F', 'linear-gradient(135deg,#2F5BEA,#139E8A)', '#C9CED4']
+    };
+    var TS = TSTYLE[SLUG] || ['blueprint'], THREADS = ['#F2A93B', '#EF5B3F', '#139E8A', '#2F5BEA'];
+    function g(c, l, t, w, h){ return '<i class="' + c + '" style="left:' + l + '%;top:' + t + '%;width:' + w + '%;height:' + h + '%"></i>'; }
+    function glyph(p){
+      var s = g('m', 5, 8, 90, 7);
+      if (/home|landing/i.test(p)) return s + g('f', 6, 26, 42, 9) + g('f', 6, 40, 32, 9) + g('m', 6, 56, 26, 6) + g('a', 6, 70, 18, 11) + g('img', 55, 24, 39, 62);
+      if (/about|team|crew|pilot/i.test(p)) return s + g('img r', 7, 26, 22, 56) + g('f', 36, 30, 54, 8) + g('m', 36, 46, 46, 6) + g('m', 36, 58, 40, 6) + g('a', 36, 72, 16, 9);
+      if (/pric|plan|package/i.test(p)) return s + [6, 37, 68].map(function(l, i){ return g(i === 1 ? 'a' : 'o', l, 22, 26, 68) + g('f', l + 4, 34, 18, 7) + g('m', l + 4, 50, 14, 5) + g('m', l + 4, 60, 16, 5); }).join('');
+      if (/contact|book|call|form/i.test(p)) return s + g('o', 22, 24, 56, 11) + g('o', 22, 40, 56, 11) + g('o', 22, 56, 56, 11) + g('a', 22, 74, 22, 12);
+      if (/blog|insight|news|what.s new|changelog|observ|article/i.test(p)) return s + [24, 45, 66].map(function(t){ return g('a', 6, t, 10, 8) + g('f', 20, t, 64, 8) + g('m', 20, t + 10, 40, 5); }).join('');
+      if (/project|work|portfolio|result|case|inspiration|gallery/i.test(p)) return s + [6, 37, 68].map(function(l, i){ return g(i % 2 ? 'a' : 'img', l, 22, 26, 30) + g('img', l, 58, 26, 30); }).join('');
+      if (/template|detail/i.test(p)) return s + g('img', 6, 20, 88, 36) + g('f', 6, 62, 64, 8) + g('m', 6, 76, 50, 6);
+      if (/how|process|service|install|guide|expertise|practice|hub/i.test(p)) return s + [8, 40, 72].map(function(l, i){ return g('r ' + (i ? 'f' : 'a'), l, 26, 13, 28) + g('m', l - 2, 64, 22, 6) + g('m', l - 2, 76, 16, 5); }).join('');
+      if (/style|token|brand|color/i.test(p)) return s + [0, 1, 2, 3, 4].map(function(i){ return g(['a', 'f', 'img', 'm', 'o'][i], 6 + i * 18, 28, 14, 56); }).join('');
+      if (/voice|audio|podcast/i.test(p)) return s + [30, 60, 85, 45, 95, 70, 40, 80, 55, 35, 65, 50].map(function(h, i){ return g(i % 3 ? 'f' : 'a', 8 + i * 7.3, 60 - h * .4, 4, h * .6); }).join('');
+      if (/sketch|idea|board/i.test(p)) return s + g('a', 8, 26, 24, 38) + g('img', 38, 30, 24, 38) + g('f', 68, 24, 24, 38) + g('m', 8, 78, 80, 5);
+      if (/review|testimonial|quote/i.test(p)) return s + g('a', 8, 24, 10, 22) + g('f', 22, 28, 64, 8) + g('f', 22, 42, 56, 8) + g('m', 22, 60, 30, 6);
+      if (/space|bny|studio|map/i.test(p)) return s + g('img', 6, 20, 88, 70) + g('a', 10, 70, 20, 10);
+      return s + g('f', 6, 28, 70, 9) + g('f', 6, 44, 56, 9) + g('m', 6, 60, 40, 6) + g('a', 70, 72, 22, 12);
+    }
+    if (site && !isLogo && !isSystem){
+      site.setAttribute('data-style', TS[0]);
+      if (TS[1]) ['--tb', '--tf', '--ta', '--ti', '--tm'].forEach(function(k, i){ site.style.setProperty(k, TS[i + 1]); });
+    }
     if (site){
-      site.innerHTML = pages.map(function(p, i){ var ax = isLogo || isSystem ? art(p) : ''; return '<div class="vs-t' + (ax ? ' is-art' : '') + '" style="--d:' + (i * .12) + 's" data-p="' + esc(p) + '">' + (ax ? '<div class="vs-w is-art">' + ax + '</div>' : '<div class="vs-w"><i></i><i></i><i class="s"></i><b></b></div>') + '<span>' + esc(p) + '</span><em>✓</em></div>'; }).join('') +
+      site.innerHTML = pages.map(function(p, i){ var ax = isLogo || isSystem ? art(p) : ''; return '<div class="vs-t' + (ax ? ' is-art' : '') + '" style="--d:' + (i * .12) + 's;--th:' + THREADS[i % 4] + '" data-p="' + esc(p) + '">' + (ax ? '<div class="vs-w is-art">' + ax + '</div>' : '<div class="vs-w g">' + glyph(p) + '</div>') + '<span>' + esc(p) + '</span><em>✓</em></div>'; }).join('') +
         '<span class="vs-cur" aria-hidden="true"><svg viewBox="0 0 16 20"><path d="M1.5 1.5v15.5l4.4-4.1 2.9 6.3 2.6-1.2-2.9-6.2 6-.3z"/></svg></span>';
     }
     var plEl = $('[data-mf="planet"]', sec), ptype = HERO_PLANET.getAttribute('data-planet') || 'planet';
@@ -2514,7 +2554,28 @@ window.Webflow.push(function(){
     set('params-title', 'All ' + PARAMS.length + ' met');
     var ck = $('[data-mf="params"]', sec); if (ck) ck.innerHTML = PARAMS.map(function(p){ return '<li>' + esc(p) + '</li>'; }).join('');
     set('status', txt('#hero [data-field="status"]') || 'Shipped');
-    var stc = $('.ab_mf_status', sec); if (stc) stc.insertAdjacentHTML('afterbegin', '<svg class="mf-radar" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="30"/><circle cx="100" cy="100" r="60"/><circle cx="100" cy="100" r="90"/><path d="M100 10v180M10 100h180"/><g class="sweep"><path d="M100 100L100 10A90 90 0 0 1 163.6 36.4Z"/></g><rect class="blip" x="136" y="58" width="6" height="6"/></svg>');
+    var stc = $('.ab_mf_status', sec); if (stc) orbitCard(stc, (txt('#hero [data-field="status"]') || '').toLowerCase());
+    // the status card's orbit: the mission's own planet, a probe on a tilted orbit that passes behind it.
+    // in orbit = circling · live = circling and transmitting · shipped = parked, flag planted on the surface
+    function orbitCard(card, status){
+      var cols = (HERO_PLANET.getAttribute('data-colors') || '#2a2263,#5b4bd6,#a597ff').split(',').map(function(c){ return c.trim(); });
+      var mode = /live/.test(status) ? 'live' : /ship|done|landed/.test(status) ? 'shipped' : 'orbit';
+      var id = 'mfp' + Math.round(Math.random() * 1e6), stars = '';
+      for (var k = 0; k < 16; k++) stars += '<circle class="mfo-st" cx="' + (10 + (k * 53) % 240) + '" cy="' + (8 + (k * 37) % 180) + '" r="' + (k % 3 ? .7 : 1.1) + '"/>';
+      var O = 'transform="translate(168 112) rotate(-9)"';
+      card.insertAdjacentHTML('afterbegin', '<svg class="mf-orbit is-' + mode + '" viewBox="0 0 260 200" aria-hidden="true"><defs><radialGradient id="' + id + '" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="' + cols[cols.length - 2 >= 0 ? cols.length - 2 : 0] + '"/><stop offset=".55" stop-color="' + cols[1 % cols.length] + '"/><stop offset="1" stop-color="' + cols[0] + '"/></radialGradient></defs>' + stars +
+        '<g ' + O + '><path class="mfo-orb" d="M-86 0A86 22 0 0 1 86 0"/><g class="mfo-back"></g></g>' +
+        '<circle class="mfo-pl" cx="168" cy="112" r="30" fill="url(#' + id + ')"/><path class="mfo-plsh" d="M168 82a30 30 0 0 1 0 60a38 38 0 0 0 0-60z"/>' +
+        (mode === 'shipped' ? '<g class="mfo-flag"><path d="M160 84V64"/><path class="mfo-fl" d="M160 64h14l-4 5 4 5h-14z"/></g>' : '') +
+        '<g ' + O + '><path class="mfo-orb mfo-fr" d="M86 0A86 22 0 0 1 -86 0"/><g class="mfo-front"><g class="mfo-sat"><rect x="-3" y="-3" width="6" height="6" rx="1"/><path class="mfo-pn" d="M-12 -2h7v4h-7zM5 -2h7v4h-7z"/>' +
+          (mode === 'live' ? '<circle class="mfo-sig" r="6"/><circle class="mfo-sig mfo-s2" r="6"/><circle class="mfo-sig mfo-s3" r="6"/>' : '') + '</g></g></g></svg>');
+      var svg = $('.mf-orbit', card), sat = $('.mfo-sat', svg), back = $('.mfo-back', svg), front = $('.mfo-front', svg), a = mode === 'shipped' ? 1.1 : .4, on = false;
+      function place(){ var x = Math.cos(a) * 86, y = Math.sin(a) * 22; sat.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ')'); var host = y < 0 ? back : front; if (sat.parentNode !== host) host.appendChild(sat); }
+      place();
+      if (reduce || !hasGsap || mode === 'shipped') return;
+      new IntersectionObserver(function(es){ on = es[0].isIntersecting; }).observe(card);
+      gsap.ticker.add(function(t, dt){ if (!on) return; a += dt / 1000 * (mode === 'live' ? .9 : .6); place(); });
+    }
     // pages tick in, counter, a cursor that tours the tiles
     $$('.ab_mf_site, .ab_mf_db, .ab_mf_chk', sec).forEach(function(v){
       if (reduce){ v.classList.add('on'); return; }
