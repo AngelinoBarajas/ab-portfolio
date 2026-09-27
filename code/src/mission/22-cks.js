@@ -22,7 +22,7 @@
       if (!FP) FP = new Promise(function(done){
         function res(){ FONTS_OK = true; done(); }
         var l = document.createElement('link'); l.id = 'cx-fonts'; l.rel = 'stylesheet';
-        l.href = 'https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Newsreader:ital@1&family=Lora:ital,wght@0,400;0,600;1,400&family=Space+Grotesk:wght@400;600&family=Fredoka:wght@500;700&family=Nunito+Sans:wght@400;700;800&family=Archivo+Narrow:wght@400;500&family=IBM+Plex+Mono&display=swap';
+        l.href = 'https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Newsreader:ital@1&family=Lora:ital,wght@0,400;0,600;1,400&family=Space+Grotesk:wght@400;600&family=Fredoka:wght@500;700&family=Nunito+Sans:wght@400;700;800&family=Archivo+Narrow:wght@400;500&family=IBM+Plex+Mono&family=Caveat:wght@500;700&display=swap';
         l.onload = function(){ (document.fonts ? document.fonts.load('700 12px "Schibsted Grotesk"') : Promise.resolve()).then(res, res); };
         l.onerror = function(){ res(); };
         document.head.appendChild(l);
@@ -654,5 +654,95 @@
       // interactive: topics toggle, Publish replays the publish (from wherever you are)
       tps.forEach(function(b){ tap(b, function(){ if (sc.hold) sc.hold(); b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); }); });
       tap(pub, function(){ tl.seek(tl.labels.publish + .5); if (sc.onSeek) sc.onSeek(); if (sc.resume) sc.resume(); });
+    });
+
+    /* ---------------- 6 · SITE PLAN: a FigJam board on CKS paper, four threads woven through every decision ---------------- */
+    // lanes of stickies (Plan / Design / Build); each thread is an idea that runs through one sticky per lane
+    var PL = [
+      ['Plan', 'ideation: what the site has to do', '#FFE68A', [['One link that sells the install', 'Proposals get a single URL that explains, demos and prices it.'], ['A six-category vocabulary', 'Reused by the story, the map and the sketch tool.'], ['Show it, don’t claim it', 'Every promise becomes a demo you can touch.'], ['No fake numbers', 'No logos, reviews or rankings. One real stat or none.']]],
+      ['Design', 'wireframes, then the look', '#FFC9BB', [['The loom = connecting what you know', 'A woven hero instead of another gradient blob.'], ['Four thread colors, four ideas', 'Saffron, coral, teal, cobalt: the mark, the loom and the map share them.'], ['Five personalities, one set', 'The same components wear a law firm, a bakery, a studio…'], ['Every demo says it’s a demo', 'Simulations are labeled in the interface, not a footnote.']]],
+      ['Build', 'coded by hand from the wireframes', '#BFEBDF', [['Plain HTML, CSS, JS', 'No framework. GitHub Actions ships it to Hostinger.'], ['Each demo loads on its own page', 'Small scripts, nothing shared that isn’t needed.'], ['⌘K search that never drifts', 'The index reads every page’s sections.'], ['The demo form says so', 'It sends nothing, and tells you before you type.']]]
+    ];
+    // [name, color, sticky column per lane]
+    var TH = [['One link', COB, [0, 0, 0]], ['Vocabulary', SAF, [1, 1, 2]], ['Show, don’t claim', COR, [2, 2, 1]], ['Honesty', TEA, [3, 3, 3]]];
+    SCENE.add('cks-plan', function(sc){
+      fonts(sc);
+      var P = sc.portrait, st = sc.stg;
+      var L = P ? { x: 16, w: 608, top: 96, h: 222, gap: 12, sw: 138, sh: 150, sx: 10, sy: 48, step: 148 } : { x: 36, w: 1128, top: 62, h: 198, gap: 18, sw: 214, sh: 132, sx: 64, sy: 52, step: 272 };
+      function laneY(i){ return L.top + i * (L.h + L.gap); }
+      function stick(li, ci){ return { x: L.x + L.sx + ci * L.step, y: laneY(li) + L.sy }; }
+      // threads run down each note's left edge, so a stitch over the note never crosses its text
+      function center(li, ci){ var p = stick(li, ci); return { x: p.x + 11, y: p.y + L.sh / 2 }; }
+      var html = '<div class="cx-bg is-paper"></div><div class="cx-fj-file"><b>#</b> CKS — Site plan <em>FigJam</em></div>' +
+        '<div class="cx-fj-tools"><i class="on"></i><i></i><i></i><i></i><i></i></div>' +
+        '<svg class="cx-fj-thr" viewBox="0 0 ' + sc.SW + ' ' + sc.SH + '" aria-hidden="true"></svg>';
+      PL.forEach(function(ln, li){
+        html += '<div class="cx-fj-lane" style="left:' + L.x + 'px;top:' + laneY(li) + 'px;width:' + L.w + 'px;height:' + L.h + 'px;--c:' + ln[2] + '"><span><b>0' + (li + 1) + ' · ' + ln[0] + '</b> ' + esc(ln[1]) + '</span></div>';
+        ln[3].forEach(function(n, ci){
+          var p = stick(li, ci), th = TH.filter(function(t){ return t[2][li] === ci; }).map(function(t){ return TH.indexOf(t); });
+          html += '<div class="cx-fj-st" data-l="' + li + '" data-th="' + th.join(' ') + '" style="left:' + p.x + 'px;top:' + p.y + 'px;width:' + L.sw + 'px;height:' + L.sh + 'px;--c:' + ln[2] + ';--r:' + ((li * 4 + ci) % 3 - 1) * 1.4 + 'deg"><b data-t="' + esc(n[0]) + '"></b><p>' + esc(n[1]) + '</p><em>Angelino</em></div>';
+        });
+      });
+      html += '<svg class="cx-fj-over" viewBox="0 0 ' + sc.SW + ' ' + sc.SH + '" aria-hidden="true"></svg>' +
+        '<div class="cx-fj-leg">' + TH.map(function(t, i){ return '<button type="button" data-th="' + i + '" style="--c:' + t[1] + '"><i></i>' + esc(t[0]) + '</button>'; }).join('') + '</div>' +
+        '<div class="cx-fj-cap">Four threads run through every decision.</div>' + cursor('a', 'Angelino') + '<div class="fg-fade"></div>';
+      st.innerHTML = html;
+      var svg = q(st, '.cx-fj-thr'), over = q(st, '.cx-fj-over'), lanes = qa(st, '.cx-fj-lane'), sts = qa(st, '.cx-fj-st'), leg = qa(st, '.cx-fj-leg button'), cap = q(st, '.cx-fj-cap'), cur = q(st, '.cur.a');
+      // each thread: in from the top, through its three stickies (swaying as it goes), out at the bottom
+      var paths = [], stitches = [];
+      TH.forEach(function(t, ti){
+        var pts = [{ x: center(0, t[2][0]).x + (ti % 2 ? 26 : -26), y: L.top - 14 }].concat(t[2].map(function(c, li){ return center(li, c); }));
+        var last = pts[pts.length - 1]; pts.push({ x: last.x + (ti % 2 ? -26 : 26), y: laneY(2) + L.h + 12 });
+        var d = 'M' + pts[0].x + ' ' + pts[0].y;
+        for (var k = 1; k < pts.length; k++){ var a = pts[k - 1], b = pts[k], my = (a.y + b.y) / 2, sw = (k % 2 ? 1 : -1) * (ti % 2 ? 22 : -22); d += 'C' + (a.x + sw) + ' ' + my + ' ' + (b.x - sw) + ' ' + my + ' ' + b.x + ' ' + b.y; }
+        var p = pth(svg, d, 'cx-fj-t'); p.style.stroke = t[1]; p.setAttribute('data-th', ti); paths.push(p);
+        // over / under: on alternate stickies the thread is stitched across the face of the note
+        t[2].forEach(function(c, li){ if ((li + ti) % 2) return; var m = center(li, c), s = pth(over, 'M' + m.x + ' ' + (m.y - L.sh / 2 - 8) + 'L' + m.x + ' ' + (m.y + L.sh / 2 + 8), 'cx-fj-t is-over'); s.style.stroke = t[1]; s.setAttribute('data-th', ti); stitches.push(s); });
+      });
+      function light(k){
+        st.classList.toggle('fj-hl', k != null);
+        qa(st, '[data-th]').forEach(function(e){ var ks = (e.getAttribute('data-th') || '').split(' '); e.classList.toggle('hl', k != null && ks.indexOf(String(k)) > -1); });
+      }
+      leg.forEach(function(b){
+        b.addEventListener('pointerenter', function(){ light(+b.getAttribute('data-th')); });
+        b.addEventListener('pointerleave', function(){ if (!sc.paused) light(null); });
+        tap(b, function(){ if (sc.hold) sc.hold(); light(+b.getAttribute('data-th')); });
+      });
+      sts.forEach(function(s){
+        s.addEventListener('pointerenter', function(){ var k = s.getAttribute('data-th'); if (k) light(+k.split(' ')[0]); });
+        s.addEventListener('pointerleave', function(){ light(null); });
+        tap(s, function(){ if (sc.hold) sc.hold(); var on = !s.classList.contains('big'); sts.forEach(function(o){ o.classList.remove('big'); }); s.classList.toggle('big', on); });
+      });
+      var R = run(sc, function(){ light(null); sts.forEach(function(s){ s.classList.remove('big'); }); paths.concat(stitches).forEach(function(p){ p.classList.remove('woven'); }); }), tl = R.tl;
+      tl.set(q(st, '.fg-fade'), { autoAlpha: 0 }, 0).set(cur, { autoAlpha: 0, x: sc.SW * .5, y: sc.SH + 30 }, 0).set(sts.concat(leg, [cap], lanes), { autoAlpha: 0 }, 0);
+      paths.concat(stitches).forEach(function(p){ hide(R, p); });
+      tl.to(cur, { autoAlpha: 1, duration: .2 }, .3);
+      var t = .3, names = ['plan', 'design', 'build'];
+      PL.forEach(function(ln, li){
+        tl.addLabel(names[li], t);
+        tl.fromTo(lanes[li], { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .4, immediateRender: false }, t);
+        t += .3;
+        sts.filter(function(s){ return +s.getAttribute('data-l') === li; }).forEach(function(s, ci){
+          var p = stick(li, ci);
+          move(R, cur, { x: p.x + L.sw * .5, y: p.y + L.sh * .45 }, t, .45);
+          tl.fromTo(s, { autoAlpha: 0, scale: .7, rotation: -6 }, { autoAlpha: 1, scale: 1, rotation: 0, duration: .35, ease: 'back.out(2)', immediateRender: false }, t + .4);
+          var b = q(s, 'b'); type(R, b, b.getAttribute('data-t'), t + .55, .55);
+          t += P ? .75 : .85;
+        });
+        t += .25;
+      });
+      tl.addLabel('weave', t);
+      tl.to(cur, { autoAlpha: 0, duration: .3 }, t);
+      paths.forEach(function(p, i){
+        draw(R, p, t + i * .7, 1.1);
+        stitches.filter(function(s){ return s.getAttribute('data-th') === String(i); }).forEach(function(s){ draw(R, s, t + i * .7 + .8, .3); });
+        tl.fromTo(leg[i], { autoAlpha: 0, y: 6 }, { autoAlpha: 1, y: 0, duration: .3, immediateRender: false }, t + i * .7 + .3);
+      });
+      t += paths.length * .7 + 1.2;
+      R.at(t, function(){ paths.concat(stitches).forEach(function(p){ p.classList.add('woven'); }); });
+      tl.fromTo(cap, { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: .4, immediateRender: false }, t);
+      [0, 1, 2, 3].forEach(function(k, i){ R.at(t + .8 + i * 1.1, function(){ light(k); }); });
+      R.at(t + 5.2, function(){ light(null); });
+      end(sc, R, t + 6.4, t + .6, [{ t: 'Plan', at: 'plan' }, { t: 'Design', at: 'design' }, { t: 'Build', at: 'build' }, { t: 'Weave', at: 'weave' }]);
     });
   })();

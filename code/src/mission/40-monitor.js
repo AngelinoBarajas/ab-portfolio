@@ -21,9 +21,9 @@
       return v + '</div>';
     }
     var TYPE = { 'live-globe': 'Live', 'live-map': 'Live', 'wipe': 'Compare', 'mobile': 'Phone', 'img': 'Still', 'logo': 'Vector', 'apps': 'Mockups', 'figma': 'Build', 'phone': 'Phone', 'flow': 'Plan', 'exploded': 'Layers', 'cms': 'CMS', 'sketch': 'Sketch', 'vector': 'Vector', 'graph': 'Graph', 'library': 'Library', 'voice': 'AI + you', 'setup': 'CMS', 'video': 'Video', 'schema': 'Schema', 'portable': 'Model',
-      'cks-styles': 'Try it', 'cks-story': 'Scroll', 'cks-map': 'Explore', 'cks-sketch': 'Try it', 'cks-publish': 'Demo' };
+      'cks-styles': 'Try it', 'cks-story': 'Scroll', 'cks-map': 'Explore', 'cks-sketch': 'Try it', 'cks-publish': 'Demo', 'cks-plan': 'Plan' };
     var KIND = { 'live-globe': 'LIVE · three.js r128', 'live-map': 'LIVE · d3 v7', 'wipe': 'COMPARE · figma ↔ webflow', 'figma': 'MOCKUP · figma → webflow', 'phone': 'MOCKUP · mobile', 'flow': 'MOCKUP · figjam → build', 'exploded': 'BREAKDOWN · layers', 'cms': 'MOCKUP · cms → site', 'mobile': 'STILL · mobile', 'img': 'STILL', 'logo': 'VECTOR · svg', 'apps': 'MOCKUPS', 'sketch': 'SKETCH · pen + paper', 'vector': 'MOCKUP · illustrator', 'graph': 'MOCKUP · knowledge graph', 'library': 'MOCKUP · insights library', 'voice': 'MOCKUP · voice kit → review', 'setup': 'MOCKUP · cms → site', 'video': 'MOCKUP · video + chapters', 'schema': 'MOCKUP · json-ld → search + ai', 'portable': 'MOCKUP · content model',
-      'cks-styles': 'DEMO · design tokens, live', 'cks-story': 'DEMO · scroll story', 'cks-map': 'DEMO · knowledge map', 'cks-sketch': 'DEMO · sketch tool', 'cks-publish': 'DEMO · cms → site + json-ld' };
+      'cks-styles': 'DEMO · design tokens, live', 'cks-story': 'DEMO · scroll story', 'cks-map': 'DEMO · knowledge map', 'cks-sketch': 'DEMO · sketch tool', 'cks-publish': 'DEMO · cms → site + json-ld', 'cks-plan': 'FIGJAM · ideation → wireframes → build' };
     screen.innerHTML = CH.map(channelView).join('') + '<div class="scan"></div><div class="roll"></div><div class="vig"></div><canvas class="noise" id="noise" width="160" height="100"></canvas>' +
       '<i class="brk tl"></i><i class="brk tr"></i><i class="brk bl"></i><i class="brk br"></i><div class="osd" id="osd">CH 1</div>';
     chans.innerHTML = CH.map(function(c, i){ return '<button type="button" role="tab" data-ch="' + esc(c.id) + '" aria-selected="' + (i ? 'false' : 'true') + '"><span class="k">' + (i + 1) + '</span><span>' + esc(c.label) + '</span><span class="t">' + (TYPE[c.kind] || '') + '</span></button>'; }).join('');
@@ -31,7 +31,7 @@
     var views = $$('.view', screen), chBtns = $$('button', chans), osd = $('#osd'), monLabel = $('#monLabel'), monCap = $('#monCap'), monKind = $('#monKind');
     // coded scenes need this mission's mockup spec for that kind; one broken scene never stops the monitor
     var NEED = { figma: 'els', phone: 'mobile', flow: 'flow', exploded: 'explode', cms: 'cms', sketch: 'sketch', vector: 'vector', graph: 'graph', library: 'library', voice: 'voice', setup: 'setup', video: 'video', schema: 'schema', portable: 'portable',
-      'cks-styles': 'cks', 'cks-story': 'cks', 'cks-map': 'cks', 'cks-sketch': 'cks', 'cks-publish': 'cks' };
+      'cks-styles': 'cks', 'cks-story': 'cks', 'cks-map': 'cks', 'cks-sketch': 'cks', 'cks-publish': 'cks', 'cks-plan': 'cks' };
     views.forEach(function(v, k){
       var c = CH[k], key = NEED[c.kind]; if (!key) return;
       if (!(M.mock && M.mock[key])){ v.innerHTML = '<div class="boot">Mockup coming soon</div>'; return; }

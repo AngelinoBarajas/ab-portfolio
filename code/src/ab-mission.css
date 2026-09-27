@@ -1511,3 +1511,33 @@ body.eng .crew-dock .dot{background:#7cc4ff;box-shadow:0 0 10px #7cc4ff}
 .cx-live-bar a:focus-visible,.cx-live-bar button:focus-visible,.cx-open:focus-visible{outline:2px solid var(--select);outline-offset:2px}
 .cx-live-bar a i{width:7px;height:7px;border-radius:50%;background:var(--live);box-shadow:0 0 0 3px rgba(59,227,138,.25)}
 .cx-open{position:absolute;right:12px;bottom:12px;z-index:9}
+
+/* 6 · site plan (FigJam on CKS paper, four threads woven through the stickies) */
+.cx-fj-file{position:absolute;left:16px;top:14px;z-index:6;display:flex;gap:8px;align-items:center;background:#fff;border-radius:8px;padding:6px 12px;font:600 12.5px var(--cxf);box-shadow:0 1px 3px rgba(11,27,43,.15)}
+.cx-fj-file b{color:#9747FF}.cx-fj-file em{font-style:normal;font-weight:500;color:var(--ink3);font-size:11px}
+.cx-fj-tools{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:6;display:flex;gap:6px;background:#fff;border-radius:10px;padding:6px;box-shadow:0 1px 3px rgba(11,27,43,.15)}
+.cx-fj-tools i{width:22px;height:22px;border-radius:6px;background:#EEEBE4}.cx-fj-tools i.on{background:#9747FF}
+.cx-fj-lane{position:absolute;border-radius:14px;background:color-mix(in srgb,var(--c) 18%,#fff);border:1.5px solid color-mix(in srgb,var(--c) 70%,#0B1B2B 8%)}
+.cx-fj-lane span{position:absolute;left:14px;top:12px;font:500 12px var(--cxf);color:var(--ink3)}
+.cx-fj-lane b{display:inline-block;background:var(--c);color:var(--ink);font-weight:800;padding:3px 9px;border-radius:6px;margin-right:6px}
+.cx-fj-thr,.cx-fj-over{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.cx-fj-thr{z-index:1}.cx-fj-over{z-index:3}
+.cx-fj-t{fill:none;stroke-width:7;stroke-linecap:round;opacity:.92;transition:opacity .25s,stroke-width .25s}
+.cx-fj-t.woven{stroke-dasharray:7 1.8!important;stroke-dashoffset:0!important}
+.cx-fj-t.is-over{stroke-width:8}
+.cx-fj-st{position:absolute;z-index:2;background:var(--c);border-radius:3px;padding:12px 14px 10px 26px;box-shadow:0 2px 2px rgba(11,27,43,.08),0 12px 20px -12px rgba(11,27,43,.45);transform:rotate(var(--r));cursor:pointer;display:flex;flex-direction:column;transition:box-shadow .25s,opacity .25s;box-sizing:border-box}
+.cx-fj-st b{font:700 20px/1.05 Caveat,"Comic Sans MS",cursive;color:var(--ink);min-height:1em}
+.cx-fj-st p{margin:6px 0 0;font:500 11px/1.35 var(--cxf);color:var(--ink2)}
+.cx-fj-st em{margin-top:auto;font:600 9px var(--cxm);font-style:normal;color:rgba(11,27,43,.5);letter-spacing:.06em;text-transform:uppercase}
+.cx-fj-st.big{z-index:5;scale:1.25;box-shadow:0 30px 60px -20px rgba(11,27,43,.5)}
+.cx-fj-leg{position:absolute;right:36px;bottom:12px;z-index:6;display:flex;gap:6px}
+.cx-fj-leg button{all:unset;cursor:pointer;display:flex;align-items:center;gap:6px;background:#fff;border:1px solid rgba(11,27,43,.14);border-radius:999px;padding:5px 11px;font:700 11.5px var(--cxf);color:var(--ink)}
+.cx-fj-leg i{width:18px;height:5px;border-radius:3px;background:var(--c)}
+.cx-fj-leg button.hl{background:var(--ink);color:#fff}
+.cx-fj-cap{position:absolute;left:36px;bottom:14px;z-index:6;font:700 24px Caveat,cursive;color:var(--ink)}
+.stg.fj-hl .cx-fj-t:not(.hl){opacity:.1}.stg.fj-hl .cx-fj-t.hl{stroke-width:9}
+.stg.fj-hl .cx-fj-st:not(.hl){opacity:.35}
+.stg.is-p .cx-fj-tools,.stg.is-p .cx-fj-cap{display:none}
+.stg.is-p .cx-fj-st{padding:8px 9px 8px 22px}.stg.is-p .cx-fj-st b{font-size:16px}.stg.is-p .cx-fj-st p{font-size:9px}
+.stg.is-p .cx-fj-leg{left:16px;right:16px;flex-wrap:wrap;justify-content:center}
+.stg.is-p .cx-fj-lane span{font-size:10px}

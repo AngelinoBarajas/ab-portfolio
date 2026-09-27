@@ -155,8 +155,8 @@
   MOCKS['ab-identity'] = { accent: '#FF6A3D', sketch: true, vector: true };
   // Knowledge System: seven coded scenes (21-knowledge.js), generic example content
   MOCKS['knowledge-system'] = { accent: '#a597ff', graph: true, library: true, voice: true, setup: true, video: true, schema: true, portable: true };
-  // CKS: the product site for the Knowledge System. Five coded demos (22-cks.js, key `cks`) plus the website trio
-  // (figma / phone / flow). `live`: once getcks.io answers (its favicon loads), the live channels show the real page.
+  // CKS: the product site for the Knowledge System. Six coded scenes (22-cks.js, key `cks`, incl. its own woven site plan)
+  // plus figma + phone. `live`: once getcks.io answers (its favicon loads), the live channels show the real page.
   (function(){
     // the hero loom, redrawn as SVG: warp lines plus eight bands of weft threads in the four thread colors
     function loom(w, h, n){
@@ -232,16 +232,7 @@
           { note: 3, scroll: '.m-map', off: 120, hold: 2.2 },
           { note: -1, scroll: 0, remove: 'woven', hold: .6 }
         ]
-      },
-      flow: { file: 'CKS — Site plan', fg: '#F7F5F0', accent: '#F2A93B',
-        groups: [
-          { name: 'Plan', steps: ['One link that sells', 'Example vocabulary'], solid: '<path d="M22 8h16v10H22zM8 42h14v10H8zM38 42h14v10H38zM30 18v12M15 42V30h30v12"/>',
-            copy: ['A product site that explains, demonstrates and prices the Knowledge System, so a proposal needs one link.', 'Six categories of example vocabulary, reused by the story, the map and the sketch tool.'] },
-          { name: 'Design', steps: ['The loom', 'Five personalities'], solid: '<path d="M8 12h44M8 24h44M8 36h44M8 48h44M16 6v48M28 6v48M40 6v48"/>',
-            copy: ['A woven hero in four thread colors. The mark, the loom and the map all share them.', 'Every component reads the same design tokens, so five sample sites can wear one set of markup.'] },
-          { name: 'Build', steps: ['Plain HTML, CSS, JS', 'GitHub → Hostinger'], solid: '<path d="M22 18L10 31l12 13M38 18l12 13-12 13M34 12l-8 38"/>',
-            copy: ['Pages generated from templates by one Python script, and each demo loads only on its own page.', 'Pushed to GitHub, checked, then deployed to Hostinger over FTPS by GitHub Actions.'] }
-        ] }
+      }
     };
   })();
   MOCKS['daniel-aguirre-law'].cms = {
