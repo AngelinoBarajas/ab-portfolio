@@ -356,7 +356,7 @@
     set('status', txt('#hero [data-field="status"]') || 'Shipped');
     var stc = $('.ab_mf_status', sec); if (stc) orbitCard(stc, (txt('#hero [data-field="status"]') || '').toLowerCase());
     // the status card's orbit: the mission's own planet, a probe on a tilted orbit that passes behind it.
-    // in orbit = circling · live = circling and transmitting · shipped = parked, flag planted on the surface
+    // in orbit = circling · live = circling and transmitting · shipped = flag planted on the surface, the probe drifts slowly
     function orbitCard(card, status){
       var cols = (HERO_PLANET.getAttribute('data-colors') || '#2a2263,#5b4bd6,#a597ff').split(',').map(function(c){ return c.trim(); });
       var mode = /live/.test(status) ? 'live' : /ship|done|landed/.test(status) ? 'shipped' : 'orbit';
@@ -372,9 +372,9 @@
       var svg = $('.mf-orbit', card), sat = $('.mfo-sat', svg), back = $('.mfo-back', svg), front = $('.mfo-front', svg), a = mode === 'shipped' ? 1.1 : .4, on = false;
       function place(){ var x = Math.cos(a) * 86, y = Math.sin(a) * 22; sat.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ')'); var host = y < 0 ? back : front; if (sat.parentNode !== host) host.appendChild(sat); }
       place();
-      if (reduce || !hasGsap || mode === 'shipped') return;
+      if (reduce || !hasGsap) return;
       new IntersectionObserver(function(es){ on = es[0].isIntersecting; }).observe(card);
-      gsap.ticker.add(function(t, dt){ if (!on) return; a += dt / 1000 * (mode === 'live' ? .9 : .6); place(); });
+      gsap.ticker.add(function(t, dt){ if (!on) return; a += dt / 1000 * (mode === 'live' ? .9 : mode === 'shipped' ? .2 : .6); place(); });
     }
     // pages tick in, counter, a cursor that tours the tiles
     $$('.ab_mf_site, .ab_mf_db, .ab_mf_chk', sec).forEach(function(v){
