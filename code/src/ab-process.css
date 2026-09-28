@@ -102,6 +102,10 @@
 .abp-dock.is-landed .abp-dock-sys::after{animation:abp-shock 1.1s cubic-bezier(.2,.7,.3,1) both}
 @keyframes abp-shock{0%{opacity:.9;transform:scale(.9)}100%{opacity:0;transform:scale(2.1)}}
 .abp-dock-moons i{position:absolute;inset:calc((1 - var(--o)) * 50%);border:1px dashed rgba(255,255,255,.12);border-radius:50%;animation:abp-spin var(--t) linear infinite}
+.abp-dock-ks{position:absolute;inset:-9%;border:1px dashed rgba(255,210,154,.4);border-radius:50%;opacity:0;transform:scale(.8);transition:opacity .4s,transform .6s cubic-bezier(.2,.9,.2,1.3);pointer-events:none}
+.abp-dock-ks.is-on{opacity:1;transform:none}
+.abp-dock-ks i{position:absolute;inset:0;animation:abp-spin 14s linear infinite}
+.abp-dock-ks .abp-ks-ico{--c:#FFD29A;position:absolute;left:50%;top:0;width:24px;height:19px;margin:-10px 0 0 -12px;filter:drop-shadow(0 0 6px rgba(255,210,154,.8))}
 .abp-dock-moons i::before{content:"";position:absolute;left:50%;top:-5px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c)}
 .abp-burst{position:absolute;left:50%;top:50%;width:0;height:0;z-index:4}
 .abp-burst i{position:absolute;left:-3px;top:-3px;width:6px;height:6px;border-radius:50%}
@@ -154,7 +158,7 @@
   .ab_eta_note,.abp-tickl{display:none}
 }
 @media screen and (max-width:479px){.ab_chart{--ps:.72}}
-@media (prefers-reduced-motion:reduce){.abp-dock-moons i{animation:none}.abp-dock.is-landed .abp-dock-sys::after{animation:none}.abp-dock-h,.abp-dock-pl{transition:none}}
+@media (prefers-reduced-motion:reduce){.abp-dock-moons i,.abp-dock-ks i{animation:none}.abp-dock.is-landed .abp-dock-sys::after{animation:none}.abp-dock-h,.abp-dock-pl{transition:none}}
 
 /* crew */
 .ab_crew_title{font-stretch:118%}
@@ -229,7 +233,7 @@
 .abp-addons{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:10px}
 .abp-addon-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust)}
 .abp-chip.is-addon{border-style:dashed}
-.abp-chip.is-addon[aria-pressed="true"]{border-style:solid;border-color:var(--c);color:var(--star)}
+.abp-chip.is-addon[aria-pressed="true"]{border-style:solid}
 .abp-ks-ico{width:14px;height:11px;flex:none;overflow:visible;stroke:var(--c,#FFD29A);stroke-width:.9;fill:none}
 .abp-ks-ico circle{fill:var(--c,#FFD29A);stroke:none}
 .abp-ks{position:absolute;inset:-24%;border:1px dashed rgba(255,210,154,.4);border-radius:50%;opacity:0;transform:scale(.6);transition:opacity .35s,transform .5s cubic-bezier(.2,.9,.2,1.3);pointer-events:none}
@@ -237,9 +241,12 @@
 .abp-ks-orb{position:absolute;inset:0;animation:abp-spin 8s linear infinite}
 .abp-ks .abp-ks-ico{--c:#FFD29A;position:absolute;left:50%;top:0;width:16px;height:13px;margin:-7px 0 0 -8px;filter:drop-shadow(0 0 4px rgba(255,210,154,.7))}
 .abp-chips{display:flex;flex-wrap:wrap;gap:6px}
-.abp-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 11px;border:1px solid var(--hair2);background:none;font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--soft);cursor:var(--hand,pointer);transition:background .2s,border-color .2s,color .2s}
-.abp-chip i{width:8px;height:8px;border-radius:50%;background:var(--c)}
-.abp-chip[aria-pressed="true"]{border-color:var(--star);color:var(--star);background:rgba(255,255,255,.06)}
+.abp-chip{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid var(--hair2);background:none;font-family:var(--mono);font-size:12px;line-height:1.2;color:var(--soft);cursor:var(--hand,pointer);transition:background .2s,border-color .2s,color .2s}
+.abp-chip:hover{border-color:var(--c,var(--signal));color:var(--star)}
+/* chips match the Home planner: a square that fills when picked, border + tint in the chip's own color */
+.abp-chip i{width:9px;height:9px;flex:none;border:1.5px solid var(--c);background:transparent;transition:background .2s}
+.abp-chip[aria-pressed="true"] i{background:var(--c)}
+.abp-chip[aria-pressed="true"]{border-color:var(--c,var(--star));color:var(--star);background:color-mix(in srgb,var(--c,#fff) 14%,transparent)}
 .abp-chip-main{display:none;margin-left:2px;padding:1px 5px;background:var(--signal);color:var(--on-signal);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase}
 .abp-chip.is-main .abp-chip-main{display:inline-block}
 .abp-chip.is-more{border-style:dashed}

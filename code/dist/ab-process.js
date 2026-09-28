@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process v0.29.3 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process v0.29.4 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abProcessInit) return;
@@ -444,6 +444,13 @@ window.Webflow.push(function(){
     if (!ksSat){ ksSat = document.createElement('span'); ksSat.className = 'abp-ks'; ksSat.setAttribute('aria-hidden', 'true'); ksSat.innerHTML = '<span class="abp-ks-orb">' + KS_ICON + '</span>'; }
     var host = $('.abp-counter', dests[sel[0]]); if (host && ksSat.parentNode !== host) host.appendChild(ksSat);
     ksSat.classList.toggle('is-on', ks);
+    // touchdown: the same satellite orbits the landed planet when the add-on rides along
+    var dsys = $('.abp-dock-sys');
+    if (dsys){
+      var dks = $('.abp-dock-ks', dsys);
+      if (!dks){ dks = document.createElement('div'); dks.className = 'abp-dock-ks'; dks.innerHTML = '<i>' + KS_ICON + '</i>'; dsys.appendChild(dks); }
+      dks.classList.toggle('is-on', ks);
+    }
   }
   var chips = $('[data-chips]'), moreBox = $('[data-more]'), moreChip = null;
   if (chips && DEST.length){

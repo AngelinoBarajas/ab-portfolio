@@ -34,6 +34,8 @@
     }
     if (!$('#plAddonsField', form) && typesRow){ var hf = document.createElement('input'); hf.type = 'hidden'; hf.name = 'Add-ons'; hf.id = 'plAddonsField'; hf.value = ''; typesRow.parentNode.appendChild(hf); }
     var chips = $$('.ab_planner_chip:not([data-addon]):not(.is-unsure)', form), addons = $$('.ab_planner_chip[data-addon]', form);
+    // add-ons wear the Knowledge-system satellite icon (the same one as the /process form)
+    addons.forEach(function(c){ if (!$('svg', c)) c.insertAdjacentHTML('afterbegin', '<svg class="ab-ks-ico" viewBox="0 0 14 11" aria-hidden="true"><path d="M2 8.5L7 2.5L12 8.5Z"/><circle cx="2" cy="8.5" r="1.6"/><circle cx="7" cy="2.5" r="2"/><circle cx="12" cy="8.5" r="1.6"/></svg>'); });
     var fType = $('#plTypesField'), fBud = $('#plBudField'), fBrief = $('#plBriefField'), fAdd = $('#plAddonsField');
     chips.concat(addons).forEach(function(c){ c.setAttribute('aria-pressed', 'false'); });
     var sg = $('.pl-stars', form), s = '';

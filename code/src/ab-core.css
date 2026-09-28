@@ -425,6 +425,10 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 .ab_planner_addons{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:10px}
 .ab_planner_addon-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust)}
 .ab_planner_chip.is-addon{border-style:dashed}
+/* the Knowledge-system add-on wears the satellite icon (same as the /process form) */
+.ab_planner_chip.is-addon::before{display:none}
+.ab-ks-ico{width:14px;height:11px;flex:none;overflow:visible;stroke:var(--c,#FFD29A);stroke-width:.9;fill:none}
+.ab-ks-ico circle{fill:var(--c,#FFD29A);stroke:none}
 .ab_planner_chip.is-addon[aria-pressed="true"]{border-style:solid}
 /* budget: "not sure yet" (still scouting) overrides the slider */
 .ab_planner_chip.is-unsure{--c:var(--dust);margin-top:14px;border-style:dashed}
