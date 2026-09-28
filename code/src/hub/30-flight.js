@@ -44,6 +44,7 @@
     dock.insertBefore(planetEl(m, 90, 'hbf-dock-pl'), dock.children[1] || null);
     track.appendChild(dock);
     $$('.ab_planet', track).forEach(build);
+    syncKs();
     // the Process page reads ab:dest (main first, then stops) and pre-fills its star chart + form
     // re-plot: warp back up to the planner on this page (the trajectory stays set; the flight plan stays below until relaunched)
     $('[data-replot]', dock).addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); warp(function(){ goTo($('#trajectory'), true, 20); }, true); });

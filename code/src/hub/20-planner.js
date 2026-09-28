@@ -19,10 +19,17 @@
     var host = main > -1 ? ports[main] : null;
     if (host && ks){ if (ksOrb.parentNode !== host) host.appendChild(ksOrb); } else if (ksOrb.parentNode) ksOrb.parentNode.removeChild(ksOrb);
     $$('[data-ks-chip]', panel || document).forEach(function(c){ c.setAttribute('aria-pressed', ks ? 'true' : 'false'); });
+    // the flight plan's touchdown planet gets the same satellite on its own orbit
+    var fd = $('.hbf-dock');
+    if (fd){
+      var fk = $('.hbf-ks', fd);
+      if (!fk){ fk = document.createElement('span'); fk.className = 'hbf-ks'; fk.setAttribute('aria-hidden', 'true'); fk.innerHTML = '<i>' + KS_ICO + '</i>'; fd.appendChild(fk); }
+      fk.classList.toggle('is-on', ks);
+    }
   }
   function toggleKs(from){
     ks = !ks; try { localStorage.setItem('ab:ks', ks ? '1' : ''); } catch (e){}
-    syncKs(); toast(ks ? 'Add-on · Complete knowledge system' : 'Add-on removed');
+    syncKs(); toast(ks ? 'Add-on · KNS · Knowledge system' : 'Add-on removed');
     if (from && hasGsap && !reduce) gsap.fromTo(from, { scale: .92 }, { scale: 1, duration: .5, ease: 'elastic.out(1,.4)', clearProps: 'scale' });
   }
   if (map){
@@ -42,8 +49,8 @@
       map.appendChild(b); ports.push(b);
     });
     ksBtn = document.createElement('button'); ksBtn.type = 'button'; ksBtn.className = 'hb-kssat'; ksBtn.style.left = '47%'; ksBtn.style.top = '12%';
-    ksBtn.setAttribute('aria-label', 'Knowledge system add-on'); ksBtn.setAttribute('aria-pressed', 'false');
-    ksBtn.innerHTML = '<span class="hb-kssat-body"><svg class="sat-ico " viewBox="0 0 24 12" aria-hidden="true"><path class="sp" d="M1 3.5h6v5H1zM17 3.5h6v5h-6z"/><path class="sa" d="M7 6h3M14 6h3"/><rect class="sb" x="10" y="2.5" width="4" height="7"/></svg></span><span class="hb-port-code">KNS</span><span class="hb-kssat-state">+ Add-on</span>';
+    ksBtn.setAttribute('aria-label', 'KNS, Knowledge system add-on'); ksBtn.setAttribute('aria-pressed', 'false');
+    ksBtn.innerHTML = '<span class="hb-kssat-body"><svg class="sat-ico " viewBox="0 0 24 12" aria-hidden="true"><path class="sp" d="M1 3.5h6v5H1zM17 3.5h6v5h-6z"/><path class="sa" d="M7 6h3M14 6h3"/><rect class="sb" x="10" y="2.5" width="4" height="7"/></svg></span><span class="hb-port-code">KNS</span><span class="hb-port-n">Knowledge system</span><span class="hb-kssat-state">+ Add-on</span>';
     ksBtn.addEventListener('click', function(){ toggleKs(ksBtn); });
     map.appendChild(ksBtn);
     onView(map, function(v){ if (v) $$('.hb-port-pl', map).forEach(build); }, { rootMargin: '600px' });
@@ -114,7 +121,7 @@
         legs += '<li style="--c:' + o.c + '" class="' + (w ? '' : 'is-custom') + '"><b>' + esc(o.short) + ' · ' + esc(o.code) + '</b><small>' + (w ? 'Stop ' + (k + 1) + ' · transfer orbit' : 'Stop ' + (k + 1) + ' · custom transfer, planned on the discovery call') + '</small>' + (w ? '<br>' + esc(w) : '') + '</li>';
       });
       var all = flownAll(chosen);
-      var ksChip = '<div class="hb-pl-k" style="margin-top:14px"><span>Add-on</span></div><div class="hb-pl-pick"><button type="button" class="is-addon" data-ks-chip="" aria-pressed="' + ks + '" style="--c:#E0A458">' + KS_ICO + '+ Complete knowledge system</button></div>';
+      var ksChip = '<div class="hb-pl-k" style="margin-top:14px"><span>Add-on</span></div><div class="hb-pl-pick"><button type="button" class="is-addon" data-ks-chip="" aria-pressed="' + ks + '" style="--c:#E0A458">' + KS_ICO + 'KNS · Knowledge system</button></div>';
       h += '<div class="hb-pl-b"><div class="hb-pl-k"><span>Your trajectory</span><span>' + chosen.length + ' destination' + (chosen.length > 1 ? 's' : '') + '</span></div><ol class="hb-legs">' + legs + '</ol>' +
         '<div class="hb-flown" style="margin-top:14px">' + (all.length ? 'Flown before · ' + flownLinks(all) : 'No mission has flown this exact trajectory yet · yours could be first') + '</div>' + ksChip + '</div>';
       h += '<div class="hb-pl-b' + (step === 3 ? ' is-next' : '') + '">' + (step === 3 ? '<span class="hb-pl-tag">Next</span>' : '') + '<div class="hb-pl-go">' +

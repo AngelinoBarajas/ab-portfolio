@@ -29,13 +29,13 @@
     var typesRow = $('#plTypes');
     if (typesRow && !$('[data-addon]', form)){
       var ad = document.createElement('div'); ad.className = 'ab_planner_addons';
-      ad.innerHTML = '<span class="ab_planner_addon-label">Add-on</span><button type="button" class="ab_planner_chip is-addon" data-addon="Complete knowledge system" data-c="#FFD29A" aria-pressed="false">+ Complete knowledge system</button>';
+      ad.innerHTML = '<span class="ab_planner_addon-label">Add-on</span><button type="button" class="ab_planner_chip is-addon" data-addon="KNS · Knowledge system" data-c="#FFD29A" aria-pressed="false">KNS · Knowledge system</button>';
       typesRow.parentNode.insertBefore(ad, typesRow.nextSibling);
     }
     if (!$('#plAddonsField', form) && typesRow){ var hf = document.createElement('input'); hf.type = 'hidden'; hf.name = 'Add-ons'; hf.id = 'plAddonsField'; hf.value = ''; typesRow.parentNode.appendChild(hf); }
     var chips = $$('.ab_planner_chip:not([data-addon]):not(.is-unsure)', form), addons = $$('.ab_planner_chip[data-addon]', form);
     // add-ons wear the Knowledge-system satellite icon (the same one as the /process form)
-    addons.forEach(function(c){ if (!$('svg', c)) c.insertAdjacentHTML('afterbegin', '<svg class="sat-ico ab-ks-ico" viewBox="0 0 24 12" aria-hidden="true"><path class="sp" d="M1 3.5h6v5H1zM17 3.5h6v5h-6z"/><path class="sa" d="M7 6h3M14 6h3"/><rect class="sb" x="10" y="2.5" width="4" height="7"/></svg>'); });
+    addons.forEach(function(c){ c.setAttribute('data-addon', 'KNS · Knowledge system'); if (!$('svg', c)) c.textContent = 'KNS · Knowledge system'; if (!$('svg', c)) c.insertAdjacentHTML('afterbegin', '<svg class="sat-ico ab-ks-ico" viewBox="0 0 24 12" aria-hidden="true"><path class="sp" d="M1 3.5h6v5H1zM17 3.5h6v5h-6z"/><path class="sa" d="M7 6h3M14 6h3"/><rect class="sb" x="10" y="2.5" width="4" height="7"/></svg>'); });
     var fType = $('#plTypesField'), fBud = $('#plBudField'), fBrief = $('#plBriefField'), fAdd = $('#plAddonsField');
     chips.concat(addons).forEach(function(c){ c.setAttribute('aria-pressed', 'false'); });
     var sg = $('.pl-stars', form), s = '';

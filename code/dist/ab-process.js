@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process v0.29.6 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process v0.29.7 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abProcessInit) return;
@@ -85,9 +85,9 @@ window.Webflow.push(function(){
     // clicking it toggles the add-on, same state as the form chip; the small satellite then circles the main planet
     var kr = ORB[3] / 2 * 100, ka = -32 * Math.PI / 180;
     chartSat = document.createElement('button'); chartSat.type = 'button'; chartSat.className = 'abp-kssat'; chartSat.setAttribute('aria-pressed', 'false');
-    chartSat.setAttribute('aria-label', 'Knowledge system add-on');
+    chartSat.setAttribute('aria-label', 'KNS, Knowledge system add-on');
     chartSat.style.left = (50 + Math.cos(ka) * kr).toFixed(2) + '%'; chartSat.style.top = (50 + Math.sin(ka) * kr).toFixed(2) + '%';
-    chartSat.innerHTML = '<span class="abp-counter"><span class="abp-kssat-body"><svg class="sat-ico " viewBox="0 0 24 12" aria-hidden="true"><path class="sp" d="M1 3.5h6v5H1zM17 3.5h6v5h-6z"/><path class="sa" d="M7 6h3M14 6h3"/><rect class="sb" x="10" y="2.5" width="4" height="7"/></svg></span><span class="abp-tag">Knowledge system</span><span class="abp-kssat-state">+ Add-on</span></span>';
+    chartSat.innerHTML = '<span class="abp-counter"><span class="abp-kssat-body"><svg class="sat-ico " viewBox="0 0 24 12" aria-hidden="true"><path class="sp" d="M1 3.5h6v5H1zM17 3.5h6v5h-6z"/><path class="sa" d="M7 6h3M14 6h3"/><rect class="sb" x="10" y="2.5" width="4" height="7"/></svg></span><span class="abp-tag">KNS · Knowledge system</span><span class="abp-kssat-state">+ Add-on</span></span>';
     chartSat.addEventListener('click', function(){ toggleKs(chartSat); });
     spin.appendChild(chartSat);
   }
@@ -133,12 +133,17 @@ window.Webflow.push(function(){
   var ship = document.createElement('div'); ship.className = 'abp-ship'; ship.setAttribute('aria-hidden', 'true');
   ship.innerHTML = '<svg viewBox="0 0 44 44"><path class="abp-flame" d="M6 22 L-8 17 L-4 22 L-8 27 Z" fill="#FF6A3D"/><path d="M6 14 H26 L40 22 L26 30 H6 Z" fill="#F2F0EA"/><path d="M14 14 L10 6 H18 L22 14 Z M14 30 L10 38 H18 L22 30 Z" fill="#8A8FA3"/><circle cx="28" cy="22" r="3.5" fill="#4C8DFF"/></svg>';
   // touchdown: the mission's main destination waits at the end of the route (stops orbit it as moons); landing sets off a small celebration
+  // touchdown buttons: the same site buttons as the /services touchdown (primary + two ghosts)
+  function dockBtn(kind, href, label, arrow, attrs){
+    return '<a class="button ' + kind + '" href="' + href + '"' + (attrs || '') + '>' + (kind.indexOf('is-primary') > -1 ? '<span class="ab_button-shine"></span>' : '') +
+      '<span class="ab_button-label">' + label + '</span>' + (arrow ? '<span class="ab_button-arrow" aria-hidden="true">' + arrow + '</span>' : '') + '</a>';
+  }
   var dock = document.createElement('div'); dock.className = 'abp-dock';
   dock.innerHTML = '<div class="abp-dock-sys" aria-hidden="true"><div class="abp-dock-moons"></div><div class="ab_planet abp-dock-pl"></div><div class="abp-burst"></div></div>' +
-    '<div class="abp-dock-txt"><div class="abp-dock-l">Touchdown · <span data-dest-short>Website</span></div><div class="abp-dock-h">Mission <span class="t-outline">live</span></div><div class="abp-dock-acts"><a class="abp-dock-cta" href="#launch">Plan this mission →</a><a class="abp-dock-cta is-replot" href="#chart">↺ Re-plot route</a></div></div>';
+    '<div class="abp-dock-txt"><div class="abp-dock-l">Touchdown · <span data-dest-short>Website</span></div><div class="abp-dock-h">Mission <span class="t-outline">live</span></div><div class="abp-dock-acts">' + dockBtn('is-primary', '#launch', 'Request this mission', '→', ' data-dock-go') + dockBtn('is-ghost', '/contact#call', 'Book a call') + dockBtn('is-ghost', '#chart', 'Re-plot route', '↺', ' data-dock-go') + '</div></div>';
   var dockPl = $('.abp-dock-pl', dock), moons = $('.abp-dock-moons', dock), lastDock = -1;
   // touchdown links are script-built (core binds same-page anchors at load), so they warp + jump here: back to the star chart, or on to the form
-  $$('.abp-dock-cta', dock).forEach(function(a){
+  $$('[data-dock-go]', dock).forEach(function(a){
     a.addEventListener('click', function(e){
       var t = document.getElementById(a.getAttribute('href').slice(1)); if (!t) return;
       e.preventDefault(); e.stopPropagation();
@@ -429,13 +434,13 @@ window.Webflow.push(function(){
   // the satellite follows the main destination (moved into its counter-rotating layer, so it stays upright)
   function toggleKs(from){
     ks = !ks; try { localStorage.setItem(KS_KEY, ks ? '1' : ''); } catch (e){}
-    syncKs(); if (toast) toast(ks ? 'Add-on · Complete knowledge system' : 'Add-on removed');
+    syncKs(); if (toast) toast(ks ? 'Add-on · KNS · Knowledge system' : 'Add-on removed');
     if (from && hasGsap && !reduce) gsap.fromTo(from, { scale: .92 }, { scale: 1, duration: .5, ease: 'elastic.out(1,.4)', clearProps: 'scale' });
   }
   function syncKs(){
     if (ksChip) ksChip.setAttribute('aria-pressed', ks ? 'true' : 'false');
     if (chartSat){ chartSat.setAttribute('aria-pressed', ks ? 'true' : 'false'); chartSat.classList.toggle('is-on', ks); var stt = $('.abp-kssat-state', chartSat); if (stt) stt.textContent = ks ? 'Add-on · on' : '+ Add-on'; }
-    if (ksField) ksField.value = ks ? 'Complete knowledge system' : '';
+    if (ksField) ksField.value = ks ? 'KNS · Knowledge system' : '';
     if (!dests.length) return;
     if (!ksSat){ ksSat = document.createElement('span'); ksSat.className = 'abp-ks'; ksSat.setAttribute('aria-hidden', 'true'); ksSat.innerHTML = '<span class="abp-ks-orb">' + KS_ICON + '</span>'; }
     var host = $('.abp-counter', dests[sel[0]]); if (host && ksSat.parentNode !== host) host.appendChild(ksSat);
@@ -465,7 +470,7 @@ window.Webflow.push(function(){
     // the Knowledge System add-on (same as the Home planner): rides along with any route, drawn as a satellite
     // circling the main destination on the star chart; posted in its own "Add-ons" field
     var ksRow = document.createElement('div'); ksRow.className = 'abp-addons';
-    ksRow.innerHTML = '<span class="abp-addon-label">Add-on</span><button type="button" class="abp-chip is-addon" data-ks="" aria-pressed="false" style="--c:#FFD29A">' + KS_ICON + '+ Complete knowledge system</button>';
+    ksRow.innerHTML = '<span class="abp-addon-label">Add-on</span><button type="button" class="abp-chip is-addon" data-ks="" aria-pressed="false" style="--c:#FFD29A">' + KS_ICON + 'KNS · Knowledge system</button>';
     chips.parentNode.insertBefore(ksRow, chips.nextSibling);
     ksChip = $('[data-ks]', ksRow);
     var fm = chips.closest('form');

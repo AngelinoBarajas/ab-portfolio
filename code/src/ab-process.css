@@ -111,14 +111,15 @@
 .abp-burst i{position:absolute;left:-3px;top:-3px;width:6px;height:6px;border-radius:50%}
 .abp-burst i.is-strip{left:-2px;top:-6px;width:4px;height:12px;border-radius:1px}
 .abp-dock-txt{margin-top:18px;display:flex;flex-direction:column;align-items:center;gap:6px}
-.abp-dock-l{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust)}
+.abp-dock-l{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--live,#3BE38A)}
 .abp-dock-l span{color:var(--star)}
 .abp-dock-h{font-family:var(--display);font-weight:900;font-stretch:118%;font-size:clamp(30px,3vw,46px);line-height:1;letter-spacing:-.02em;text-transform:uppercase;color:var(--star);opacity:.18;transform:translateY(8px);transition:opacity .5s,transform .6s cubic-bezier(.2,.9,.2,1.2)}
 .abp-dock.is-landed .abp-dock-h{opacity:1;transform:none}
 .abp-dock-cta{margin-top:4px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--signal);border-bottom:1px solid transparent;opacity:0;transition:opacity .4s .3s,border-color .2s;pointer-events:none}
 .abp-dock.is-landed .abp-dock-cta{opacity:1;pointer-events:auto}
 .abp-dock-cta:hover{border-color:var(--signal)}
-.abp-dock-acts{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;margin-top:4px}
+.abp-dock-acts{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:18px;opacity:0;pointer-events:none;transition:opacity .4s .3s}
+.abp-dock.is-landed .abp-dock-acts{opacity:1;pointer-events:auto}
 .abp-dock-acts .abp-dock-cta{margin-top:0}
 .abp-dock-cta.is-replot{color:var(--soft)}
 .abp-dock-cta.is-replot:hover{color:var(--star);border-color:var(--star)}
@@ -140,7 +141,7 @@
   .abp-dock-sys{--dock:150px;flex:none}
   .abp-dock-txt{margin-top:22px;align-items:center}
   .abp-dock-h{font-size:34px}
-  .abp-dock-acts{margin-top:10px}
+  .abp-dock-acts{margin-top:16px}
   /* hero: the countdown becomes a compact mission clock under the crumb, beside the planet, instead of trailing the buttons */
   .ab_process-hero_grid>.ab_count{order:-1;justify-self:start;margin:4px 0 -18px}
   .ab_count_number{font-size:78px;line-height:.9}
