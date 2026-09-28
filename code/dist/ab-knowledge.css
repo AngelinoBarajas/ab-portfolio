@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-knowledge.css v0.27.5 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-knowledge.css v0.27.6 · github.com/AngelinoBarajas/ab-portfolio */
 /* =========================================================
    KNOWLEDGE SYSTEM · the Observatory (/observatory, /observatory/*, /topics, /topics/*) + rows on Mission,
    Service and Home. Webflow gives each ab_ks-* class a stub rule; the look lives here (approved prototype:
@@ -127,6 +127,9 @@
 @media (max-width:767px){.ab_ks-cats{grid-template-columns:1fr}}
 /* hero title: "OBSERVATORY" is ~9.2em wide, so below 480 the Designer's 46px floor ran it off the column */
 @media (max-width:479px){.ab_dbh.is-ks .ab_dbh_title.is-ks{font-size:min(46px,calc((100vw - 2rem) / 9.5))}}
+/* hero record line (dot · Observatory · 15 observations · 27 topics) is ~359px as one flex row: below 480 it squashed,
+   broke mid-piece and ran off the column. Scale its type to the column (dot + gap = 24px fixed) and keep it one line. */
+@media (max-width:479px){.ab_dbh.is-ks .ab_rec{font-size:min(12px,calc((100vw - 2rem - 24px) / 29));letter-spacing:.1em;white-space:nowrap}}
 
 /* ---------- article ---------- */
 .ab_ks-prog{position:fixed!important;left:0;top:0;height:3px;width:100%;z-index:60;background:var(--_color---brand--signal);transform-origin:0 50%;transform:scaleX(0);box-shadow:0 0 12px var(--_color---brand--signal);pointer-events:none}

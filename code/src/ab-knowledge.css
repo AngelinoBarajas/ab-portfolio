@@ -126,6 +126,9 @@
 @media (max-width:767px){.ab_ks-cats{grid-template-columns:1fr}}
 /* hero title: "OBSERVATORY" is ~9.2em wide, so below 480 the Designer's 46px floor ran it off the column */
 @media (max-width:479px){.ab_dbh.is-ks .ab_dbh_title.is-ks{font-size:min(46px,calc((100vw - 2rem) / 9.5))}}
+/* hero record line (dot · Observatory · 15 observations · 27 topics) is ~359px as one flex row: below 480 it squashed,
+   broke mid-piece and ran off the column. Scale its type to the column (dot + gap = 24px fixed) and keep it one line. */
+@media (max-width:479px){.ab_dbh.is-ks .ab_rec{font-size:min(12px,calc((100vw - 2rem - 24px) / 29));letter-spacing:.1em;white-space:nowrap}}
 
 /* ---------- article ---------- */
 .ab_ks-prog{position:fixed!important;left:0;top:0;height:3px;width:100%;z-index:60;background:var(--signal);transform-origin:0 50%;transform:scaleX(0);box-shadow:0 0 12px var(--signal);pointer-events:none}
