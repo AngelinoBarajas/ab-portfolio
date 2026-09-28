@@ -57,6 +57,8 @@
     "12": ["philosophy-at-work", "brand-identity", "design-systems"],
     "13": ["philosophy-at-work", "webflow-cms", "knowledge-system"],
     "14": ["philosophy-at-work", "better-questions", "crawlable-links"],
-    "15": ["philosophy-at-work", "knowledge-system", "micro-interaction"]
+    "15": ["philosophy-at-work", "knowledge-system", "micro-interaction"],
+    "16": ["philosophy-at-work", "motion-scroll", "design-systems"],
+    "17": ["discovery", "prototyping", "scope-creep"]
   }
 }
