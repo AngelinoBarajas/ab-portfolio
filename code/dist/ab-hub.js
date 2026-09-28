@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-hub v0.30.2 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-hub v0.30.3 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHubInit) return;
@@ -284,7 +284,7 @@ window.Webflow.push(function(){
     gsap.killTweensOf(pass);
     // transform only: the pass slides back up into the slot, is refilled while hidden, then feeds out smoothly.
     // .ab_hub-print clips everything above the slot, so no clip-path is animated (it repaints the drop shadow every frame)
-    gsap.timeline({ onComplete: function(){ mon.classList.remove('is-printing'); later(function(){ if (cur === i) heroPlanet(s); }); prompt('AB-' + s.no + ' PASS PRINTED · EXPLORE THE SERVICE FROM THE PASS'); } })
+    gsap.timeline({ onComplete: function(){ mon.classList.remove('is-printing'); if (AB.hubPassSettle) AB.hubPassSettle(); later(function(){ if (cur === i) heroPlanet(s); }); prompt('AB-' + s.no + ' PASS PRINTED · EXPLORE THE SERVICE FROM THE PASS'); } })
       .to(pass, { yPercent: -100, y: -30, rotationX: 12, rotationY: 0, duration: prev > -1 ? .32 : 0, ease: 'power2.in' })
       .add(function(){ fillPass(s, true); hang(); })
       .to(pass, { yPercent: 0, y: 0, rotationX: 0, duration: 1, ease: 'power3.out', delay: .06 });
@@ -326,7 +326,7 @@ window.Webflow.push(function(){
      over a soft dim, then tilts toward the pointer. The hover target is the lifted pass's final rect (not its live rect),
      so edges don't flicker; once it drops back it stays down until the pointer has left its slot. Keyboard focus lifts
      it too; Esc, a scroll, a print or a resize drops it. Touch, narrow windows and reduced motion keep the plain pass. ---------- */
-  var printBox = $('[data-hub-print]'), lifted = false, armed = true, liftT = 0, overPass = false, liftBox = null, liftY = 0, lastScroll = 0, dim = null, ptX = 0, ptY = 0;
+  var printBox = $('[data-hub-print]'), lifted = false, armed = true, liftT = 0, settleT = 0, overPass = false, liftBox = null, liftY = 0, lastScroll = 0, dim = null, ptX = 0, ptY = 0, hasPt = false;
   var fineMq = window.matchMedia ? window.matchMedia('(hover: hover) and (pointer: fine)') : null;
   function growOk(){ return !!(pass && printBox && hasGsap && !reduce && !coarse && fineMq && fineMq.matches && innerWidth >= 992); }
   if (pass && printBox){ dim = document.createElement('div'); dim.className = 'hb-pass-dim'; dim.setAttribute('aria-hidden', 'true'); printBox.insertBefore(dim, pass); }
@@ -359,22 +359,31 @@ window.Webflow.push(function(){
     if (instant){ gsap.killTweensOf(pass); gsap.set(pass, { x: 0, y: 0, scale: 1, rotationX: 0, rotationY: 0 }); done(); return; }
     gsap.to(pass, { x: 0, y: 0, scale: 1, rotationX: 0, rotationY: 0, duration: .55, ease: 'power3.inOut', overwrite: 'auto', onComplete: done });
   }
+  // the pass can arrive under a still mouse (scrolled to it, or it printed there): once the scroll settles and the
+  // print is done, lift it if the pointer is over it. Retries while either is still moving.
+  function settle(){
+    clearTimeout(settleT);
+    if (lifted || !armed || !hasPt || !growOk()) return;
+    if ((mon && mon.classList.contains('is-printing')) || Date.now() - lastScroll < 150){ settleT = setTimeout(settle, 160); return; }
+    if (inBox(ptX, ptY, homeRect(), 0)) lift(ptX, ptY);
+  }
+  AB.hubPassSettle = settle;
   if (pass && printBox){
     pass.addEventListener('pointerenter', function(e){
       overPass = true;
       if (e.pointerType !== 'mouse' || !armed || lifted || !growOk()) return;
       clearTimeout(liftT);
       // a short dwell, so a pointer passing over the pass on the way down the page doesn't lift it
-      liftT = setTimeout(function(){ if (overPass && armed && Date.now() - lastScroll > 150) lift(ptX, ptY); }, 180);
+      liftT = setTimeout(function(){ if (overPass && armed && Date.now() - lastScroll > 150 && !(mon && mon.classList.contains('is-printing'))) lift(ptX, ptY); else settle(); }, 180);
     });
     pass.addEventListener('pointerleave', function(){ overPass = false; if (!lifted) clearTimeout(liftT); });
     document.addEventListener('pointermove', function(e){
-      ptX = e.clientX; ptY = e.clientY;
+      ptX = e.clientX; ptY = e.clientY; if (e.pointerType === 'mouse') hasPt = true;
       if (lifted){ if (e.pointerType === 'mouse' && !inBox(ptX, ptY, liftBox, 10)) drop(); return; }
       if (!armed && !inBox(ptX, ptY, homeRect(), 2)) armed = true;
     }, { passive: true });
     document.documentElement.addEventListener('mouseleave', function(){ drop(); });
-    addEventListener('scroll', function(){ lastScroll = Date.now(); if (lifted && Math.abs(scrollY - liftY) > 24) drop(); }, { passive: true });
+    addEventListener('scroll', function(){ lastScroll = Date.now(); if (lifted && Math.abs(scrollY - liftY) > 24) drop(); else if (!lifted){ clearTimeout(settleT); settleT = setTimeout(settle, 200); } }, { passive: true });
     addEventListener('blur', function(){ drop(); });
     // keyboard: tabbing into the pass lifts it (centered), tabbing out or Esc drops it
     pass.addEventListener('focusin', function(e){ var t = e.target; if (!lifted && t.matches && t.matches(':focus-visible') && growOk()){ armed = true; lift(null, null); } });
