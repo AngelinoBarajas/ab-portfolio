@@ -133,7 +133,7 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 .ab_nav_menu-button[aria-expanded="true"] .ab_nav_menu-line.is-bottom{transform:rotate(-45deg)}
 .ab_menu_component{background-image:radial-gradient(60% 50% at 80% 90%,rgba(124,92,255,.25),transparent 70%),radial-gradient(50% 40% at 10% 20%,rgba(255,106,61,.12),transparent 70%);padding-bottom:calc(32px + env(safe-area-inset-bottom,0px))}
 .ab_menu_tag,.ab_menu_links,.ab_menu_foot,.ab_menu_hq{position:relative;z-index:2}
-.ab_menu_hq{display:inline-flex;align-self:flex-start;align-items:center;gap:8px;margin:12px 0 4px;padding:8px 12px;border:1px solid var(--hair2);font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:var(--soft);transition:border-color .2s,color .2s,background .2s}
+.ab_menu_hq{display:inline-flex;align-self:flex-start;align-items:center;gap:8px;margin:6px 0 18px;padding:8px 12px;border:1px solid var(--hair2);font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:var(--soft);transition:border-color .2s,color .2s,background .2s}
 .ab_menu_hq svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round}
 .ab_menu_hq b{font-weight:500;color:var(--star)}
 .ab_menu_hq:hover,.ab_menu_hq:focus-visible,.ab_menu_hq[aria-current="page"]{border-color:var(--signal);color:var(--star);background:rgba(255,106,61,.1);outline:none}
