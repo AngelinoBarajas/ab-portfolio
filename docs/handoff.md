@@ -1,14 +1,18 @@
-# Session handoff (2026-09-28, v0.29.17 on staging; next: Angelino's review, tablet/phone pass, Designer step I1)
+# Session handoff (2026-09-28, v0.29 session closed: v0.29.17 on staging; next: Angelino's review, tablet/phone pass, Designer step I1)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
 ## Next session
 
-- **Angelino's review on staging (not yet watched live):** the Flight computer on all 8 service pages at desktop + phone (Run, line sync, the tools: slow-mo/reduced motion, ease chips, add CMS item, swatches + width slider, draft toggles, editable sheet row, "Load it all up front"). All programs were checked headless (timelines fast-forwarded, no errors) and by DOM on staging, but the animations were never watched (browser pane hidden all session).
-- **Designer step I1 is PARTLY done (verified in the raw HTML 2026-09-28):** the H2 reads "Flight computer" but lost its outline span (`<span class="t-outline">computer</span>`: re-add it); still old: eyebrow `/engineer · under the hood`, the lede, the frame label `▢ under-the-hood`, `data-frame="under-the-hood"`. Steps: `docs/designer-steps.md` › I1. Visitors already see the new text (script).
-- **Optional next depth (2b):** a small "Flight programs" collection (Service ref, order, label, code, note) for CH 02+ per service; needs a Designer step (list filtered by Service = current item).
-- **Still waiting from before:** `docs/designer-steps.md` › H1–H6, G5/G6/G8, Nav `ture` tidy-up.
-- **Before touching code:** `git pull`; tags are shared with parallel sessions. **Next free tag: `git fetch --tags && git tag --sort=-v:refname | head -1`** (v0.28.12 at the end of this session). **v0.28.7 is a stray tag** (docs commit ae2512d, same code as v0.28.6): never reuse it.
+**Live on webflow.io (verified 2026-09-28, end of the v0.29 session):** ab-core JS **v0.29.10** + CSS **v0.29.16** (site-wide), ab-home **v0.29.16**, ab-process JS + CSS **v0.29.11**, ab-hub JS + CSS **v0.29.9**, ab-about JS + CSS **v0.29.17**, ab-knowledge JS + CSS **v0.29.2** on /observatory (JS also on the Observatory + Topics templates; Home, Topics page, Services + Mission templates still load knowledge 0.25.5), ab-services JS + CSS **v0.29.0**, ab-contact CSS **v0.29.4** (JS 0.27.0), ab-work JS 0.26.1, ab-mission JS 0.28.6 + CSS 0.26.5, ab-404 JS 0.14.0 + CSS 0.7.1. 17 Observatory notes live (WB-09, WB-10 added this session).
+
+1. **Angelino's review on staging.** Nothing from v0.29.x was watched animating in a real browser (the pane was hidden; checks were headless screenshots, stepped GSAP clocks and DOM probes). Hard-refresh (Ctrl+Shift+R) first: his browser cached old pages twice this session.
+2. **Tablet / phone pass** of the v0.29 work not yet checked on a device: Home bento (order, minis, tall/wide spans at 991/479), Crew satellite phone path, Player one quest feed, both touchdowns, the /services map satellite, the KNS chips.
+3. **Designer step I1 is still PARTLY done:** service-page H2 lost its `<span class="t-outline">computer</span>`; eyebrow, lede, frame label and `data-frame` are still old. Steps: `docs/designer-steps.md` › I1.
+4. **Still waiting from before:** `docs/designer-steps.md` › H1–H6, G5/G6/G8, Nav `ture` tidy-up. Optional: move the six bookshelf titles into the Designer elements (they're set by script now).
+5. **Optional next depth (2b):** a small "Flight programs" collection for CH 02+ per service (needs a Designer list filtered by Service).
+
+**Before touching code:** `git pull`; tags are shared with parallel sessions: `git fetch --tags && git tag --sort=-v:refname | head -1` (**v0.29.17** at the end of this session). **v0.28.7 is a stray tag**: never reuse it. After tagging, wait ~40 s and purge jsDelivr before hashing (a 404 fetched too early gets cached: hit twice this session).
 
 ## Latest (2026-09-28, v0.29.17) · verified on staging 2026-09-28
 
