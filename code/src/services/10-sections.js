@@ -69,7 +69,8 @@
     var sec = $('#hood'), slot = $('#svCode'), code = $('[data-field="code"]');
     var src = code ? code.textContent.replace(/^\s*\n|\s+$/g, '') : '';
     if (!sec) return;
-    if (!src || !AB.codeBlock){ sec.remove(); return; }
+    // no CMS snippet (Branding): keep the section when GSAP is here, 30-flight fills it with its own program
+    if (!src || !AB.codeBlock){ if (!hasGsap) sec.remove(); return; }
     slot.innerHTML = AB.codeBlock(src, txt('[data-field="code-label"]') || 'excerpt');
   })();
 

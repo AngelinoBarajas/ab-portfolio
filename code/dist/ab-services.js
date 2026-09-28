@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-services v0.28.8 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-services v0.28.9 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abServicesInit) return;
@@ -189,7 +189,8 @@ window.Webflow.push(function(){
     var sec = $('#hood'), slot = $('#svCode'), code = $('[data-field="code"]');
     var src = code ? code.textContent.replace(/^\s*\n|\s+$/g, '') : '';
     if (!sec) return;
-    if (!src || !AB.codeBlock){ sec.remove(); return; }
+    // no CMS snippet (Branding): keep the section when GSAP is here, 30-flight fills it with its own program
+    if (!src || !AB.codeBlock){ if (!hasGsap) sec.remove(); return; }
     slot.innerHTML = AB.codeBlock(src, txt('[data-field="code-label"]') || 'excerpt');
   })();
 
@@ -381,7 +382,7 @@ window.Webflow.push(function(){
   P.ease = {
     label: 'Easing', cap: 'easing · tuned by hand',
     code: function(fc){ return "gsap.to('.ship', { // @target One element: the ship.\n  x: 280, // @x It travels 280px to the right.\n  duration: 1.2, // @dur The trip always takes 1.2 seconds.\n  ease: '" + (fc.val('ease') || 'expo.out') + "' // @ease The ease is the whole feel. Same distance, same time: pick another below and watch the spacing change.\n});"; },
-    edit: 'ease',
+    edit: 'ease', editLine: 'ease',
     tools: EASES.map(function(e, i){ return { k: 'ease', v: e, label: e.replace('(1, 0.4)', '').replace('(2)', ''), on: !i }; }),
     build: function(st, fc){
       st.innerHTML = '<div class="ez"><div class="ez-graph"><svg viewBox="-6 -40 212 180"><path class="ax" d="M0 100H200M0 0H200" stroke="rgba(255,255,255,.14)" fill="none" stroke-dasharray="3 4"/><text x="204" y="3" fill="#8A8FA3" font-size="9" font-family="JetBrains Mono,monospace">280px</text><text x="204" y="103" fill="#8A8FA3" font-size="9" font-family="JetBrains Mono,monospace">0</text><path class="c" fill="none" stroke="#FF6A3D" stroke-width="2"/><circle class="d" r="5" fill="#FF6A3D"/></svg></div>' +
@@ -521,7 +522,7 @@ window.Webflow.push(function(){
     code: function(fc){ return ":root {\n  --signal: " + (fc.val('sig') || '#FF6A3D') + "; /* @signal One accent color. Every button, link and highlight reads it, so a rebrand is one line. */\n" +
       "  --space-m: clamp(1rem, 2vw, 1.5rem); /* @space Spacing that grows with the screen, between a floor (16px) and a ceiling (24px). */\n" +
       "  --h1: clamp(3.25rem, 10.5vw, 11.25rem); /* @h1 The headline scales with the screen width: never under 52px, never over 180px. No breakpoints to babysit. */\n}"; },
-    edit: 'sig',
+    edit: 'sig', editLine: 'signal',
     tools: SIGS.map(function(s, i){ return { k: 'sig', v: s[0], label: '<i class="sw" style="background:' + s[0] + '"></i>' + s[1], on: !i }; }),
     build: function(st, fc){
       st.innerHTML = '<div class="ds"><div class="ds-ruler"><span>Screen</span><b class="w">1440px</b><input class="ds-range" type="range" min="360" max="1440" step="1" value="1440" aria-label="Screen width"></div>' +
@@ -560,7 +561,215 @@ window.Webflow.push(function(){
     }
   };
 
-  var BY_SLUG = { motion: ['reveal', 'ease'], 'webgl-data': ['pins'], 'design-systems': ['tokens'] };
+  /* ---------- webflow development · the Client-First wrapper stack, box by box ---------- */
+  P.struct = {
+    flow: true, // phones: the stage grows with its content
+    label: 'Structure', cap: 'client-first structure',
+    code: '<section class="section_hero"> <!-- @section One section per band of the page, named for what it holds. -->\n' +
+      '  <div class="padding-global"> <!-- @gutter The side gutters: set once, the same on every page. -->\n' +
+      '    <div class="container-large"> <!-- @container A max width, so lines stay readable on a big screen. -->\n' +
+      '      <div class="padding-section-large"> <!-- @vertical Top and bottom spacing from one shared scale. -->\n' +
+      '        <h1 class="heading-style-h1">Built to be edited</h1> <!-- @heading The look is a class, so anyone can reuse it later without touching code. -->\n' +
+      '      </div>\n    </div>\n  </div>\n</section>',
+    build: function(st, fc){
+      var K = ['section', 'gutter', 'container', 'vertical', 'heading'], N = ['section_hero', 'padding-global', 'container-large', 'padding-section-large', 'heading-style-h1'];
+      st.innerHTML = '<div class="wf"><div class="wf-tree"><div class="wf-cap">Navigator</div>' + N.map(function(n, i){ return '<button type="button" class="wf-row" data-k="' + K[i] + '" style="padding-left:' + (10 + i * 12) + 'px"><i></i>' + n + '</button>'; }).join('') + '</div>' +
+        '<div class="wf-canvas">' + K.map(function(k, i){ return '<div class="wf-b wf-' + k + '" data-k="' + k + '" data-label="' + N[i] + '">'; }).join('') + '<span>Built to be edited</span>' + rep('</div>', K.length) + '</div></div>';
+      var rows = $$('.wf-row', st), boxes = $$('.wf-b', st), head = $('.wf-heading span', st);
+      function on(k){
+        var at = K.indexOf(k);
+        rows.forEach(function(r){ r.classList.toggle('on', r.getAttribute('data-k') === k); });
+        boxes.forEach(function(b, i){ b.classList.toggle('on', i === at); b.classList.toggle('seen', i < at); });
+      }
+      rows.forEach(function(r){ r.addEventListener('click', function(){ var k = r.getAttribute('data-k'); on(k); fc.cue(k); gsap.set(head, { opacity: 1 }); }); });
+      function reset(){ on(''); boxes.forEach(function(b){ b.classList.remove('seen'); }); gsap.set(head, { opacity: 0, y: 8 }); }
+      reset();
+      return {
+        reset: reset,
+        play: function(){
+          var tl = gsap.timeline();
+          K.forEach(function(k, i){
+            tl.call(fc.cue, [k]).call(on, [k]);
+            if (k === 'heading') tl.to(head, { opacity: 1, y: 0, duration: .6, ease: 'expo.out' });
+            tl.to({}, { duration: i === K.length - 1 ? .8 : 1.5 });
+          });
+          return tl;
+        }
+      };
+    }
+  };
+
+  /* ---------- custom deploys · content files → filter drafts → sort → push ---------- */
+  var FILES = [['apollo.md', 2024, false], ['voyager.md', 2026, false], ['gemini.md', 2025, true], ['cassini.md', 2025, false], ['juno.md', 2026, true]];
+  P.deploy = {
+    flow: true, // phones: the stage grows with its content
+    label: 'Build + deploy', cap: 'astro · content collection',
+    code: "import { getCollection } from 'astro:content'; // @import The missions live as plain content files in the repo; Astro reads them when it builds.\n\n" +
+      "const missions = (await getCollection('missions')) // @get Load every mission file...\n" +
+      "  .filter(function (m) { return !m.data.draft; }) // @draft ...leave out the drafts (tap a file to toggle one)...\n" +
+      "  .sort(function (a, b) { return b.data.year - a.data.year; }); // @sort ...and put the newest first. One push, and the site rebuilds itself.",
+    build: function(st, fc){
+      st.innerHTML = '<div class="dp"><div class="dp-col"><div class="dp-cap">content/missions</div><div class="dp-files"></div></div>' +
+        '<div class="dp-col"><div class="dp-cap">missions · <b class="n">0</b></div><div class="dp-out"></div></div><div class="dp-term"></div></div>';
+      var files = $('.dp-files', st), out = $('.dp-out', st), n = $('.dp-cap .n', st), term = $('.dp-term', st), RH = 30;
+      function fileRows(){
+        files.innerHTML = FILES.map(function(f, i){ return '<button type="button" class="dp-f' + (f[2] ? ' is-draft' : '') + '" data-i="' + i + '"><b>' + f[0] + '</b><span>' + f[1] + '</span><em>draft</em></button>'; }).join('');
+        $$('.dp-f', files).forEach(function(b){ b.addEventListener('click', function(){ var f = FILES[+b.getAttribute('data-i')]; f[2] = !f[2]; fileRows(); fc.run(); }); });
+      }
+      function reset(){
+        gsap.killTweensOf($$('.dp-o', out)); fileRows(); out.innerHTML = ''; out.style.height = (FILES.length * RH) + 'px'; n.textContent = '0'; term.innerHTML = '';
+      }
+      reset();
+      return {
+        reset: reset,
+        play: function(){
+          var tl = gsap.timeline(), rows = [];
+          tl.call(fc.cue, ['import']).call(function(){ $$('.dp-f', files).forEach(function(b, i){ setTimeout(function(){ b.classList.add('lit'); }, i * 120); }); }).to({}, { duration: 1.3 })
+            .call(fc.cue, ['get']).call(function(){
+              out.innerHTML = FILES.map(function(f, i){ return '<div class="dp-o' + (f[2] ? ' is-draft' : '') + '" style="top:' + (i * RH) + 'px"><b>' + f[0].replace('.md', '') + '</b><span>' + f[1] + '</span></div>'; }).join('');
+              rows = $$('.dp-o', out).map(function(el, i){ return { el: el, f: FILES[i] }; }); n.textContent = rows.length;
+              gsap.from(out.children, { opacity: 0, x: -14, duration: .35, stagger: .08 });
+            }).to({}, { duration: 1.4 })
+            .call(fc.cue, ['draft']).call(function(){
+              rows.forEach(function(r){ if (r.f[2]) r.el.classList.add('drop'); });
+              gsap.to(rows.filter(function(r){ return r.f[2]; }).map(function(r){ return r.el; }), { opacity: 0, x: 14, duration: .4, delay: .5 });
+              rows = rows.filter(function(r){ return !r.f[2]; });
+              rows.forEach(function(r, i){ gsap.to(r.el, { top: i * RH, duration: .5, delay: .9, ease: 'power2.inOut' }); });
+              n.textContent = rows.length;
+            }).to({}, { duration: 1.9 })
+            .call(fc.cue, ['sort']).call(function(){
+              rows.slice().sort(function(a, b){ return b.f[1] - a.f[1]; }).forEach(function(r, i){ gsap.to(r.el, { top: i * RH, duration: .6, ease: 'power2.inOut' }); });
+            }).to({}, { duration: 1 });
+          var L = ['<span class="hi">$</span> git push origin main', '→ building with Astro', '<span class="ok">✓</span> ', '<span class="ok">✓</span> live at <span class="hi">yourbrand.com</span>'];
+          L.forEach(function(l, i){ tl.call(function(){ term.insertAdjacentHTML('beforeend', '<div>' + (i === 2 ? l + rows.length + ' mission' + (rows.length === 1 ? '' : 's') + ' built' : l) + '</div>'); }).to({}, { duration: .5 }); });
+          return tl;
+        }
+      };
+    }
+  };
+
+  /* ---------- CMS integrations · one sheet row becomes a CMS item ---------- */
+  function slugify(t){ return String(t).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''); }
+  P.sync = {
+    flow: true, // phones: the stage grows with its content
+    label: 'Sheet → CMS', cap: 'sync · sheet row to cms item',
+    code: "function toItem(row) { // @row One spreadsheet row comes in (edit its title on the left)...\n  return {\n    fieldData: {\n" +
+      "      name: row.title, // @name ...its title becomes the item's name,\n" +
+      "      slug: slugify(row.title), // @slug a clean URL slug is made from it automatically,\n" +
+      "      'service-types': row.services.split(',') // @types and a comma list becomes real tags the CMS can filter by.\n    }\n  };\n}",
+    build: function(st, fc){
+      st.innerHTML = '<div class="sy"><div class="sy-sheet"><div class="sy-cap">Sheet · Projects</div><div class="sy-grid"><span class="h">A · title</span><span class="h">B · services</span>' +
+        '<input class="sy-in" type="text" value="Spring Launch Party!" maxlength="40" aria-label="Row title (edit it)"><span class="sy-sv">Webflow, Motion, Branding</span></div></div>' +
+        '<div class="sy-arrow" aria-hidden="true">→</div>' +
+        '<div class="sy-item"><div class="sy-cap">CMS · new item <i class="sy-ok">✓ synced</i></div><div class="sy-f"><em>Name</em><b class="nm"></b></div><div class="sy-f"><em>Slug</em><b class="sl"></b></div><div class="sy-f"><em>Service types</em><b class="sy-chips"></b></div></div></div>';
+      var inp = $('.sy-in', st), grid = $('.sy-grid', st), nm = $('.nm', st), sl = $('.sl', st), chips = $('.sy-chips', st), item = $('.sy-item', st), t;
+      inp.addEventListener('input', function(){ clearTimeout(t); t = setTimeout(fc.run, 700); });
+      function reset(){ nm.textContent = ''; sl.textContent = ''; chips.innerHTML = ''; grid.classList.remove('on'); item.classList.remove('done'); $$('.sy-f', st).forEach(function(f){ f.classList.remove('on'); }); }
+      function typeTo(el, text, tl){ var o = { p: 0 }; tl.to(o, { p: 1, duration: Math.min(1.2, .25 + text.length * .03), ease: 'none', onUpdate: function(){ el.textContent = text.slice(0, Math.round(o.p * text.length)); } }); }
+      function field(i){ $$('.sy-f', st).forEach(function(f, j){ f.classList.toggle('on', j === i); }); }
+      reset();
+      return {
+        reset: reset,
+        play: function(){
+          var title = inp.value.trim() || 'Untitled', tl = gsap.timeline();
+          tl.call(fc.cue, ['row']).call(function(){ grid.classList.add('on'); }).to({}, { duration: 1.1 })
+            .call(fc.cue, ['name']).call(field, [0]); typeTo(nm, title, tl); tl.to({}, { duration: .7 })
+            .call(fc.cue, ['slug']).call(field, [1]); typeTo(sl, slugify(title) || 'untitled', tl); tl.to({}, { duration: .7 })
+            .call(fc.cue, ['types']).call(field, [2]);
+          'Webflow, Motion, Branding'.split(',').forEach(function(sv){ tl.call(function(){ chips.insertAdjacentHTML('beforeend', '<i>' + esc(sv.trim()) + '</i>'); gsap.from(chips.lastChild, { scale: .6, opacity: 0, duration: .3, ease: 'back.out(3)' }); }).to({}, { duration: .35 }); });
+          tl.call(function(){ field(-1); item.classList.add('done'); }).to({}, { duration: .5 });
+          return tl;
+        }
+      };
+    }
+  };
+
+  /* ---------- performance · a heavy scene that loads late and rests off screen ---------- */
+  P.lazy = {
+    flow: true, // phones: the stage grows with its content
+    label: 'Lazy 3D', cap: 'lazy webgl · pause off-screen',
+    code: "new IntersectionObserver(function (entries) { // @watch Watch whether the 3D scene is on screen.\n" +
+      "  var on = entries[0].isIntersecting;\n" +
+      "  if (on && !scene) scene = initGlobe(); // @lazy Nothing heavy loads until the visitor actually scrolls to it.\n" +
+      "  if (scene) on ? scene.play() : scene.pause(); // @pause Off screen it stops drawing: no battery or CPU spent on what nobody sees.\n" +
+      "}).observe(document.querySelector('.globe'));",
+    tools: [{ k: 'eager', label: 'Load it all up front', on: false }],
+    build: function(st, fc){
+      st.innerHTML = '<div class="lz"><div class="lz-frame"><div class="mv-url"><i></i><i></i><i></i><span>yourbrand.com</span></div><div class="lz-vp"><div class="lz-page">' +
+        '<div class="lz-bars"><i></i><i></i><i class="s"></i></div><div class="lz-bars"><i class="s"></i><i class="s"></i></div>' +
+        '<div class="lz-globe"><canvas></canvas><span class="lz-ph">not loaded</span></div><div class="lz-bars"><i class="s"></i><i class="s"></i><i class="s"></i></div><div class="lz-bars"><i></i><i class="s"></i></div></div></div></div>' +
+        '<div class="lz-read"><div>Scene <b class="s">not loaded</b></div><div>Drawing <b class="d">no</b></div><div>Frames drawn <b class="f">0</b></div><div class="lz-cpu"><span>Work</span><i><b></b></i></div></div></div>';
+      var lz = $('.lz', st), vp = $('.lz-vp', st), page = $('.lz-page', st), gl = $('.lz-globe', st), c = $('canvas', st), ph = $('.lz-ph', st);
+      var sS = $('.lz-read .s', st), sD = $('.lz-read .d', st), sF = $('.lz-read .f', st), cpu = $('.lz-cpu b', st);
+      var ctx = c.getContext('2d'), S = 120, loaded = false, running = false, frames = 0, rot = 0, vis = false, pts = [];
+      c.width = c.height = S * 2;
+      for (var la = -75; la <= 75; la += 15) for (var lo = -180; lo < 180; lo += 15) pts.push([la * Math.PI / 180, lo * Math.PI / 180]);
+      function draw(){
+        ctx.clearRect(0, 0, S * 2, S * 2); ctx.fillStyle = '#F2F0EA';
+        pts.forEach(function(q){ var l = q[1] + rot, x = Math.cos(q[0]) * Math.sin(l), y = Math.sin(q[0]), z = Math.cos(q[0]) * Math.cos(l); if (z < 0) return; ctx.globalAlpha = .2 + z * .8; ctx.fillRect(S + x * S * .86, S - y * S * .86, 3, 3); });
+        ctx.globalAlpha = 1;
+      }
+      function state(){ sS.textContent = loaded ? 'loaded' : 'not loaded'; sD.textContent = running ? 'yes' : (loaded ? 'paused' : 'no'); gl.classList.toggle('is-on', loaded); cpu.style.transform = 'scaleX(' + (running ? .82 : .04) + ')'; lz.classList.toggle('is-busy', running); }
+      if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ vis = es[0].isIntersecting; }).observe(st); else vis = true;
+      gsap.ticker.add(function(t, dt){ if (!vis || !running) return; rot += dt * .0012; frames++; if (frames % 2) draw(); sF.textContent = frames; });
+      function reset(){ gsap.killTweensOf(page); gsap.set(page, { y: 0 }); loaded = fc.tool('eager'); running = loaded; frames = 0; sF.textContent = '0'; gl.classList.remove('seen'); if (loaded) draw(); else ctx.clearRect(0, 0, S * 2, S * 2); state(); }
+      reset();
+      return {
+        reset: reset,
+        play: function(){
+          var eager = fc.tool('eager'), into = function(){ return gl.offsetTop - vp.clientHeight / 2 + gl.offsetHeight / 2; }, past = function(){ return gl.offsetTop + gl.offsetHeight + 10; };
+          var tl = gsap.timeline();
+          tl.call(fc.cue, ['watch']).call(function(){ gl.classList.add('seen'); }).to({}, { duration: 1.2 })
+            .to(page, { y: function(){ return -into(); }, duration: 1.4, ease: 'power2.inOut' })
+            .call(fc.cue, ['lazy']).call(function(){ if (!loaded){ loaded = true; draw(); } running = true; state(); }).to({}, { duration: 2 })
+            .to(page, { y: function(){ return -past(); }, duration: 1.4, ease: 'power2.inOut' })
+            .call(fc.cue, ['pause']).call(function(){ running = eager; state(); if (eager) sD.textContent = 'yes, off screen'; }).to({}, { duration: 1.6 });
+          return tl;
+        }
+      };
+    }
+  };
+
+  /* ---------- branding · four tokens carry the identity (the site's own AB mark) ---------- */
+  P.brand = {
+    flow: true, // phones: the stage grows with its content
+    label: 'Brand tokens', cap: 'brand · tokens',
+    code: function(fc){ return ":root {\n  --brand-accent: " + (fc.val('acc') || '#FF6A3D') + "; /* @accent One accent, used sparingly: the planet in the mark, buttons, links. */\n" +
+      "  --brand-ink: #0B0C14; /* @ink The dark everything sits on. */\n" +
+      "  --brand-type: 'Archivo', sans-serif; /* @type One typeface family carries the whole voice. */\n" +
+      "  --mark-space: 0.5em; /* @space The mark always keeps this much empty room around it. */\n}"; },
+    edit: 'acc', editLine: 'accent',
+    tools: SIGS.map(function(s, i){ return { k: 'acc', v: s[0], label: '<i class="sw" style="background:' + s[0] + '"></i>' + s[1], on: !i }; }),
+    build: function(st, fc){
+      var mk = AB.markSVG ? AB.markSVG({ cls: 'br-svg', grid: true }) : '', small = AB.markSVG ? AB.markSVG({ cls: 'br-svg' }) : '';
+      st.innerHTML = '<div class="br"><div class="br-mark">' + mk + '<span class="br-sp" aria-hidden="true"></span></div>' +
+        '<div class="br-apps"><div class="br-card">' + small + '<b>Angelino Barajas</b><span>Designer + developer</span><em>barajasdsgn.com</em></div>' +
+        '<div class="br-bar">' + small + '<i></i><i></i><i></i><span class="br-btn">Book a call</span></div></div></div>';
+      var br = $('.br', st), gs = $$('.br-mark .lg-g', st), marks = $$('.lg-m path', st), sp = $('.br-sp', st), card = $('.br-card', st), bar = $('.br-bar', st);
+      function acc(){ br.style.setProperty('--acc', fc.val('acc') || '#FF6A3D'); }
+      function reset(){
+        acc(); gsap.killTweensOf(gs.concat(marks, [sp, card, bar]));
+        gs.forEach(function(g){ var L = g.getTotalLength ? g.getTotalLength() : 600; g.style.strokeDasharray = L; g.style.strokeDashoffset = L; });
+        gsap.set(marks, { opacity: .15 }); gsap.set(sp, { opacity: 0 }); br.classList.remove('is-ink', 'is-type', 'is-acc');
+      }
+      reset();
+      return {
+        reset: reset, redraw: acc,
+        play: function(){
+          var tl = gsap.timeline();
+          tl.to(gs, { strokeDashoffset: 0, duration: 1.1, stagger: .06, ease: 'power2.inOut' })
+            .to(marks, { opacity: 1, duration: .5, stagger: .12 }, '-=.3')
+            .call(fc.cue, ['accent']).call(function(){ br.classList.add('is-acc'); }).to({}, { duration: 1.4 })
+            .call(fc.cue, ['ink']).call(function(){ br.classList.add('is-ink'); }).to({}, { duration: 1.3 })
+            .call(fc.cue, ['type']).call(function(){ br.classList.add('is-type'); }).from([card, bar], { y: 10, opacity: .4, duration: .5, stagger: .1 }).to({}, { duration: 1 })
+            .call(fc.cue, ['space']).to(sp, { opacity: 1, duration: .4 }).to({}, { duration: 1.4 });
+          return tl;
+        }
+      };
+    }
+  };
+
+  var BY_SLUG = { motion: ['reveal', 'ease'], 'webgl-data': ['pins'], 'design-systems': ['tokens'], 'webflow-development': ['struct'], 'custom-deploys': ['deploy'], 'cms-integrations': ['sync'], 'performance': ['lazy'], 'branding': ['brand'] };
   var LIST = (BY_SLUG[SLUG] || []).map(function(k){ return P[k]; });
   if (!LIST.length) return;
 
@@ -608,7 +817,7 @@ window.Webflow.push(function(){
     Object.keys(parsed.notes).forEach(function(k){ lineOf[parsed.notes[k].line] = k; });
     codeEl.innerHTML = html.map(function(h, i){
       var k = lineOf[i];
-      return '<span class="fc-ln' + (k ? ' has-note' : '') + (cur.edit && k === 'ease' || cur.edit && k === 'signal' ? ' is-edit' : '') + '"' + (k ? ' tabindex="0" data-k="' + k + '"' : '') + '><b>' + pad2(i + 1) + '</b><span>' + (h || ' ') + '</span></span>';
+      return '<span class="fc-ln' + (k ? ' has-note' : '') + (k && cur.editLine === k ? ' is-edit' : '') + '"' + (k ? ' tabindex="0" data-k="' + k + '"' : '') + '><b>' + pad2(i + 1) + '</b><span>' + (h || ' ') + '</span></span>';
     }).join('');
     $('.cb-l', inner).textContent = lg.toUpperCase(); $('.cb-n', inner).textContent = cur.cap;
   }
@@ -657,6 +866,7 @@ window.Webflow.push(function(){
     idx = i; cur = LIST[i]; vals = {}; flags = {};
     toolsFor(); render();
     osd.textContent = 'CH ' + pad2(i + 1) + ' · ' + cur.label;
+    stage.classList.toggle('is-flow', !!cur.flow);
     inst = cur.build(stage, fc);
     setState('idle'); tcEl.textContent = 'T+00:00.0';
     var first1 = parsed.notes[Object.keys(parsed.notes)[0]]; noteB.textContent = 'Ready'; noteS.textContent = 'Press Run, or hover a marked line.';
@@ -673,6 +883,7 @@ window.Webflow.push(function(){
     if (reduce){ t.progress(1); setState('done'); var ks = Object.keys(parsed.notes); fc.cue(ks[ks.length - 1]); }
   }
   runBtn.addEventListener('click', run);
+  fc.run = run; // programs re-run themselves after an in-viewport edit (deploy drafts, sheet row)
   $$('.fc-chan', inner).forEach(function(b, i){
     b.addEventListener('click', function(){
       if (i === idx) return;
