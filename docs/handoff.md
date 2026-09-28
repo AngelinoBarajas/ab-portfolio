@@ -1,12 +1,11 @@
-# Session handoff (2026-09-28, Designer steps mostly done; next: the remaining optional steps)
+# Session handoff (2026-09-28, kip debrief + site polish done; next: add depth to the Services pages)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
-## Next session: finish the optional Designer steps (`docs/designer-steps.md`)
+## Next session: add depth to the Services pages
 
-Walk Angelino through one step at a time: first explain **why** you recommend it (he decides per item), then the exact Navigator path, then verify on a webflow.io publish and tick the box. Staging only; ask before every publish or delete.
-- **Open, pending his decision:** **G5** (Home heading effect classes: recommended *skip*, script adds them and the canvas can't show the effect anyway; he hadn't answered), **G6** (Tools + Quotes list sort order), **G8** (Mission template: Tools chip color binding + Services rail dot binding), Nav tidy-up (`data-lenis-prevent` value typed `ture`).
-- **Parked:** D2 headshot (needs his photo), C1/C2 template JSON-LD (launch only: Webflow publishes `{{DOMAIN}}` empty), placeholder missions' empty `og:image` (set Social image or leave while noindex).
+Angelino brings his ideas in the first message. Scope: the Services template (`/services/[slug]`, 8 services from the CMS) and possibly the hub (`/services`). Start by reading: `docs/services-hub-plan.md`, `docs/webflow-build-notes.md` (search "Services"), `code/src/services/` + `code/src/ab-services.css`, `code/src/hub/` + `code/src/ab-hub.css`, the Services CMS schema (it is at Webflow's **60-field cap**: new per-service content needs another collection, e.g. the Hub manifest pattern, or a reference). Look at the live pages at 1440 and 390 before proposing anything. Designer-first: propose Designer steps before code; one idea at a time with what/why/cost (memory `feedback_explain-why-before-optional-steps`).
+- **Waiting for Angelino (his own batch, any time):** `docs/designer-steps.md` › **H1–H6** (statement planet, Benefits source, email fallback text, optional mission CSS link, placeholder testimonials, optional native Observatory bento card), plus the older G5/G6/G8 and the Nav `ture` tidy-up. Reload the Designer before starting.
 - **Before touching code:** `git pull`; tags are shared with parallel sessions (CKS debrief, kip debrief, which kept releasing after this session: v0.27.5–v0.27.7+). **Find the next free tag with `git fetch --tags && git tag --sort=-v:refname | head -1`** (don't trust a number written here), and message the other sessions which tag you take.
 
 ## Latest (2026-09-28, kip debrief session) · verified on staging 2026-09-28
@@ -16,7 +15,7 @@ Walk Angelino through one step at a time: first explain **why** you recommend it
 - **Designer step for Angelino (one element):** Mission template › Briefing › `.ab_brief_side`: duplicate the hidden `div.ab_cms-source` (data-field="params"), bind it to **Benefits**, set its attribute to `data-field="benefits"`. The script then lists the four benefits under Mission parameters (reuses the parameters' classes, no CSS needed). Reload the Designer first (API writes this session).
 - **Also this session:** mission order 510 → CKS → kip → Knowledge System → AB Identity; placeholders hidden; all five on the Home board (ab-home v0.28.3); 510 card = globe section; **placeholder testimonials (replace before launch)**; site email angelino@barajasdsgn.com via Site settings. Designer steps waiting: `docs/designer-steps.md` › **H** (statement planet, Benefits source, email fallback text, optional mission CSS link, placeholder quotes). Home board frames for CKS (mini loom) + kip (hopping faces) animated in ab-home **v0.28.4**.
 - **kip OG image settled** (2026-09-28): the 73,576-byte `kip-src/img/og-kip.png` (headline, six characters, "A concept baby log for everyone who helps") everywhere; the older 67,806-byte variant was overwritten by the kip rebuild (kip-site has no git). kip items Angelino signed off: "that's all fine".
-- **Open:** Angelino's review of `/work/kip` + the investor-style copy; the Figma comment (real v2 note about doses); kip has no site plan scene yet (debrief rule); kip site issues he was told about (vitamin D "1 drop" on the home page + app tour, "Might be gas" handoff note, static "Handoff card for Sam, 6:30 pm" label); Observatory filter jump reported on his phone (Chrome can't reproduce it; likely cache).
+- **Final state (end of session, all verified on staging):** ab-home **v0.28.5** (Observatory bento card, animated CKS loom + kip hopping faces on the board), ab-mission JS **v0.28.2**, ab-knowledge CSS **v0.27.9** / JS **0.27.8**. Mission order 510 → CKS → kip → Knowledge System → AB Identity; placeholders hidden; CKS + kip copy rewritten as product pitches. Angelino accepted the kip open items as they are (site plan, Figma note, kip-site dose wording): nothing pending on kip except the Designer steps in H.
 
 ## Latest (2026-09-27/28, Designer steps session) · verified on staging 2026-09-28
 
