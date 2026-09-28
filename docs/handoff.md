@@ -1,4 +1,4 @@
-# Session handoff (2026-09-28, v0.29.7 on staging; next: Angelino's review, tablet/phone pass, Designer step I1)
+# Session handoff (2026-09-28, v0.29.11 on staging; next: Angelino's review, tablet/phone pass, Designer step I1)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -9,6 +9,16 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 - **Optional next depth (2b):** a small "Flight programs" collection (Service ref, order, label, code, note) for CH 02+ per service; needs a Designer step (list filtered by Service = current item).
 - **Still waiting from before:** `docs/designer-steps.md` › H1–H6, G5/G6/G8, Nav `ture` tidy-up.
 - **Before touching code:** `git pull`; tags are shared with parallel sessions. **Next free tag: `git fetch --tags && git tag --sort=-v:refname | head -1`** (v0.28.12 at the end of this session). **v0.28.7 is a stray tag** (docs commit ae2512d, same code as v0.28.6): never reuse it.
+
+## Latest (2026-09-28, v0.29.8 → v0.29.11) · verified on staging 2026-09-28
+
+Live: ab-core JS + CSS **v0.29.10**, ab-home **v0.29.8**, ab-process JS + CSS **v0.29.11**, ab-hub JS + CSS **v0.29.9**.
+- **Planets spin on the compositor** (core): `.tex::before` is a strip of two texture tiles sliding by transform (`--tex` set by `buildPlanet`), replacing the `background-position` animation that repainted every frame. Fixed the choppy scroll by the big About › "Always looking up" planet. Core JS + CSS must ship together (old JS + new CSS draws doubled textures).
+- **Mobile:** bento cards can't outgrow their column (Custom deploys terminal ran off screen); HQ home button in the mobile menu (small, above the destinations); Crew satellite on phones is 60px and travels down between the stacked cards, and its layer sits above a tapped card (z 12 > selected z 8).
+- **Plot a trajectory** card: diagonal route bottom left → top right over a full HTML starfield.
+- **KNS flag** on the flight plan cards of both route scrollers (/process, /services).
+- **COMMS wave:** seamless 240-unit irregular tile as a mask, 9s loop, one service color at a time with slow fades (56s cycle, orange first); fills the label's row on phones.
+- **Open:** "OBSERVATORY" overflows the mobile menu at 390px (big 45px links); left as is because Angelino asked not to change their size. Offered: shrink them to ~9vw only on narrow phones.
 
 ## Latest (2026-09-28, v0.29.3 → v0.29.7) · verified on staging 2026-09-28
 
