@@ -818,3 +818,5 @@ section:hover > .ab_frame-label{color:var(--select)}
 /* Home › Plot a trajectory: a starfield over the whole panel (HTML, so it fills any card shape) */
 .v-traj-stars{position:absolute;inset:0;pointer-events:none}
 .v-traj-stars i{position:absolute;border-radius:50%;background:#F2F0EA}
+/* narrow phones: the big menu links scale with the screen so the longest one (OBSERVATORY) fits; wider screens keep 45px */
+@media (max-width:479px){.ab_menu_link{font-size:min(45px,9vw)}}
