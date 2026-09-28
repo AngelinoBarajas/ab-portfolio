@@ -7,7 +7,7 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 Walk Angelino through one step at a time: first explain **why** you recommend it (he decides per item), then the exact Navigator path, then verify on a webflow.io publish and tick the box. Staging only; ask before every publish or delete.
 - **Open, pending his decision:** **G5** (Home heading effect classes: recommended *skip*, script adds them and the canvas can't show the effect anyway; he hadn't answered), **G6** (Tools + Quotes list sort order), **G8** (Mission template: Tools chip color binding + Services rail dot binding), Nav tidy-up (`data-lenis-prevent` value typed `ture`).
 - **Parked:** D2 headshot (needs his photo), C1/C2 template JSON-LD (launch only: Webflow publishes `{{DOMAIN}}` empty), placeholder missions' empty `og:image` (set Social image or leave while noindex).
-- **Before touching code:** `git pull`; tags are shared with the CKS session (last used **v0.27.4**; message it which tag you take).
+- **Before touching code:** `git pull`; tags are shared with parallel sessions (CKS debrief, kip debrief): last used **v0.27.5** (kip session, ab-knowledge.css), next free **v0.27.6**; check `git tag` and message the others which tag you take.
 
 ## Latest (2026-09-27/28, Designer steps session) · verified on staging 2026-09-28
 
