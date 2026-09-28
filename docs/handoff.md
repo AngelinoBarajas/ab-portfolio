@@ -1,4 +1,4 @@
-# Session handoff (2026-09-28, Services depth done: Flight computer on all 8 services; next: Angelino's staging review + Designer step I1)
+# Session handoff (2026-09-28, v0.29 batch on staging; next: Angelino's review, chip dead-zone report, tablet/phone pass, Designer step I1)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -9,6 +9,18 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 - **Optional next depth (2b):** a small "Flight programs" collection (Service ref, order, label, code, note) for CH 02+ per service; needs a Designer step (list filtered by Service = current item).
 - **Still waiting from before:** `docs/designer-steps.md` › H1–H6, G5/G6/G8, Nav `ture` tidy-up.
 - **Before touching code:** `git pull`; tags are shared with parallel sessions. **Next free tag: `git fetch --tags && git tag --sort=-v:refname | head -1`** (v0.28.12 at the end of this session). **v0.28.7 is a stray tag** (docs commit ae2512d, same code as v0.28.6): never reuse it.
+
+## Latest (2026-09-28, v0.29 batch) · verified on staging 2026-09-28
+
+Live on webflow.io: ab-core JS + CSS **v0.29.0**, ab-home **v0.29.1**, ab-process JS + CSS **v0.29.1**, ab-knowledge JS **v0.29.0** (/observatory, Observatory + Topics templates; Home/Services/Mission templates + /topics still 0.25.5) and CSS **v0.29.0** on /observatory, ab-services JS + CSS **v0.29.0**, ab-about JS + CSS **v0.29.0**, ab-hub CSS + ab-contact CSS **v0.29.0** (their JS unchanged). Mission CSS still v0.26.5 (Designer-bound head). Backups of the replaced links: `backups/2026-09-28-v0.29.0-heads-before.txt`.
+
+- **Fixes:** Observatory filter no longer lets the list collapse while Flip runs (holds the height until the cards land; the light section used to ride up over the cards). Flight computer "+ Add a CMS item" works (run() overwrote the program's onComplete, so `busy` stuck), and the globe fly-in sets up in `onStart`.
+- **/process:** "+ Complete knowledge system" add-on chip (like the Home planner): posts an "Add-ons" field, draws a satellite round the main planet. "↺ Reset route" on the destination panel. Crew roles: comms signal (dark square relay node with corner brackets, dish follows the cursor, packets TX/RX, receiving card edge lights, pulse down the link, waveform in the COMMS bar).
+- **Home bento:** planet + new "Plot a trajectory" card (→ /services#trajectory) both tall like the 3D card; Field notes `is-wide` beside Custom deploys with a wide star chart + signal log (fetches /observatory for all notes once on screen; compact chart under 560px).
+- **About › Player one:** quest progress bar (one segment per quest) + live feed of finds and hints.
+- **Spacesuit glove cursor** site-wide: `--hand` in ab-core.css, every `cursor:pointer` → `var(--hand,pointer)`.
+- **Observatory:** field notes 16 + 17 imported (WB-09 less-is-a-bore, WB-10 mercury-gemini-apollo); CKS mission id added to `docs/webflow-cms-ids.json`.
+- **Open:** Angelino is re-testing a possible "dead zone" on the Observatory topic chips (not reproducible: nothing overlaps them at any scroll position). Nothing checked at tablet/phone widths yet for the new Home layout, Crew signal or Player one feed.
 
 ## Latest (2026-09-28, Services depth session) · verified on staging 2026-09-28
 
