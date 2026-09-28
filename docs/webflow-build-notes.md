@@ -767,6 +767,7 @@ Root causes and non-obvious fixes:
 - **Services lede + badge:** Designer text, swapped by script only while the old text is present (Designer steps J1/J2).
 - **Gauge frame looked broken (v0.30.6):** `.abp-con-deco` sat at `inset:0`, so its corner rivets landed on the 6px inset bezel line and its 24px grid ran over the frame. Moved to `inset:7px` (brackets/rivets repositioned inside).
 - **Touchdown too far right (v0.30.7):** `layout()` put the destination at `viewL + innerWidth * .7`; now `.58`.
+- **Selection box collapsed to a line (v0.30.8):** core appends `.sel` (the Figma-style box) inside every `[data-selectable]`; `.abp-console>*:not(.abp-con-deco){position:relative}` also matched it. Added `:not(.sel)` there and to two older ab-hub child rules (`.hb-pp-page > *`, `.hb-patch > *`).
 - **jsDelivr served a cached 404 for v0.30.7** right after tagging even though `package.json` at the tag already answered 200: poll the exact file's hash, purging until it matches ([[lesson_jsdelivr-caches-404-before-tag]]).
 - **CMS:** 6 book quotes (Quotes collection, `name` = quote); WB-09 body AOL Hometown dates; every Sort field ×10 (backup `backups/2026-09-28-sort-before.json`; Mission Types not done).
 
