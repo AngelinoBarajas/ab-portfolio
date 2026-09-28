@@ -209,6 +209,23 @@
 .abp-fl{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust);margin-bottom:8px}
 .abp-reset{all:unset;box-sizing:border-box;float:right;margin:0 0 6px 12px;padding:5px 9px;border:1px solid var(--hair2);font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dust);cursor:var(--hand,pointer);transition:border-color .2s,color .2s}
 .abp-reset:hover,.abp-reset:focus-visible{border-color:var(--signal);color:var(--star)}
+/* star chart: the Knowledge-system add-on satellite (toggle, not a stop) */
+.abp-kssat{position:absolute;width:56px;height:30px;margin:-15px 0 0 -28px;padding:0;border:0;background:none;color:inherit;font:inherit;cursor:var(--hand,pointer);z-index:3}
+.abp-kssat .abp-counter{display:block}
+.abp-kssat-body{position:absolute;inset:0;display:grid;place-items:center;border:1px dashed rgba(255,210,154,.45);transition:border-color .3s,background .3s,box-shadow .3s}
+.abp-kssat svg{width:44px;height:22px;overflow:visible;transition:transform .45s cubic-bezier(.2,.9,.2,1.3)}
+.abp-kssat .p{fill:#1d2350;stroke:#FFD29A;stroke-width:1}
+.abp-kssat .a{stroke:#FFD29A;stroke-width:1.2}
+.abp-kssat .b{fill:#F2F0EA;stroke:#FFD29A;stroke-width:1}
+.abp-kssat .l{fill:rgba(255,210,154,.35);transition:fill .3s}
+.abp-kssat:hover .abp-kssat-body,.abp-kssat:focus-visible .abp-kssat-body{border-style:solid;background:rgba(255,210,154,.08)}
+.abp-kssat:hover svg,.abp-kssat:focus-visible svg{transform:rotate(-12deg) scale(1.08)}
+.abp-kssat:focus-visible{outline:none}
+.abp-kssat.is-on .abp-kssat-body{border-style:solid;border-color:#FFD29A;background:rgba(255,210,154,.12);box-shadow:0 0 18px rgba(255,210,154,.35)}
+.abp-kssat.is-on .l{fill:#FFD29A;animation:abp-wave-dot 1.2s ease-in-out infinite}
+.abp-kssat .abp-tag{top:calc(100% + 6px);white-space:nowrap}
+.abp-kssat-state{position:absolute;left:50%;top:calc(100% + 20px);transform:translateX(-50%);white-space:nowrap;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#FFD29A;opacity:.75}
+.abp-kssat.is-on .abp-kssat-state{opacity:1}
 .abp-addons{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:10px}
 .abp-addon-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust)}
 .abp-chip.is-addon{border-style:dashed}

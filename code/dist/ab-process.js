@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process v0.29.2 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process v0.29.3 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abProcessInit) return;
@@ -58,7 +58,7 @@ window.Webflow.push(function(){
   }
 
   /* ---------- star chart ---------- */
-  var chart = $('[data-chart]'), ORB = [0.36, 0.52, 0.68, 0.84], dests = [];
+  var chart = $('[data-chart]'), ORB = [0.36, 0.52, 0.68, 0.84], dests = [], chartSat = null;
   if (chart && DEST.length){
     ORB.forEach(function(r){ var o = document.createElement('span'); o.className = 'abp-orbit'; o.style.width = o.style.height = (r * 100) + '%'; chart.appendChild(o); });
     var spin = document.createElement('div'); spin.className = 'abp-spin'; chart.appendChild(spin);
@@ -81,6 +81,15 @@ window.Webflow.push(function(){
       });
       spin.appendChild(b); dests.push(b);
     });
+    // the Knowledge System add-on as a satellite on the outer orbit (upper right, in the open sky): not a stop,
+    // clicking it toggles the add-on, same state as the form chip; the small satellite then circles the main planet
+    var kr = ORB[3] / 2 * 100, ka = -32 * Math.PI / 180;
+    chartSat = document.createElement('button'); chartSat.type = 'button'; chartSat.className = 'abp-kssat'; chartSat.setAttribute('aria-pressed', 'false');
+    chartSat.setAttribute('aria-label', 'Knowledge system add-on');
+    chartSat.style.left = (50 + Math.cos(ka) * kr).toFixed(2) + '%'; chartSat.style.top = (50 + Math.sin(ka) * kr).toFixed(2) + '%';
+    chartSat.innerHTML = '<span class="abp-counter"><span class="abp-kssat-body"><svg viewBox="0 0 44 22" aria-hidden="true"><rect class="p" x="1" y="6" width="11" height="10"/><rect class="p" x="32" y="6" width="11" height="10"/><path class="a" d="M12 11H16M28 11H32"/><rect class="b" x="16" y="4" width="12" height="14"/><circle class="l" cx="22" cy="11" r="2.2"/></svg></span><span class="abp-tag">Knowledge system</span><span class="abp-kssat-state">+ Add-on</span></span>';
+    chartSat.addEventListener('click', function(){ toggleKs(chartSat); });
+    spin.appendChild(chartSat);
   }
   // panel: the stops list + "Add a stop" (script UI; the destination copy itself comes from the CMS)
   var panelBody = $('.ab_chart_panel-body'), stopsBox = null, addBtn = null;
@@ -370,13 +379,16 @@ window.Webflow.push(function(){
       lis.forEach(function(li, i){ li.classList.remove('is-on'); setTimeout(function(){ li.classList.add('is-on'); }, 140 + 110 * i); });
     }
     if (!hasGsap || reduce){ sat.style.left = '50%'; return; }
-    // the orbit: left to right across the section with a slow bob and roll; a card is pinged as the satellite crosses its middle
+    // the orbit: glides back and forth across the section (easing at each end, always on screen) with a slow bob and
+    // roll; a card is pinged each time the satellite crosses its middle, in either direction
     var o = { p: 0 }, dragging = false, hit = [], W = 0;
     function measure(){ W = grid.clientWidth; }
+    // width can read 0 at startup (layout not settled yet), so re-measure on view and fall back to a live read
+    function posX(p){ if (!W) measure(); return 8 + Math.max(0, W - 84 - 16) * p; } // 84 = satellite width
     measure(); addEventListener('resize', measure);
-    var loop = gsap.to(o, { p: 1, duration: 16, ease: 'none', repeat: -1, paused: true, onRepeat: function(){ hit = []; }, onUpdate: function(){
+    var loop = gsap.to(o, { p: 1, duration: 10, ease: 'sine.inOut', repeat: -1, yoyo: true, paused: true, onRepeat: function(){ hit = []; }, onUpdate: function(){
       if (dragging) return;
-      var x = -60 + (W + 120) * o.p, y = Math.sin(o.p * Math.PI * 4) * 6, rot = Math.sin(o.p * Math.PI * 2) * 6;
+      var x = posX(o.p), y = Math.sin(o.p * Math.PI * 4) * 6, rot = Math.sin(o.p * Math.PI * 2) * 6;
       gsap.set(sat, { x: x, y: y, rotation: rot });
       cols.forEach(function(col, i){
         var mid = col.offsetLeft + col.offsetWidth / 2, near = Math.abs(x + 42 - mid) < col.offsetWidth * .28;
@@ -386,9 +398,9 @@ window.Webflow.push(function(){
     if (window.Draggable){
       Draggable.create(sat, { type: 'x,y', bounds: grid.parentNode, inertia: !!window.InertiaPlugin,
         onPress: function(){ dragging = true; cone.classList.remove('is-on'); },
-        onRelease: function(){ var d = this; gsap.delayedCall(.6, function(){ gsap.to(sat, { x: -60 + (W + 120) * o.p, y: 0, rotation: 0, duration: 1.2, ease: 'elastic.out(1,.5)', onComplete: function(){ dragging = false; } }); }); } });
+        onRelease: function(){ var d = this; gsap.delayedCall(.6, function(){ gsap.to(sat, { x: posX(o.p), y: 0, rotation: 0, duration: 1.2, ease: 'elastic.out(1,.5)', onComplete: function(){ dragging = false; } }); }); } });
     }
-    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ es[0].isIntersecting ? loop.play() : loop.pause(); }).observe(grid);
+    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ if (es[0].isIntersecting){ measure(); loop.play(); } else loop.pause(); }).observe(grid);
     else loop.play();
   })();
   (function(){
@@ -419,8 +431,14 @@ window.Webflow.push(function(){
   try { ks = localStorage.getItem(KS_KEY) === '1'; } catch (e){}
   var KS_ICON = '<svg class="abp-ks-ico" viewBox="0 0 14 11" aria-hidden="true"><path d="M2 8.5L7 2.5L12 8.5Z"/><circle cx="2" cy="8.5" r="1.6"/><circle cx="7" cy="2.5" r="2"/><circle cx="12" cy="8.5" r="1.6"/></svg>';
   // the satellite follows the main destination (moved into its counter-rotating layer, so it stays upright)
+  function toggleKs(from){
+    ks = !ks; try { localStorage.setItem(KS_KEY, ks ? '1' : ''); } catch (e){}
+    syncKs(); if (toast) toast(ks ? 'Add-on · Complete knowledge system' : 'Add-on removed');
+    if (from && hasGsap && !reduce) gsap.fromTo(from, { scale: .92 }, { scale: 1, duration: .5, ease: 'elastic.out(1,.4)', clearProps: 'scale' });
+  }
   function syncKs(){
     if (ksChip) ksChip.setAttribute('aria-pressed', ks ? 'true' : 'false');
+    if (chartSat){ chartSat.setAttribute('aria-pressed', ks ? 'true' : 'false'); chartSat.classList.toggle('is-on', ks); var stt = $('.abp-kssat-state', chartSat); if (stt) stt.textContent = ks ? 'Add-on · on' : '+ Add-on'; }
     if (ksField) ksField.value = ks ? 'Complete knowledge system' : '';
     if (!dests.length) return;
     if (!ksSat){ ksSat = document.createElement('span'); ksSat.className = 'abp-ks'; ksSat.setAttribute('aria-hidden', 'true'); ksSat.innerHTML = '<span class="abp-ks-orb">' + KS_ICON + '</span>'; }
@@ -449,11 +467,7 @@ window.Webflow.push(function(){
     ksChip = $('[data-ks]', ksRow);
     var fm = chips.closest('form');
     if (fm && !$('input[name="Add-ons"]', fm)){ ksField = document.createElement('input'); ksField.type = 'hidden'; ksField.name = 'Add-ons'; ksField.value = ''; fm.appendChild(ksField); }
-    ksChip.addEventListener('click', function(){
-      ks = !ks; try { localStorage.setItem(KS_KEY, ks ? '1' : ''); } catch (e){}
-      syncKs(); if (toast) toast(ks ? 'Add-on · Complete knowledge system' : 'Add-on removed');
-      if (hasGsap && !reduce) gsap.fromTo(ksChip, { scale: .95 }, { scale: 1, duration: .45, ease: 'elastic.out(1,.4)' });
-    });
+    ksChip.addEventListener('click', function(){ toggleKs(ksChip); });
     if (moreChip) moreChip.addEventListener('click', function(){ setMore(moreChip.getAttribute('aria-pressed') !== 'true'); });
   }
   function setMore(on){

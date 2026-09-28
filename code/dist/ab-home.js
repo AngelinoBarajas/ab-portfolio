@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.29.2 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.29.3 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -517,17 +517,17 @@ window.Webflow.push(function(){
 
   /* ---------- bento layout (6 tracks, dense): tall and wide cards zig-zag so every row is full
        Webflow (4×2) · 3D (2×2)
-       Motion (2×2) · Planet · Trajectory / Deploys · Brand
+       Custom deploys (2×2) · Planet · Trajectory / Motion · Brand
        Field notes (4) · CMS
        Systems · Performance (4)
      Tablet/phone fall back to Webflow's 2- and 1-column rules for is-tall / is-wide ---------- */
   (function(){
     var grid = $('#capabilities .ab_bento_grid'); if (!grid) return;
     function cell(n){ var c = $('[data-name="Card / ' + n + '"]', grid); return c && c.closest('.ab_bento_cell'); }
-    var order = ['motion', 'specimen', 'trajectory', 'deploys', 'branding', 'observatory', 'cms-integrations', 'systems', 'performance'].map(cell);
+    var order = ['deploys', 'specimen', 'trajectory', 'motion', 'branding', 'observatory', 'cms-integrations', 'systems', 'performance'].map(cell);
     if (order.some(function(c){ return !c; })) return;
-    var set = { motion: 'is-tall', observatory: 'is-wide', performance: 'is-wide' };
-    ['motion', 'specimen', 'trajectory', 'deploys', 'branding', 'observatory', 'cms-integrations', 'systems', 'performance'].forEach(function(n, i){
+    var set = { deploys: 'is-tall', observatory: 'is-wide', performance: 'is-wide' };
+    ['deploys', 'specimen', 'trajectory', 'motion', 'branding', 'observatory', 'cms-integrations', 'systems', 'performance'].forEach(function(n, i){
       var c = order[i]; c.classList.remove('is-tall', 'is-wide', 'is-half');
       if (set[n]) c.classList.add(set[n]);
       grid.appendChild(c);
@@ -632,7 +632,9 @@ window.Webflow.push(function(){
       if (card) card.addEventListener('pointerenter', function(){ gsap.fromTo(orb, { rotation: 0 }, { rotation: -360, svgOrigin: '0 0', duration: 1.6, ease: 'power3.inOut' }); });
     },
     terminal: function(v){
-      var lines = ['<span class="hi">$</span> git push origin main', '→ building site with Astro', '<span class="ok">✓</span> build complete', '→ deploying to the edge', '<span class="ok">✓</span> live at <span class="hi">yourbrand.com</span>'];
+      // a full deploy log: the card is tall now, so the whole run fits (build, checks, edge, live)
+      var ok = '<span class="ok">✓</span> ', lines = ['<span class="hi">$</span> git push origin main', '→ building site with Astro', '&nbsp;&nbsp;' + ok + '14 pages · 3 collections', '&nbsp;&nbsp;' + ok + 'images optimized · −62%', ok + 'build complete in 8.4s', '→ running checks',
+        '&nbsp;&nbsp;' + ok + 'Lighthouse 98 · 100 · 100 · 100', '&nbsp;&nbsp;' + ok + 'links 212 / 212', '&nbsp;&nbsp;' + ok + 'reduced motion respected', '→ deploying to the edge', '&nbsp;&nbsp;' + ok + '31 regions warm', ok + 'live at <span class="hi">yourbrand.com</span>'];
       v.innerHTML = '<div class="v-term"><div class="bar"><i></i><i></i><i></i></div><div class="out"></div></div>';
       var out = $('.out', v), vis = false, running = false;
       // every line is always in the layout; typing only toggles visibility, so the card never changes height
@@ -642,7 +644,7 @@ window.Webflow.push(function(){
         if (running) return; running = true;
         rows.forEach(function(r){ r.style.visibility = 'hidden'; });
         var i = 0;
-        (function nx(){ if (i < rows.length){ rows[i++].style.visibility = 'visible'; setTimeout(nx, 520); } else setTimeout(function(){ running = false; if (vis) run(); }, 4200); })();
+        (function nx(){ if (i < rows.length){ rows[i++].style.visibility = 'visible'; setTimeout(nx, 380); } else setTimeout(function(){ running = false; if (vis) run(); }, 4200); })();
       }
       onView(v, function(x){ vis = x; if (x && !reduce) run(); });
     },
