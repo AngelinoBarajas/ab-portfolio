@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.29.9 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.29.10 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -1559,6 +1559,16 @@ window.Webflow.push(function(){
     }
     btn.addEventListener('click', function(){ if (isOpen) close(true); else open(); });
     links.forEach(function(a){ a.addEventListener('click', function(){ close(false); }); });
+    // HQ: a small home button above the destinations (the logo is the only other way home on phones); it stays small
+    // so the big destination links keep their size
+    var list = $('.ab_menu_links', menu);
+    if (list && !$('.ab_menu_hq', menu)){
+      var hq = document.createElement('a'); hq.className = 'ab_menu_hq'; hq.href = '/';
+      hq.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 7.5L8 2.5l6 5M4 6.5V13.5h8V6.5M6.5 13.5V9.5h3v4"/></svg><b>HQ</b><span>Home</span>';
+      if (location.pathname.replace(/\/+$/, '') === '') hq.setAttribute('aria-current', 'page');
+      list.parentNode.insertBefore(hq, list);
+      hq.addEventListener('click', function(){ close(false); });
+    }
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && isOpen) close(true); });
     addEventListener('resize', function(){ if (innerWidth > 991 && isOpen) close(false); });
   })();

@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process.css v0.29.9 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process.css v0.29.10 · github.com/AngelinoBarajas/ab-portfolio */
 /* Process (/process) · the flight planner. Loaded from the page <head>.
    Only what the Designer can't hold: font-stretch, outline text, script-built pieces (abp-*: chart planets + orbits,
    route path / ship / pad, gauge, chips, form fields), state classes (.is-on, aria-pressed), pseudos and reduced motion.
@@ -171,7 +171,7 @@
 .ab_crew_link-label{transform:translate(-50%,-50%) rotate(-90deg)}
 /* crew satellite: drifts above the two cards, drops a signal cone on the one below and re-ticks its list */
 .ab_crew_grid.has-sat{position:relative}
-.abp-sat-orbit{position:absolute;left:0;right:0;top:-46px;height:40px;pointer-events:none;z-index:4}
+.abp-sat-orbit{position:absolute;left:0;right:0;top:-46px;height:40px;pointer-events:none;z-index:12} /* above a tapped (selected, z 8) card */
 .abp-sat{--sat:#0B0C14;position:absolute;left:0;top:-8px;width:84px;height:42px;pointer-events:auto;cursor:grab;touch-action:none}
 .abp-sat:active{cursor:grabbing}
 .abp-sat .sat-ico{width:84px;height:42px;filter:drop-shadow(0 6px 8px rgba(11,12,20,.18))}
