@@ -84,7 +84,7 @@ Back up the current field first (paste into `webflow/backup/`). Insert each `[Fi
 
 ## I. Flight computer (Services depth session, design approved 2026-09-28)
 
-- [ ] **I1. Rename "Under the hood" → "Flight computer"** (Services template › `section_sv-hood#hood`). **Wait until all 8 services have a program**: until then the 5 without one still show the plain snippet, and this heading + lede would promise a console that isn't there. The script already shows the new text on the 3 finished services, so visitors see it today; this step puts it in the raw HTML (crawlers, no-JS).
+- [ ] **I1. Rename "Under the hood" → "Flight computer"** (Services template › `section_sv-hood#hood`). **Ready (2026-09-28): all 8 services have a program since ab-services v0.28.9.** The script already shows the new text, so visitors see it today; this step puts it in the raw HTML (crawlers, no-JS).
   1. Navigator › `section_sv-hood` › … › `ab_sv_code_copy` › eyebrow `text-style-eyebrow`: `/engineer · under the hood` → `/engineer · flight computer`
   2. The H2 `#hood-h`: first text `Under the ` → `Flight `; the outline span (`t-outline`) `hood` → `computer`
   3. The lede `ab_sec-h_lede`: → `The code that flies this service. Run a program and watch what each line does.`
