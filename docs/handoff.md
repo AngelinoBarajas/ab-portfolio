@@ -1,4 +1,4 @@
-# Session handoff (2026-09-28, v0.29.13 on staging; next: Angelino's review, tablet/phone pass, Designer step I1)
+# Session handoff (2026-09-28, v0.29.15 on staging; next: Angelino's review, tablet/phone pass, Designer step I1)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -9,6 +9,12 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 - **Optional next depth (2b):** a small "Flight programs" collection (Service ref, order, label, code, note) for CH 02+ per service; needs a Designer step (list filtered by Service = current item).
 - **Still waiting from before:** `docs/designer-steps.md` › H1–H6, G5/G6/G8, Nav `ture` tidy-up.
 - **Before touching code:** `git pull`; tags are shared with parallel sessions. **Next free tag: `git fetch --tags && git tag --sort=-v:refname | head -1`** (v0.28.12 at the end of this session). **v0.28.7 is a stray tag** (docs commit ae2512d, same code as v0.28.6): never reuse it.
+
+## Latest (2026-09-28, v0.29.14 → v0.29.15) · verified on staging 2026-09-28
+
+Live: ab-core CSS **v0.29.15** (JS v0.29.10), ab-home **v0.29.15**.
+- **Field notes chart:** the beam draws each constellation as it passes going right and erases them in reverse coming back (hover speeds the scan; it no longer reveals all at once).
+- **Home bento:** Custom deploys is one row again with two mini cards under it (`.is-minis` cell): "Now booking" reads the nav's CMS-bound `[data-bind="availability"]` (Q4 2026 today) → /contact#call, and "Reply time · < 1 business day" → /contact. Order: Webflow + 3D / Custom deploys · Motion · Planet / minis · Brand · Trajectory / Field notes (wide) · CMS / Systems · Performance (wide). Light cards run down the middle column.
 
 ## Latest (2026-09-28, v0.29.8 → v0.29.11) · verified on staging 2026-09-28
 
