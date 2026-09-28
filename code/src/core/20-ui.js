@@ -37,7 +37,13 @@
 
   /* ---------- layout grid overlay (Shift+G, footer toggle) ---------- */
   var gbtn = $('#gridToggle');
-  function toggleGrid(){ var on = !lgrid.classList.contains('on'); lgrid.classList.toggle('on', on); if (gbtn) gbtn.setAttribute('aria-pressed', on); toast(on ? 'Layout grid on · 12 columns · 24px gutter' : 'Layout grid off'); }
+  // the toast reads the overlay's real numbers (columns shown at this width, gap, side margins, max width), so it never drifts from the CSS
+  function gridInfo(){
+    var inner = $('.ab_lgrid-inner', lgrid); if (!inner) return '';
+    var cs = getComputedStyle(inner), n = $$('i', inner).filter(function(i){ return getComputedStyle(i).display !== 'none'; }).length;
+    return ' · ' + n + ' columns · ' + Math.round(parseFloat(cs.columnGap)) + 'px gap · ' + Math.round(parseFloat(getComputedStyle(lgrid).paddingLeft)) + 'px margins · ' + Math.round(parseFloat(cs.maxWidth)) + 'px max';
+  }
+  function toggleGrid(){ var on = !lgrid.classList.contains('on'); lgrid.classList.toggle('on', on); if (gbtn) gbtn.setAttribute('aria-pressed', on); toast(on ? 'Layout grid on' + gridInfo() : 'Layout grid off'); }
   if (gbtn){
     if (!gbtn.hasAttribute('tabindex')) gbtn.tabIndex = 0;
     gbtn.setAttribute('aria-pressed', 'false');

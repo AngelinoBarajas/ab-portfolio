@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.28.11 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.28.12 · github.com/AngelinoBarajas/ab-portfolio */
 /* =========================================================
    AB Portfolio · ab-core.css (site-wide)
    Only what the Webflow Designer can't express: pseudo-elements, state
@@ -504,6 +504,9 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 .ab_lgrid.on{opacity:1}
 .ab_lgrid-inner{height:100%;max-width:var(--_spacing---layout--max-width);margin-inline:auto;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:16px}
 .ab_lgrid i{background:rgba(255,72,72,.07);border-inline:1px solid rgba(255,72,72,.16)}
+/* card rows share the layout grid's 16px column gap so their edges sit on the Shift+G columns. The Observatory card grid
+   (.ab_ks-grid) lives in ab-knowledge.css, pinned per page (v0.25.5 on most); div.ab_ks-grid outranks it everywhere */
+div.ab_ks-grid{column-gap:16px}
 @media (max-width:767px){.ab_lgrid-inner{grid-template-columns:repeat(4,minmax(0,1fr));column-gap:16px}.ab_lgrid i:nth-child(n+5){display:none}}
 
 /* ---------- text effects ---------- */

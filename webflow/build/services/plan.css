@@ -1,5 +1,5 @@
 .section_sv-plan{position:relative}
-.ab_sv_plan{position:relative;z-index:3;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;padding-top:34px}
+.ab_sv_plan{position:relative;z-index:3;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));column-gap:16px;row-gap:18px;padding-top:34px}
 .ab_sv_plan_line{position:absolute;left:0;right:0;top:8px;height:2px;background-color:var(--hair)}
 .ab_sv_plan_fill{position:absolute;left:0;top:8px;width:100%;height:2px;background-image:linear-gradient(90deg,#FF6A3D,#ffb08f)}
 .ab_sv_plan_item{position:relative;padding:20px 20px 22px;border:1px solid var(--hair);background-color:rgba(14,16,32,0.62)}
