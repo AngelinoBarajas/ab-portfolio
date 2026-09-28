@@ -33,7 +33,8 @@
   // "Test flight" (a proof of concept) is a status, not a discipline: badge its chip, keep it out of the discipline counts
   var TEST = AB.testFlight ? AB.testFlight($$('[data-meta-types] .ab_meta_chip')) : false;
   TYPES = TYPES.filter(function(t){ return !/^test flight$/i.test(t); });
-  var isLogo = TYPES.indexOf('Logo') > -1 || TYPES.indexOf('Branding') > -1;
+  // an identity mission: logo/branding work with no website or app of its own (kip is branded, but it's a site + app)
+  var isLogo = (TYPES.indexOf('Logo') > -1 || TYPES.indexOf('Branding') > -1) && TYPES.indexOf('Website') < 0 && TYPES.indexOf('App') < 0;
   // a system mission (content system with no website of its own, e.g. the Knowledge System add-on)
   var isSystem = !isLogo && TYPES.indexOf('Content system') > -1 && TYPES.indexOf('Website') < 0;
 
@@ -51,7 +52,7 @@
   (function(){
     var MI = MOCKS[SLUG] && MOCKS[SLUG].img; if (!MI) return;
     var still = reduce || !!(navigator.connection && navigator.connection.saveData);
-    CH.forEach(function(c){ var L = MI[c.id]; if (!L || c.src) return; c.src = still ? (L[1] || L[0]) : L[0]; c.before = c.src; c.after = L[1] || L[0]; });
+    CH.forEach(function(c){ var L = MI[c.id]; if (!L || c.src) return; c.src = still ? (L[1] || L[0]) : L[0]; c.before = c.src; c.after = L[1] || L[0]; c.loop = !still; });
   })();
   var PINS = $$('[data-pins-source] .w-dyn-item').map(function(item){
     var it = $('[data-pin]', item) || item;

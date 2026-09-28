@@ -7,7 +7,8 @@
     function markSVG(mode){ return AB.markSVG({ grid: mode !== 'light' && mode !== 'plain', dims: mode === 'grid' }); }
     function smallMark(color){ var M = AB.MARK; return '<svg viewBox="0 0 490.16 241.75" aria-hidden="true"><g fill="' + color + '"><path d="' + M.a + '"/><path d="' + M.planet + '"/><path d="' + M.b + '"/></g></svg>'; }
     function channelView(c){
-      var v = '<div class="view ' + c.kind + (c.mode === 'light' ? ' light' : '') + '" data-ch="' + esc(c.id) + '" data-kind="' + c.kind + '" role="tabpanel" aria-label="' + esc(c.label) + '">';
+      // (a mobile still/loop centers its phone inline too, so it doesn't wait on a stylesheet release)
+      var v = '<div class="view ' + c.kind + (c.mode === 'light' ? ' light' : '') + '" data-ch="' + esc(c.id) + '" data-kind="' + c.kind + '" role="tabpanel" aria-label="' + esc(c.label) + '"' + (c.kind === 'mobile' ? ' style="display:grid;place-items:center"' : '') + '>';
       if (c.kind === 'img') v += c.src ? '<img class="full" src="' + esc(c.src) + '" alt="' + esc(c.caption) + '" loading="lazy">' : '';
       else if (c.kind === 'mobile') v += '<div class="phone-f"><div><img src="' + esc(c.src) + '" alt="' + esc(c.caption) + '" loading="lazy"></div></div>';
       else if (c.kind === 'wipe') v += '<div class="wipe"><img src="' + esc(c.before) + '" alt="Design file"><img class="aft" src="' + esc(c.after) + '" alt="Built site"><span class="hdl"><i>⇆</i></span><span class="lab l">Design</span><span class="lab r">Build</span></div>';
@@ -26,7 +27,10 @@
       'cks-styles': 'DEMO · design tokens, live', 'cks-story': 'DEMO · scroll story', 'cks-map': 'DEMO · knowledge map', 'cks-sketch': 'DEMO · sketch tool', 'cks-publish': 'DEMO · cms → site + json-ld', 'cks-plan': 'FIGJAM · ideation → wireframes → build' };
     screen.innerHTML = CH.map(channelView).join('') + '<div class="scan"></div><div class="roll"></div><div class="vig"></div><canvas class="noise" id="noise" width="160" height="100"></canvas>' +
       '<i class="brk tl"></i><i class="brk tr"></i><i class="brk bl"></i><i class="brk br"></i><div class="osd" id="osd">CH 1</div>';
-    chans.innerHTML = CH.map(function(c, i){ return '<button type="button" role="tab" data-ch="' + esc(c.id) + '" aria-selected="' + (i ? 'false' : 'true') + '"><span class="k">' + (i + 1) + '</span><span>' + esc(c.label) + '</span><span class="t">' + (TYPE[c.kind] || '') + '</span></button>'; }).join('');
+    // a recorded loop of the real site (MOCKS[slug].img) is labeled as a recording, not a still
+    CH.forEach(function(c){ if (c.loop){ TYPE['loop-' + c.kind] = 'Loop'; KIND['loop-' + c.kind] = 'LOOP · recorded from the site' + (c.kind === 'mobile' ? ' · phone' : ''); } });
+    function tk(c){ return c.loop ? 'loop-' + c.kind : c.kind; }
+    chans.innerHTML = CH.map(function(c, i){ return '<button type="button" role="tab" data-ch="' + esc(c.id) + '" aria-selected="' + (i ? 'false' : 'true') + '"><span class="k">' + (i + 1) + '</span><span>' + esc(c.label) + '</span><span class="t">' + (TYPE[tk(c)] || '') + '</span></button>'; }).join('');
     chans.style.setProperty('--n', CH.length);
     var views = $$('.view', screen), chBtns = $$('button', chans), osd = $('#osd'), monLabel = $('#monLabel'), monCap = $('#monCap'), monKind = $('#monKind');
     // coded scenes need this mission's mockup spec for that kind; one broken scene never stops the monitor
@@ -51,9 +55,9 @@
       seenCh[i] = true; if (CH.length > 1 && Object.keys(seenCh).length >= CH.length && AB.quest) AB.quest('channels');
       views.forEach(function(v, k){ v.classList.toggle('on', k === i); });
       chBtns.forEach(function(b, k){ b.setAttribute('aria-selected', k === i ? 'true' : 'false'); });
-      monLabel.textContent = c.label; monCap.textContent = c.caption; monKind.textContent = KIND[c.kind] || '';
+      monLabel.textContent = c.label; monCap.textContent = c.caption; monKind.textContent = KIND[tk(c)] || '';
       $('#tCh').textContent = (i + 1) + ' / ' + CH.length;
-      $('#tSrc').textContent = c.kind.indexOf('live') === 0 ? 'Live code' : liveOn(c) ? 'Live site' : /^cks-/.test(c.kind) ? 'Coded demo' : c.kind === 'wipe' ? 'Figma + site' : /^(figma|phone|flow|exploded|cms|sketch|vector|graph|library|voice|setup|video|schema|portable)$/.test(c.kind) ? 'Mockup' : c.kind === 'logo' || c.kind === 'apps' ? 'Vector' : 'Screenshot';
+      $('#tSrc').textContent = c.kind.indexOf('live') === 0 ? 'Live code' : liveOn(c) ? 'Live site' : c.loop ? 'Recording' : /^cks-/.test(c.kind) ? 'Coded demo' : c.kind === 'wipe' ? 'Figma + site' : /^(figma|phone|flow|exploded|cms|sketch|vector|graph|library|voice|setup|video|schema|portable)$/.test(c.kind) ? 'Mockup' : c.kind === 'logo' || c.kind === 'apps' ? 'Vector' : 'Screenshot';
       if (liveOn(c)){ monKind.textContent = 'LIVE · ' + LIVE.host; chBtns[i].querySelector('.t').textContent = 'Live'; }
       osd.textContent = 'CH ' + (i + 1) + ' · ' + c.label;
       if (!silent){ staticBurst(); if (!reduce && hasGsap) gsap.fromTo(osd, { opacity: 0 }, { opacity: 1, duration: .1, repeat: 3, yoyo: true }); }
