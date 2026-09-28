@@ -3,6 +3,9 @@
      The "marks on a grid" card drops to one row and this card takes the freed cell below it, right after
      Custom deploys, so auto-placement keeps every row full. A native Designer card ([data-visual="observatory"])
      wins: then the script only draws its visual. ---------- */
+  // services lede (Designer text): the new line until it's edited in the Designer (docs/designer-steps.md › J2)
+  $$('#capabilities .ab_section-lede').forEach(function(p){ if (/one planet you can throw/i.test(p.textContent)) p.textContent = 'Eight services, one orbit: everything a site needs to launch, grow and keep working long after day one.'; });
+
   (function(){
     var grid = $('#capabilities .ab_bento_grid'); if (!grid) return;
     var brand = $('[data-name="Card / branding"]', grid), deploys = $('[data-name="Card / deploys"]', grid);
@@ -67,7 +70,7 @@
         '<article data-name="Card / availability" data-selectable="" class="ab_bento-card is-mini is-book"><div class="mini-k"><span><i class="mini-dot" aria-hidden="true"></i>Now booking</span>' + (months ? '<span class="mini-months" aria-hidden="true">' + months + '</span>' : '') + '</div>' +
           '<h3 class="ab_bento-card_title">' + esc(when || 'New missions') + '</h3><p class="mini-p">Taking on new missions. Discovery calls are 30 minutes.</p>' +
           '<a class="ab_bento-card_link" href="/contact#call" aria-label="Book a discovery call">↗</a></article>' +
-        '<article data-name="Card / reply" data-selectable="" class="ab_bento-card is-mini is-reply"><div class="mini-k"><span>Reply time</span><span class="mini-bubble" aria-hidden="true"><i></i><i></i><i></i></span></div>' +
+        '<article data-name="Card / reply" data-selectable="" class="ab_bento-card is-mini is-reply"><span class="mini-aura" aria-hidden="true"><i></i></span><span class="mini-sparks" aria-hidden="true"><b style="left:62%;top:18%;--d:0s;--s:1"></b><b style="left:84%;top:34%;--d:0.9s;--s:0.7"></b><b style="left:74%;top:62%;--d:1.7s;--s:0.55"></b><b style="left:90%;top:78%;--d:0.4s;--s:0.85"></b><b style="left:48%;top:12%;--d:2.3s;--s:0.5"></b><b style="left:34%;top:82%;--d:1.2s;--s:0.6"></b><b style="left:12%;top:20%;--d:2.8s;--s:0.45"></b></span><div class="mini-k"><span>Reply time</span><span class="mini-bubble" aria-hidden="true"><i></i><i></i><i></i></span></div>' +
           '<h3 class="ab_bento-card_title">&lt; 1 business day</h3><p class="mini-p">A real person on the other end, not a ticket queue.</p>' +
           '<a class="ab_bento-card_link" href="/contact" aria-label="Send a message">↗</a></article>';
       $$('.ab_bento-card', minis).forEach(function(c){ if (AB.cardFx) AB.cardFx(c); });
@@ -165,7 +168,7 @@
     easing: function(v){
       if (!hasGsap) return;
       var eases = ['expo.out', 'power3.inOut', 'elastic.out(1,0.4)', 'back.out(2.2)', 'bounce.out'], ei = 0;
-      v.innerHTML = '<div class="v-ease"><svg viewBox="0 0 200 120" preserveAspectRatio="none"><path d="M0 110H200M0 10H200" stroke="currentColor" stroke-opacity=".15" fill="none" vector-effect="non-scaling-stroke"/><path class="cv" fill="none" stroke="#FF6A3D" stroke-width="2" vector-effect="non-scaling-stroke"/><circle class="dt" r="5" fill="#FF6A3D"/></svg><div class="track"><i></i></div></div><button type="button">expo.out ↻</button>';
+      v.innerHTML = '<div class="v-ease"><div class="v-plot"><svg viewBox="0 0 200 120" preserveAspectRatio="none"><path d="M0 110H200M0 10H200" stroke="currentColor" stroke-opacity=".15" fill="none" vector-effect="non-scaling-stroke"/><path class="cv" fill="none" stroke="#FF6A3D" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><i class="dt" aria-hidden="true"></i></div><div class="track"><i></i></div></div><button type="button">expo.out ↻</button>';
       var cv = $('.cv', v), dt = $('.dt', v), sq = $('.track i', v), btn = $('button', v), tr = $('.track', v), tw;
       var lo = 0, hi = 1, trH = 0, seen = true;
       function measure(){ trH = tr.clientHeight; }
@@ -178,11 +181,11 @@
         for (var i = 0; i <= 60; i++){ var t = i / 60; d += (i ? 'L' : 'M') + (t * 200).toFixed(1) + ' ' + Y(E(t)).toFixed(1); }
         cv.setAttribute('d', d); btn.textContent = eases[ei] + ' ↻';
         var o = { t: 0 }; if (tw) tw.kill();
-        tw = gsap.to(o, { t: 1, duration: 1.6, ease: 'none', repeat: -1, repeatDelay: .6, onUpdate: function(){ var e = E(o.t); dt.setAttribute('cx', o.t * 200); dt.setAttribute('cy', Y(e)); sq.style.bottom = ((e - lo) / (hi - lo) * (trH - 14)) + 'px'; } });
+        tw = gsap.to(o, { t: 1, duration: 1.6, ease: 'none', repeat: -1, repeatDelay: .6, onUpdate: function(){ var e = E(o.t); dt.style.left = (o.t * 100) + '%'; dt.style.top = (Y(e) / 120 * 100) + '%'; sq.style.bottom = ((e - lo) / (hi - lo) * (trH - 14)) + 'px'; } });
         if (reduce) tw.progress(1).pause(); else if (!seen) tw.pause();
       }
       function next(){ ei = (ei + 1) % eases.length; play(); }
-      btn.addEventListener('click', next); $('svg', v).addEventListener('click', next); $('svg', v).style.cursor = 'var(--hand, pointer)';
+      btn.addEventListener('click', next); $('.v-plot', v).addEventListener('click', next); $('svg', v).style.cursor = 'var(--hand, pointer)';
       play();
       if (!reduce && window.IntersectionObserver) onView(v, function(on){ seen = on; if (!tw) return; if (on){ measure(); tw.resume(); } else tw.pause(); });
     },
@@ -252,10 +255,32 @@
       onView(v, function(x){ vis = x; if (x) run(); else { timers.forEach(clearTimeout); timers = []; running = false; } });
     },
     pipeline: function(v){
-      v.innerHTML = '<div class="v-pipe"><div class="node src"><span>Airtable</span><span>Sheets</span><span>API</span></div><div class="node">Webhook</div><div class="node dst">Webflow CMS</div><div class="line"><i></i><i></i><i></i></div></div>';
+      // any source, one shape: each source's packet leaves in its own color and lands in Webflow blue
+      var SRC = [['Airtable', '#E8A400'], ['Sheets', '#0F9D58'], ['API', '#7C5CFF']];
+      v.innerHTML = '<div class="v-pipe"><div class="node src">' + SRC.map(function(s, i){ return '<span style="--c:' + s[1] + '"><b></b>' + s[0] + '</span>'; }).join('') + '</div><div class="node hook">Webhook</div><div class="node dst">Webflow CMS<em>+1 item</em></div>' +
+        '<div class="line">' + SRC.map(function(s, i){ return '<i style="--c:' + s[1] + ';--dy:' + ((i - 1) * 33) + 'px;animation-delay:' + (i * .8).toFixed(1) + 's"></i>'; }).join('') + '</div></div>';
     },
     tokens: function(v){
-      v.innerHTML = '<div class="v-tok">' + ['#07080D', '#161A2E', '#F2F0EA', '#FF6A3D', '#4C8DFF', '#7C5CFF'].map(function(c){ return '<i style="background:' + c + '" title="' + c + '"></i>'; }).join('') + '<div class="ramp"><span>Aa</span><span>Aa</span><span>Aa</span><span>Aa</span></div></div>';
+      // one set of tokens skins every component: the same card, button and type scale re-themed three ways
+      var T = [
+        { n: 'AB', brand: '#FF6A3D', surf: '#0B0C14', ink: '#F2F0EA', rad: 0, scale: 1.333, font: 'var(--_typography---font--display)' },
+        { n: 'Nova', brand: '#7C5CFF', surf: '#F1EDFF', ink: '#1A1530', rad: 14, scale: 1.2, font: 'var(--_typography---font--body)' },
+        { n: 'Terra', brand: '#0AA35A', surf: '#FFF6E6', ink: '#1E2A1F', rad: 6, scale: 1.25, font: 'Georgia, serif' }
+      ], ti = 0;
+      v.innerHTML = '<div class="v-sys"><div class="v-sys_tabs">' + T.map(function(t, i){ return '<button type="button" data-i="' + i + '">' + t.n + '</button>'; }).join('') + '<span class="v-sys_n">tokens → components</span></div>' +
+        '<div class="v-sys_body"><dl class="v-sys_tok"></dl><div class="v-sys_ui"><div class="v-sys_card"><small>Case study</small><strong>Mission report</strong><p>One edit, every page.</p><span class="v-sys_btn">Launch →</span></div>' +
+        '<div class="v-sys_ramp"><span>Aa</span><span>Aa</span><span>Aa</span><span>Aa</span></div></div></div></div>';
+      var root = $('.v-sys', v), dl = $('.v-sys_tok', v), tabs = $$('.v-sys_tabs button', v), seen = false, timer = null;
+      function apply(i){
+        var t = T[i]; ti = i;
+        root.style.setProperty('--b', t.brand); root.style.setProperty('--s', t.surf); root.style.setProperty('--k', t.ink);
+        root.style.setProperty('--r', t.rad + 'px'); root.style.setProperty('--f', t.font); root.style.setProperty('--x', t.scale);
+        dl.innerHTML = [['brand', '<i style="background:' + t.brand + '"></i>' + t.brand], ['surface', '<i style="background:' + t.surf + '"></i>' + t.surf], ['radius', t.rad + 'px'], ['scale', '× ' + t.scale]].map(function(r){ return '<div><dt>--' + r[0] + '</dt><dd>' + r[1] + '</dd></div>'; }).join('');
+        tabs.forEach(function(b, k){ b.setAttribute('aria-pressed', k === i ? 'true' : 'false'); });
+      }
+      function loop(){ clearTimeout(timer); if (reduce || !seen) return; timer = setTimeout(function(){ apply((ti + 1) % T.length); loop(); }, 3200); }
+      tabs.forEach(function(b){ b.addEventListener('click', function(e){ e.stopPropagation(); apply(+b.getAttribute('data-i')); loop(); }); });
+      apply(0); onView(root, function(x){ seen = x; if (x) loop(); else clearTimeout(timer); });
     },
     observatory: function(v){
       // wide card (two cards across): a full star chart + a live signal log of real notes; narrow: the compact chart

@@ -15,9 +15,9 @@
     if (mini && POS[T.slug]){
       mini.setAttribute('data-cat', T.cat);
       mini.innerHTML = '<svg viewBox="-250 -130 480 270" aria-hidden="true"><path class="cl" d="' + consPath(T.cat, cx0[0], cx0[1]) + '"/>' +
-        sibs.map(function(t){ var p = POS[t.slug]; if (!p) return ''; var x = p[0] - cx0[0], y = p[1] - cx0[1], on = t === T, r = starR(t), R = SIDE[t.slug] === 'R';
+        sibs.map(function(t){ var p = POS[t.slug]; if (!p) return ''; var x = p[0] - cx0[0], y = p[1] - cx0[1], on = t === T, r = starR(t), L = lbl(x, y, r, SIDE[t.slug], 7);
           return '<g class="' + (on ? 'is-on' : '') + '">' + (on ? '<circle class="st-p" cx="' + x + '" cy="' + y + '" r="' + r + '"/><circle class="st-r" cx="' + x + '" cy="' + y + '" r="' + (r + 5) + '"/>' : '') +
-            '<circle class="st" cx="' + x + '" cy="' + y + '" r="' + r + '"/><text class="tl" x="' + (R ? x + r + 7 : x - r - 7) + '" y="' + (y + 3) + '" text-anchor="' + (R ? 'start' : 'end') + '">' + esc(t.name) + '</text></g>'; }).join('') + '</svg>';
+            '<circle class="st" cx="' + x + '" cy="' + y + '" r="' + r + '"/><text class="tl" x="' + L[0] + '" y="' + (L[1] - 1) + '" text-anchor="' + L[2] + '">' + esc(t.name) + '</text></g>'; }).join('') + '</svg>';
     }
     var stats = $('[data-ks-tstats]');
     if (stats) stats.innerHTML = [['Observations', tNotes.length, '#notes'], ['Missions', tMis.length, '#practice'], ['Services', SVC.length, '#services'], ['Questions', tFaq.length, '#questions']]

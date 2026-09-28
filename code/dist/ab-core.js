@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.29.17 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.30.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -384,7 +384,9 @@ window.Webflow.push(function(){
     if (flag && hasGsap && !reduce && flash){
       gsap.set(flash, { opacity: 1 }); sf.state.warp = 1;
       html.classList.remove('ab-warp-in');
-      var out = function(){ out = null; gsap.timeline().to(flash, { opacity: 0, duration: .6, ease: 'power2.out' }, .05).to(sf.state, { warp: 0, duration: 1.1, ease: 'power2.out' }, 0); };
+      // the first page of a visit (head script sets 'first') drops out of hyperspace slower: the stars hold at full streak, then settle
+      var first = flag === 'first';
+      var out = function(){ out = null; gsap.timeline().to(flash, { opacity: 0, duration: first ? 1.1 : .6, ease: 'power2.out' }, first ? .35 : .05).to(sf.state, { warp: 0, duration: first ? 2.4 : 1.1, ease: first ? 'expo.out' : 'power2.out' }, first ? .25 : 0); };
       // arriving at an anchor (/#launch): the first jump lands short while late layout grows above the target, so the
       // fade showed the sections in between (About → Home testimonials). Stay covered until 30-motion re-aims (AB.arrived)
       var hid = location.hash.length > 1 ? location.hash.slice(1) : '', tgt = null;
@@ -531,6 +533,8 @@ window.Webflow.push(function(){
       var img = $('img', a); if (!img || $('.ab_logo-svg', a)) return;
       img.insertAdjacentHTML('beforebegin', svg()); img.style.display = 'none';
       var s = $('.ab_logo-svg', a);
+      // Home: the nav mark is signal orange (you're at base); other pages keep it white
+      if (location.pathname === '/' && !a.closest('footer, .ab_footer_brand')) a.classList.add('is-home');
       $$('path', s).forEach(function(p){ var L = p.getTotalLength ? Math.ceil(p.getTotalLength()) : 2000; p.style.setProperty('--len', L); });
       if (reduce) return;
       var inFooter = !!a.closest('footer, .ab_footer_brand');

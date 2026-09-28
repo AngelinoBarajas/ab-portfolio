@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.29.17 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.30.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -59,7 +59,8 @@ window.Webflow.push(function(){
   /* ---------- hero toys (anything with data-drag in the hero) ---------- */
   var hero = $('#hero');
   var badge = $('.ab_hero_badge'), sat = $('#sat');
-  if (badge){ badge.tabIndex = 0; badge.setAttribute('aria-label', 'Draggable badge: design and build, established 2026'); }
+  // Est. 1987: designing since birth (Angelino's call). The ring text lives in a Designer embed; set here until it's edited there
+  if (badge){ badge.tabIndex = 0; badge.setAttribute('aria-label', 'Draggable badge: design and build, established 1987'); var btp = $('textPath', badge); if (btp) btp.textContent = btp.textContent.replace(/Est\.\s*\d{4}/, 'Est. 1987'); }
   if (sat){ sat.tabIndex = 0; sat.setAttribute('aria-label', 'Satellite. Please do not drag it.'); }
   if (hero && canDrag){
     $$('[data-drag]', hero).forEach(function(el){
@@ -403,7 +404,8 @@ window.Webflow.push(function(){
     addEventListener('resize', function(){ fit(false); });
     $('#zIn').addEventListener('click', function(){ zoomTo(S + .15); });
     $('#zOut').addEventListener('click', function(){ zoomTo(S - .15); });
-    $('#zFit').addEventListener('click', function(){ fit(true); });
+    var focused = null; // the layer the board is zoomed in on
+    $('#zFit').addEventListener('click', function(){ focused = null; fit(true); });
     viewport.addEventListener('wheel', function(e){ if (!e.ctrlKey && !e.metaKey) return; e.preventDefault(); e.stopPropagation(); zoomTo(S * (e.deltaY > 0 ? .92 : 1.08)); }, { passive: false });
 
     Draggable.create(world, { type: coarse ? 'x' : 'x,y', trigger: viewport, inertia: true, dragClickables: false, allowNativeTouchScrolling: true,
@@ -429,8 +431,14 @@ window.Webflow.push(function(){
       b.addEventListener('click', function(){
         var f = frames.filter(function(x){ return x.getAttribute('data-slug') === b.getAttribute('data-target'); })[0]; if (!f) return;
         select(f); lastInteract = Date.now();
-        var cx = (f.offsetLeft + gsap.getProperty(f, 'x') + f.offsetWidth / 2) * S, cy = (f.offsetTop + gsap.getProperty(f, 'y') + f.offsetHeight / 2) * S;
-        gsap.to(world, { x: viewport.offsetWidth / 2 - cx, y: viewport.offsetHeight / 2 - cy, duration: .8, ease: 'power3.inOut', onUpdate: updateMM });
+        // a layer zooms in on its frame (~126%, less if the frame wouldn't fit); the same layer again zooms back out to fit
+        var slug = b.getAttribute('data-target');
+        if (focused === slug){ focused = null; fit(true); return; }
+        focused = slug;
+        var vw = viewport.offsetWidth, vh = viewport.offsetHeight, ns = Math.max(.3, Math.min(1.26, vw * .9 / f.offsetWidth, vh * .9 / f.offsetHeight));
+        var cx = (f.offsetLeft + gsap.getProperty(f, 'x') + f.offsetWidth / 2) * ns, cy = (f.offsetTop + gsap.getProperty(f, 'y') + f.offsetHeight / 2) * ns;
+        S = ns; zPct.textContent = Math.round(S * 100) + '%';
+        gsap.to(world, { scale: S, x: vw / 2 - cx, y: vh / 2 - cy, duration: .9, ease: 'power3.inOut', onUpdate: updateMM, onComplete: updateMM });
       });
     });
 
@@ -447,7 +455,7 @@ window.Webflow.push(function(){
       onView(board, function(x){ boardVisible = x; });
       var wander = function(){
         if (reduce){ gsap.set(fake, { opacity: 0 }); return; }
-        if (!boardVisible || Date.now() - lastInteract < 5000){ gsap.to(fake, { opacity: .25, duration: .3 }); gsap.delayedCall(1.5, wander); return; }
+        if (!boardVisible || focused || Date.now() - lastInteract < 5000){ gsap.to(fake, { opacity: .25, duration: .3 }); gsap.delayedCall(1.5, wander); return; }
         gsap.to(fake, { opacity: 1, duration: .3 });
         var f = frames[oi++ % frames.length], vr = viewport.getBoundingClientRect(), r = f.getBoundingClientRect();
         var tx = gsap.utils.clamp(10, vr.width - 110, r.left - vr.left + r.width * gsap.utils.random(.35, .7)), ty = gsap.utils.clamp(10, vr.height - 40, r.top - vr.top + r.height * gsap.utils.random(.3, .7));
@@ -475,6 +483,9 @@ window.Webflow.push(function(){
      The "marks on a grid" card drops to one row and this card takes the freed cell below it, right after
      Custom deploys, so auto-placement keeps every row full. A native Designer card ([data-visual="observatory"])
      wins: then the script only draws its visual. ---------- */
+  // services lede (Designer text): the new line until it's edited in the Designer (docs/designer-steps.md › J2)
+  $$('#capabilities .ab_section-lede').forEach(function(p){ if (/one planet you can throw/i.test(p.textContent)) p.textContent = 'Eight services, one orbit: everything a site needs to launch, grow and keep working long after day one.'; });
+
   (function(){
     var grid = $('#capabilities .ab_bento_grid'); if (!grid) return;
     var brand = $('[data-name="Card / branding"]', grid), deploys = $('[data-name="Card / deploys"]', grid);
@@ -539,7 +550,7 @@ window.Webflow.push(function(){
         '<article data-name="Card / availability" data-selectable="" class="ab_bento-card is-mini is-book"><div class="mini-k"><span><i class="mini-dot" aria-hidden="true"></i>Now booking</span>' + (months ? '<span class="mini-months" aria-hidden="true">' + months + '</span>' : '') + '</div>' +
           '<h3 class="ab_bento-card_title">' + esc(when || 'New missions') + '</h3><p class="mini-p">Taking on new missions. Discovery calls are 30 minutes.</p>' +
           '<a class="ab_bento-card_link" href="/contact#call" aria-label="Book a discovery call">↗</a></article>' +
-        '<article data-name="Card / reply" data-selectable="" class="ab_bento-card is-mini is-reply"><div class="mini-k"><span>Reply time</span><span class="mini-bubble" aria-hidden="true"><i></i><i></i><i></i></span></div>' +
+        '<article data-name="Card / reply" data-selectable="" class="ab_bento-card is-mini is-reply"><span class="mini-aura" aria-hidden="true"><i></i></span><span class="mini-sparks" aria-hidden="true"><b style="left:62%;top:18%;--d:0s;--s:1"></b><b style="left:84%;top:34%;--d:0.9s;--s:0.7"></b><b style="left:74%;top:62%;--d:1.7s;--s:0.55"></b><b style="left:90%;top:78%;--d:0.4s;--s:0.85"></b><b style="left:48%;top:12%;--d:2.3s;--s:0.5"></b><b style="left:34%;top:82%;--d:1.2s;--s:0.6"></b><b style="left:12%;top:20%;--d:2.8s;--s:0.45"></b></span><div class="mini-k"><span>Reply time</span><span class="mini-bubble" aria-hidden="true"><i></i><i></i><i></i></span></div>' +
           '<h3 class="ab_bento-card_title">&lt; 1 business day</h3><p class="mini-p">A real person on the other end, not a ticket queue.</p>' +
           '<a class="ab_bento-card_link" href="/contact" aria-label="Send a message">↗</a></article>';
       $$('.ab_bento-card', minis).forEach(function(c){ if (AB.cardFx) AB.cardFx(c); });
@@ -637,7 +648,7 @@ window.Webflow.push(function(){
     easing: function(v){
       if (!hasGsap) return;
       var eases = ['expo.out', 'power3.inOut', 'elastic.out(1,0.4)', 'back.out(2.2)', 'bounce.out'], ei = 0;
-      v.innerHTML = '<div class="v-ease"><svg viewBox="0 0 200 120" preserveAspectRatio="none"><path d="M0 110H200M0 10H200" stroke="currentColor" stroke-opacity=".15" fill="none" vector-effect="non-scaling-stroke"/><path class="cv" fill="none" stroke="#FF6A3D" stroke-width="2" vector-effect="non-scaling-stroke"/><circle class="dt" r="5" fill="#FF6A3D"/></svg><div class="track"><i></i></div></div><button type="button">expo.out ↻</button>';
+      v.innerHTML = '<div class="v-ease"><div class="v-plot"><svg viewBox="0 0 200 120" preserveAspectRatio="none"><path d="M0 110H200M0 10H200" stroke="currentColor" stroke-opacity=".15" fill="none" vector-effect="non-scaling-stroke"/><path class="cv" fill="none" stroke="#FF6A3D" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><i class="dt" aria-hidden="true"></i></div><div class="track"><i></i></div></div><button type="button">expo.out ↻</button>';
       var cv = $('.cv', v), dt = $('.dt', v), sq = $('.track i', v), btn = $('button', v), tr = $('.track', v), tw;
       var lo = 0, hi = 1, trH = 0, seen = true;
       function measure(){ trH = tr.clientHeight; }
@@ -650,11 +661,11 @@ window.Webflow.push(function(){
         for (var i = 0; i <= 60; i++){ var t = i / 60; d += (i ? 'L' : 'M') + (t * 200).toFixed(1) + ' ' + Y(E(t)).toFixed(1); }
         cv.setAttribute('d', d); btn.textContent = eases[ei] + ' ↻';
         var o = { t: 0 }; if (tw) tw.kill();
-        tw = gsap.to(o, { t: 1, duration: 1.6, ease: 'none', repeat: -1, repeatDelay: .6, onUpdate: function(){ var e = E(o.t); dt.setAttribute('cx', o.t * 200); dt.setAttribute('cy', Y(e)); sq.style.bottom = ((e - lo) / (hi - lo) * (trH - 14)) + 'px'; } });
+        tw = gsap.to(o, { t: 1, duration: 1.6, ease: 'none', repeat: -1, repeatDelay: .6, onUpdate: function(){ var e = E(o.t); dt.style.left = (o.t * 100) + '%'; dt.style.top = (Y(e) / 120 * 100) + '%'; sq.style.bottom = ((e - lo) / (hi - lo) * (trH - 14)) + 'px'; } });
         if (reduce) tw.progress(1).pause(); else if (!seen) tw.pause();
       }
       function next(){ ei = (ei + 1) % eases.length; play(); }
-      btn.addEventListener('click', next); $('svg', v).addEventListener('click', next); $('svg', v).style.cursor = 'var(--hand, pointer)';
+      btn.addEventListener('click', next); $('.v-plot', v).addEventListener('click', next); $('svg', v).style.cursor = 'var(--hand, pointer)';
       play();
       if (!reduce && window.IntersectionObserver) onView(v, function(on){ seen = on; if (!tw) return; if (on){ measure(); tw.resume(); } else tw.pause(); });
     },
@@ -724,10 +735,32 @@ window.Webflow.push(function(){
       onView(v, function(x){ vis = x; if (x) run(); else { timers.forEach(clearTimeout); timers = []; running = false; } });
     },
     pipeline: function(v){
-      v.innerHTML = '<div class="v-pipe"><div class="node src"><span>Airtable</span><span>Sheets</span><span>API</span></div><div class="node">Webhook</div><div class="node dst">Webflow CMS</div><div class="line"><i></i><i></i><i></i></div></div>';
+      // any source, one shape: each source's packet leaves in its own color and lands in Webflow blue
+      var SRC = [['Airtable', '#E8A400'], ['Sheets', '#0F9D58'], ['API', '#7C5CFF']];
+      v.innerHTML = '<div class="v-pipe"><div class="node src">' + SRC.map(function(s, i){ return '<span style="--c:' + s[1] + '"><b></b>' + s[0] + '</span>'; }).join('') + '</div><div class="node hook">Webhook</div><div class="node dst">Webflow CMS<em>+1 item</em></div>' +
+        '<div class="line">' + SRC.map(function(s, i){ return '<i style="--c:' + s[1] + ';--dy:' + ((i - 1) * 33) + 'px;animation-delay:' + (i * .8).toFixed(1) + 's"></i>'; }).join('') + '</div></div>';
     },
     tokens: function(v){
-      v.innerHTML = '<div class="v-tok">' + ['#07080D', '#161A2E', '#F2F0EA', '#FF6A3D', '#4C8DFF', '#7C5CFF'].map(function(c){ return '<i style="background:' + c + '" title="' + c + '"></i>'; }).join('') + '<div class="ramp"><span>Aa</span><span>Aa</span><span>Aa</span><span>Aa</span></div></div>';
+      // one set of tokens skins every component: the same card, button and type scale re-themed three ways
+      var T = [
+        { n: 'AB', brand: '#FF6A3D', surf: '#0B0C14', ink: '#F2F0EA', rad: 0, scale: 1.333, font: 'var(--_typography---font--display)' },
+        { n: 'Nova', brand: '#7C5CFF', surf: '#F1EDFF', ink: '#1A1530', rad: 14, scale: 1.2, font: 'var(--_typography---font--body)' },
+        { n: 'Terra', brand: '#0AA35A', surf: '#FFF6E6', ink: '#1E2A1F', rad: 6, scale: 1.25, font: 'Georgia, serif' }
+      ], ti = 0;
+      v.innerHTML = '<div class="v-sys"><div class="v-sys_tabs">' + T.map(function(t, i){ return '<button type="button" data-i="' + i + '">' + t.n + '</button>'; }).join('') + '<span class="v-sys_n">tokens → components</span></div>' +
+        '<div class="v-sys_body"><dl class="v-sys_tok"></dl><div class="v-sys_ui"><div class="v-sys_card"><small>Case study</small><strong>Mission report</strong><p>One edit, every page.</p><span class="v-sys_btn">Launch →</span></div>' +
+        '<div class="v-sys_ramp"><span>Aa</span><span>Aa</span><span>Aa</span><span>Aa</span></div></div></div></div>';
+      var root = $('.v-sys', v), dl = $('.v-sys_tok', v), tabs = $$('.v-sys_tabs button', v), seen = false, timer = null;
+      function apply(i){
+        var t = T[i]; ti = i;
+        root.style.setProperty('--b', t.brand); root.style.setProperty('--s', t.surf); root.style.setProperty('--k', t.ink);
+        root.style.setProperty('--r', t.rad + 'px'); root.style.setProperty('--f', t.font); root.style.setProperty('--x', t.scale);
+        dl.innerHTML = [['brand', '<i style="background:' + t.brand + '"></i>' + t.brand], ['surface', '<i style="background:' + t.surf + '"></i>' + t.surf], ['radius', t.rad + 'px'], ['scale', '× ' + t.scale]].map(function(r){ return '<div><dt>--' + r[0] + '</dt><dd>' + r[1] + '</dd></div>'; }).join('');
+        tabs.forEach(function(b, k){ b.setAttribute('aria-pressed', k === i ? 'true' : 'false'); });
+      }
+      function loop(){ clearTimeout(timer); if (reduce || !seen) return; timer = setTimeout(function(){ apply((ti + 1) % T.length); loop(); }, 3200); }
+      tabs.forEach(function(b){ b.addEventListener('click', function(e){ e.stopPropagation(); apply(+b.getAttribute('data-i')); loop(); }); });
+      apply(0); onView(root, function(x){ seen = x; if (x) loop(); else clearTimeout(timer); });
     },
     observatory: function(v){
       // wide card (two cards across): a full star chart + a live signal log of real notes; narrow: the compact chart
@@ -1066,15 +1099,22 @@ window.Webflow.push(function(){
           gsap.to(byEl, { opacity: 1, duration: .6, delay: .4 });
         } });
       } else {
-        gsap.fromTo(words, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .5, stagger: .035, ease: 'power3.out' });
-        gsap.fromTo(byEl, { opacity: 0 }, { opacity: 1, duration: .5, delay: .3 });
+        // the next transmission plots in like the INCOMING label: each word decodes from noise, left to right
+        gsap.set(words, { opacity: 1, y: 0 });
+        if (window.ScrambleTextPlugin) words.forEach(function(w, k){ var txt = w.textContent; gsap.fromTo(w, { opacity: .35 }, { opacity: 1, duration: .5, delay: k * .05, scrambleText: { text: txt, chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#/+', speed: .6, revealDelay: .15 } }); });
+        else gsap.fromTo(words, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .5, stagger: .035, ease: 'power3.out' });
+        gsap.fromTo(byEl, { opacity: 0 }, { opacity: 1, duration: .5, delay: .3 + words.length * .05 });
       }
     }
     render(0, 'scrub');
-    $('#iqNext').addEventListener('click', function(){
-      if (scrub){ scrub.kill(); scrub = null; }
-      render((idx + 1) % QUOTES.length, 'pop');
-    });
+    function next(){ if (scrub){ scrub.kill(); scrub = null; } render((idx + 1) % QUOTES.length, 'pop'); }
+    // transmissions change by themselves while the section is on screen (paused on hover); longer quotes stay up longer
+    var auto = null, seen = false, held = false;
+    function queue(){ clearTimeout(auto); if (reduce || !hasGsap || !seen || held || QUOTES.length < 2) return; auto = setTimeout(function(){ next(); queue(); }, 4200 + QUOTES[idx].t.length * 30); }
+    onView(box, function(x){ seen = x; if (x) queue(); else clearTimeout(auto); });
+    box.addEventListener('mouseenter', function(){ held = true; clearTimeout(auto); });
+    box.addEventListener('mouseleave', function(){ held = false; queue(); });
+    $('#iqNext').addEventListener('click', function(){ next(); queue(); });
   })();
 
   });
@@ -1120,6 +1160,7 @@ window.Webflow.push(function(){
     addons.forEach(function(c){ c.setAttribute('data-addon', 'KNS · Knowledge system'); if (!$('svg', c)) c.textContent = 'KNS · Knowledge system'; if (!$('svg', c)) c.insertAdjacentHTML('afterbegin', '<svg class="sat-ico ab-ks-ico" viewBox="0 0 24 12" aria-hidden="true"><path class="sp" d="M1 3.5h6v5H1zM17 3.5h6v5h-6z"/><path class="sa" d="M7 6h3M14 6h3"/><rect class="sb" x="10" y="2.5" width="4" height="7"/></svg>'); });
     var fType = $('#plTypesField'), fBud = $('#plBudField'), fBrief = $('#plBriefField'), fAdd = $('#plAddonsField');
     chips.concat(addons).forEach(function(c){ c.setAttribute('aria-pressed', 'false'); });
+    var ol = $('.pl-orbitlines ellipse', form); if (ol){ ol.setAttribute('cx', 110); ol.setAttribute('cy', 138); ol.setAttribute('transform', 'rotate(-14 110 138)'); }
     var sg = $('.pl-stars', form), s = '';
     if (sg){ for (var i = 0; i < 60; i++) s += '<circle cx="' + (Math.random() * 560).toFixed(1) + '" cy="' + (Math.random() * 190).toFixed(1) + '" r="' + (Math.random() < .1 ? 1 : .45) + '" fill="#fff" opacity="' + (.15 + Math.random() * .55).toFixed(2) + '"/>'; sg.innerHTML = s; }
     function radios(){ return $$('input[name="Launch window"]', form); }
@@ -1139,9 +1180,10 @@ window.Webflow.push(function(){
     function draw(anim){
       var st = state(), n = st.sel.length; st0 = st;
       // window = distance, types = planet (first pick) + moons (the rest), budget = rings
-      var X = [290, 370, 462, 410][st.w], Y = [92, 70, 58, 46][st.w], R = 14 + Math.min(n, 4) * 3.2;
-      var lift = st.w === 3 ? 150 : 96 + st.w * 12, cx = (56 + X) / 2;
-      var d = 'M78 144 Q ' + cx + ' ' + (Y - lift * .35) + ' ' + (X - R - 10) + ' ' + (Y + 3);
+      // Earth sits at (110,138) and the destinations reach x 450, so the route is centered in the 560 frame (was 56 → 462)
+      var X = [300, 365, 450, 405][st.w], Y = [96, 78, 66, 54][st.w], R = 14 + Math.min(n, 4) * 3.2;
+      var lift = st.w === 3 ? 140 : 90 + st.w * 12, cx = (110 + X) / 2;
+      var d = 'M131 132 Q ' + cx + ' ' + (Y - lift * .35) + ' ' + (X - R - 10) + ' ' + (Y + 3);
       path.setAttribute('d', d); done.setAttribute('d', d);
       path.style.strokeDasharray = st.w === 3 ? '1.5 7' : '';
       var k = n ? String(st.sel[0]) : 'none';

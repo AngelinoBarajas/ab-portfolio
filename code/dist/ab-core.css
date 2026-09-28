@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.29.17 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.30.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* click cursor: a spacesuit glove (hotspot on the fingertip); every clickable uses var(--hand) */
 :root{--hand:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 32 32%22%3E%3Cg stroke=%22%230B0C14%22 stroke-width=%221.3%22 stroke-linejoin=%22round%22%3E%3Crect x=%222.6%22 y=%2213.6%22 width=%225.8%22 height=%2210.5%22 rx=%222.9%22 transform=%22rotate%28-42 5.5 18.8%29%22 fill=%22%23E4E1D8%22/%3E%3Crect x=%229.5%22 y=%221.2%22 width=%226.4%22 height=%2217%22 rx=%223.2%22 fill=%22%23F7F5EF%22/%3E%3Crect x=%2215.6%22 y=%2210.2%22 width=%225.4%22 height=%229.5%22 rx=%222.7%22 fill=%22%23F7F5EF%22/%3E%3Crect x=%2220.6%22 y=%2211.4%22 width=%225.2%22 height=%228.8%22 rx=%222.6%22 fill=%22%23F7F5EF%22/%3E%3Crect x=%2225.2%22 y=%2213%22 width=%224.6%22 height=%227.8%22 rx=%222.3%22 fill=%22%23F7F5EF%22/%3E%3Cpath d=%22M8.4 16.5H29.6V21.5C29.6 25 27.2 27 24 27H14C10.6 27 8.4 24.6 8.4 21.5Z%22 fill=%22%23F7F5EF%22/%3E%3Crect x=%229.2%22 y=%2225.4%22 width=%2220.6%22 height=%225.6%22 rx=%221.4%22 fill=%22%23FF6A3D%22/%3E%3C/g%3E%3Cg stroke=%22%238A8FA3%22 stroke-width=%22.8%22 fill=%22none%22 stroke-linecap=%22round%22%3E%3Cpath d=%22M10.6 7.2H14.8M10.6 11.8H14.8M12 21.2H26%22/%3E%3C/g%3E%3Cpath d=%22M9.2 28.2H29.8%22 stroke=%22%230B0C14%22 stroke-width=%22.8%22/%3E%3C/svg%3E") 12 1,pointer}
 a[href],button:not(:disabled),[role="button"],summary,label[for],select,input[type="submit"],input[type="checkbox"],input[type="radio"]{cursor:var(--hand)}
@@ -270,7 +270,10 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 .v-wire .btns{display:flex;gap:6px;margin-top:8px}.v-wire .btns i{width:44px;height:14px;background:var(--_color---brand--signal)}.v-wire .btns i+i{background:transparent;border:1px solid var(--_color---neutral--hair-strong)}
 .v-wire .map{min-height:90px;background:radial-gradient(var(--_color---neutral--hair-strong) 1px,transparent 1.4px) 0 0/10px 10px}
 .v-ease{display:flex;gap:14px;align-items:stretch;padding:12px 12px 40px;height:100%}
-.v-ease svg{flex:1;min-width:0;height:100%;min-height:110px;overflow:visible;color:var(--_color---text--primary)}
+.v-ease .v-plot{position:relative;flex:1;min-width:0;min-height:110px}
+.v-ease svg{display:block;width:100%;height:100%;min-height:110px;overflow:visible;color:var(--_color---text--primary)}
+/* the dot is HTML over the stretched (preserveAspectRatio none) plot, so it stays round at any card size */
+.v-ease .dt{position:absolute;left:0;top:90%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:var(--_color---brand--signal);pointer-events:none}
 .v-ease .track{width:16px;border:1px solid var(--_color---neutral--hair);position:relative}
 .v-ease .track i{position:absolute;left:1px;right:1px;height:14px;background:var(--_color---brand--signal);bottom:0}
 .ab_bento-card_viz > button{all:unset;cursor:var(--hand,pointer);position:absolute;left:12px;bottom:10px;font-family:var(--_typography---font--mono);font-size:11px;padding:4px 8px;border:1px solid var(--_color---neutral--hair-strong);background:var(--_color---neutral--deep);color:var(--_color---text--primary)}
@@ -305,17 +308,46 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 .v-pipe{position:relative;height:100%;min-height:140px;display:flex;align-items:center;justify-content:space-between;padding:0 14px}
 .v-pipe .node{position:relative;z-index:2;font-family:var(--_typography---font--mono);font-size:11px;padding:7px 9px;border:1px solid var(--_color---neutral--hair-strong);background:var(--_color---neutral--deep);white-space:nowrap}
 .v-pipe .node.src{display:flex;flex-direction:column;gap:6px;border:0;background:none;padding:0}
-.v-pipe .node.src span{padding:6px 8px;border:1px solid var(--_color---neutral--hair-strong);background:var(--_color---neutral--deep)}
-.v-pipe .node.dst{border-color:var(--_color---ui--select);color:var(--_color---ui--select)}
+.v-pipe .node.src span{display:flex;align-items:center;gap:7px;padding:6px 8px;border:1px solid var(--_color---neutral--hair-strong);border-left:2px solid var(--c);background:var(--_color---neutral--deep)}
+.v-pipe .node.src b{width:7px;height:7px;flex:none;background:var(--c)}
+.v-pipe .node.dst{border-color:var(--_color---ui--select);color:var(--_color---ui--select);animation:pipe-land .8s ease-out infinite}
+.v-pipe .node.dst em{position:absolute;right:0;bottom:calc(100% + 6px);font-style:normal;font-size:10px;letter-spacing:.06em;color:var(--_color---ui--select);animation:pipe-plus 2.4s ease-out infinite;opacity:0}
 .v-pipe .line{position:absolute;left:18%;right:18%;top:50%;height:1px;background:var(--_color---neutral--hair-strong);z-index:1}
-.v-pipe .line i{position:absolute;top:-3px;width:7px;height:7px;background:var(--_color---brand--signal);animation:ab-flow 2.2s linear infinite}
-.v-pipe .line i:nth-child(2){animation-delay:.73s}.v-pipe .line i:nth-child(3){animation-delay:1.46s}
+/* each packet leaves its own source row in that source's color, merges onto the line, and is Webflow blue on arrival */
+.v-pipe .line i{position:absolute;top:-3px;left:0;width:7px;height:7px;background:var(--c);animation:pipe-run 2.4s linear infinite}
+@keyframes pipe-run{0%{left:0;transform:translateY(var(--dy));background:var(--c);opacity:0}6%{opacity:1}22%{transform:translateY(0);background:var(--c)}55%{background:var(--c)}88%{background:#146EF5;box-shadow:0 0 8px #146EF5}100%{left:calc(100% - 7px);transform:translateY(0);background:#146EF5;opacity:1}}
+@keyframes pipe-land{0%,70%{box-shadow:none}85%{box-shadow:0 0 0 3px rgba(20,110,245,.18)}100%{box-shadow:none}}
+@keyframes pipe-plus{0%,80%{opacity:0;transform:translateY(4px)}88%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-4px)}}
 @keyframes ab-flow{from{left:0}to{left:calc(100% - 7px)}}
-.v-tok{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;padding:12px;align-content:start;height:100%}
-.v-tok i{aspect-ratio:1;border:1px solid var(--_color---neutral--hair);transition:transform .3s}
-.v-tok i:hover{transform:scale(1.15)}
-.v-tok .ramp{grid-column:1/-1;display:flex;align-items:baseline;gap:10px;font-family:var(--_typography---font--display);font-weight:800;font-stretch:112%;margin-top:6px}
-.v-tok .ramp span:nth-child(1){font-size:44px}.v-tok .ramp span:nth-child(2){font-size:30px}.v-tok .ramp span:nth-child(3){font-size:20px}.v-tok .ramp span:nth-child(4){font-size:13px}
+/* Design systems: one token set skins the same card, button and type scale three ways (AB · Nova · Terra) */
+.v-sys{display:flex;flex-direction:column;gap:10px;height:100%;padding:12px;font-family:var(--_typography---font--mono);font-size:10.5px}
+.v-sys_tabs{display:flex;align-items:center;gap:4px}
+.v-sys_tabs button{padding:5px 9px;border:1px solid var(--_color---neutral--hair-strong);background:none;font:inherit;letter-spacing:.06em;color:var(--_color---text--tertiary);cursor:var(--hand,pointer);transition:color .2s,border-color .2s,background .2s}
+.v-sys_tabs button[aria-pressed="true"]{color:var(--_color---text--primary);border-color:var(--b);background:color-mix(in srgb,var(--b) 14%,transparent)}
+.v-sys_n{margin-left:auto;color:var(--_color---text--tertiary);letter-spacing:.08em;text-transform:uppercase;font-size:9.5px}
+.v-sys_body{flex:1;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:12px;min-height:0}
+.v-sys_tok{margin:0;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.v-sys_tok div{display:flex;justify-content:space-between;gap:8px;padding-bottom:5px;border-bottom:1px dashed var(--_color---neutral--hair-strong)}
+.v-sys_tok dt{color:var(--_color---text--tertiary)}
+.v-sys_tok dd{margin:0;display:inline-flex;align-items:center;gap:5px;color:var(--_color---text--primary);white-space:nowrap}
+.v-sys_tok dd i{width:9px;height:9px;border:1px solid var(--_color---neutral--hair-strong)}
+.v-sys_ui{display:flex;flex-direction:column;gap:8px;min-width:0}
+.v-sys_card{display:flex;flex-direction:column;gap:4px;padding:12px;border:1px solid color-mix(in srgb,var(--k) 14%,transparent);border-radius:var(--r);background:var(--s);color:var(--k);transition:background .6s,color .6s,border-radius .6s,border-color .6s}
+.v-sys_card small{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--b);transition:color .6s}
+.v-sys_card strong{font-family:var(--f);font-weight:800;font-size:calc(12px * var(--x) * var(--x));line-height:1.05;transition:font-size .6s}
+.v-sys_card p{margin:0;font-family:var(--_typography---font--body);font-size:11px;opacity:.75}
+.v-sys_btn{align-self:flex-start;margin-top:4px;padding:6px 10px;border-radius:var(--r);background:var(--b);color:#fff;font-size:10px;letter-spacing:.06em;transition:background .6s,border-radius .6s}
+.v-sys_ramp{display:flex;align-items:baseline;gap:8px;font-family:var(--f);font-weight:800;color:var(--_color---text--primary);transition:font-family .6s}
+.v-sys_ramp span{transition:font-size .6s}
+.v-sys_ramp span:nth-child(1){font-size:calc(10px * var(--x) * var(--x) * var(--x) * var(--x))}.v-sys_ramp span:nth-child(2){font-size:calc(10px * var(--x) * var(--x) * var(--x))}.v-sys_ramp span:nth-child(3){font-size:calc(10px * var(--x) * var(--x))}.v-sys_ramp span:nth-child(4){font-size:calc(10px * var(--x));color:var(--b)}
+/* narrow CMS card: the webhook hop drops out so sources and Webflow CMS don't collide */
+.v-pipe{container-type:inline-size}
+@container (max-width:330px){.v-pipe .node.hook{display:none}}
+/* a narrow card (tablet widths, the 3-up grid at 1024): tokens as a 2 × 2 grid above the preview */
+.v-sys{container-type:inline-size}
+.v-sys_tok dt{white-space:nowrap}
+@container (max-width:360px){.v-sys_body{grid-template-columns:minmax(0,1fr);gap:8px}.v-sys_tok{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px}.v-sys_n{display:none}.v-sys_ramp{display:none}}
+@media (prefers-reduced-motion:reduce){.v-pipe .line i,.v-pipe .node.dst,.v-pipe .node.dst em{animation:none}}
 .v-meter{display:flex;flex-direction:column;justify-content:center;gap:12px;padding:14px;height:100%;min-height:130px}
 .v-meter div{display:grid;grid-template-columns:78px 1fr 72px;gap:10px;align-items:center;font-family:var(--_typography---font--mono);font-size:11px;color:var(--_color---text--secondary)}
 .v-meter b{height:6px;background:var(--_color---neutral--hair);position:relative;overflow:hidden}
@@ -855,3 +887,19 @@ section:hover > .ab_frame-label{color:var(--_color---ui--select)}
 .mini-bubble i:nth-child(2){animation-delay:.15s}.mini-bubble i:nth-child(3){animation-delay:.3s}
 @keyframes mini-type{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-4px);opacity:1}}
 @media (prefers-reduced-motion:reduce){.mini-dot,.mini-m.is-now,.mini-bubble i{animation:none}}
+/* Home planner: Earth moved in from the corner so the route sits centered (50-planner.js draws from 110,138) */
+.ab_planner_viz .ab_planet.is-planner-earth{left:16.07%;top:62.1%}
+/* Reply time mini: a slow-turning signal gradient (a rotated conic layer, compositor only) + twinkling four-point sparks */
+.ab_bento-card.is-reply{overflow:hidden;isolation:isolate}
+.ab_bento-card.is-reply .mini-k,.ab_bento-card.is-reply .ab_bento-card_title,.ab_bento-card.is-reply .mini-p{position:relative;z-index:1}
+.ab_bento-card.is-reply .ab_bento-card_link{z-index:2}
+.mini-aura{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.mini-aura i{position:absolute;left:-60%;top:-110%;width:220%;height:320%;background:conic-gradient(from 0deg,#FF6A3D,#FF8C5E 18%,#FFB48E 34%,#FFD6B8 50%,#FF9A6E 66%,#FFC2A0 82%,#FF6A3D);filter:blur(28px);will-change:transform;animation:mini-aura 16s linear infinite}
+.mini-aura::after{content:"";position:absolute;inset:0;background:radial-gradient(90% 70% at 100% 0,rgba(255,238,222,.55),transparent 60%),radial-gradient(80% 90% at 0 100%,rgba(255,106,61,.35),transparent 62%)}
+.mini-sparks{position:absolute;inset:0;z-index:0;pointer-events:none}
+.mini-sparks b{position:absolute;width:12px;height:12px;margin:-6px 0 0 -6px;background:#FFF8EC;clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);filter:drop-shadow(0 0 3px rgba(255,106,61,.95)) drop-shadow(0 0 6px #fff);opacity:0;transform:scale(0);animation:mini-tw 3.2s ease-in-out var(--d,0s) infinite}
+.ab_bento-card.is-reply:hover .mini-sparks b{animation-duration:1.6s}
+@keyframes mini-aura{to{transform:rotate(360deg)}}
+@keyframes mini-tw{0%,100%{opacity:0;transform:scale(0) rotate(0)}45%{opacity:1;transform:scale(var(--s,1)) rotate(45deg)}70%{opacity:.2;transform:scale(calc(var(--s,1)*.4)) rotate(90deg)}}
+@media (prefers-reduced-motion:reduce){.mini-aura i{animation:none}.mini-sparks b{animation:none;opacity:.8;transform:scale(var(--s,1))}}
+.ab_nav_logo.is-home{color:var(--_color---brand--signal)}

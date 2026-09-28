@@ -8,6 +8,8 @@
       var img = $('img', a); if (!img || $('.ab_logo-svg', a)) return;
       img.insertAdjacentHTML('beforebegin', svg()); img.style.display = 'none';
       var s = $('.ab_logo-svg', a);
+      // Home: the nav mark is signal orange (you're at base); other pages keep it white
+      if (location.pathname === '/' && !a.closest('footer, .ab_footer_brand')) a.classList.add('is-home');
       $$('path', s).forEach(function(p){ var L = p.getTotalLength ? Math.ceil(p.getTotalLength()) : 2000; p.style.setProperty('--len', L); });
       if (reduce) return;
       var inFooter = !!a.closest('footer, .ab_footer_brand');

@@ -52,7 +52,8 @@
   /* ---------- hero toys (anything with data-drag in the hero) ---------- */
   var hero = $('#hero');
   var badge = $('.ab_hero_badge'), sat = $('#sat');
-  if (badge){ badge.tabIndex = 0; badge.setAttribute('aria-label', 'Draggable badge: design and build, established 2026'); }
+  // Est. 1987: designing since birth (Angelino's call). The ring text lives in a Designer embed; set here until it's edited there
+  if (badge){ badge.tabIndex = 0; badge.setAttribute('aria-label', 'Draggable badge: design and build, established 1987'); var btp = $('textPath', badge); if (btp) btp.textContent = btp.textContent.replace(/Est\.\s*\d{4}/, 'Est. 1987'); }
   if (sat){ sat.tabIndex = 0; sat.setAttribute('aria-label', 'Satellite. Please do not drag it.'); }
   if (hero && canDrag){
     $$('[data-drag]', hero).forEach(function(el){

@@ -34,13 +34,20 @@
           gsap.to(byEl, { opacity: 1, duration: .6, delay: .4 });
         } });
       } else {
-        gsap.fromTo(words, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .5, stagger: .035, ease: 'power3.out' });
-        gsap.fromTo(byEl, { opacity: 0 }, { opacity: 1, duration: .5, delay: .3 });
+        // the next transmission plots in like the INCOMING label: each word decodes from noise, left to right
+        gsap.set(words, { opacity: 1, y: 0 });
+        if (window.ScrambleTextPlugin) words.forEach(function(w, k){ var txt = w.textContent; gsap.fromTo(w, { opacity: .35 }, { opacity: 1, duration: .5, delay: k * .05, scrambleText: { text: txt, chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#/+', speed: .6, revealDelay: .15 } }); });
+        else gsap.fromTo(words, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .5, stagger: .035, ease: 'power3.out' });
+        gsap.fromTo(byEl, { opacity: 0 }, { opacity: 1, duration: .5, delay: .3 + words.length * .05 });
       }
     }
     render(0, 'scrub');
-    $('#iqNext').addEventListener('click', function(){
-      if (scrub){ scrub.kill(); scrub = null; }
-      render((idx + 1) % QUOTES.length, 'pop');
-    });
+    function next(){ if (scrub){ scrub.kill(); scrub = null; } render((idx + 1) % QUOTES.length, 'pop'); }
+    // transmissions change by themselves while the section is on screen (paused on hover); longer quotes stay up longer
+    var auto = null, seen = false, held = false;
+    function queue(){ clearTimeout(auto); if (reduce || !hasGsap || !seen || held || QUOTES.length < 2) return; auto = setTimeout(function(){ next(); queue(); }, 4200 + QUOTES[idx].t.length * 30); }
+    onView(box, function(x){ seen = x; if (x) queue(); else clearTimeout(auto); });
+    box.addEventListener('mouseenter', function(){ held = true; clearTimeout(auto); });
+    box.addEventListener('mouseleave', function(){ held = false; queue(); });
+    $('#iqNext').addEventListener('click', function(){ next(); queue(); });
   })();

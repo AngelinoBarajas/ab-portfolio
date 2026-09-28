@@ -157,6 +157,7 @@
   .ab_eta_gauge .ab_eta_text{font-size:12.5px;line-height:1.4;margin-top:4px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
   .ab_eta_adds{grid-column:1 / -1;margin:0}
   .ab_eta_note,.abp-tickl{display:none}
+  .abp-con-top{grid-column:1 / -1;margin:0;padding:0 2px 8px}
 }
 @media screen and (max-width:479px){.ab_chart{--ps:.72}}
 @media (prefers-reduced-motion:reduce){.abp-dock-moons i,.abp-dock-ks i{animation:none}.abp-dock.is-landed .abp-dock-sys::after{animation:none}.abp-dock-h,.abp-dock-pl{transition:none}}
@@ -179,35 +180,83 @@
 .abp-sat-cone.is-on{opacity:1;transform:none}
 .ab_crew_grid.has-sat .ab_crew_col.is-ping{animation:abp-sat-ping 1.6s ease-out}
 @keyframes abp-sat-ping{0%{box-shadow:0 0 0 0 rgba(255,106,61,0)}15%{box-shadow:0 0 0 2px rgba(255,106,61,.9),0 18px 40px -18px rgba(255,106,61,.45)}100%{box-shadow:0 0 0 0 rgba(255,106,61,0)}}
-/* comms bar: live dot + scrolling waveform */
-.abp-wave{display:flex;align-items:center;gap:8px;flex:none}
-.abp-wave-dot{width:6px;height:6px;border-radius:50%;background:var(--signal);animation:abp-wave-dot 1.2s ease-in-out infinite}
+/* crew card (you): one of a kind · aurora border in the service colors drifting slowly (start angle random per visit),
+   a soft two-corner wash, a checklist that runs through the same colors */
+@property --you-a{syntax:"<angle>";inherits:false;initial-value:0deg}
+.ab_crew_col.abp-you{position:relative;border-color:transparent;background:radial-gradient(80% 60% at 100% 0,rgba(124,92,255,.10),transparent 70%),radial-gradient(70% 55% at 0 100%,rgba(255,106,61,.08),transparent 70%),radial-gradient(50% 40% at 100% 100%,rgba(20,110,245,.06),transparent 70%),var(--panel);box-shadow:0 26px 60px -34px rgba(124,92,255,.45)}
+.abp-you::before{content:"";position:absolute;inset:-1px;padding:2px;background:conic-gradient(from var(--you-a),#146EF5,#7c5cff,#FF6A3D,#ffd166,#0AE448,#5eead4,#146EF5);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;animation:abp-you 18s linear infinite;animation-delay:var(--you-d,0s)}
+@keyframes abp-you{to{--you-a:360deg}}
+.abp-you .ab_crew_who{background:linear-gradient(90deg,#146EF5,#7c5cff 45%,#FF6A3D);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:600}
+.abp-you .ab_crew_item:nth-child(1){--tc:#146EF5}.abp-you .ab_crew_item:nth-child(2){--tc:#5b62f0}.abp-you .ab_crew_item:nth-child(3){--tc:#7c5cff}.abp-you .ab_crew_item:nth-child(4){--tc:#c25f9e}.abp-you .ab_crew_item:nth-child(n+5){--tc:#FF6A3D}
+.abp-you .ab_crew_tick{border-color:color-mix(in srgb,var(--tc) 55%,transparent);background:color-mix(in srgb,var(--tc) 9%,transparent)}
+.abp-you .ab_crew_tick svg{stroke:var(--tc)}
+.ab_crew_grid.has-sat .abp-you.is-ping{animation-name:abp-sat-ping-you}
+@keyframes abp-sat-ping-you{0%{box-shadow:0 0 0 0 rgba(124,92,255,0)}15%{box-shadow:0 0 0 3px rgba(124,92,255,.55),0 18px 40px -18px rgba(124,92,255,.5)}100%{box-shadow:0 26px 60px -34px rgba(124,92,255,.45)}}
+/* comms bar: COMMS chip + channel over a small signal scope (the /contact signal line look), updates to the right */
+.ab_crew_comms.abp-comms{flex-wrap:nowrap;align-items:center;gap:clamp(18px,3vw,40px)}
+.abp-comms-l{flex:0 0 clamp(210px,22vw,300px);display:flex;flex-direction:column;gap:8px;min-width:0}
+.abp-comms-top{display:flex;align-items:center;gap:8px}
+.abp-comms-dot{width:6px;height:6px;border-radius:50%;background:var(--ch,var(--signal));box-shadow:0 0 8px var(--ch,var(--signal));transition:background .6s,box-shadow .6s;animation:abp-wave-dot 1.2s ease-in-out infinite}
 @keyframes abp-wave-dot{50%{opacity:.25}}
-.abp-wave-scope{display:block;position:relative;width:96px;height:16px;overflow:hidden}
-.abp-wave-scope i{position:absolute;inset:0;background:#FF6A3D;-webkit-mask:var(--wave) 0 50%/240px 16px repeat-x;mask:var(--wave) 0 50%/240px 16px repeat-x;animation:abp-wave-run 9s linear infinite,abp-wave-hue 56s linear infinite}
-@keyframes abp-wave-run{to{-webkit-mask-position:-240px 50%;mask-position:-240px 50%}}
-/* one service color at a time, easing slowly into the next (orange first) */
-@keyframes abp-wave-hue{0%,6%{background:#FF6A3D}12.5%,18.5%{background:#146EF5}25%,31%{background:#5eead4}37.5%,43.5%{background:#0AE448}50%,56%{background:#7c5cff}62.5%,68.5%{background:#ffd166}75%,81%{background:#8fb1ff}87.5%,93.5%{background:#C9C7C0}100%{background:#FF6A3D}}
-@media (max-width:767px){.abp-wave{flex:1 1 40%;min-width:0}.abp-wave-scope{flex:1;width:auto}.ab_crew_comms > div:not(.ab_crew_comms-label):not(.abp-wave){flex:1 1 100%}}
+.abp-comms-ch{margin-left:auto;font-size:10px;letter-spacing:.12em;color:var(--dust)}
+.abp-comms-ch b{font-weight:500;color:var(--star);font-variant-numeric:tabular-nums}
+.abp-scope{position:relative;height:46px;border:1px solid rgba(255,255,255,.08);background:radial-gradient(120% 90% at 50% 50%,#12152a,#07080d);box-shadow:inset 0 0 0 1px rgba(7,8,13,.9),0 10px 24px -16px rgba(11,12,20,.6);overflow:hidden}
+.abp-scope::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.04) 0 1px,transparent 1px 25%);pointer-events:none}
+.abp-scope svg{display:block;width:100%;height:100%;overflow:visible}
+.abp-scope-grid{stroke:rgba(255,255,255,.12);stroke-dasharray:2 6;vector-effect:non-scaling-stroke}
+.abp-scope-wave{fill:none;stroke:var(--ch);stroke-width:1.6;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 4px var(--ch));transition:stroke .8s,filter .8s}
+.abp-packet{position:absolute;top:50%;left:0;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;border-radius:50%;background:#fff;box-shadow:0 0 12px 3px var(--ch),-26px 0 20px -5px var(--ch);opacity:0;pointer-events:none}
+.abp-comms-r{flex:1 1 auto;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:10px 28px}
+.abp-comms-r>div{display:flex;align-items:center;gap:10px}
+.abp-comms-r>div::before{content:"";flex:none;width:5px;height:5px;background:var(--hair2);transform:rotate(45deg)}
+@media (max-width:767px){.ab_crew_comms.abp-comms{flex-direction:column;align-items:stretch;gap:14px}.abp-comms-l{flex:none}.abp-comms-r{flex-direction:column;align-items:flex-start;gap:8px}}
 /* flight plan cards: KNS flag while the add-on rides along */
 .abp-ks-flag{display:inline-flex;align-items:center;gap:5px;margin-left:auto;margin-right:10px;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:#FFD29A;vertical-align:middle}
 .abp-ks-flag[hidden]{display:none}
 .abp-ks-flag .abp-ks-ico{width:16px;height:8px}
 
-/* timeline dials + gauge */
+/* timeline dials: each factor has its own color (--c, set by the script; same hues as the chips) */
 .ab_eta_opt:last-child{border-right:0}
-.ab_eta_opt{transition:background .2s,color .2s;user-select:none;-webkit-user-select:none}
-.ab_eta_opt:hover{color:var(--star)}
-.ab_eta_opt[aria-pressed="true"]{background:var(--signal);color:var(--on-signal)}
+.ab_eta_opt{transition:background .25s,color .2s,box-shadow .25s;user-select:none;-webkit-user-select:none}
+.ab_eta_opt:hover{color:var(--star);box-shadow:inset 0 -2px 0 var(--c,var(--signal))}
+.ab_eta_opt[aria-pressed="true"]{background:var(--c,var(--signal));color:var(--tc,var(--on-signal));box-shadow:0 0 18px -4px var(--c,var(--signal))}
 .ab_eta_opt:focus-visible{outline:2px solid var(--select);outline-offset:-2px}
+.ab_eta_factor-name::before{content:"";display:inline-block;width:8px;height:8px;margin:0 8px 1px 0;background:var(--c,var(--signal));box-shadow:0 0 8px var(--c,var(--signal));vertical-align:middle}
 .ab_eta_title{font-stretch:118%}
 .ab_eta_dial svg{display:block;width:100%;height:auto;overflow:visible}
-.abp-arc{fill:none;stroke:rgba(255,255,255,.12);stroke-width:14;stroke-linecap:round}
-.abp-arc-on{fill:none;stroke:var(--signal);stroke-width:14;stroke-linecap:round;transition:stroke-dashoffset .8s cubic-bezier(.2,.9,.2,1)}
-.abp-needle line{stroke:var(--star);stroke-width:2}.abp-needle circle{fill:var(--star)}
-.abp-tickl{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;fill:var(--dust)}
-.abp-add{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:4px 8px;border:1px solid rgba(255,106,61,.4);color:var(--signal)}
-.abp-add.is-none{border-color:var(--hair2);color:var(--dust)}
+/* the gauge as a ship console: bezel, corner brackets + rivets, scanlines, status strip; --gc = the color at the needle */
+@property --gc{syntax:"<color>";inherits:true;initial-value:#FF6A3D}
+.ab_eta_gauge.abp-console{--gc:#FF6A3D;background:radial-gradient(90% 60% at 50% 38%,color-mix(in srgb,var(--gc) 9%,transparent),transparent 70%),linear-gradient(180deg,#121526,#0a0b14);border-color:rgba(255,255,255,.12);box-shadow:inset 0 0 0 5px #0b0c16,inset 0 0 0 6px rgba(255,255,255,.06),0 30px 60px -30px rgba(0,0,0,.8);transition:--gc .6s}
+.abp-con-deco{position:absolute;inset:0;overflow:hidden;pointer-events:none;background:
+  linear-gradient(var(--dust),var(--dust)) left 12px top 12px/16px 1.5px no-repeat,linear-gradient(var(--dust),var(--dust)) left 12px top 12px/1.5px 16px no-repeat,
+  linear-gradient(var(--dust),var(--dust)) right 12px top 12px/16px 1.5px no-repeat,linear-gradient(var(--dust),var(--dust)) right 12px top 12px/1.5px 16px no-repeat,
+  linear-gradient(var(--dust),var(--dust)) left 12px bottom 12px/16px 1.5px no-repeat,linear-gradient(var(--dust),var(--dust)) left 12px bottom 12px/1.5px 16px no-repeat,
+  linear-gradient(var(--dust),var(--dust)) right 12px bottom 12px/16px 1.5px no-repeat,linear-gradient(var(--dust),var(--dust)) right 12px bottom 12px/1.5px 16px no-repeat,
+  radial-gradient(circle,#5a5f75 1.6px,transparent 2.2px) left 4px top 4px/8px 8px no-repeat,radial-gradient(circle,#5a5f75 1.6px,transparent 2.2px) right 4px top 4px/8px 8px no-repeat,
+  radial-gradient(circle,#5a5f75 1.6px,transparent 2.2px) left 4px bottom 4px/8px 8px no-repeat,radial-gradient(circle,#5a5f75 1.6px,transparent 2.2px) right 4px bottom 4px/8px 8px no-repeat,
+  linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px) 0 0/100% 24px,linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px) 0 0/24px 100%;opacity:.9}
+.abp-con-deco::after{content:"";position:absolute;inset:6px;background:repeating-linear-gradient(180deg,rgba(255,255,255,.028) 0 1px,transparent 1px 3px);-webkit-mask:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent);mask:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent)}
+.abp-con-deco::before{content:"";position:absolute;left:6px;right:6px;top:0;height:100%;background:linear-gradient(180deg,transparent calc(100% - 90px),color-mix(in srgb,var(--gc) 8%,transparent) calc(100% - 45px),transparent);animation:abp-scan 7s linear infinite}
+@keyframes abp-scan{from{transform:translateY(-100%)}to{transform:translateY(12%)}}
+.abp-console>*:not(.abp-con-deco){position:relative;z-index:1}
+.abp-con-top{display:flex;align-items:center;gap:8px;margin:-4px 0 14px;padding:0 18px 10px;border-bottom:1px dashed rgba(255,255,255,.1);font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dust)}
+.abp-con-led{width:7px;height:7px;border-radius:50%;background:var(--gc);box-shadow:0 0 8px var(--gc);animation:ab-blink 1.6s infinite}
+.abp-con-read{margin-left:auto;color:var(--dust)}
+.abp-con-read b{display:inline-block;min-width:3ch;margin:0 2px;padding:2px 5px;border:1px solid rgba(255,255,255,.1);background:#05060b;color:var(--gc);font-weight:500;font-variant-numeric:tabular-nums;text-shadow:0 0 6px var(--gc)}
+.abp-face{fill:url(#abpFace)}
+.abp-tk{stroke:rgba(255,255,255,.16);stroke-width:1;transition:stroke .3s}
+.abp-tk.is-mj{stroke-width:1.6}
+.abp-tk.is-lit{stroke:rgba(255,255,255,.7)}
+.abp-tk.is-zone{stroke:var(--gc);stroke-width:2}
+.abp-arc{fill:none;stroke:rgba(255,255,255,.08);stroke-width:14;stroke-linecap:round}
+.abp-arc-on{fill:none;stroke-width:14;stroke-linecap:round;filter:drop-shadow(0 0 6px color-mix(in srgb,var(--gc) 60%,transparent))}
+.abp-arc-pulse{fill:none;stroke:#fff;stroke-width:6;stroke-linecap:round;opacity:0;filter:blur(1.5px);mix-blend-mode:screen}
+.abp-needle line{stroke:#fff;stroke-width:2.2;stroke-linecap:round;filter:drop-shadow(0 0 3px var(--gc)) drop-shadow(0 0 6px var(--gc))}
+.abp-needle circle{fill:var(--star)}
+.abp-needle .abp-hub-r{fill:#0b0c16;stroke:var(--gc);stroke-width:1.5}
+.abp-tickl{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;fill:var(--dust)}
+.abp-add{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:4px 8px;border:1px solid color-mix(in srgb,var(--c,var(--signal)) 55%,transparent);background:color-mix(in srgb,var(--c,var(--signal)) 10%,transparent);color:var(--c,var(--signal))}
+.abp-add.is-none{border-color:var(--hair2);background:none;color:var(--dust)}
 
 /* launch form (fields live in an Embed inside the Webflow Form) */
 .ab_launch_form .w-form{margin:0}
@@ -281,4 +330,4 @@ select.abp-in{appearance:none;-webkit-appearance:none;background-image:linear-gr
   .abp-tag{display:none}
   .abp-dest.is-on .abp-tag{display:block}
 }
-@media (prefers-reduced-motion:reduce){.ab_crew_grid.has-sat .ab_crew_col,.abp-wave *,.abp-ks-orb,.abp-spin,.abp-counter,.abp-flame,.ab_rec_dot.is-live,.ab_chart.is-adding .abp-dest .abp-pl{animation:none}.abp-arc-on,.ab_crew_tick svg{transition:none}}
+@media (prefers-reduced-motion:reduce){.ab_crew_grid.has-sat .ab_crew_col,.abp-you::before,.abp-comms-dot,.abp-con-deco::before,.abp-con-led,.abp-ks-orb,.abp-spin,.abp-counter,.abp-flame,.ab_rec_dot.is-live,.ab_chart.is-adding .abp-dest .abp-pl{animation:none}.abp-arc-on,.ab_crew_tick svg{transition:none}}

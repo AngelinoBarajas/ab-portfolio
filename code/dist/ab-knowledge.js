@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-knowledge v0.29.17 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-knowledge v0.30.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abKnowledgeInit) return;
@@ -313,6 +313,75 @@ window.Webflow.push(function(){
   /* ---------- Home › Incoming signals: native cards, just reveal them ---------- */
   if (ROW === 'home') reveal($('[data-ks-row="home"]'));
 
+  /* ---------- /observatory hero: research drones. Every 7–12 s (never two readouts at once) a small satellite glides in on a curve, parks beside the
+     planet, beams a field note home (dashed beam + packets, a ring where they land, a mono readout with a real note code
+     and title), then drifts off. Max 2 at a time, transforms + opacity only, paused off screen / in a hidden tab,
+     none under reduced motion. The layer never takes a click. ---------- */
+  if (VIEW === 'library' && hasGsap && !reduce) (function(){
+    var hero = vEl, pl = $('.ab_planet.is-dbh', hero); if (!pl || !OBS.length) return;
+    var layer = document.createElement('div'); layer.className = 'ab_ks-drones'; layer.setAttribute('aria-hidden', 'true'); hero.appendChild(layer);
+    var SAT = '<svg class="sat-ico" viewBox="0 0 24 12"><path class="sp" d="M1 3.5h6v5H1zM17 3.5h6v5h-6z"/><path class="sa" d="M7 6h3M14 6h3"/><rect class="sb" x="10" y="2.5" width="4" height="7"/></svg>';
+    var live = [], next = null, onScreen = false, lastNote = -1, lastAng = 0, first = true;
+    function running(){ return onScreen && !document.hidden; }
+    function pick(){ var i; do { i = Math.floor(Math.random() * OBS.length); } while (OBS.length > 1 && i === lastNote); lastNote = i; return OBS[i]; }
+    function geo(){ var h = hero.getBoundingClientRect(), p = pl.getBoundingClientRect(); return { W: h.width, x: p.left - h.left + p.width / 2, y: p.top - h.top + p.height / 2, R: p.width / 2 }; }
+    function bez(a, c, b, t){ var u = 1 - t; return [u * u * a[0] + 2 * u * t * c[0] + t * t * b[0], u * u * a[1] + 2 * u * t * c[1] + t * t * b[1]]; }
+    function el(cls, html){ var d = document.createElement('div'); d.className = cls; if (html) d.innerHTML = html; layer.appendChild(d); return d; }
+    function fly(){
+      if (live.length >= 2) return;
+      var G = geo(); if (G.R < 30) return;
+      // parking spot: on an arc left of the planet (the side facing the page), clear of the ring; two drones never share it
+      var deg; do { deg = 175 + Math.random() * 55; } while (live.length && Math.abs(deg - lastAng) < 25); lastAng = deg;
+      var ang = deg * Math.PI / 180, rr = G.R * (1.6 + Math.random() * .3), P = [G.x + Math.cos(ang) * rr, G.y + Math.sin(ang) * rr];
+      // in from the top or the right edge, out the other way, on gentle curves
+      var top = Math.random() < .5, rnd = Math.random();
+      var A = top ? [G.x - G.R * (.6 + rnd * 1.4), -60] : [G.W + 60, G.y + G.R * (.6 + rnd)];
+      var B = top ? [G.W + 60, G.y - G.R * (.4 + rnd * .6)] : [G.x - G.R * (1 + rnd * 1.2), -60];
+      var C1 = [(A[0] + P[0]) / 2 - G.R * .5, (A[1] + P[1]) / 2 + G.R * .35], C2 = [(P[0] + B[0]) / 2 - G.R * .3, (P[1] + B[1]) / 2 - G.R * .4];
+      var o = pick(), nm = o.name.length > 40 ? o.name.slice(0, 38).replace(/\s+\S*$/, '') + '…' : o.name;
+      var d = el('ab_ks-drone', '<span class="ab_ks-drone_b">' + SAT + '<i></i></span>');
+      var lb = el('ab_ks-drone_l', '<span><b>RX</b> · ' + esc(o.code || 'WB') + ' · field note received</span><span>' + esc(nm) + '</span>');
+      // beam: a wrapper rotated toward the planet holds the dashed line + three packets
+      var dx = G.x - P[0], dy = G.y - P[1], full = Math.sqrt(dx * dx + dy * dy), dist = full - G.R * .9, bdeg = Math.atan2(dy, dx) * 180 / Math.PI;
+      var bm = el('ab_ks-bm', '<span class="ab_ks-bm_l"></span><span class="ab_ks-pk"></span><span class="ab_ks-pk"></span><span class="ab_ks-pk"></span>');
+      var hit = el('ab_ks-hit'), line = bm.firstChild, pks = $$('.ab_ks-pk', bm), H = [P[0] + dx / full * dist, P[1] + dy / full * dist];
+      gsap.set(bm, { x: P[0], y: P[1], rotation: bdeg, width: dist, opacity: 0 }); gsap.set(line, { scaleX: 0, transformOrigin: '0% 50%' });
+      gsap.set(hit, { x: H[0], y: H[1], scale: .3, opacity: 0 }); gsap.set(lb, { x: P[0] - 16, y: P[1] - 50, xPercent: -100, yPercent: -100, opacity: 0 }); // readout sits up-left of the drone, off the title
+      var pr = { t: 0 }, prev = A;
+      function move(a, c, b){ return function(){ var q = bez(a, c, b, pr.t); gsap.set(d, { x: q[0], y: q[1], rotation: Math.max(-22, Math.min(22, (q[0] - prev[0]) * 1.4)) }); prev = q; }; }
+      gsap.set(d, { x: A[0], y: A[1], opacity: 0 });
+      var tl = gsap.timeline({ paused: !running(), onComplete: function(){ [d, lb, bm, hit].forEach(function(x){ layer.removeChild(x); }); live.splice(live.indexOf(tl), 1); } });
+      tl.to(d, { opacity: 1, duration: .4 }, 0)
+        .to(pr, { t: 1, duration: 3, ease: 'power2.out', onUpdate: move(A, C1, P) }, 0)
+        .to(d, { rotation: 0, duration: .5, ease: 'power2.out' }, 3)
+        .add('tx', 3.1)
+        .to(bm, { opacity: 1, duration: .2 }, 'tx').to(line, { scaleX: 1, duration: .45, ease: 'power2.out' }, 'tx')
+        .to(lb, { opacity: 1, y: P[1] - 14, duration: .4, ease: 'power2.out' }, 'tx+=.3');
+      // three rounds of packets, each lighting a ring where it lands
+      for (var k = 0; k < 3; k++){
+        tl.fromTo(pks, { x: 0, opacity: 0 }, { x: dist, opacity: 1, duration: .7, ease: 'none', stagger: .16, immediateRender: false }, 'tx+=' + (.35 + k * .95))
+          .to(pks, { opacity: 0, duration: .12, stagger: .16 }, 'tx+=' + (.95 + k * .95))
+          .fromTo(hit, { scale: .3, opacity: .9 }, { scale: 1.7, opacity: 0, duration: .8, ease: 'power2.out', immediateRender: false }, 'tx+=' + (1 + k * .95));
+      }
+      tl.add('out', 'tx+=3.5')
+        .set(line, { transformOrigin: '100% 50%' }, 'out').to(line, { scaleX: 0, duration: .35, ease: 'power2.in' }, 'out').to(bm, { opacity: 0, duration: .2 }, 'out+=.3')
+        .to(lb, { opacity: 0, y: P[1] - 20, duration: .4 }, 'out+=.4')
+        .add(function(){ prev = P; }, 'out+=.44')
+        .fromTo(pr, { t: 0 }, { t: 1, duration: 3.2, ease: 'power2.in', onUpdate: move(P, C2, B), immediateRender: false }, 'out+=.45')
+        .to(d, { opacity: 0, duration: .6 }, 'out+=3.05');
+      live.push(tl);
+    }
+    function schedule(){ if (next) next.kill(); next = gsap.delayedCall(first ? 1.8 : 7 + Math.random() * 5, function(){ next = null; first = false; fly(); schedule(); }); }
+    function sync(){
+      var on = running();
+      live.forEach(function(t){ t.paused(!on); });
+      if (on){ if (next) next.resume(); else schedule(); } else if (next) next.pause();
+    }
+    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ onScreen = es[0].isIntersecting; sync(); }).observe(hero);
+    else { onScreen = true; sync(); }
+    document.addEventListener('visibilitychange', sync);
+  })();
+
   /* ===== knowledge/20-article.js ===== */
   /* ---------- /observatory/[slug]: the article ---------- */
   if (VIEW === 'article') (function(){
@@ -383,25 +452,47 @@ window.Webflow.push(function(){
 
   /* ===== knowledge/30-chart.js ===== */
   /* ---------- star chart geometry (shared by /topics and the topic page mini-map) ---------- */
-  var CENTER = { who: [200, 200], what: [650, 180], how: [1090, 210], watch: [190, 590], ideas: [700, 600], known: [1130, 580] };
-  // hand-placed star slots per constellation: [dx, dy, label side]
-  var SHAPES = [[-120, -40, 'L'], [-10, -95, 'R'], [110, -30, 'R'], [80, 70, 'R'], [-30, 110, 'R'], [-130, 70, 'L']];
-  var POS = {}, SIDE = {};
+  var CENTER = { who: [200, 215], what: [650, 190], how: [1080, 225], watch: [205, 595], ideas: [690, 610], known: [1070, 590] };
+  // each constellation has its own figure: star slots [dx, dy] in the order topics fill them + the lines between slots.
+  // A line only draws when both of its stars exist, so a 3-star constellation still reads as its shape.
+  var FIG = {
+    who: { n: 'dipper', p: [[-10, -8], [108, -20], [118, 70], [0, 84], [-78, -44], [-148, -74]], e: [[0, 1], [1, 2], [2, 3], [3, 0], [0, 4], [4, 5]], s: ['T', 'R', 'R', 'B', 'T', 'L'] },
+    what: { n: 'cassiopeia', p: [[-140, -45], [-72, 58], [-5, -22], [66, 66], [138, -52], [30, -100]], e: [[0, 1], [1, 2], [2, 3], [3, 4], [2, 5]], s: ['L', 'B', 'R', 'B', 'R', 'R'] },
+    how: { n: 'cross', p: [[0, 0], [-128, -12], [122, -22], [4, -100], [-6, 104], [-150, 52]], e: [[0, 1], [0, 2], [0, 3], [0, 4], [1, 5]], s: ['R', 'L', 'R', 'R', 'R', 'L'] },
+    watch: { n: 'zigzag', p: [[-160, 82], [-88, -58], [-22, 38], [40, -70], [100, 38], [150, -55]], e: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5]], s: ['B', 'T', 'B', 'T', 'B', 'T'] },
+    ideas: { n: 'loop', p: [[-128, 30], [-86, -62], [8, -92], [104, -54], [128, 40], [10, 92]], e: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 0]], s: ['L', 'L', 'T', 'R', 'R', 'B'] },
+    known: { n: 'arrowhead', p: [[118, -4], [-2, -92], [8, 88], [-42, -2], [-148, 4], [-112, -64]], e: [[0, 1], [0, 2], [0, 3], [3, 4], [4, 5]], s: ['R', 'R', 'R', 'B', 'L', 'L'] }
+  };
+  // seeded jitter per constellation: hand-drawn feel, identical on every visit
+  var jsd = 11; function jr(){ jsd = (jsd * 16807) % 2147483647; return jsd / 2147483647 - .5; }
+  Object.keys(FIG).forEach(function(k){ FIG[k].p.forEach(function(s){ s[0] = Math.round(s[0] + jr() * 22); s[1] = Math.round(s[1] + jr() * 18); }); });
+  var POS = {}, SIDE = {}, SLOT = {};
   CATS.forEach(function(c){
+    var fg = FIG[c.key], cx = CENTER[c.key];
     TOPICS.filter(function(t){ return t.cat === c.key; }).forEach(function(t, i){
-      var s = SHAPES[i % 6], cx = CENTER[c.key]; POS[t.slug] = [cx[0] + s[0], cx[1] + s[1]];
-      SIDE[t.slug] = t.slug === 'philosophy-at-work' ? 'R' : s[2]; // one hand-tuned label (it collides with Reduced motion)
+      // more than six stars: extra ones sit just outside the figure (it never breaks, it just grows)
+      var s = fg.p[i % fg.p.length], ring = Math.floor(i / fg.p.length), k = 1 + ring * .35;
+      POS[t.slug] = [cx[0] + s[0] * k, cx[1] + s[1] * k]; SLOT[t.slug] = i;
+      SIDE[t.slug] = ring ? (s[0] < 0 ? 'L' : 'R') : fg.s[i]; // label side per slot: L / R / T(op) / B(ottom)
     });
   });
   var XL = [];
   OBS.forEach(function(x){ for (var i = 0; i < x.topics.length; i++) for (var j = i + 1; j < x.topics.length; j++){ var a = x.topics[i], b = x.topics[j]; if (!POS[a] || !POS[b]) continue; var k = a < b ? a + '|' + b : b + '|' + a; if (XL.indexOf(k) < 0) XL.push(k); } });
+  // label anchor for a star at x,y with radius r: [x, y, text-anchor]
+  function lbl(x, y, r, side, gap){ gap = gap || 9; return side === 'T' ? [x, y - r - gap + 1, 'middle'] : side === 'B' ? [x, y + r + gap + 9, 'middle'] : side === 'R' ? [x + r + gap, y + 4, 'start'] : [x - r - gap, y + 4, 'end']; }
   function starR(t){ return 3 + Math.sqrt(links(t)) * 1.7; }
-  function consPath(key, dx, dy){ var ts = TOPICS.filter(function(t){ return t.cat === key && POS[t.slug]; }); return ts.length ? 'M' + ts.map(function(t){ return (POS[t.slug][0] - (dx || 0)) + ' ' + (POS[t.slug][1] - (dy || 0)); }).join(' L') : ''; }
+  // the constellation's figure as one path (segments between the stars that exist), optionally re-centered
+  function consPath(key, dx, dy){
+    var ts = TOPICS.filter(function(t){ return t.cat === key && POS[t.slug]; }), at = {}, d = '';
+    ts.forEach(function(t){ at[SLOT[t.slug]] = POS[t.slug]; });
+    FIG[key].e.forEach(function(e){ var a = at[e[0]], b = at[e[1]]; if (a && b) d += 'M' + (a[0] - (dx || 0)) + ' ' + (a[1] - (dy || 0)) + ' L' + (b[0] - (dx || 0)) + ' ' + (b[1] - (dy || 0)) + ' '; });
+    return d.trim();
+  }
 
   if (VIEW === 'chart') (function(){
     var mount = $('[data-ks-chart]'); if (!mount || !TOPICS.length) return;
     // the grid is a tiling pattern over a huge rect, so it never ends when the view is panned past the chart
-    var g = '<defs><pattern id="abKsGrid" width="100" height="90" patternUnits="userSpaceOnUse"><path class="gp" d="M100 0H0V90"/></pattern></defs>' +
+    var g = '<defs><filter id="abKsGlow" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="5"/></filter><pattern id="abKsGrid" width="100" height="90" patternUnits="userSpaceOnUse"><path class="gp" d="M100 0H0V90"/></pattern></defs>' +
       '<g class="grid"><rect x="-5000" y="-4000" width="11400" height="8800" fill="url(#abKsGrid)"/><circle cx="660" cy="390" r="230"/><circle cx="660" cy="390" r="440"/><circle cx="660" cy="390" r="760"/>';
     // faint background stars across the whole pannable area (deterministic, so every visit looks the same)
     var sd = 7; function rnd(){ sd = (sd * 16807) % 2147483647; return sd / 2147483647; }
@@ -409,23 +500,34 @@ window.Webflow.push(function(){
     g += '</g>';
     var xl = XL.map(function(k){ var p = k.split('|'), a = POS[p[0]], b = POS[p[1]], mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2 - 40;
       return '<path class="xl" data-a="' + p[0] + '" data-b="' + p[1] + '" d="M' + a.join(' ') + ' Q' + mx + ' ' + my + ' ' + b.join(' ') + '"/>'; }).join('');
+    // each constellation: a faint nebula in its color, the figure, then a title plate centered above it
+    // (mono code line with a diamond + star count, the name with a soft glow, bracket rule sized to the name after render)
     var cons = CATS.map(function(c){
-      var ys = TOPICS.filter(function(t){ return t.cat === c.key && POS[t.slug]; }).map(function(t){ return POS[t.slug][1]; }); if (!ys.length) return '';
-      var top = Math.min.apply(null, ys), cx = CENTER[c.key];
-      return '<g data-cat="' + c.key + '"><path class="cl" d="' + consPath(c.key) + '"/><text class="cc" x="' + (cx[0] - 150) + '" y="' + (top - 50) + '">' + c.code + ' · ' + pad2(c.i + 1) + '</text><text class="cn" x="' + (cx[0] - 150) + '" y="' + (top - 26) + '">' + esc(c.name) + '</text></g>';
+      var ts = TOPICS.filter(function(t){ return t.cat === c.key && POS[t.slug]; }); if (!ts.length) return '';
+      var ys = ts.map(function(t){ return POS[t.slug][1]; }), top = Math.min.apply(null, ys), cx = CENTER[c.key], ty = top - 40;
+      return '<g data-cat="' + c.key + '" data-fig="' + FIG[c.key].n + '"><path class="cl" d="' + consPath(c.key) + '"/>' +
+        '<g class="ct" transform="translate(' + cx[0] + ' ' + ty + ')"><path class="cb" d=""/><text class="cc" y="-32" text-anchor="middle">◆ ' + c.code + ' · ' + pad2(c.i + 1) + ' · ' + pad2(ts.length) + ' STARS</text>' +
+        '<text class="cn cn-g" text-anchor="middle" aria-hidden="true">' + esc(c.name) + '</text><text class="cn" text-anchor="middle">' + esc(c.name) + '</text></g></g>';
     }).join('');
+    // nebulae sit under everything (routes included); the gradient lives inside the group so its stops read --kc
+    var nebs = CATS.map(function(c){ var cx = CENTER[c.key], id = 'abKsNb-' + c.key;
+      return '<g class="nbg" data-cat="' + c.key + '"><radialGradient id="' + id + '"><stop class="nb0" offset="0"/><stop class="nb1" offset="1"/></radialGradient><ellipse class="nb" cx="' + cx[0] + '" cy="' + (cx[1] - 10) + '" rx="240" ry="170" fill="url(#' + id + ')"/></g>'; }).join('');
     var stars = TOPICS.filter(function(t){ return POS[t.slug]; }).map(function(t, i){
-      var p = POS[t.slug], r = starR(t), right = SIDE[t.slug] === 'R';
+      var p = POS[t.slug], r = starR(t), L = lbl(p[0], p[1], r, SIDE[t.slug]);
       return '<a href="' + URL_T + t.slug + '" data-cat="' + t.cat + '" data-slug="' + t.slug + '" aria-label="' + esc(t.name) + ', ' + links(t) + ' links">' +
         '<circle class="st-h" cx="' + p[0] + '" cy="' + p[1] + '" r="' + (r * 3.2) + '"/><circle class="st-r" cx="' + p[0] + '" cy="' + p[1] + '" r="' + (r + 5) + '"/>' +
         '<circle class="st' + (i % 3 ? '' : ' tw') + '" cx="' + p[0] + '" cy="' + p[1] + '" r="' + r + '"/>' +
-        '<text class="tl" x="' + (p[0] + (right ? r + 9 : -(r + 9))) + '" y="' + (p[1] + 4) + '" text-anchor="' + (right ? 'start' : 'end') + '">' + esc(t.name) + '</text></a>';
+        '<text class="tl" x="' + L[0] + '" y="' + L[1] + '" text-anchor="' + L[2] + '">' + esc(t.name) + '</text></a>';
     }).join('');
     mount.innerHTML = '<div class="ab_ks-chart" data-lenis-prevent-wheel=""><div class="ab_ks-chart_h"><span>Chart · ' + TOPICS.length + ' stars · ' + XL.length + ' shared-observation routes</span><span>Star size = <b>links</b> · dashed = <b>shares an observation</b></span></div>' +
-      '<div class="ab_ks-map" data-ks-map=""><svg viewBox="-110 20 1510 760" role="img" aria-label="Star chart of ' + TOPICS.length + ' topics in six constellations">' + g + xl + cons + stars + '</svg></div>' +
+      '<div class="ab_ks-map" data-ks-map=""><svg viewBox="-110 20 1510 760" role="img" aria-label="Star chart of ' + TOPICS.length + ' topics in six constellations">' + g + nebs + xl + cons + stars + '</svg></div>' +
       '<div class="ab_ks-read" data-ks-read="" data-lenis-prevent="" aria-live="polite"></div>' +
       '<div class="ab_ks-chart_f" role="group" aria-label="Fly to a constellation"><span class="ab_ks-chart_fl">Fly to</span>' + CATS.map(function(c){ return '<button type="button" class="ab_ks-chip is-cons" data-cat="' + c.key + '" aria-pressed="false"><b>' + c.code + '</b>' + esc(c.name) + '</button>'; }).join('') + '</div></div>';
 
+    // size each title's brackets to its name (again once the display font lands, it's much wider than the fallback)
+    function brackets(){ $$('.ct', mount).forEach(function(g){ var n = $('.cn:not(.cn-g)', g), hw = 0; try { hw = n.getComputedTextLength() / 2; } catch (x) {} if (!hw) return;
+      $('.cb', g).setAttribute('d', 'M' + (-hw - 8) + ' -19H' + (-hw - 16) + 'V6H' + (-hw - 8) + 'M' + (hw + 8) + ' -19H' + (hw + 16) + 'V6H' + (hw + 8)); }); }
+    brackets(); if (document.fonts && document.fonts.ready) document.fonts.ready.then(brackets);
     var map = $('[data-ks-map]', mount), read = $('[data-ks-read]', mount), links_ = $$('a', map), xls = $$('.xl', map), sel = null, lastType = 'mouse';
     function show(a){
       if (sel === a) return; sel = a;
@@ -553,9 +655,9 @@ window.Webflow.push(function(){
     if (mini && POS[T.slug]){
       mini.setAttribute('data-cat', T.cat);
       mini.innerHTML = '<svg viewBox="-250 -130 480 270" aria-hidden="true"><path class="cl" d="' + consPath(T.cat, cx0[0], cx0[1]) + '"/>' +
-        sibs.map(function(t){ var p = POS[t.slug]; if (!p) return ''; var x = p[0] - cx0[0], y = p[1] - cx0[1], on = t === T, r = starR(t), R = SIDE[t.slug] === 'R';
+        sibs.map(function(t){ var p = POS[t.slug]; if (!p) return ''; var x = p[0] - cx0[0], y = p[1] - cx0[1], on = t === T, r = starR(t), L = lbl(x, y, r, SIDE[t.slug], 7);
           return '<g class="' + (on ? 'is-on' : '') + '">' + (on ? '<circle class="st-p" cx="' + x + '" cy="' + y + '" r="' + r + '"/><circle class="st-r" cx="' + x + '" cy="' + y + '" r="' + (r + 5) + '"/>' : '') +
-            '<circle class="st" cx="' + x + '" cy="' + y + '" r="' + r + '"/><text class="tl" x="' + (R ? x + r + 7 : x - r - 7) + '" y="' + (y + 3) + '" text-anchor="' + (R ? 'start' : 'end') + '">' + esc(t.name) + '</text></g>'; }).join('') + '</svg>';
+            '<circle class="st" cx="' + x + '" cy="' + y + '" r="' + r + '"/><text class="tl" x="' + L[0] + '" y="' + (L[1] - 1) + '" text-anchor="' + L[2] + '">' + esc(t.name) + '</text></g>'; }).join('') + '</svg>';
     }
     var stats = $('[data-ks-tstats]');
     if (stats) stats.innerHTML = [['Observations', tNotes.length, '#notes'], ['Missions', tMis.length, '#practice'], ['Services', SVC.length, '#services'], ['Questions', tFaq.length, '#questions']]

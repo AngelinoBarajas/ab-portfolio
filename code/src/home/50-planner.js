@@ -38,6 +38,7 @@
     addons.forEach(function(c){ c.setAttribute('data-addon', 'KNS · Knowledge system'); if (!$('svg', c)) c.textContent = 'KNS · Knowledge system'; if (!$('svg', c)) c.insertAdjacentHTML('afterbegin', '<svg class="sat-ico ab-ks-ico" viewBox="0 0 24 12" aria-hidden="true"><path class="sp" d="M1 3.5h6v5H1zM17 3.5h6v5h-6z"/><path class="sa" d="M7 6h3M14 6h3"/><rect class="sb" x="10" y="2.5" width="4" height="7"/></svg>'); });
     var fType = $('#plTypesField'), fBud = $('#plBudField'), fBrief = $('#plBriefField'), fAdd = $('#plAddonsField');
     chips.concat(addons).forEach(function(c){ c.setAttribute('aria-pressed', 'false'); });
+    var ol = $('.pl-orbitlines ellipse', form); if (ol){ ol.setAttribute('cx', 110); ol.setAttribute('cy', 138); ol.setAttribute('transform', 'rotate(-14 110 138)'); }
     var sg = $('.pl-stars', form), s = '';
     if (sg){ for (var i = 0; i < 60; i++) s += '<circle cx="' + (Math.random() * 560).toFixed(1) + '" cy="' + (Math.random() * 190).toFixed(1) + '" r="' + (Math.random() < .1 ? 1 : .45) + '" fill="#fff" opacity="' + (.15 + Math.random() * .55).toFixed(2) + '"/>'; sg.innerHTML = s; }
     function radios(){ return $$('input[name="Launch window"]', form); }
@@ -57,9 +58,10 @@
     function draw(anim){
       var st = state(), n = st.sel.length; st0 = st;
       // window = distance, types = planet (first pick) + moons (the rest), budget = rings
-      var X = [290, 370, 462, 410][st.w], Y = [92, 70, 58, 46][st.w], R = 14 + Math.min(n, 4) * 3.2;
-      var lift = st.w === 3 ? 150 : 96 + st.w * 12, cx = (56 + X) / 2;
-      var d = 'M78 144 Q ' + cx + ' ' + (Y - lift * .35) + ' ' + (X - R - 10) + ' ' + (Y + 3);
+      // Earth sits at (110,138) and the destinations reach x 450, so the route is centered in the 560 frame (was 56 → 462)
+      var X = [300, 365, 450, 405][st.w], Y = [96, 78, 66, 54][st.w], R = 14 + Math.min(n, 4) * 3.2;
+      var lift = st.w === 3 ? 140 : 90 + st.w * 12, cx = (110 + X) / 2;
+      var d = 'M131 132 Q ' + cx + ' ' + (Y - lift * .35) + ' ' + (X - R - 10) + ' ' + (Y + 3);
       path.setAttribute('d', d); done.setAttribute('d', d);
       path.style.strokeDasharray = st.w === 3 ? '1.5 7' : '';
       var k = n ? String(st.sel[0]) : 'none';

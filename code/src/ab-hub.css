@@ -95,6 +95,16 @@ html:has(.section_hub-hero),.main-wrapper:has(.section_hub-hero){overflow-anchor
   background:radial-gradient(420px circle at var(--mx) var(--my),rgba(255,255,255,.09),transparent 60%),radial-gradient(240px circle at var(--mx) var(--my),rgba(255,106,61,.09),transparent 70%),
   linear-gradient(calc(105deg + var(--gx) * 50deg),transparent 28%,rgba(140,200,255,.06) 44%,rgba(255,150,220,.05) 54%,transparent 70%)}
 .ab_hub-log:hover .hb-glare,.ab_hub-pass:hover .hb-glare{opacity:1}
+/* pass focus (desktop, script: 10-board.js › launch pass focus): the print slot's clip and perspective step aside so the
+   pass can lift and center over a soft dim (fixed to the view once the wrapper has no perspective); the pass rises above it */
+.ab_hub-pass{transition:box-shadow .5s cubic-bezier(.2,.8,.2,1)}
+.ab_hub-print.is-focus{clip-path:none;perspective:none}
+.ab_hub-print.is-focus .ab_hub-pass{z-index:2}
+.ab_hub-pass.is-lifted{box-shadow:0 60px 120px -30px rgba(0,0,0,.85),0 0 0 1px color-mix(in srgb,var(--c) 35%,transparent),0 0 60px -10px color-mix(in srgb,var(--c) 30%,transparent),inset 0 1px 0 rgba(255,255,255,.14)}
+.hb-pass-dim{position:absolute;left:0;top:0;width:0;height:0;opacity:0;pointer-events:none;z-index:1;transition:opacity .45s ease;
+  background:radial-gradient(ellipse at 50% 50%,rgba(6,8,16,.42),rgba(6,8,16,.72) 70%)}
+.ab_hub-print.is-focus .hb-pass-dim{position:fixed;inset:0;width:auto;height:auto}
+.ab_hub-print.is-dim .hb-pass-dim{opacity:1}
 @media (max-width:1200px){
   .ab_hub-slot{margin-left:7%;margin-right:7%}
   .ab_hub-pass{grid-template-columns:minmax(0,1fr);width:86%}

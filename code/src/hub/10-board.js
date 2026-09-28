@@ -74,6 +74,7 @@
       callRow.style.setProperty('--cw', Math.max(8, Math.min(16, Math.floor(cc * 10) / 10)) + 'px');
     }
     // after a print the pass keeps GSAP's transform (same tilt); drop it on resize so each breakpoint's tilt applies
+    if (lifted) drop(true);
     var ps = $('[data-hub-pass]'); if (ps && hasGsap && !gsap.isTweening(ps)) gsap.set(ps, { clearProps: 'transform' });
     hang();
   }
@@ -172,6 +173,7 @@
     if (!quiet) prompt('AB-' + s.no + ' ' + s.short.toUpperCase() + ' ARMED · PRINTING LAUNCH PASS');
     if (!pass) return;
     if (quiet || reduce || !hasGsap){ fillPass(s); hang(); return; }
+    drop(true);
     mon.classList.add('is-printing');
     gsap.killTweensOf(pass);
     // transform only: the pass slides back up into the slot, is refilled while hidden, then feeds out smoothly.
@@ -211,7 +213,68 @@
     }
   });
   sws.forEach(function(s, i){ s.addEventListener('click', function(){ print(i); }); });
-  glass(pass, function(){ return mon && mon.classList.contains('is-printing'); });
+  // on desktop the pass only tilts while it's lifted (focus mode below); elsewhere it tilts as before
+  glass(pass, function(){ return (mon && mon.classList.contains('is-printing')) || (growOk() && !lifted); });
+
+  /* ---------- launch pass focus (desktop): hover a moment and the pass lifts, grows and centers itself in the view
+     over a soft dim, then tilts toward the pointer. The hover target is the lifted pass's final rect (not its live rect),
+     so edges don't flicker; once it drops back it stays down until the pointer has left its slot. Keyboard focus lifts
+     it too; Esc, a scroll, a print or a resize drops it. Touch, narrow windows and reduced motion keep the plain pass. ---------- */
+  var printBox = $('[data-hub-print]'), lifted = false, armed = true, liftT = 0, overPass = false, liftBox = null, liftY = 0, lastScroll = 0, dim = null, ptX = 0, ptY = 0;
+  var fineMq = window.matchMedia ? window.matchMedia('(hover: hover) and (pointer: fine)') : null;
+  function growOk(){ return !!(pass && printBox && hasGsap && !reduce && !coarse && fineMq && fineMq.matches && innerWidth >= 992); }
+  if (pass && printBox){ dim = document.createElement('div'); dim.className = 'hb-pass-dim'; dim.setAttribute('aria-hidden', 'true'); printBox.insertBefore(dim, pass); }
+  // the pass's layout box (without its transform)
+  function homeRect(){ var w = printBox.getBoundingClientRect(); return { l: w.left + pass.offsetLeft, t: w.top + pass.offsetTop, w: pass.offsetWidth, h: pass.offsetHeight }; }
+  function inBox(x, y, b, m){ return x >= b.l - m && x <= b.l + b.w + m && y >= b.t - m && y <= b.t + b.h + m; }
+  function lift(px, py){
+    if (lifted || !growOk() || (mon && mon.classList.contains('is-printing'))) return;
+    var h = homeRect(), vw = document.documentElement.clientWidth, vh = innerHeight;
+    var s = Math.max(1, Math.min(1.12, (vw - 64) / h.w, (vh - 48) / h.h)), W = h.w * s, H = h.h * s;
+    var cx = h.l + h.w / 2, cy = h.t + h.h / 2, x = vw / 2 - cx, y = vh / 2 - cy, m = 48;
+    // the lifted pass always ends up under the pointer (48px in from its edges), so it can't slide away from the cursor
+    if (px != null){
+      x = Math.min(Math.max(x, px + m - cx - W / 2), px - m - cx + W / 2);
+      y = Math.min(Math.max(y, py + m - cy - H / 2), py - m - cy + H / 2);
+    }
+    lifted = true; liftY = scrollY;
+    liftBox = { l: cx + x - W / 2, t: cy + y - H / 2, w: W, h: H };
+    printBox.classList.add('is-focus', 'is-dim'); pass.classList.add('is-lifted');
+    gsap.set(pass, { transformOrigin: '50% 50%', transformPerspective: 1000 });
+    gsap.to(pass, { x: x, y: y, scale: s, duration: .6, ease: 'power3.out', overwrite: 'auto' });
+  }
+  function drop(instant){
+    clearTimeout(liftT);
+    if (!lifted) return;
+    lifted = false; armed = false; liftBox = null;
+    printBox.classList.remove('is-dim'); pass.classList.remove('is-lifted');
+    pass.style.setProperty('--tx', '0px'); pass.style.setProperty('--ty', '0px');
+    function done(){ if (lifted) return; printBox.classList.remove('is-focus'); gsap.set(pass, { transformOrigin: '50% 0%' }); }
+    if (instant){ gsap.killTweensOf(pass); gsap.set(pass, { x: 0, y: 0, scale: 1, rotationX: 0, rotationY: 0 }); done(); return; }
+    gsap.to(pass, { x: 0, y: 0, scale: 1, rotationX: 0, rotationY: 0, duration: .55, ease: 'power3.inOut', overwrite: 'auto', onComplete: done });
+  }
+  if (pass && printBox){
+    pass.addEventListener('pointerenter', function(e){
+      overPass = true;
+      if (e.pointerType !== 'mouse' || !armed || lifted || !growOk()) return;
+      clearTimeout(liftT);
+      // a short dwell, so a pointer passing over the pass on the way down the page doesn't lift it
+      liftT = setTimeout(function(){ if (overPass && armed && Date.now() - lastScroll > 150) lift(ptX, ptY); }, 180);
+    });
+    pass.addEventListener('pointerleave', function(){ overPass = false; if (!lifted) clearTimeout(liftT); });
+    document.addEventListener('pointermove', function(e){
+      ptX = e.clientX; ptY = e.clientY;
+      if (lifted){ if (e.pointerType === 'mouse' && !inBox(ptX, ptY, liftBox, 10)) drop(); return; }
+      if (!armed && !inBox(ptX, ptY, homeRect(), 2)) armed = true;
+    }, { passive: true });
+    document.documentElement.addEventListener('mouseleave', function(){ drop(); });
+    addEventListener('scroll', function(){ lastScroll = Date.now(); if (lifted && Math.abs(scrollY - liftY) > 24) drop(); }, { passive: true });
+    addEventListener('blur', function(){ drop(); });
+    // keyboard: tabbing into the pass lifts it (centered), tabbing out or Esc drops it
+    pass.addEventListener('focusin', function(e){ var t = e.target; if (!lifted && t.matches && t.matches(':focus-visible') && growOk()){ armed = true; lift(null, null); } });
+    pass.addEventListener('focusout', function(e){ if (lifted && !(e.relatedTarget && pass.contains(e.relatedTarget))) drop(); });
+    document.addEventListener('keydown', function(e){ if (lifted && (e.key === 'Escape' || e.key === 'Esc')) drop(); });
+  }
   function peek(i){
     if (!board) return;
     peekEls.forEach(function(p, j){

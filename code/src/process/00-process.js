@@ -223,16 +223,62 @@
   }
 
   /* ---------- what moves the timeline ---------- */
+  // each factor has its own color (service palette, same hues as the chips); a picked option fills with it and the
+  // gauge arc blends the colors of every factor that stretches the route, weighted by how far it stretches it
+  var ETA_C = ['#146EF5', '#ffd166', '#FF6A3D', '#0AE448', '#5eead4', '#7c5cff'], ETA_T = ['#fff', '#07080d', '#07080d', '#07080d', '#07080d', '#fff'];
   var segs = $$('.ab_eta_seg'), fv = segs.map(function(){ return 1; });
   var BUCKETS = $$('[data-eta-buckets] .ab_eta_bucket').map(function(b){ var t = $('.ab_eta_bucket-t', b), p = $('.ab_eta_bucket-p', b); return [t ? t.textContent : '', p ? p.textContent : '']; });
-  var dial = $('[data-gauge]');
-  if (dial) dial.innerHTML = '<svg viewBox="0 0 300 170"><path class="abp-arc" d="M30 150 A120 120 0 0 1 270 150"/><path class="abp-arc-on" d="M30 150 A120 120 0 0 1 270 150"/>' +
-    '<g class="abp-needle"><line x1="150" y1="150" x2="150" y2="52"/><circle cx="150" cy="150" r="7"/></g>' +
-    '<text class="abp-tickl" x="18" y="168">' + esc((BUCKETS[0] || ['Short hop'])[0]) + '</text><text class="abp-tickl" x="150" y="18" text-anchor="middle">' + esc((BUCKETS[1] || ['Standard orbit'])[0]) + '</text><text class="abp-tickl" x="282" y="168" text-anchor="end">Deep space</text></svg>';
-  var arc = dial && $('.abp-arc-on', dial), needle = dial && $('.abp-needle', dial), arcLen = arc ? arc.getTotalLength() : 0;
-  if (arc){ arc.style.strokeDasharray = arcLen; arc.style.strokeDashoffset = arcLen; }
+  var dial = $('[data-gauge]'), gauge = dial && dial.parentNode, SVGN = 'http://www.w3.org/2000/svg';
+  // console dial: inner tick ring (majors on the bucket lines), blended arc, a light pulse riding the lit arc, glowing needle
+  function ticks(){
+    var s = '';
+    for (var k = 0; k <= 30; k++){
+      var t = k / 30, a = Math.PI * (1 - t), mj = k % 5 === 0 || k === 10 || k === 20, r1 = mj ? 96 : 100, r2 = 106;
+      s += '<line class="abp-tk' + (mj ? ' is-mj' : '') + (k === 10 || k === 20 ? ' is-zone' : '') + '" data-t="' + t.toFixed(3) + '" x1="' + (150 + Math.cos(a) * r1).toFixed(1) + '" y1="' + (150 - Math.sin(a) * r1).toFixed(1) + '" x2="' + (150 + Math.cos(a) * r2).toFixed(1) + '" y2="' + (150 - Math.sin(a) * r2).toFixed(1) + '"/>';
+    }
+    return s;
+  }
+  if (dial){
+    var stopsHtml = ''; for (var gi = 0; gi < 8; gi++) stopsHtml += '<stop offset="0" stop-color="#FF6A3D"/>';
+    dial.innerHTML = '<svg viewBox="0 0 300 170"><defs><linearGradient id="abpArcG" gradientUnits="userSpaceOnUse" x1="23" y1="0" x2="277" y2="0" color-interpolation="linearRGB">' + stopsHtml + '</linearGradient>' +
+      '<radialGradient id="abpFace" cx="150" cy="150" r="140" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity=".07"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>' +
+      '<path class="abp-face" d="M10 150 A140 140 0 0 1 290 150 Z"/><g class="abp-ticks">' + ticks() + '</g>' +
+      '<path class="abp-arc" d="M30 150 A120 120 0 0 1 270 150"/><path class="abp-arc-on" d="M30 150 A120 120 0 0 1 270 150"/><path class="abp-arc-pulse" d="M30 150 A120 120 0 0 1 270 150"/>' +
+      '<g class="abp-needle"><g class="abp-needle-j"><line x1="150" y1="150" x2="150" y2="62"/><circle class="abp-hub-r" cx="150" cy="150" r="11"/><circle cx="150" cy="150" r="6"/></g></g>' +
+      '<text class="abp-tickl" x="18" y="168">' + esc((BUCKETS[0] || ['Short hop'])[0]) + '</text><text class="abp-tickl" x="150" y="12" text-anchor="middle">' + esc((BUCKETS[1] || ['Standard orbit'])[0]) + '</text><text class="abp-tickl" x="282" y="168" text-anchor="end">Deep space</text></svg>';
+    // instrument chrome: status strip with a live readout, corner brackets + rivets, scanlines
+    gauge.classList.add('abp-console');
+    var cTop = document.createElement('div'); cTop.className = 'abp-con-top'; cTop.setAttribute('aria-hidden', 'true');
+    cTop.innerHTML = '<span class="abp-con-led"></span><span class="abp-con-name">Route length</span><span class="abp-con-read">RNG <b>050</b>%</span>';
+    gauge.insertBefore(cTop, dial);
+    var cDeco = document.createElement('div'); cDeco.className = 'abp-con-deco'; cDeco.setAttribute('aria-hidden', 'true'); gauge.appendChild(cDeco);
+  }
+  var arc = dial && $('.abp-arc-on', dial), pulse = dial && $('.abp-arc-pulse', dial), needle = dial && $('.abp-needle', dial), jit = dial && $('.abp-needle-j', dial);
+  var gStops = dial ? $$('#abpArcG stop', dial) : [], tks = dial ? $$('.abp-tk', dial) : [], readN = dial && $('.abp-con-read b', gauge);
+  var arcLen = arc ? arc.getTotalLength() : 0, gs = { r: 0 }, lastGc = '';
+  segs.forEach(function(s, f){ gs['w' + f] = 1; });
+  if (arc){ arc.style.strokeDasharray = arcLen; arc.style.strokeDashoffset = arcLen; arc.setAttribute('stroke', 'url(#abpArcG)'); }
+  if (pulse){ pulse.style.strokeDasharray = '12 ' + Math.ceil(arcLen * 2); pulse.style.strokeDashoffset = arcLen; }
+  // arc position t (0..1 along the semicircle) → gradient offset (the gradient runs along x, the arc is x = 150 - 120cos(πt))
+  function gOff(t){ return (1 - Math.cos(Math.PI * Math.max(0, Math.min(1, t)))) / 2 * 240 / 254 + 7 / 254; }
+  // repaint from the tweened state: arc length, color stops (one band per stretching factor, blended between centers),
+  // lit ticks, readout, and --gc (the color at the needle) for the needle glow + LED
+  function paintArc(){
+    if (!arc) return;
+    var r = Math.max(.04, gs.r), tot = 0, cum = 0, st = [];
+    segs.forEach(function(s, f){ tot += gs['w' + f]; });
+    segs.forEach(function(s, f){ var w = gs['w' + f]; if (w > .01) st.push([(cum + w / 2) / tot * r, ETA_C[f]]); cum += w; });
+    if (!st.length) st = [[0, '#8A8FA3']];
+    var list = [[0, st[0][1]]].concat(st, [[r, st[st.length - 1][1]]]);
+    gStops.forEach(function(n, k){ var p = list[Math.min(k, list.length - 1)]; n.setAttribute('offset', gOff(p[0]).toFixed(4)); n.setAttribute('stop-color', p[1]); });
+    arc.style.strokeDashoffset = arcLen * (1 - r);
+    tks.forEach(function(t){ t.classList.toggle('is-lit', +t.getAttribute('data-t') <= r + .001); });
+    if (readN) readN.textContent = ('00' + Math.round(gs.r * 100)).slice(-3);
+    var gc = st[st.length - 1][1]; if (gc !== lastGc && gauge){ gauge.style.setProperty('--gc', gc); lastGc = gc; }
+  }
   segs.forEach(function(seg, f){
     seg.setAttribute('data-factor', f);
+    var fac = seg.parentNode; if (fac){ fac.style.setProperty('--c', ETA_C[f % 6]); fac.style.setProperty('--tc', ETA_T[f % 6]); }
     $$('.ab_eta_opt', seg).forEach(function(o, v){
       o.setAttribute('role', 'button'); o.tabIndex = 0; o.setAttribute('aria-pressed', 'false');
       function go(){ setFactor(f, v); eta(); }
@@ -248,15 +294,28 @@
     if (bk && tt) tt.textContent = bk[0]; if (bk && tp) tp.textContent = bk[1];
     if (adds){
       var names = segs.map(function(s){ var n = s.parentNode && $('.ab_eta_factor-name', s.parentNode); return n ? n.firstChild.textContent.trim() : ''; });
-      var on = fv.map(function(v, f){ return v === 2 ? '<span class="abp-add">+ ' + esc(names[f]) + '</span>' : ''; }).join('');
+      var on = fv.map(function(v, f){ return v === 2 ? '<span class="abp-add" style="--c:' + ETA_C[f % 6] + '">+ ' + esc(names[f]) + '</span>' : ''; }).join('');
       adds.innerHTML = on || '<span class="abp-add is-none">Nothing stretching it</span>';
     }
+    if (gauge) gauge.setAttribute('data-bucket', b);
     if (!arc) return;
-    var rot = -90 + 180 * r; arc.style.strokeDashoffset = arcLen * (1 - Math.max(.04, r));
-    if (instant || reduce || !hasGsap) needle.setAttribute('transform', 'rotate(' + rot + ' 150 150)');
-    else gsap.to(needle, { rotation: rot, svgOrigin: '150 150', duration: .9, ease: 'elastic.out(1,.6)' });
+    var rot = -90 + 180 * r, to = { r: r };
+    fv.forEach(function(v, f){ to['w' + f] = v; });
+    if (instant || reduce || !hasGsap){ for (var k in to) gs[k] = to[k]; paintArc(); needle.setAttribute('transform', 'rotate(' + rot + ' 150 150)'); return; }
+    to.duration = .9; to.ease = 'power3.out'; to.overwrite = true; to.onUpdate = paintArc;
+    gsap.to(gs, to);
+    gsap.to(needle, { rotation: rot, svgOrigin: '150 150', duration: .9, ease: 'elastic.out(1,.6)' });
   }
-
+  // idle life while on screen: the needle hums (small random wobble), a light pulse runs up the lit arc
+  if (dial && hasGsap && !reduce){
+    var pl = { p: 0 };
+    var hum = gsap.to(jit, { rotation: function(){ return (Math.random() - .5) * 2.6; }, svgOrigin: '150 150', duration: .45, ease: 'sine.inOut', repeat: -1, repeatRefresh: true, paused: true });
+    var run = gsap.to(pl, { p: 1, duration: 2.4, ease: 'power1.inOut', repeat: -1, repeatDelay: 1.3, paused: true, onUpdate: function(){
+      var fill = arcLen * Math.max(.04, gs.r); pulse.style.strokeDashoffset = -(pl.p * Math.max(0, fill - 12)); pulse.style.opacity = Math.sin(pl.p * Math.PI).toFixed(3);
+    } });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ var v = es[0].isIntersecting; if (v){ hum.play(); run.play(); } else { hum.pause(); run.pause(); } }).observe(dial);
+    else { hum.play(); run.play(); }
+  }
   /* ---------- the flight: pinned sideways (≥768) or a vertical rail (phones) ---------- */
   var hudN = $('[data-hud-n]'), hudL = $('[data-hud-l]'), countN = $('[data-count-n]');
   var pts = [], len = 0, st = null, wide = false, lastK = -2, CARD_TOP = 200, pinOver = 0, routeSec = $('.section_process-route'), trackW = 0, landed = false, lastBurst = 0, D = 240;
@@ -403,24 +462,55 @@
     if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ if (es[0].isIntersecting){ measure(); loop.play(); } else loop.pause(); }).observe(grid);
     else loop.play();
   })();
+  /* ---------- comms bar: the COMMS chip sits over a small signal scope (same look as the /contact signal line: dashed
+     center line, a glowing wave that tapers at both ends, a packet riding it now and then); the updates run to the
+     right. The scope steps through the service colors, one channel at a time. Runs only while on screen ---------- */
   (function(){
-    var bar = $('.ab_crew_comms');
-    if (bar){
-      var w = document.createElement('div'); w.className = 'abp-wave'; w.setAttribute('aria-hidden', 'true');
-      // one 240-unit tile of an irregular wave (four sines whose periods all divide 240, so sliding by one tile loops
-      // without a seam); it masks a single color that fades slowly from service color to service color
-      var d = 'M0 8', T2 = Math.PI * 2 / 240;
-      for (var x = 0; x <= 240; x += 1){ var y = 8 + 2.6 * Math.sin(T2 * x + .3) + 2.2 * Math.sin(T2 * 3 * x + 1.1) + 1.5 * Math.sin(T2 * 7 * x + 2) + 1 * Math.sin(T2 * 13 * x + .5); d += ' L' + x + ' ' + Math.max(1, Math.min(15, y)).toFixed(2); }
-      var tile = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 16"><path d="' + d + '" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
-      w.innerHTML = '<i class="abp-wave-dot"></i><span class="abp-wave-scope"><i></i></span>';
-      $('.abp-wave-scope', w).style.setProperty('--wave', 'url("data:image/svg+xml,' + encodeURIComponent(tile) + '")');
-      var lab = $('.ab_crew_comms-label', bar); bar.insertBefore(w, lab ? lab.nextSibling : bar.firstChild);
+    var bar = $('.ab_crew_comms'); if (!bar) return;
+    var lab = $('.ab_crew_comms-label', bar), items = Array.prototype.slice.call(bar.children).filter(function(n){ return n !== lab; });
+    var l = document.createElement('div'); l.className = 'abp-comms-l';
+    l.innerHTML = '<div class="abp-comms-top"><i class="abp-comms-dot" aria-hidden="true"></i><span class="abp-comms-ch" aria-hidden="true">CH <b>01</b></span></div>' +
+      '<div class="abp-scope" aria-hidden="true"><svg viewBox="0 0 1000 100" preserveAspectRatio="none"><path class="abp-scope-grid" d="M0 50 H1000"/><path class="abp-scope-wave" d="M0 50 H1000"/></svg><span class="abp-packet"></span></div>';
+    var r = document.createElement('div'); r.className = 'abp-comms-r';
+    items.forEach(function(n){ r.appendChild(n); });
+    var topRow = l.firstChild; if (lab) topRow.insertBefore(lab, topRow.firstChild);
+    bar.insertBefore(l, bar.firstChild); bar.appendChild(r); bar.classList.add('abp-comms');
+    var wave = $('.abp-scope-wave', l), packet = $('.abp-packet', l), chN = $('.abp-comms-ch b', l);
+    var CH = ['#FF6A3D', '#146EF5', '#5eead4', '#0AE448', '#7c5cff', '#ffd166'], ch = 0;
+    l.style.setProperty('--ch', CH[0]);
+    var N = 120, t = 0, bump = null, nextBump = 1.6, nextCh = 7, running = false, last = 0;
+    function draw(){
+      var d = '';
+      for (var i = 0; i <= N; i++){
+        var x = i / N * 1000, env = Math.sin(Math.PI * i / N);
+        var y = 13 * env * (Math.sin(x * .031 + t * 2.2) + .45 * Math.sin(x * .083 - t * 3.3));
+        if (bump) y += bump.a * Math.exp(-Math.pow((x - bump.x) / 40, 2)) * Math.sin(x * .12 - t * 14) * env;
+        d += (i ? ' L' : 'M') + x.toFixed(1) + ' ' + (50 + y).toFixed(1);
+      }
+      wave.setAttribute('d', d);
     }
-    if ('IntersectionObserver' in window && bar){
-      bar.classList.add('is-idle');
-      if (bar) new IntersectionObserver(function(es){ bar.classList.toggle('is-idle', !es[0].isIntersecting); }).observe(bar);
+    function loop(now){
+      if (!running) return;
+      var dt = Math.min(.05, (now - (last || now)) / 1000); last = now; t += dt;
+      // a packet crosses every few seconds, dragging a bump in the wave with it
+      if (!bump && t > nextBump) bump = { x: 0, a: 26 };
+      if (bump){ bump.x += dt * 620; packet.style.left = (bump.x / 10) + '%'; packet.style.opacity = Math.min(1, Math.sin(Math.PI * Math.min(1, bump.x / 1000)) * 1.6).toFixed(2);
+        if (bump.x > 1000){ bump = null; packet.style.opacity = 0; nextBump = t + 2.8 + Math.random() * 2.4; } }
+      if (t > nextCh){ ch = (ch + 1) % CH.length; l.style.setProperty('--ch', CH[ch]); if (chN) chN.textContent = '0' + (ch + 1); nextCh = t + 7; }
+      draw();
+      requestAnimationFrame(loop);
     }
+    function go(on){ if (on === running) return; running = on; last = 0; if (on) requestAnimationFrame(loop); }
+    if (reduce){ draw(); return; }
+    var vis = true;
+    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ vis = es[0].isIntersecting; go(vis && !document.hidden); }).observe(bar);
+    document.addEventListener('visibilitychange', function(){ go(vis && !document.hidden); });
+    go(true);
   })();
+  // the Crew card (you) is one of a kind: an aurora border in the service colors that drifts slowly, starting at a
+  // different angle for every visitor, a soft wash and a gradient checklist
+  var youCard = $$('.ab_crew_col')[1];
+  if (youCard){ youCard.classList.add('abp-you'); youCard.style.setProperty('--you-d', '-' + (Math.random() * 18).toFixed(2) + 's'); }
 
   $$('.ab_crew_tick').forEach(function(t){ t.innerHTML = '<svg viewBox="0 0 12 12"><path d="M1.5 6.5l3 3 6-7"/></svg>'; });
   $$('.ab_crew_col').forEach(function(col){

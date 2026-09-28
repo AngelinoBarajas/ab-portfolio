@@ -264,7 +264,8 @@
     addEventListener('resize', function(){ fit(false); });
     $('#zIn').addEventListener('click', function(){ zoomTo(S + .15); });
     $('#zOut').addEventListener('click', function(){ zoomTo(S - .15); });
-    $('#zFit').addEventListener('click', function(){ fit(true); });
+    var focused = null; // the layer the board is zoomed in on
+    $('#zFit').addEventListener('click', function(){ focused = null; fit(true); });
     viewport.addEventListener('wheel', function(e){ if (!e.ctrlKey && !e.metaKey) return; e.preventDefault(); e.stopPropagation(); zoomTo(S * (e.deltaY > 0 ? .92 : 1.08)); }, { passive: false });
 
     Draggable.create(world, { type: coarse ? 'x' : 'x,y', trigger: viewport, inertia: true, dragClickables: false, allowNativeTouchScrolling: true,
@@ -290,8 +291,14 @@
       b.addEventListener('click', function(){
         var f = frames.filter(function(x){ return x.getAttribute('data-slug') === b.getAttribute('data-target'); })[0]; if (!f) return;
         select(f); lastInteract = Date.now();
-        var cx = (f.offsetLeft + gsap.getProperty(f, 'x') + f.offsetWidth / 2) * S, cy = (f.offsetTop + gsap.getProperty(f, 'y') + f.offsetHeight / 2) * S;
-        gsap.to(world, { x: viewport.offsetWidth / 2 - cx, y: viewport.offsetHeight / 2 - cy, duration: .8, ease: 'power3.inOut', onUpdate: updateMM });
+        // a layer zooms in on its frame (~126%, less if the frame wouldn't fit); the same layer again zooms back out to fit
+        var slug = b.getAttribute('data-target');
+        if (focused === slug){ focused = null; fit(true); return; }
+        focused = slug;
+        var vw = viewport.offsetWidth, vh = viewport.offsetHeight, ns = Math.max(.3, Math.min(1.26, vw * .9 / f.offsetWidth, vh * .9 / f.offsetHeight));
+        var cx = (f.offsetLeft + gsap.getProperty(f, 'x') + f.offsetWidth / 2) * ns, cy = (f.offsetTop + gsap.getProperty(f, 'y') + f.offsetHeight / 2) * ns;
+        S = ns; zPct.textContent = Math.round(S * 100) + '%';
+        gsap.to(world, { scale: S, x: vw / 2 - cx, y: vh / 2 - cy, duration: .9, ease: 'power3.inOut', onUpdate: updateMM, onComplete: updateMM });
       });
     });
 
@@ -308,7 +315,7 @@
       onView(board, function(x){ boardVisible = x; });
       var wander = function(){
         if (reduce){ gsap.set(fake, { opacity: 0 }); return; }
-        if (!boardVisible || Date.now() - lastInteract < 5000){ gsap.to(fake, { opacity: .25, duration: .3 }); gsap.delayedCall(1.5, wander); return; }
+        if (!boardVisible || focused || Date.now() - lastInteract < 5000){ gsap.to(fake, { opacity: .25, duration: .3 }); gsap.delayedCall(1.5, wander); return; }
         gsap.to(fake, { opacity: 1, duration: .3 });
         var f = frames[oi++ % frames.length], vr = viewport.getBoundingClientRect(), r = f.getBoundingClientRect();
         var tx = gsap.utils.clamp(10, vr.width - 110, r.left - vr.left + r.width * gsap.utils.random(.35, .7)), ty = gsap.utils.clamp(10, vr.height - 40, r.top - vr.top + r.height * gsap.utils.random(.3, .7));

@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-contact.css v0.29.17 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-contact.css v0.30.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* =========================================================
    CONTACT (/contact) · open a channel. Page <head> <link>.
    Designer classes: section_contact-hero, ab_ct-*; script-built parts: abc-*.
@@ -90,3 +90,12 @@ textarea.abc-in{min-height:128px;resize:vertical}
   .ab_ct-route_btns .button{width:100%}
 }
 @media (prefers-reduced-motion:reduce){.abc-beacon{animation:none}}
+
+/* Other channels › Email: the uppercase display address overflowed its quarter-width cell and clipped "Copy".
+   The address reads in mono lowercase on its own full-width row, Copy tag pinned right */
+.ab_ct-cell .button.is-email{width:100%;justify-content:space-between;gap:10px;padding:0 14px}
+.ab_ct-cell .button.is-email .ab_button-label{min-width:0;overflow:hidden;text-overflow:ellipsis;font-family:var(--_typography---font--mono);font-weight:500;font-size:12.5px;letter-spacing:0;text-transform:none}
+.ab_ct-cell .button.is-email .ab_footer_email-copy{flex:none;font-family:var(--_typography---font--mono);color:var(--_color---text--tertiary)}
+.ab_ct-cell .button.is-email:hover .ab_footer_email-copy{color:inherit}
+/* 992–1439px: four cells left ~190px for the address + Copy, so the cells go two by two */
+@media (min-width:992px) and (max-width:1439px){.ab_ct-cells{grid-template-columns:repeat(2,minmax(0,1fr))}}
