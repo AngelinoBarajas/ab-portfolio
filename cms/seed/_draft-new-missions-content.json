@@ -1,0 +1,483 @@
+{
+  "_note": "kip rows were pushed to Webflow on 2026-09-28 (slugs kip-*); Webflow is the source of truth. DRAFT, not imported. kip rows updated for kip v2 (2026-09-28); CKS rows are the stale pre-v2 draft (CKS shipped, Webflow is the source of truth). Same shapes as mission-channels.json, mission-systems.json, problems-solved.json and mission-stats.json. 'live-kip' needs the live switch CKS uses (MOCKS.kip.live; see docs/kip-cks-mission-plan.md). Channel images live in prototypes/img/ and still need copying to the Webflow CDN. Animated channels: 'image' is the animated WebP loop and 'image-2' is its still, shown instead under prefers-reduced-motion. MP4 versions of each loop sit beside them in case Webflow flattens animated WebP. Every kip snippet is copied line for line from kip-site/kip/js/.",
+  "mission-channels": [
+    {
+      "name": "Try it, as anyone",
+      "mission": "kip",
+      "kind": "img",
+      "caption": "The real Try it page, recorded: be Nana and her med button is off, log two bottles and the pattern note changes, hand the phone to Sam and vitamin D asks first. Nothing is saved or sent.",
+      "image": "prototypes/img/kip-ch-try-anim.webp",
+      "image-2": "prototypes/img/kip-ch-try.webp",
+      "mode": "",
+      "sort": 1,
+      "_id": "try"
+    },
+    {
+      "name": "One Tuesday, five people",
+      "mission": "kip",
+      "kind": "img",
+      "caption": "June's Tuesday on one ribbon, 6:10 am to just past 3 am. The sky turns, the log fills and four handoffs pass without a detail dropped: 20 entries from 5 people.",
+      "image": "prototypes/img/kip-ch-story-anim.webp",
+      "image-2": "prototypes/img/kip-ch-story.webp",
+      "mode": "",
+      "sort": 2,
+      "_id": "story"
+    },
+    {
+      "name": "Design → build",
+      "mission": "kip",
+      "kind": "figma",
+      "caption": "The hero frame on the design canvas, the review note that took doses out of the sample log, then the built page.",
+      "image": "",
+      "image-2": "",
+      "mode": "",
+      "sort": 3,
+      "_id": "design"
+    },
+    {
+      "name": "Shift handoff",
+      "mission": "kip",
+      "kind": "phone",
+      "caption": "Nana logs a bottle, Rosa starts her shift, and the app tells her everything she missed before she asks.",
+      "image": "",
+      "image-2": "",
+      "mode": "",
+      "sort": 4,
+      "_id": "mobile"
+    },
+    {
+      "name": "3am mode",
+      "mission": "kip",
+      "kind": "mobile",
+      "caption": "3am mode on a phone: the log goes dim and warm, the buttons get huge, and a feed takes one tap.",
+      "image": "prototypes/img/kip-ch-night-anim.webp",
+      "image-2": "prototypes/img/kip-ch-night.webp",
+      "mode": "",
+      "sort": 5,
+      "_id": "night"
+    },
+    {
+      "name": "Nana sees what Nana needs",
+      "mission": "kip",
+      "kind": "img",
+      "caption": "Flip what Nana and Rosa can do and each phone redraws: meds and full history for Nana, the charts for Rosa. Pattern alerts stay with the parents.",
+      "image": "prototypes/img/kip-ch-roles-anim.webp",
+      "image-2": "prototypes/img/kip-ch-roles.webp",
+      "mode": "",
+      "sort": 6,
+      "_id": "roles"
+    },
+    {
+      "name": "Pediatrician report",
+      "mission": "kip",
+      "kind": "img",
+      "caption": "The report rebuilds as the range changes from 7 days to 4 weeks to since birth. Untick everything and it says so; tick Feeds and it's back.",
+      "image": "prototypes/img/kip-ch-report-anim.webp",
+      "image-2": "prototypes/img/kip-ch-report.webp",
+      "mode": "",
+      "sort": 7,
+      "_id": "report"
+    },
+    {
+      "name": "The village",
+      "mission": "kip",
+      "kind": "img",
+      "caption": "Five caregivers and one baby, each a different shape as well as a different color, breathing on the page.",
+      "image": "prototypes/img/kip-ch-cast-anim.webp",
+      "image-2": "prototypes/img/kip-ch-cast.webp",
+      "mode": "",
+      "sort": 8,
+      "_id": "cast"
+    },
+    {
+      "name": "Live style lab",
+      "mission": "cks",
+      "kind": "live-site",
+      "caption": "The real style lab, running on the hosted site. Switch sites, or tune your own colors, type and corners and watch the tokens update.",
+      "image": "",
+      "image-2": "",
+      "mode": "",
+      "sort": 1,
+      "_id": "live-styles"
+    },
+    {
+      "name": "Live Voice Kit",
+      "mission": "cks",
+      "kind": "live-site",
+      "caption": "The real Voice Kit demo: capture, build the kit, then review a draft. Publish stays locked until you approve.",
+      "image": "",
+      "image-2": "",
+      "mode": "",
+      "sort": 2,
+      "_id": "live-voice"
+    },
+    {
+      "name": "Design → build",
+      "mission": "cks",
+      "kind": "figma",
+      "caption": "The hero frame, the review note about the loom fighting the headline, then the built page with the weave pushed right.",
+      "image": "",
+      "image-2": "",
+      "mode": "",
+      "sort": 3,
+      "_id": "design"
+    },
+    {
+      "name": "Five sites, one set",
+      "mission": "cks",
+      "kind": "img",
+      "caption": "The same components as a law firm, a studio, a bakery, an architect and a physio practice, switching live. Only the design tokens change.",
+      "image": "prototypes/img/cks-ch-skins-anim.webp",
+      "image-2": "prototypes/img/cks-ch-skins.webp",
+      "mode": "",
+      "sort": 4,
+      "_id": "skins"
+    },
+    {
+      "name": "Publish once",
+      "mission": "cks",
+      "kind": "img",
+      "caption": "One entry published: the library gains a card, the topic page's reading list grows, a project fills its row and the structured data rewrites itself.",
+      "image": "prototypes/img/cks-ch-publish-anim.webp",
+      "image-2": "prototypes/img/cks-ch-publish.webp",
+      "mode": "",
+      "sort": 5,
+      "_id": "publish"
+    },
+    {
+      "name": "On a phone",
+      "mission": "cks",
+      "kind": "mobile",
+      "caption": "Scrolling the CKS home on a phone: the loom rides above the headline and every section stacks into one column.",
+      "image": "prototypes/img/cks-ch-mobile-anim.webp",
+      "image-2": "prototypes/img/cks-ch-mobile.webp",
+      "mode": "",
+      "sort": 6,
+      "_id": "mobile"
+    }
+  ],
+  "mission-systems": [
+    {
+      "name": "A day on one ribbon",
+      "mission": "kip",
+      "tag": "GSAP · scroll",
+      "channel": "story",
+      "cadet": "Scroll the home page and June's Tuesday slides past a fixed \"now\" line, from 6am to after 3am. The sky changes with the hour, entries land, and each handoff card lights up as the next person takes over.",
+      "why": "\"Everyone in one place\" is easy to say. Watching five people pass one day between them, without anything getting lost, shows it.",
+      "engineer": "One table of shifts, entries and chapters draws both the static ribbon and the scrubbed one, so the no-JS and [[Reduced motion]] versions can't drift from the animated one. A GSAP ScrollTrigger scrubs a single number, the minute of the day, and one render function moves the ribbon, blends the sky and updates the count.",
+      "snippet": "function render(t) {\n  var x = NX - (t - START) / SPAN * W;\n  ribbon.style.transform = 'translate3d(' + x.toFixed(1) + 'px,0,0)';\n  var c = sky(t);\n  sec.style.backgroundColor = 'rgb(' + c.join(',') + ')';",
+      "sort": 1
+    },
+    {
+      "name": "Try it, as anyone",
+      "mission": "kip",
+      "tag": "In-memory demo",
+      "channel": "try",
+      "cadet": "Be Ari, Sam, Nana, Rosa or Jo. Log a bottle or a nap and the log, the handoff card and the pattern note all update. Switch people and kip tells the new person what they missed.",
+      "why": "There's no app to download, so the site has to let you use it. Trying it as the grandparent, not the parent, is what makes the roles make sense.",
+      "engineer": "A small in-memory simulation: switching people is a handoff, the med button checks who already gave vitamin D today and asks before logging another, and the pattern note changes only when the log does. Nothing is stored; reloading starts the afternoon over.",
+      "snippet": "if (k === 'med' && !S.medAsk) {\n  // the double-dose check: kip shows who already gave it today before logging another\n  var prev = all().filter(function (e) { return e.k === 'med'; })[0];\n  if (prev) {\n    S.medAsk = true;",
+      "sort": 2
+    },
+    {
+      "name": "Roles you can see",
+      "mission": "kip",
+      "tag": "Permissions · a11y",
+      "channel": "roles",
+      "cadet": "Flip what Nana and Rosa can do, and their two phones redraw beside the switches: turn off meds and Nana's med row says it's hidden.",
+      "why": "A permissions table is hard to picture. A phone that changes when you flip a switch isn't.",
+      "engineer": "Each switch is a real switch control that redraws that person's phone. Turning off logging turns off meds too, and turning on meds turns logging back on, so the permissions can't contradict each other. Pattern alerts are locked to parents here and on the insights page, so the two pages agree.",
+      "snippet": "// logging meds needs logging at all: keep the pair honest\nif (k === 'log' && !on) { var m = box.querySelector('.sw-btn[data-p=\"' + p + '\"][data-k=\"meds\"]'); if (m.getAttribute('aria-checked') === 'true') m.setAttribute('aria-checked', 'false'); }\nif (k === 'meds' && on) box.querySelector('.sw-btn[data-p=\"' + p + '\"][data-k=\"log\"]').setAttribute('aria-checked', 'true');\npaint(p);",
+      "sort": 3
+    },
+    {
+      "name": "A report that prints",
+      "mission": "kip",
+      "tag": "Report · print · CSV",
+      "channel": "report",
+      "cadet": "Pick a range and what to include, and the pediatrician report rebuilds: the bars grow to their new heights, the averages change, and it prints as a clean page.",
+      "why": "Checkups shouldn't start with a parent scrolling their phone and guessing. And a report is only useful if it looks like a document, not an app screen.",
+      "engineer": "Three ranges with real rebuilds: when the bar count stays the same, each bar eases to its new height; when it changes, the bars redraw and grow in. Unticking every category shows an empty state, a print stylesheet prints only the paper, the sample CSV is built in the browser, and the share link says it's simulated. Medication rows say \"as directed\", never a dose.",
+      "snippet": "if (old.length === vals.length) {\n  // same number of bars: let each one grow or shrink to its new height\n  old.forEach(function (b, i) {\n    b.querySelector('.rp-bb').style.setProperty('--h', h(vals[i], mn, mx));",
+      "sort": 4
+    },
+    {
+      "name": "Patterns, not diagnoses",
+      "mission": "kip",
+      "tag": "Copy · alerts",
+      "channel": "try",
+      "cadet": "Log a few bottles close together and kip says so in a plain sentence. It says what changed, never why, and the note only goes to the parents.",
+      "why": "Parents want to notice a change early without an app scaring them. kip spots patterns; the pediatrician decides what they mean.",
+      "engineer": "The pattern note is picked by what was just logged against June's usual afternoon, and every version describes the change without naming a cause. Switch to anyone who isn't a parent and the page says they wouldn't get the note.",
+      "snippet": "if (newFeeds >= 2) return 'Feeds are closer together than usual this afternoon: ' + c.feed + ' since 2 pm, where she usually has one or two. kip will mention it if it keeps up. It won’t guess why.';",
+      "sort": 5
+    },
+    {
+      "name": "The village, drawn",
+      "mission": "kip",
+      "tag": "SVG · characters",
+      "channel": "cast",
+      "cadet": "Six characters, each a different shape as well as a color. You can tell who logged a feed by silhouette alone.",
+      "why": "Attribution only works if it reads in half a second, half asleep.",
+      "engineer": "Each character is one [[SVG]] symbol in a shared sprite, so the same source draws the 40px avatar on every log entry and the full-size figures on the home page. Shape carries identity; color is backup, which also keeps it readable for color-blind parents.",
+      "snippet": "function svgChar(w) { return '<svg class=\"char\" viewBox=\"0 0 120 120\" aria-hidden=\"true\"><use href=\"#c-' + w + '\"/></svg>'; }",
+      "sort": 6
+    },
+    {
+      "name": "The loom",
+      "mission": "cks",
+      "tag": "Canvas · performance",
+      "channel": "design",
+      "cadet": "The hero is a woven cloth of colored threads that drifts and parts around your cursor. It stands in for the idea of connecting what you know.",
+      "why": "A signature image people remember, instead of another gradient blob.",
+      "engineer": "One canvas, drawn by hand: DPR-aware, paused offscreen and in hidden tabs, and a single still frame under [[Reduced motion]]. The same class draws the light header and dark footer variants.",
+      "snippet": "new IntersectionObserver(function (en) {\n  self.visible = en[0].isIntersecting;\n  self.visible ? self.start() : self.stop();\n}).observe(canvas);\ndocument.addEventListener('visibilitychange', function () {\n  document.hidden ? self.stop() : (self.visible && self.start());\n});",
+      "sort": 1
+    },
+    {
+      "name": "Same components, any brand",
+      "mission": "cks",
+      "tag": "Design tokens",
+      "channel": "skins",
+      "cadet": "An article card, topic header, related list, video player and FAQ re-skin instantly as five very different websites.",
+      "why": "The first fear with any add-on is that it will look bolted on. This answers it before anyone asks.",
+      "engineer": "Each site is a set of 23 tokens (color, three font roles, radius, spacing, border, shadow) written as CSS custom properties on one wrapper, the same way [[Variables]] work in Webflow. Container queries let the components fit their frame, not the screen.",
+      "snippet": "W.applyTokens = function (skinEl, tk) {\n  var v = W.tokensToVars(tk);\n  for (var k in v) skinEl.style.setProperty(k, v[k]);\n};",
+      "sort": 2
+    },
+    {
+      "name": "Bring your own brand",
+      "mission": "cks",
+      "tag": "Live tokens.json",
+      "channel": "live-styles",
+      "cadet": "Pick an accent color, a heading font, a corner radius, density and light or dark, and watch the components and a live tokens file change together.",
+      "why": "Seeing the tokens change is what makes \"it inherits your design system\" believable.",
+      "engineer": "The controls write to the same token map the five sample sites use, then re-render the tokens panel and highlight the lines that changed.",
+      "snippet": "",
+      "sort": 3
+    },
+    {
+      "name": "Publish once, watch it connect",
+      "mission": "cks",
+      "tag": "CMS → site demo",
+      "channel": "publish",
+      "cadet": "Type a title, pick topics and press Publish. The library, the topic page, a project page and the structured data all update together.",
+      "why": "\"Tag once, linked everywhere\" is abstract until you do it yourself in ten seconds.",
+      "engineer": "The editor is deliberately generic, not a copy of any real CMS. Publishing builds [[JSON-LD]] from the same fields the preview uses, so the code panel always matches what the page shows.",
+      "snippet": "var art = {\n  '@type': 'Article', headline: title, articleSection: theme,\n  about: t.map(function (x) { return x.name; }),\n  url: 'https://yoursite.com/insights/' + slug\n};\nt.forEach(function (x) { graph.push({ '@type': 'DefinedTerm', name: x.name }); });",
+      "sort": 4
+    },
+    {
+      "name": "Voice Kit with a real gate",
+      "mission": "cks",
+      "tag": "AI · approval",
+      "channel": "live-voice",
+      "cadet": "Paste something you wrote, record a few minutes (simulated in the demo), set preferences, then review an AI draft. Publish stays locked until you approve.",
+      "why": "The promise is that nothing goes live without you. The demo keeps that promise in code, not just in copy.",
+      "engineer": "The pipeline is a small state machine. The Publish button's disabled state comes straight from the stage, so there's no path to publishing that skips approval.",
+      "snippet": "// 0 draft · 1 drafted · 2 in review · 3 approved · 4 published\npub.disabled = n !== 3;\nwhy.textContent = n < 3 ? 'Publish unlocks only after you approve.'\n  : n === 3 ? 'Approved by you. Ready to publish.' : 'Published. It’s live on your site.';",
+      "sort": 5
+    },
+    {
+      "name": "Honest by design",
+      "mission": "cks",
+      "tag": "Copy · labels",
+      "channel": "",
+      "cadet": "Prices say illustrative, the recording says simulated, the scoreboard says illustration, and there are no logos or testimonials anywhere.",
+      "why": "A product about being quotable can't open with made-up claims. The honesty is part of the pitch.",
+      "engineer": "Every demo that fakes something labels it in the interface, not in a footnote. The only outcome number on the site (12 hours a month) is real and attributed.",
+      "snippet": "",
+      "sort": 6
+    }
+  ],
+  "problems-solved": [
+    {
+      "name": "One log instead of a group chat",
+      "mission": "kip",
+      "code": "WHO-FED-HER-LAST",
+      "who": "visitors",
+      "problem": "With five people caring for one baby, the group chat becomes the log, and nobody trusts it.",
+      "fix": "One shared log where every feed, nap and diaper carries the face and name of whoever logged it.",
+      "result": "\"Did she eat?\" gets answered by opening the app, not by texting everyone.",
+      "engineer": "Every entry has one shape (who, what, when), so the log, the handoff card and the counts read from the same list and can't disagree.",
+      "snippet": "",
+      "demo": "story",
+      "sort": 1
+    },
+    {
+      "name": "Shift changes without lost details",
+      "mission": "kip",
+      "code": "THE-3AM-HANDOFF",
+      "who": "visitors",
+      "problem": "Every shift change loses something: the last feed time, the nap that ran long, the note about the rash.",
+      "fix": "A handoff card when someone takes over, with everything since they last had the phone and who did it.",
+      "result": "The next person starts caught up, without a phone call or a note on the fridge.",
+      "engineer": "In Try it, switching people is the handoff: the card lists what others logged since that person's last entry.",
+      "snippet": "",
+      "demo": "try",
+      "sort": 2
+    },
+    {
+      "name": "No double doses",
+      "mission": "kip",
+      "code": "DID-SHE-GET-HER-VITAMIN-D",
+      "who": "visitors",
+      "problem": "Two caregivers each give the morning vitamin D, because neither knew the other already had.",
+      "fix": "Before logging a med, kip shows who already logged it today and asks before logging another.",
+      "result": "A second dose takes a deliberate \"log it anyway\", not a habit.",
+      "engineer": "The med button looks for today's earlier dose before it logs. Roles that can't log meds get the button switched off, with the reason.",
+      "snippet": "",
+      "demo": "try",
+      "sort": 3
+    },
+    {
+      "name": "Share what each person needs",
+      "mission": "kip",
+      "code": "ALL-OR-NOTHING",
+      "who": "visitors",
+      "problem": "Most baby apps share everything with everyone, or nothing at all.",
+      "fix": "Roles plus per-person switches, with each person's phone redrawing as you flip them.",
+      "result": "Nana can log feeds without seeing the med history, and pattern alerts stay with the parents.",
+      "engineer": "Logging and meds are linked, so no switch combination can contradict another.",
+      "snippet": "",
+      "demo": "roles",
+      "sort": 4
+    },
+    {
+      "name": "A concept that doesn't pretend",
+      "mission": "kip",
+      "code": "COMING-SOON-BADGES",
+      "who": "client",
+      "problem": "A concept site dressed up as an app-store listing, with badges and stars, promises an app that doesn't exist.",
+      "fix": "No badges, reviews or users. Every call to action is \"Try it\" or an early-access form that says it sends nothing.",
+      "result": "The site can be shown to anyone without a caveat, because it never claims more than it is.",
+      "engineer": "The early-access inputs have no name attributes, so even a submit without JavaScript carries nothing anywhere.",
+      "snippet": "",
+      "demo": "",
+      "sort": 5
+    },
+    {
+      "name": "Prove it matches before the call",
+      "mission": "cks",
+      "code": "LOOKS-BOLTED-ON",
+      "who": "visitors",
+      "problem": "Buyers assume an add-on will look like someone else's widget sitting on their site.",
+      "fix": "A live style lab: the same components as five very different websites, plus controls to try your own colors, type and corners.",
+      "result": "People see their own look before they book a call.",
+      "engineer": "Personalities are token sets applied as CSS custom properties on one wrapper; the bring-your-own panel edits the same map.",
+      "snippet": "",
+      "demo": "live-styles",
+      "sort": 1
+    },
+    {
+      "name": "Make the mechanism obvious",
+      "mission": "cks",
+      "code": "SOUNDS-COMPLICATED",
+      "who": "visitors",
+      "problem": "Vocabularies, tagging and structured data sound like a developer project.",
+      "fix": "A publish demo: type a title, tag it, press Publish and watch four parts of the site update.",
+      "result": "The idea lands in ten seconds, with no jargon on screen.",
+      "engineer": "The preview and the generated JSON-LD read from the same fields, so what you see is what search engines would get.",
+      "snippet": "",
+      "demo": "publish",
+      "sort": 2
+    },
+    {
+      "name": "Show writing help without the dread",
+      "mission": "cks",
+      "code": "NO-TIME-TO-WRITE",
+      "who": "visitors",
+      "problem": "Founders don't have time to write, and generic AI copy sounds like everyone else.",
+      "fix": "The Voice Kit demo, with a side-by-side of generic AI next to the same idea in your voice, and a review step you control.",
+      "result": "Writing help feels like capture, not homework, and never like handing over the keys.",
+      "engineer": "The approval gate is enforced by the pipeline's state, not by a label.",
+      "snippet": "",
+      "demo": "live-voice",
+      "sort": 3
+    },
+    {
+      "name": "Earn trust by not overselling",
+      "mission": "cks",
+      "code": "NO-SNAKE-OIL",
+      "who": "visitors",
+      "problem": "Most \"get found by AI\" pitches promise rankings and citations nobody can guarantee.",
+      "fix": "An honest-version block on every key page, illustrative labels on anything simulated, and one real number.",
+      "result": "The site reads like the expert, not the salesman.",
+      "engineer": "No logos, testimonials, customer counts or rankings anywhere; every simulated demo says so in the interface.",
+      "snippet": "",
+      "demo": "",
+      "sort": 4
+    },
+    {
+      "name": "One link that sells the install",
+      "mission": "cks",
+      "code": "CASE-STUDY-VS-SALES",
+      "who": "client",
+      "problem": "The Knowledge System case study explains the build, but it can't do the selling: no pricing, no packages, no way to try it.",
+      "fix": "A product site with its own name, three install packages, a comparison table, an FAQ and a contact form.",
+      "result": "Proposals and cold emails get one link that explains, demonstrates and prices the system.",
+      "engineer": "Five static pages on Hostinger with no framework; each demo is its own small script loaded only on its page.",
+      "snippet": "",
+      "demo": "",
+      "sort": 5
+    }
+  ],
+  "mission-stats": [
+    {
+      "name": "pages, including the 404",
+      "mission": "kip",
+      "value": 12,
+      "suffix": "",
+      "sort": 1
+    },
+    {
+      "name": "interactive demos you can try",
+      "mission": "kip",
+      "value": 5,
+      "suffix": "",
+      "sort": 2
+    },
+    {
+      "name": "bytes sent by any demo or form",
+      "mission": "kip",
+      "value": 0,
+      "suffix": "",
+      "sort": 3
+    },
+    {
+      "name": "app-store badges, reviews, ratings or press logos",
+      "mission": "kip",
+      "value": 0,
+      "suffix": "",
+      "sort": 4
+    },
+    {
+      "name": "site personalities, one component set",
+      "mission": "cks",
+      "value": 5,
+      "suffix": "",
+      "sort": 1
+    },
+    {
+      "name": "design tokens per personality",
+      "mission": "cks",
+      "value": 23,
+      "suffix": "",
+      "sort": 2
+    },
+    {
+      "name": "content models shown (Webflow, WordPress, Sanity, Markdown)",
+      "mission": "cks",
+      "value": 4,
+      "suffix": "",
+      "sort": 3
+    },
+    {
+      "name": "outcome number on the site, and it's real",
+      "mission": "cks",
+      "value": 1,
+      "suffix": "",
+      "sort": 4
+    }
+  ]
+}

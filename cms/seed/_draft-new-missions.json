@@ -1,0 +1,146 @@
+{
+  "_note": "kip was pushed to Webflow on 2026-09-28 (webflow.io only); Webflow is the source of truth for kip and CKS. DRAFT, not imported. kip updated for kip v2 (2026-09-28): #06, sort 6, Test flight, In orbit until the site is uploaded. CKS entries are the stale pre-v2 draft: CKS shipped as #05 and Webflow is the source of truth for it. Nothing here is a real client result; both are self-initiated concept products.",
+  "_services-update": {
+    "_note": "Add kip to each service's existing missions list as it is in Webflow now (these lists changed when CKS shipped). Don't replace the lists.",
+    "branding": {
+      "add": [
+        "kip"
+      ]
+    },
+    "motion": {
+      "add": [
+        "kip"
+      ]
+    },
+    "webgl-data": {
+      "add": [
+        "kip"
+      ]
+    },
+    "custom-deploys": {
+      "add": [
+        "kip"
+      ]
+    }
+  },
+  "_new-tools": [
+    {
+      "name": "SVG",
+      "icon": "pen",
+      "use": "Characters, icons and every chart drawn by hand",
+      "_note": "Hostinger and Canvas API were added with CKS. Check the Tools collection for SVG before creating it."
+    }
+  ],
+  "missions": [
+    {
+      "slug": "kip",
+      "name": "kip",
+      "number": 6,
+      "client": "Concept product · self-initiated",
+      "types": [
+        "App",
+        "UI/UX",
+        "Branding",
+        "Website",
+        "Test flight"
+      ],
+      "role": "Designer + developer",
+      "year": "2026",
+      "platform": "Hand-coded · Hostinger",
+      "status": "In orbit",
+      "live-url": "",
+      "summary": "kip turns the rotation of people raising a newborn into one team: parents, grandparents, nannies and night doulas share one log, every entry signed with a face, so no detail is lost between shifts.",
+      "cover": "",
+      "cover-kind": "App",
+      "brand-bg": "#FFF4E6",
+      "brand-fg": "#1E1B2E",
+      "brand-accent": "#FF7A45",
+      "brand-accent-2": "#14204F",
+      "brand-font": "Baloo 2",
+      "planet-type": "gas",
+      "planet-colors": "#14204F,#FF7A45,#FFC94A,#FFF4E6,#5FD3A8",
+      "planet-ring": "#FFC94A,#FF7A45,#14204F",
+      "planet-glow": "rgba(255,122,69,.35)",
+      "objective-cadet": "Babies aren’t raised by one tired parent. They’re raised by a rotation: two parents, a grandparent, a nanny, a night doula. Baby trackers tend to assume one person holding the phone; kip is built for the rotation. Every feed, nap, diaper and dose lands in one shared log with the face of whoever logged it, a handoff card briefs the next person before they ask, roles give each person exactly what they need, and plain-sentence patterns go to the parents, never diagnoses. The ambition: nothing dropped between shifts, no dose given twice by accident, and checkups that start with real data instead of guesses. It’s a [[Test flight]], a concept with no app yet, so the site lets you try it as any of the five people in June’s day.",
+      "objective-engineer": "Eleven pages and a real 404, coded by hand after ideation and wireframes, with no framework. A GSAP-scrubbed ribbon follows one day through four handoffs, a Try it page runs the shared log in memory (switching people is a handoff, and vitamin D asks before a second dose), a role builder redraws each person's phone, and a pediatrician report rebuilds across three ranges and prints only the paper. Dark mode is one token swap, Command-K search covers every page, every page reads without JavaScript, and motion rests under [[Reduced motion]].",
+      "params": "Tell caregivers apart by shape alone at 3am\nRoles and permissions, not all-or-nothing sharing\nPatterns, not diagnoses\nEvery demo runs in the browser, and nothing is sent anywhere\nNo invented users, reviews, ratings or app-store badges",
+      "benefits": "Know who fed her last without texting anyone: every entry carries the face of whoever logged it\nStart every shift caught up: a handoff card shows what happened since you last had the phone\nNo accidental double doses: kip shows who already gave vitamin D today and asks before logging another\nShare only what each person needs: Nana logs feeds without seeing the med history, and alerts stay with the parents",
+      "manifest-pages": "Home, Try it, Village, Insights, App tour, Pricing, Privacy, Questions, Early access, What's new, About, 404",
+      "manifest-collections": "App screens: Today, Log a feed, Village, Invite, Insights, Export, Night mode, Handoff, Milestones",
+      "handoff": "A static site that uploads anywhere, five demos that run in the browser and send nothing, nine app screens on a design canvas and a character set ready for the real app.",
+      "stack": [
+        "Figma",
+        "GSAP",
+        "SVG",
+        "Hostinger",
+        "Claude"
+      ],
+      "quote": null,
+      "quote-by": null,
+      "next-mission": "510-visuals",
+      "featured": false,
+      "sort": 6,
+      "services": [
+        "branding",
+        "motion",
+        "custom-deploys"
+      ],
+      "_changes": "CKS › Next mission becomes kip. Placeholders renumber to 07-09.",
+      "_benefits-note": "New plain-text field (one benefit per line, no numbers), shown as a list in the briefing next to Mission parameters. Needs the CMS field + a small render in 30-mission.js (same as params).",
+      "meta-description": "kip, a concept app for everyone raising a newborn: one shared log with a face on every entry, briefed handoffs, and patterns, not diagnoses.",
+      "_note": "Pushed to Webflow 2026-09-28 (item 6aba889079ae9bdb448a106d); Webflow is now the source of truth."
+    },
+    {
+      "slug": "cks",
+      "name": "CKS",
+      "number": 6,
+      "client": "Product site · for the Knowledge System add-on",
+      "types": [
+        "Website",
+        "Content system",
+        "Design system",
+        "Development"
+      ],
+      "role": "Strategist + designer + developer",
+      "year": "2026",
+      "platform": "Hand-coded · Hostinger",
+      "status": "Live",
+      "live-url": "[https://cks.your-domain.com]",
+      "summary": "The product site for the Complete Knowledge System: a Stripe-grade SaaS site where visitors watch the same components change clothes for any brand, publish an entry and see the site rebuild, and try the Voice Kit.",
+      "cover": "",
+      "cover-kind": "Site",
+      "brand-bg": "#F7F5F0",
+      "brand-fg": "#0B1B2B",
+      "brand-accent": "#EF5B3F",
+      "brand-accent-2": "#2F5BEA",
+      "brand-font": "Schibsted Grotesk",
+      "planet-type": "ice",
+      "planet-colors": "#0B1B2B,#2F5BEA,#139E8A,#F2A93B,#EF5B3F",
+      "planet-ring": "#F2A93B,#139E8A,#2F5BEA",
+      "planet-glow": "rgba(47,91,234,.35)",
+      "objective-cadet": "The Knowledge System case study shows how it works inside a client's site. This mission sells it: a product site that lets a founder see it match their brand, feel how easy an update is, and try the Voice Kit before booking an install.",
+      "objective-engineer": "Five hand-coded pages. A canvas loom hero that pauses offscreen, a token-driven style lab where five site personalities and a bring-your-own panel re-skin the same components live, a publish demo that rebuilds the library, topic page and JSON-LD, and an interactive Voice Kit with a real approval gate.",
+      "params": "Show style matching, don't claim it\nAn update a non-developer understands in 10 seconds\nNothing publishes without approval, even in the demo\nNo promised rankings, citations or timelines\nOnly one outcome number, and it's real",
+      "manifest-pages": "Home, How it works, Styles, Voice Kit, Pricing",
+      "manifest-collections": "Five site personalities, Knowledge graph, Publish demo, Voice Kit pipeline",
+      "handoff": "A static product site that uploads anywhere, with every demo running on the same tokens a client's site would use.",
+      "stack": [
+        "GSAP",
+        "Canvas API",
+        "Webflow CMS",
+        "Hostinger",
+        "Claude"
+      ],
+      "quote": null,
+      "quote-by": null,
+      "next-mission": "510-visuals",
+      "featured": false,
+      "sort": 6,
+      "services": [
+        "cms-integrations",
+        "design-systems",
+        "custom-deploys"
+      ]
+    }
+  ]
+}
