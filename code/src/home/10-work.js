@@ -21,6 +21,59 @@
       if (!inline) return '';
       return rgbToHex(getComputedStyle(node)[prop === 'bg' ? 'backgroundColor' : 'color']);
     }
+    // run an animation only while its frame is on screen and the tab is visible
+    function whileSeen(el, on, off){
+      var seen = false;
+      function sync(){ (seen && !document.hidden) ? on() : off(); }
+      if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ seen = es[0].isIntersecting; sync(); }).observe(el); else { seen = true; sync(); }
+      document.addEventListener('visibilitychange', sync);
+    }
+    // CKS: the hero loom from cks-src/js/cks.js, scaled down (fewer threads, smaller wave), no pointer parting
+    function miniLoom(cv, host){
+      var TH = ['#F2A93B', '#EF5B3F', '#139E8A', '#2F5BEA', '#EDE6DA'], seed = 5, bands = [];
+      function rnd(){ seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+      [[0, 5], [4, 3], [2, 6], [4, 2], [3, 5], [1, 3], [4, 2], [0, 4]].forEach(function(b){ for (var k = 0; k < b[1]; k++) bands.push({ col: TH[b[0]], j: rnd() * 2 - 1 }); });
+      var ctx = cv.getContext('2d'), w = 0, h = 0, t = 7.3, raf = 0, running = false, last = 0;
+      function size(){ var dpr = Math.min(window.devicePixelRatio || 1, 2); w = cv.clientWidth; h = cv.clientHeight; cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+      function draw(){
+        if (!w || !h) return;
+        var n = bands.length, sp = 5.5, ww = 4, gap = 8, cx0 = w * .74, tilt = -.42, half = n * sp / 2, rows = Math.ceil(h / gap) + 2, X = [], r, i, y, col;
+        ctx.clearRect(0, 0, w, h);
+        for (r = 0; r < rows; r++){ y = r * gap; for (i = 0; i < n; i++) X[r * n + i] = cx0 + (i * sp - half) + (y - h * .3) * tilt + 24 * Math.sin(y * .011 + t * .32) + 5 * Math.sin(y * .034 - t * .55 + i * .045) + bands[i].j * .8; }
+        ctx.lineWidth = ww; var by = {};
+        for (i = 0; i < n; i++) (by[bands[i].col] = by[bands[i].col] || []).push(i);
+        for (col in by){ ctx.strokeStyle = col; ctx.beginPath(); by[col].forEach(function(i){ ctx.moveTo(X[i], -gap); for (var r = 0; r < rows; r++) ctx.lineTo(X[r * n + i], r * gap); }); ctx.stroke(); }
+        ctx.fillStyle = 'rgba(11,27,43,.16)';
+        for (r = 0; r < rows; r++) for (i = 0; i < n; i++) if (((i + r) & 3) >= 2) ctx.fillRect(X[r * n + i] - ww / 2, r * gap - 2, ww, 4);
+        ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(11,27,43,.26)'; ctx.beginPath();
+        for (r = 0; r < rows; r++){ y = r * gap + .5; var x = 0; for (i = 0; i < n; i++){ var xc = X[r * n + i]; if (((i + r) & 3) < 2){ var a = xc - ww / 2 - .5; if (a > x){ ctx.moveTo(x, y); ctx.lineTo(a, y); } x = xc + ww / 2 + .5; } } if (x < w){ ctx.moveTo(x, y); ctx.lineTo(w, y); } }
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(255,255,255,.22)';
+        for (r = 0; r < rows; r++) for (i = 0; i < n; i++) if (((i + r) & 3) === 0) ctx.fillRect(X[r * n + i] - ww / 2 + .6, r * gap - gap * .5, 1.2, gap);
+        // veils in the paper color so the title and summary stay crisp: from the left, and up from the bottom
+        var g = ctx.createLinearGradient(0, 0, w, 0); g.addColorStop(0, 'rgba(247,245,240,1)'); g.addColorStop(.4, 'rgba(247,245,240,.9)'); g.addColorStop(.62, 'rgba(247,245,240,0)');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+        var g2 = ctx.createLinearGradient(0, h * .32, 0, h); g2.addColorStop(0, 'rgba(247,245,240,0)'); g2.addColorStop(.45, 'rgba(247,245,240,.94)'); g2.addColorStop(1, 'rgba(247,245,240,1)');
+        ctx.fillStyle = g2; ctx.fillRect(0, h * .32, w, h * .68);
+      }
+      function tick(now){ if (!running) return; t += Math.min(64, now - last) / 1000; last = now; draw(); raf = requestAnimationFrame(tick); }
+      size(); draw();
+      if (window.ResizeObserver) new ResizeObserver(function(){ size(); draw(); }).observe(cv);
+      if (reduce) return;
+      whileSeen(host, function(){ if (running) return; running = true; last = performance.now(); raf = requestAnimationFrame(tick); }, function(){ running = false; cancelAnimationFrame(raf); });
+    }
+    // kip: each face hops in place on its own beat (squash, jump, land)
+    function hop(box, host){
+      if (reduce || !box.animate) return;
+      var anims = [].map.call(box.children, function(s, k){
+        return s.animate([
+          { transform: 'translateY(0) scale(1,1)' }, { transform: 'translateY(0) scale(1.1,.9)', offset: .14 },
+          { transform: 'translateY(-22px) scale(.95,1.06)', offset: .42 }, { transform: 'translateY(0) scale(1,1)', offset: .66 },
+          { transform: 'translateY(0) scale(1.06,.94)', offset: .76 }, { transform: 'translateY(0) scale(1,1)' }
+        ], { duration: 1300 + k * 170, delay: k * 260, iterations: Infinity, easing: 'ease-in-out' });
+      });
+      whileSeen(host, function(){ anims.forEach(function(a){ a.play(); }); }, function(){ anims.forEach(function(a){ a.pause(); }); });
+    }
     var maxY = 0, autoI = 0;
     frames.forEach(function(f, i){
       var slot = f.classList.contains('is-slot'), L = !slot && LAYOUT[i];
@@ -49,13 +102,25 @@
           mk.innerHTML = AB.markSVG({ grid: true });
           inner.appendChild(mk);
         }
-        else if (slug === 'cks' || slug === 'kip'){
-          // each product's own picture: the CKS woven mark; three of kip's caregivers (from the kip press kit)
-          var ar = document.createElement('div'); ar.className = 'pv'; ar.setAttribute('aria-hidden', 'true');
-          ar.style.cssText = slug === 'cks' ? 'position:absolute;right:26px;top:26px;width:120px' : 'position:absolute;right:22px;top:24px;width:200px;display:flex;gap:6px;align-items:flex-end';
-          ar.innerHTML = slug === 'cks' ? '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="6" width="19" height="5" rx="1.2" fill="#EF5B3F"/><rect x="2.5" y="13" width="19" height="5" rx="1.2" fill="#139E8A"/><rect x="6" y="2.5" width="5" height="19" rx="1.2" fill="#F2A93B" stroke="#F7F5F0" stroke-width="1.4"/><rect x="13" y="2.5" width="5" height="19" rx="1.2" fill="#2F5BEA" stroke="#F7F5F0" stroke-width="1.4"/><rect x="12.3" y="6" width="6.4" height="5" fill="#EF5B3F"/><path d="M12.3 6V11M18.7 6V11" stroke="#F7F5F0" stroke-width="1.4"/><rect x="5.3" y="13" width="6.4" height="5" fill="#139E8A"/><path d="M5.3 13V18M11.7 13V18" stroke="#F7F5F0" stroke-width="1.4"/></svg>' : '<svg viewBox="0 0 120 120" aria-hidden="true"><path d="M60 10C86 10 104 36 106 64c2 30-16 50-46 50S12 94 14 64C16 36 34 10 60 10Z" fill="#FF7A45"/><path d="M58 11c-4-9 4-15 12-11" fill="none" stroke="#FF7A45" stroke-width="7" stroke-linecap="round"/><ellipse cx="40" cy="72" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><ellipse cx="80" cy="72" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><circle cx="47" cy="62" r="4.6" fill="#1E1B2E"/><circle cx="73" cy="62" r="4.6" fill="#1E1B2E"/><path d="M53 75 Q60 82 67 75" fill="none" stroke="#1E1B2E" stroke-width="3.6" stroke-linecap="round"/></svg><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="22" r="13" fill="#FFC94A"/><path d="M8 114C8 58 28 32 60 32s52 26 52 82Z" fill="#FFC94A"/><ellipse cx="38" cy="82" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><ellipse cx="82" cy="82" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><circle cx="45" cy="72" r="4.6" fill="#1E1B2E"/><circle cx="75" cy="72" r="4.6" fill="#1E1B2E"/><path d="M53 85 Q60 92 67 85" fill="none" stroke="#1E1B2E" stroke-width="3.6" stroke-linecap="round"/><circle cx="45" cy="72" r="10" fill="none" stroke="#1E1B2E" stroke-width="2.8"/><circle cx="75" cy="72" r="10" fill="none" stroke="#1E1B2E" stroke-width="2.8"/><path d="M55 72h10" stroke="#1E1B2E" stroke-width="2.8"/></svg><svg viewBox="0 0 120 120" aria-hidden="true"><path d="M60 24c-6-12 0-20 10-22 2 10-2 18-10 22Z" fill="#2E9E76"/><path d="M60 24c-4-10-14-12-22-8 4 8 12 11 22 8Z" fill="#5FD3A8"/><path d="M20 58c0-24 14-34 40-34s40 10 40 34v20c0 26-14 36-40 36S20 104 20 78Z" fill="#5FD3A8"/><ellipse cx="40" cy="76" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><ellipse cx="80" cy="76" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><circle cx="47" cy="66" r="4.6" fill="#1E1B2E"/><circle cx="73" cy="66" r="4.6" fill="#1E1B2E"/><path d="M53 79 Q60 86 67 79" fill="none" stroke="#1E1B2E" stroke-width="3.6" stroke-linecap="round"/></svg>';
-          if (slug === 'kip') [].forEach.call(ar.children, function(s, k){ s.style.cssText = 'flex:1;height:auto;transform:translateY(' + [0, -8, 0][k] + 'px)'; });
-          inner.appendChild(ar);
+        else if (slug === 'cks'){
+          // a small version of the CKS hero loom (cks-src/js/cks.js), drifting behind the title
+          var lc = document.createElement('canvas'); lc.className = 'ab_board_loom'; lc.setAttribute('aria-hidden', 'true');
+          lc.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none';
+          inner.appendChild(lc); f.__loom = lc;
+        }
+        else if (slug === 'kip'){
+          // kip's deeper tangerine with white text, and three caregivers hopping in place (kip press-kit SVGs; Sam, Nana,
+          // Rosa: blue, yellow and green read on tangerine, Ari's orange wouldn't)
+          inner.style.setProperty('--fbg', '#E85F2A'); inner.style.setProperty('--ffg', '#FFFFFF'); f.__bg = '#E85F2A';
+          var ar = document.createElement('div'); ar.className = 'ab_board_kip'; ar.setAttribute('aria-hidden', 'true');
+          ar.style.cssText = 'position:absolute;right:24px;top:26px;display:flex;gap:10px;align-items:flex-end;z-index:0';
+          ar.innerHTML = '<svg viewBox="0 0 120 120" aria-hidden="true"><rect x="24" y="8" width="72" height="108" rx="36" fill="#6FA8FF"/><path d="M52 10c2-8 12-8 14-2" fill="none" stroke="#6FA8FF" stroke-width="6" stroke-linecap="round"/><path d="M44 44h10M66 44h10" stroke="#1E1B2E" stroke-width="3.2" stroke-linecap="round"/><ellipse cx="42" cy="66" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><ellipse cx="78" cy="66" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><circle cx="49" cy="56" r="4.6" fill="#1E1B2E"/><circle cx="71" cy="56" r="4.6" fill="#1E1B2E"/><path d="M52 67 Q60 79 68 67 Z" fill="#1E1B2E"/></svg><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="22" r="13" fill="#FFC94A"/><path d="M8 114C8 58 28 32 60 32s52 26 52 82Z" fill="#FFC94A"/><ellipse cx="38" cy="82" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><ellipse cx="82" cy="82" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><circle cx="45" cy="72" r="4.6" fill="#1E1B2E"/><circle cx="75" cy="72" r="4.6" fill="#1E1B2E"/><path d="M53 85 Q60 92 67 85" fill="none" stroke="#1E1B2E" stroke-width="3.6" stroke-linecap="round"/><circle cx="45" cy="72" r="10" fill="none" stroke="#1E1B2E" stroke-width="2.8"/><circle cx="75" cy="72" r="10" fill="none" stroke="#1E1B2E" stroke-width="2.8"/><path d="M55 72h10" stroke="#1E1B2E" stroke-width="2.8"/></svg><svg viewBox="0 0 120 120" aria-hidden="true"><path d="M60 24c-6-12 0-20 10-22 2 10-2 18-10 22Z" fill="#2E9E76"/><path d="M60 24c-4-10-14-12-22-8 4 8 12 11 22 8Z" fill="#5FD3A8"/><path d="M20 58c0-24 14-34 40-34s40 10 40 34v20c0 26-14 36-40 36S20 104 20 78Z" fill="#5FD3A8"/><ellipse cx="40" cy="76" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><ellipse cx="80" cy="76" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><circle cx="47" cy="66" r="4.6" fill="#1E1B2E"/><circle cx="73" cy="66" r="4.6" fill="#1E1B2E"/><path d="M53 79 Q60 86 67 79" fill="none" stroke="#1E1B2E" stroke-width="3.6" stroke-linecap="round"/></svg>';
+          [].forEach.call(ar.children, function(s){ s.style.cssText = 'flex:none;width:58px;height:58px;overflow:visible;transform-origin:50% 100%'; });
+          // phone deck (≤767, frames 4:5): centered and larger, clear of the Open case button, like the deck's canvas previews
+          var mq = window.matchMedia('(max-width: 767px)');
+          var place = function(){ var d = mq.matches; ar.style.left = d ? '50%' : 'auto'; ar.style.right = d ? 'auto' : '24px'; ar.style.top = d ? '24%' : '26px'; ar.style.transform = d ? 'translateX(-50%) scale(1.3)' : ''; ar.style.transformOrigin = '50% 0'; };
+          place(); if (mq.addEventListener) mq.addEventListener('change', place);
+          inner.appendChild(ar); f.__hop = ar;
         }
         else if (slug === 'knowledge-system'){
           // a tiny knowledge graph: one entry in the middle, its tags and the pages they link, lines drawing on a loop
@@ -69,6 +134,9 @@
         var t = document.createElement('div'); t.className = 'ab_board_ftitle' + (/lora|serif/i.test(f.getAttribute('data-font') || '') ? ' is-serif' : ''); t.textContent = name; inner.appendChild(t);
         var sb = document.createElement('div'); sb.className = 'ab_board_fsub'; sb.textContent = f.getAttribute('data-summary') || ''; inner.appendChild(sb);
         f.appendChild(inner);
+        if (f.__loom || f.__hop){ [t, sb, op].forEach(function(n){ n.style.position = n === op ? 'absolute' : 'relative'; n.style.zIndex = '1'; }); }
+        if (f.__loom) miniLoom(f.__loom, f);
+        if (f.__hop) hop(f.__hop, f);
       }
       if (f.__sel) $('.sel-tag', f.__sel).textContent = 'Frame / ' + slug;
     });
