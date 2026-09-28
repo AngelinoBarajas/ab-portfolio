@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.28.4 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.28.5 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -471,6 +471,32 @@ window.Webflow.push(function(){
   __steps.push(function(){
   /* ===== home/20-services.js ===== */
 
+  /* ---------- Observatory card: a colorful bento card for the field notes (articles + build notes).
+     The "marks on a grid" card drops to one row and this card takes the freed cell below it, right after
+     Custom deploys, so auto-placement keeps every row full. A native Designer card ([data-visual="observatory"])
+     wins: then the script only draws its visual. ---------- */
+  (function(){
+    var grid = $('#capabilities .ab_bento_grid'); if (!grid) return;
+    var brand = $('[data-name="Card / branding"]', grid), deploys = $('[data-name="Card / deploys"]', grid);
+    if (brand && brand.parentNode.classList.contains('is-tall')) brand.parentNode.classList.remove('is-tall');
+    if ($('[data-visual="observatory"]', grid) || !deploys) return;
+    var cell = document.createElement('div'); cell.className = 'ab_bento_cell';
+    cell.innerHTML = '<article data-name="Card / observatory" data-selectable="" data-visual="observatory" class="ab_bento-card is-observatory" style="background:linear-gradient(135deg,#4C8DFF 0%,#7C5CFF 48%,#FF6A3D 100%);border-color:transparent;color:#fff">' +
+      '<div class="ab_bento-card_viz" style="background:rgba(7,8,13,.28);border-color:rgba(255,255,255,.22)"></div>' +
+      '<div class="ab_bento-card_copy"><div class="ab_bento-card_label text-style-mono" style="color:rgba(255,255,255,.8)">The Observatory</div>' +
+      '<h3 class="ab_bento-card_title" style="color:#fff">Field notes from real builds</h3>' +
+      '<p class="ab_bento-card_text" style="color:rgba(255,255,255,.88)">Articles on the how and the why: build notes from real projects and the ideas behind them, linked by topic.</p></div>' +
+      '<a aria-label="The Observatory: articles and field notes" href="/observatory" class="ab_bento-card_link" style="color:#fff;border-color:rgba(255,255,255,.6)">↗</a></article>';
+    deploys.parentNode.parentNode.insertBefore(cell, deploys.parentNode.nextSibling);
+    var card = cell.firstChild;
+    // the same selection frame core gives every [data-selectable] (core ran before this bundle)
+    var s = document.createElement('div'); s.className = 'sel'; s.setAttribute('aria-hidden', 'true');
+    s.innerHTML = '<i class="tl"></i><i class="tc"></i><i class="tr"></i><i class="ml"></i><i class="mr"></i><i class="bl"></i><i class="bc"></i><i class="br"></i><span class="sel-tag">Card / observatory</span><span class="sel-size"></span>';
+    card.appendChild(s); card.__sel = s;
+    card.addEventListener('mouseenter', function(){ $('.sel-size', s).textContent = Math.round(card.offsetWidth) + ' × ' + Math.round(card.offsetHeight); });
+    if (AB.cardFx) AB.cardFx(card);
+  })();
+
   /* ---------- services bento (spotlight + tilt come from core AB.cardFx) ---------- */
   var cards = $$('#capabilities .ab_bento-card');
   if (hasGsap && !coarse && !reduce && cards.length){
@@ -588,6 +614,35 @@ window.Webflow.push(function(){
     },
     tokens: function(v){
       v.innerHTML = '<div class="v-tok">' + ['#07080D', '#161A2E', '#F2F0EA', '#FF6A3D', '#4C8DFF', '#7C5CFF'].map(function(c){ return '<i style="background:' + c + '" title="' + c + '"></i>'; }).join('') + '<div class="ramp"><span>Aa</span><span>Aa</span><span>Aa</span><span>Aa</span></div></div>';
+    },
+    observatory: function(v){
+      // a tiny star chart: six constellations (the Observatory's topic groups) draw in turn; a chip flips between the two themes
+      var C = [
+        { c: '#FFD166', p: [[22, 34], [44, 22], [62, 40], [48, 58]] }, { c: '#5eead4', p: [[98, 20], [120, 34], [140, 24]] },
+        { c: '#ffffff', p: [[176, 44], [196, 26], [218, 38], [236, 22]] }, { c: '#8fb1ff', p: [[40, 104], [62, 90], [84, 110], [70, 128]] },
+        { c: '#FF9E80', p: [[128, 96], [150, 116], [172, 100]] }, { c: '#c4b5ff', p: [[206, 90], [228, 110], [250, 94], [268, 116]] }
+      ];
+      var bg = ''; for (var k = 0; k < 26; k++) bg += '<circle class="bg" cx="' + ((k * 97) % 290 + 5) + '" cy="' + ((k * 53) % 140 + 6) + '" r="' + (k % 4 ? .7 : 1.1) + '"/>';
+      v.innerHTML = '<div class="v-obs" style="position:relative;width:100%;height:100%;min-height:150px;display:flex;flex-direction:column;justify-content:center;gap:10px;padding:14px">' +
+        '<svg viewBox="0 0 290 150" style="width:100%;height:auto;display:block;overflow:visible" aria-hidden="true"><g fill="rgba(255,255,255,.5)">' + bg + '</g>' +
+        C.map(function(g, i){ return '<g class="cst" data-i="' + i + '"><path d="M' + g.p.map(function(q){ return q.join(' '); }).join('L') + '" fill="none" stroke="' + g.c + '" stroke-width="1.4" stroke-linecap="round" opacity=".9"/>' +
+          g.p.map(function(q){ return '<circle class="st" cx="' + q[0] + '" cy="' + q[1] + '" r="2.6" fill="' + g.c + '"/>'; }).join('') + '</g>'; }).join('') + '</svg>' +
+        '<span class="chip" style="align-self:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:5px 9px;border:1px solid rgba(255,255,255,.45);color:#fff;background:rgba(7,8,13,.25)">BN · Build notes</span></div>';
+      var paths = $$('.cst path', v), stars = $$('.st', v), chip = $('.chip', v), card = v.closest('.ab_bento-card'), vis = false;
+      if (reduce || !hasGsap) return;
+      paths.forEach(function(p){ var L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; });
+      gsap.set(stars, { scale: 0, transformOrigin: '50% 50%' });
+      var tl = gsap.timeline({ paused: true, repeat: -1, repeatDelay: 1.2 });
+      C.forEach(function(g, i){
+        var grp = $$('.cst[data-i="' + i + '"] .st', v), p = paths[i], at = i * .75;
+        tl.to(grp, { scale: 1, duration: .35, stagger: .08, ease: 'back.out(3)' }, at).to(p, { strokeDashoffset: 0, duration: .8, ease: 'power2.inOut' }, at + .1);
+        if (i === 2) tl.call(function(){ chip.textContent = 'WB · Why before how'; }, null, at);
+      });
+      tl.to(paths, { opacity: .25, duration: .8 }, '+=1.4').to(stars, { scale: 0, duration: .4, stagger: .02 }, '<.4')
+        .call(function(){ chip.textContent = 'BN · Build notes'; paths.forEach(function(p){ p.style.strokeDashoffset = p.getTotalLength(); p.style.opacity = .9; }); });
+      gsap.to(stars, { opacity: .55, duration: 1.2, repeat: -1, yoyo: true, stagger: { each: .23, from: 'random' }, ease: 'sine.inOut' });
+      onView(v, function(x){ vis = x; x ? tl.play() : tl.pause(); });
+      if (card) card.addEventListener('pointerenter', function(){ gsap.to(paths, { strokeDashoffset: 0, opacity: 1, duration: .6 }); gsap.to(stars, { scale: 1.2, duration: .4, stagger: .02, yoyo: true, repeat: 1 }); });
     },
     meters: function(v){
       v.innerHTML = '<div class="v-meter"><div><span>LCP</span><b><i style="--v:.72"></i></b><span>&lt; 2.5 s</span></div><div><span>CLS</span><b><i style="--v:.9"></i></b><span>&lt; 0.1</span></div><div><span>Motion</span><b><i style="--v:1"></i></b><span>60 fps</span></div></div>';
