@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.30.4 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.30.5 · github.com/AngelinoBarajas/ab-portfolio */
 /* click cursor: a spacesuit glove (hotspot on the fingertip); every clickable uses var(--hand) */
 :root{--hand:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 32 32%22%3E%3Cg stroke=%22%230B0C14%22 stroke-width=%221.3%22 stroke-linejoin=%22round%22%3E%3Crect x=%222.6%22 y=%2213.6%22 width=%225.8%22 height=%2210.5%22 rx=%222.9%22 transform=%22rotate%28-42 5.5 18.8%29%22 fill=%22%23E4E1D8%22/%3E%3Crect x=%229.5%22 y=%221.2%22 width=%226.4%22 height=%2217%22 rx=%223.2%22 fill=%22%23F7F5EF%22/%3E%3Crect x=%2215.6%22 y=%2210.2%22 width=%225.4%22 height=%229.5%22 rx=%222.7%22 fill=%22%23F7F5EF%22/%3E%3Crect x=%2220.6%22 y=%2211.4%22 width=%225.2%22 height=%228.8%22 rx=%222.6%22 fill=%22%23F7F5EF%22/%3E%3Crect x=%2225.2%22 y=%2213%22 width=%224.6%22 height=%227.8%22 rx=%222.3%22 fill=%22%23F7F5EF%22/%3E%3Cpath d=%22M8.4 16.5H29.6V21.5C29.6 25 27.2 27 24 27H14C10.6 27 8.4 24.6 8.4 21.5Z%22 fill=%22%23F7F5EF%22/%3E%3Crect x=%229.2%22 y=%2225.4%22 width=%2220.6%22 height=%225.6%22 rx=%221.4%22 fill=%22%23FF6A3D%22/%3E%3C/g%3E%3Cg stroke=%22%238A8FA3%22 stroke-width=%22.8%22 fill=%22none%22 stroke-linecap=%22round%22%3E%3Cpath d=%22M10.6 7.2H14.8M10.6 11.8H14.8M12 21.2H26%22/%3E%3C/g%3E%3Cpath d=%22M9.2 28.2H29.8%22 stroke=%22%230B0C14%22 stroke-width=%22.8%22/%3E%3C/svg%3E") 12 1,pointer}
 a[href],button:not(:disabled),[role="button"],summary,label[for],select,input[type="submit"],input[type="checkbox"],input[type="radio"]{cursor:var(--hand)}
@@ -919,29 +919,29 @@ section:hover > .ab_frame-label{color:var(--_color---ui--select)}
   .abt-dish{display:flex;flex-direction:column;gap:14px;position:absolute;right:0;top:clamp(130px,14vw,200px);width:clamp(280px,23vw,380px);z-index:2;pointer-events:none}
 }
 .abt-sky{display:block;width:100%;height:auto;overflow:visible}
-.abt-ground{stroke:rgba(242,240,234,.14);stroke-dasharray:2 6}
-.abt-mount{fill:none;stroke:rgba(242,240,234,.5);stroke-width:2}
-.abt-base{fill:rgba(242,240,234,.35)}
-.abt-bowl-b{fill:url(#abtBowl);stroke:rgba(242,240,234,.55);stroke-width:1.5}
-.abt-rim{fill:none;stroke:rgba(242,240,234,.8);stroke-width:1.5}
-.abt-strut{fill:none;stroke:rgba(242,240,234,.45);stroke-width:1.2}
-.abt-feed{fill:#161a2e;stroke:rgba(242,240,234,.7)}
-.abt-hub{fill:#161a2e;stroke:rgba(242,240,234,.7)}
-.abt-rx{fill:var(--_color---brand--signal);opacity:.35}
-.abt-dish.is-rx .abt-rx{animation:abt-rx 1.2s ease-out 3}
-.abt-beam{stroke:var(--_color---brand--signal);stroke-width:1.2;stroke-dasharray:3 7;opacity:.7;animation:abt-flow .9s linear infinite}
-.abt-star{fill:#fff;filter:drop-shadow(0 0 5px #fff) drop-shadow(0 0 10px var(--_color---brand--signal))}
-.abt-ring{fill:none;stroke:var(--_color---brand--signal);stroke-width:1;transform-box:fill-box;transform-origin:center;animation:abt-ping 2.4s ease-out infinite}
+.abt-arm,.abt-mast{fill:none;stroke:#c9c7c0;stroke-width:2}
+.abt-panel{fill:#1e2c63;stroke:#9fb8ff;stroke-width:1}
+.abt-grid{fill:none;stroke:#9fb8ff;stroke-width:.8;opacity:.8}
+.abt-body{fill:#e9e6dd;stroke:#fff;stroke-width:1}
+.abt-band{fill:#c9a66b}
+.abt-ant{fill:#e9e6dd;stroke:#c9c7c0;stroke-width:1.2}
+.abt-rx{fill:var(--fq,var(--_color---brand--signal));filter:drop-shadow(0 0 5px var(--fq,var(--_color---brand--signal)));transition:fill .6s}
+.abt-lock{fill:none;stroke:var(--fq,var(--_color---brand--signal));stroke-width:1.5;opacity:0;transform-box:fill-box;transform-origin:center}
+.abt-dish.is-lock .abt-lock{animation:abt-lockring .9s ease-out}
+.abt-led{fill:var(--fq,var(--_color---brand--signal));animation:ab-blink 1.4s infinite}
+.abt-beam{stroke:var(--fq,var(--_color---brand--signal));stroke-width:1.2;stroke-dasharray:3 7;animation:abt-flow .9s linear infinite;transition:stroke .6s}
+.abt-star{fill:#fff;filter:drop-shadow(0 0 5px #fff) drop-shadow(0 0 10px var(--fq,var(--_color---brand--signal)))}
+.abt-ring{fill:none;stroke:var(--fq,var(--_color---brand--signal));stroke-width:1;transform-box:fill-box;transform-origin:center;animation:abt-ping 2.4s ease-out infinite}
 .abt-ring.is-2{animation-delay:1.2s}
 .abt-read{display:flex;flex-direction:column;gap:7px;padding:12px 14px;border:1px solid var(--_color---neutral--hair);background:rgba(7,8,13,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);font-family:var(--_typography---font--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--_color---text--tertiary)}
 .abt-read-k{display:flex;justify-content:space-between;gap:12px}
 .abt-read-k b{font-weight:500;color:var(--_color---text--primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
-.abt-read-k:first-child span{color:var(--_color---brand--signal)}
+.abt-read-k:first-child span,.abt-dish.is-lock .abt-stat{color:var(--fq,var(--_color---brand--signal));transition:color .6s}
 .abt-wave{display:block;width:100%;height:42px;border-top:1px dashed var(--_color---neutral--hair);border-bottom:1px dashed var(--_color---neutral--hair)}
-.abt-wave path{fill:none;stroke:var(--_color---brand--signal);stroke-width:1.5;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 4px var(--_color---brand--signal))}
+.abt-wave path{fill:none;stroke:var(--fq,var(--_color---brand--signal));stroke-width:1.5;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 4px var(--fq,var(--_color---brand--signal)));transition:stroke .6s}
 .abt-bar{display:block;height:2px;background:var(--_color---neutral--hair)}
-.abt-bar i{display:block;height:100%;background:var(--_color---brand--signal);transform-origin:0 50%;transform:scaleX(0)}
+.abt-bar i{display:block;height:100%;background:var(--fq,var(--_color---brand--signal));transform-origin:0 50%;transform:scaleX(0)}
 @keyframes abt-ping{from{transform:scale(.3);opacity:.9}to{transform:scale(3.2);opacity:0}}
 @keyframes abt-flow{to{stroke-dashoffset:-20}}
-@keyframes abt-rx{0%{opacity:1;r:6}100%{opacity:.35;r:3}}
-@media (prefers-reduced-motion:reduce){.abt-ring,.abt-beam,.abt-dish.is-rx .abt-rx{animation:none}}
+@keyframes abt-lockring{from{transform:scale(1);opacity:1}to{transform:scale(5);opacity:0}}
+@media (prefers-reduced-motion:reduce){.abt-ring,.abt-beam,.abt-led,.abt-dish.is-lock .abt-lock{animation:none}}
