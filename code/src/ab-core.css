@@ -666,6 +666,9 @@ section:hover > .ab_frame-label{color:var(--select)}
 
 /* ---------- code blocks (AB.codeBlock: Mission systems/problems, Services under the hood) ---------- */
 .cb{margin:14px 0 0;border:1px solid var(--hair2);background:#05060a;position:relative}
+/* a code block inside a CMS Rich Text is a <figure>: Webflow caps .w-richtext figure at max-width:60% (473px in a 789px
+   article, 203px on a phone). Code spans the text column. */
+.w-richtext figure.cb{max-width:none;width:100%}
 .cb figcaption{display:flex;align-items:center;gap:10px;padding:7px 10px 7px 12px;border-bottom:1px solid var(--hair);font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--dust)}
 .cb-l{color:#05060a;background:#7cc4ff;padding:2px 6px;font-weight:500}
 .cb-n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-transform:lowercase}

@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-services.css v0.27.3 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-services.css v0.27.4 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · Services template (/services/[slug]) · loaded in the template <head>.
    Webflow classes carry the layout; this file holds states, pseudo-elements and descendant rules Webflow can't. */
 
@@ -67,13 +67,15 @@
 
 /* rail: fading edges + arrow when it scrolls sideways (script wraps it in .sv-rail-wrap) */
 .sv-rail-wrap{position:relative}
-.sv-rail-wrap::before,.sv-rail-wrap::after{content:"";position:absolute;top:0;bottom:0;width:48px;pointer-events:none;z-index:5;opacity:0;transition:opacity .3s}
-.sv-rail-wrap::before{left:0;background:linear-gradient(90deg,var(--_color---neutral--void),transparent)}
-.sv-rail-wrap::after{right:0;background:linear-gradient(270deg,var(--_color---neutral--void) 30%,transparent)}
-.sv-rail-wrap.is-over::after{opacity:1}
-.sv-rail-wrap.is-over:not(.is-start)::before{opacity:1}
-.sv-rail-wrap.is-end::after{opacity:0}
-.sv-rail-more{position:absolute;right:0;top:50%;z-index:6;width:34px;height:34px;margin-top:-17px;display:none;place-items:center;border:1px solid var(--_color---neutral--hair-strong);border-radius:50%;background:rgba(7,8,13,.85);color:var(--_color---text--primary);font-size:15px;cursor:pointer;transition:border-color .2s,color .2s,transform .3s}
+/* the chips fade themselves (mask), so the hero's starfield + glow show through; a void-colored overlay read as a
+   hard black bar on phones. Left fade once scrolled, right fade (ending at the arrow) while there's more to see */
+.sv-rail-wrap .ab_sv_rail{--fl:0px;--fr:0px;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 var(--fl),#000 calc(100% - var(--fr)),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 var(--fl),#000 calc(100% - var(--fr)),transparent 100%)}
+.sv-rail-wrap.is-over:not(.is-start) .ab_sv_rail{--fl:32px}
+.sv-rail-wrap.is-over:not(.is-end) .ab_sv_rail{--fr:88px}
+/* the arrow is a chip: same 38px height and square corners, pinned to the chip row (rail padding-top 2px), not a
+   floating circle; the rail keeps 46px (arrow + gap) of room at its end so the last chip scrolls clear of it */
+.sv-rail-more{position:absolute;right:0;top:2px;z-index:6;width:38px;height:38px;margin:0;padding:0;display:none;place-items:center;border:1px solid var(--_color---neutral--hair-strong);border-radius:0;background:var(--_color---neutral--void);color:var(--_color---text--primary);font-family:var(--_typography---font--mono);font-size:14px;line-height:1;cursor:pointer;transition:border-color .2s,color .2s,transform .3s}
+.sv-rail-wrap.is-over .ab_sv_rail{padding-right:46px}
 .sv-rail-wrap.is-over .sv-rail-more{display:grid}
 .sv-rail-wrap.is-over:not(.is-end) .sv-rail-more span{animation:sv-nudge 1.6s ease-in-out infinite}
 .sv-rail-wrap.is-end .sv-rail-more{transform:rotate(180deg)}

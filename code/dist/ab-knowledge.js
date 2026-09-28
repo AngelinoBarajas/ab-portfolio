@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-knowledge v0.27.3 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-knowledge v0.27.4 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abKnowledgeInit) return;
