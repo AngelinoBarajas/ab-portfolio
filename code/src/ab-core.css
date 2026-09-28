@@ -132,6 +132,8 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 .ab_menu_link.w--current{flex-wrap:wrap;row-gap:4px}
 .ab_menu_link.w--current .ab_menu_link-path{display:none}
 .ab_menu_link.w--current::after{content:"You are here";align-self:center;padding:3px 8px;border:1px solid var(--signal);font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.14em;line-height:1.2;text-transform:uppercase;white-space:nowrap;color:var(--signal)}
+/* Tablet and below the menu rows stack (word over /slug, Designer), so the pill sits under the word, not centered */
+@media (max-width:991px){.ab_menu_link.w--current::after{align-self:flex-start}}
 
 /* ---------- hero ---------- */
 .ab_hero_meta,.ab_hero_bottom{pointer-events:none}
