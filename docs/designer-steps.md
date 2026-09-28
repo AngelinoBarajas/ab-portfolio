@@ -11,49 +11,60 @@ Already done (don't redo): Home color bindings, Work card tags + brand colors, t
 ## A. Crawlable links (highest SEO value)
 Today these hrefs are fixed by script only; crawlers see the wrong URL. For each: select the Link Block › Settings (gear) › Link type **Collection page / Current … page** (or the reference field).
 
-- [ ] **A1. Observatory cards**: page `/observatory` › `section_ks-library` › Collection List › item › observation card Link Block (`ab_ks-card`) → *Current Observation page*. Raw HTML should then read `/observatory/<slug>` (now `/observatory`).
-- [ ] **A2. Topic index links**: `/observatory` topic chips/index links and `/topics` › topic index item link → *Current Topic page* (now render `/topics`).
-- [ ] **A3. Home board frame**: Home › work board › Missions list item › frame link → *Current Missions page* (renders `detail_work`, a 404).
-- [ ] **A4. Work mission card**: `/work` › Missions list › `ab_mission-card` link → *Current Missions page* (renders `/work`).
-- [ ] **A5. Services related-mission card**: Services template › related missions list › card link → *Current Missions page*.
-- [ ] **A6. Mission Next card**: Missions template › Next card link → *Next mission* field.
+- [x] **A1. Observatory cards** (done 2026-09-27, verified: 10 cards render `/observatory/<slug>`): page `/observatory` › `section_ks-library` › Collection List › item › observation card Link Block (`ab_ks-card`) → *Current Observation page*. Raw HTML should then read `/observatory/<slug>` (now `/observatory`).
+- [x] **A1b. Home Incoming signals cards** (done 2026-09-27, verified: 3 cards render `/observatory/<slug>`): Home › `section_ks-row` (#signals) › … › `ab_ks-item` › `ab_ks-card` → *Current Observation* (found 2026-09-27: 3 cards render `/observatory`).
+- [x] **A2. Topic index links** (done 2026-09-27, verified: 27/27 on each page render `/topics/<slug>`): `/observatory` topic chips/index links and `/topics` › topic index item link → *Current Topic page* (now render `/topics`).
+- [x] **A3. Home board frame** (done 2026-09-27, verified: 3 frames render `/work/<slug>`): Home › work board › Missions list item › frame link → *Current Missions page* (renders `detail_work`, a 404).
+- [x] **A4. Work mission card** (done 2026-09-27, verified 6/6 `/work/<slug>`): `/work` › Missions list › `ab_mission-card` (item) › `ab_mission-card_link` → *Current Missions page* (renders `/work`).
+- [x] ~~A5. Services related-mission card~~: not a Designer step. Those cards are cloned from `/work` by script (hidden list only supplies slugs), so they inherit A4's real hrefs. Replaced by A5a–c (found 2026-09-27):
+- [x] **A5a. (done 2026-09-27, verified) Services template rail**: `section_dbh` › … › `ab_sv_rail` (#svRail) › list › item › `ab_sv_rail_link` → *Current Service* (8 render `/services`).
+- [x] **A5b. (done 2026-09-27, verified) Services template Pairs with**: `section_dbh` › … › `ab_meta.is-service` › `ab_meta_item` › `ab_sv_pairs` › list › item › `ab_sv_pair` → *Current Service* (render `/services`).
+- [x] **A5c. (done 2026-09-27, verified) Services hub Explore**: `/services` › `section_hub-hero` › … › `ab_hub-scr` › list › item › `ab_hub-row` › `ab_hub-go` → *Current Service* (8 render `/services`).
+- [x] ~~A6. Mission Next card → Next mission field~~: not needed. The Next card is script-built inside the shared Next card component (no native link). Replaced by **A6. Missions template switcher** `ab_dbh_top` › `ab_mswitch` › list › item › `ab_mswitch_link` → *Current Mission* (done 2026-09-27, verified 3/3 `/work/<slug>` on each mission page).
 - Note: MCP-set collection links render the literal slug; these must be set in the Designer. Links from the static `/observatory` / `/topics` pages to their own-folder templates were the ones rendering the static URL; if A1/A2 still render wrong after setting, report it (script keeps working meanwhile).
 
 ## B. Template SEO + Open Graph (Page settings of each template)
-- [ ] **B1. Observatory template**: SEO title `[Name] · Observatory · Angelino Barajas`, description `[Meta description]`; OG title/description "Same as SEO", OG image = og-site image.
-- [ ] **B2. Topics template**: `[Name] · Topics · Angelino Barajas`, `[Meta description]`; OG same as SEO + og-site image.
-- [ ] **B3. Missions template**: `[Name] · Mission debrief · Angelino Barajas`, `[Meta description]`; OG same as SEO, OG image = **Social image** field.
-- [ ] **B4. Services template**: `[Name] · Services · Angelino Barajas`, `[Summary]`; OG same as SEO (OG image already og-services).
+- [x] **B1. Observatory template** (done 2026-09-27, verified; OG image via template head `<meta>`, the Designer dropdown only lists CMS Image fields): SEO title `[Name] · Observatory · Angelino Barajas`, description `[Meta description]`; OG title/description "Same as SEO", OG image = og-site image.
+- [x] **B2. Topics template** (done 2026-09-27, verified; OG image via head `<meta>`): `[Name] · Topics · Angelino Barajas`, `[Meta description]`; OG same as SEO + og-site image.
+- [x] **B3. Missions template** (done 2026-09-27, verified 7/7; placeholders without a Social image emit an empty og:image, harmless while noindex): `[Name] · Mission debrief · Angelino Barajas`, `[Meta description]`; OG same as SEO, OG image = **Social image** field.
+- [x] **B4. Services template** (done 2026-09-27, verified): `[Name] · Services · Angelino Barajas`, `[Summary]`; OG same as SEO (OG image already og-services).
 
 ## C. Template head code (Page settings › Custom code › Inside `<head>`)
 Back up the current field first (paste into `webflow/backup/`). Insert each `[Field]` with "+ Add field".
-- [ ] **C1. Missions template**: `<meta name="robots" content="[Robots]">` then the block in `seo/jsonld/mission-template.head.html`.
-- [ ] **C2. Services template**: `seo/jsonld/services-template.head.html`.
-- Keep `{{DOMAIN}}` until launch (launch versions in `seo/jsonld/launch/`). Observatory/Topics JSON-LD is emitted by ab-knowledge; a native template version is optional later.
+- [x] **C1. Missions template** (robots meta done 2026-09-27, verified: `noindex` on exactly the 4 placeholder/hidden missions, empty on the 3 real ones; JSON-LD block **moved to launch**) : `<meta name="robots" content="[Robots]">` then the block in `seo/jsonld/mission-template.head.html`.
+- [ ] **C2. Services template** (⏸ moved to launch): `seo/jsonld/services-template.head.html`.
+- ⚠️ Webflow treats any `{{…}}` in custom code as its own variable and publishes it **empty** (the Designer warns: *invalid {{ variables }}*). So `{{DOMAIN}}` can't sit in a template head; paste the template JSON-LD at launch from `seo/jsonld/launch/` (generated with the real domain). Was: keep `{{DOMAIN}}` until launch (launch versions in `seo/jsonld/launch/`). Observatory/Topics JSON-LD is emitted by ab-knowledge; a native template version is optional later.
 
 ## D. Images + alt
-- [ ] **D1. Work card cover** Image › Settings › Alt text → from CMS (cover alt / name).
+- [x] **D1. Work card cover** (done 2026-09-27, verified: *Use alt text from asset* on a CMS-bound image outputs the CMS item's alt; cards without a cover stay empty) Image › Settings › Alt text → from CMS (cover alt / name).
 - [ ] **D2. Headshot**: About hero › badge › front face › `.ab_badge_photo` › add Image (4:5); CSS fills the frame and hides the silhouette. (Needs the photo from Angelino.)
 
 ## E. Forms
-- [ ] **E1. Process form**: Form settings › Name (now "Email Form"). Script doesn't use its ID.
-- [ ] **E2. Contact form**: same rename. After any rename re-check the form ID (Webflow resets it to `wf-form-<Name>`; Contact's script hooks: check `docs/webflow-build-notes.md` › Contact before renaming).
-- [ ] **E3. Forms notification email**: Site settings › Forms › confirm the address (Home planner, Process, Contact all post there).
+- [x] **E1. Process form** → **Launch Brief** (done 2026-09-27, verified `wf-form-Launch-Brief`): Form settings › Name (now "Email Form"). Script doesn't use its ID.
+- [x] **E2. Contact form** → **Contact Channel** (done 2026-09-27, verified `wf-form-Contact-Channel`; scripts find forms by container, not ID): same rename. After any rename re-check the form ID (Webflow resets it to `wf-form-<Name>`; Contact's script hooks: check `docs/webflow-build-notes.md` › Contact before renaming).
+- [x] **E3. Forms notification email** (confirmed by Angelino 2026-09-28: test submissions arrived): Site settings › Forms › confirm the address (Home planner, Process, Contact all post there).
 
 ## F. Site settings
-- [ ] **F1. Favicon + webclip**: Site settings › General › upload `logo/favicon-32.png` + `logo/webclip-256.png`.
-- [ ] **F2. SEO**: Auto-generate sitemap **on**; Disable Webflow subdomain indexing **on** (staging stays out of Google). Canonical + robots.txt wait for launch (`seo-plan.md` §5).
+- [x] **F1. Favicon + webclip** (done 2026-09-28, verified: favicon 32/48, apple-touch 180, icons 192/512 all 200 PNG; the 512 is upscaled from the 256 webclip, re-upload a 512 export someday): Site settings › General › upload `logo/favicon-32.png` + `logo/webclip-256.png`.
+- [x] **F2. SEO** (done 2026-09-28: Webflow subdomain indexing **Off** (the toggle reads "indexing … enabled" when On, so Off = staging blocked), Auto-generate sitemap **On**, crawlers + AI bots On, robots.txt empty, canonical-base toggle Off until launch. Verified: webflow.io `/robots.txt` = `Disallow: /`; `/sitemap.xml` 404s on webflow.io by design, it's served on custom domains only → check at launch): Auto-generate sitemap **on**; Disable Webflow subdomain indexing **on** (staging stays out of Google). Canonical + robots.txt wait for launch (`seo-plan.md` §5).
+
+## N. Mobile nav fit (found 2026-09-27, done 2026-09-28, verified 320–991px)
+- [x] **N1.** `ab_menu_link` (BASE) Size `clamp(26px, 9vw, 76px)` (was `clamp(40px, 12vw, 76px)`). Note: the Designer shows an inherited `clamp()` as "0 PX" on smaller breakpoints; set it on Desktop.
+- [x] ~~N2. hide `ab_menu_link-path`~~ → replaced by Angelino's idea: **Tablet** `ab_menu_link` Direction Vertical, gap 6px (the `/slug` sits under the word). Core **v0.27.2** left-aligns the "You are here" pill on stacked rows.
+- [x] **N3.** `ab_menu_component.is-open` (combo): Align Y **Top** + Overflow **Auto**; element attribute `data-lenis-prevent` (value typed `ture`, harmless: Lenis checks presence); `ab_menu_tag.text-style-mono` Display Block + Margin Top auto (Designer greys out vertical margin on an inline Text Span until it's Block). Result: bottom-anchored when it fits, scrolls from the top under the nav when it doesn't.
+- [ ] Tidy-ups next time in the Nav: attribute value `ture` → `true`; `ab_menu_tag` margin/display are set at Mobile L only (move to Tablet if the 768–991 menu ever looks top-heavy; measured fine); leftover Mobile L `ab_menu_component { display: none }` (harmless).
 
 ## G. Optional cleanups (do if time allows)
-- [ ] G1. Observatory/Topics CMS field display names → Title Case (API made them lowercase).
-- [ ] G2. Work card cover Image visibility bound to *Cover is set* (script already removes empty images).
-- [ ] G3. Work card name H3 → H2; About badge h3s → Text Block; footer Services column + Motion, Design systems, Performance.
-- [ ] G4. Home planner: swap the fields embed for `webflow/build/home/planner-fields.embed.html`; move `#plRead` below `.ab_planner_viz` (script does it now).
-- [ ] G5. Home heading spans: add `t-outline` to spans in `#work-h`, `#cap-h`, `#log-h`; `t-orbit` in `#orbit-h`; `t-stars` in `#launch-h` (script adds them now).
+- [x] G1. (done via API 2026-09-28: 19 fields on Observatory, Topics, FAQ › Topics, Missions › Topics; slugs unchanged) Observatory/Topics CMS field display names → Title Case (API made them lowercase).
+- [x] G2. (done 2026-09-28, verified: /work outputs only the 3 real cover imgs; the condition lives behind the purple dot on Settings › Visibility) Work card cover Image visibility bound to *Cover is set* (script already removes empty images).
+- [x] G3. (done 2026-09-28, changed plan: cards stay H3 because Services clones them under its "Related missions" H2; `/work` got a hidden `h2.ab_sr` "Missions" instead. About badge back title → Text Block. Footer Services column rebuilt from the Navigate column (the old one was a Text Block with inline links, can't add links reliably): `nav[aria-label=services]`, 8 links, all 200; static links to CMS items break if a service slug is renamed) Work card name H3 → H2; About badge h3s → Text Block; footer Services column + Motion, Design systems, Performance.
+- [x] ~~G4~~ skipped 2026-09-28 (Angelino): the script already adds the add-on chip + hidden Add-ons field (submitted), ticks, "Not sure yet" and moves `#plRead`; the repo embed has drifted (no "Not sure yet"), and a re-paste risks a working form for no visible change. Home planner: swap the fields embed for `webflow/build/home/planner-fields.embed.html`; move `#plRead` below `.ab_planner_viz` (script does it now).
+- [ ] G5. (pending Angelino's call; recommended **skip**: `home/00-hero.js:10` adds the classes to unclassed spans before anyone scrolls there, and the Designer canvas can't show the effects since it doesn't load our CSS) Home heading spans: add `t-outline` to spans in `#work-h`, `#cap-h`, `#log-h`; `t-orbit` in `#orbit-h`; `t-stars` in `#launch-h` (script adds them now).
 - [ ] G6. Sorts: Tools list order (3 Adobe items sort first), Quotes list order.
-- [ ] G7. 404 page: `main-wrapper` id `top`, section id `hero` (MCP hits a component-map conflict).
+- [x] ~~G7~~ skipped 2026-09-28: no-op (404 script finds `.section_lost` by class; hero toys need `#heroTitle`; core handles `#top` without an element). 404 page: `main-wrapper` id `top`, section id `hero` (MCP hits a component-map conflict).
 - [ ] G8. Mission template: Tools stack chip color binding (`[data-field=color]` BG = Tools › Color); Services rail dot `[data-field=dot]` BG = *Rail dot color*.
-- [ ] G9. Process crew section: shorter top spacing.
+- [x] G9. (done 2026-09-28: combo `section_process-crew.theme-light` Padding Top `clamp(40px, 6vw, 96px)`; space above the heading 299→243 desktop, 211→141 phone; first try landed in Margin, Alt-click cleared it) Process crew section: shorter top spacing. Source: shared `.theme-light` padding `clamp(110px,13vw,180px)` + margin `clamp(20px,4vw,48px)` on top of the inner `padding-section-medium` 64px (~194px above the content vs 64 elsewhere). Fix on the combo `section_process-crew.theme-light` only, never on `theme-light`.
+- [x] G10. (Designer showed Visible but Webflow kept publishing `overflow:hidden`; fixed in code, ab-services v0.27.3 `.ab_sv_solve .ab_sv_s{overflow:visible}`, verified) Services template › Problems solved cards `ab_sv_s` (BASE) › Overflow **Visible** (found 2026-09-28: `overflow:hidden` clipped the hover selection frame, which sits at inset -1px with handles at -5px, so its border never showed; nothing else in the card extends past its edges; scanned 9 page types, only this one clips a `.sel`).
 
 ## Not Designer (content Angelino supplies)
 Placeholders in `docs/placeholders.md` (email, socials, 4 pin images, testimonials, `[X–Y weeks]`), metrics numbers, pin coordinates (Lincoln Center / ON NYC), copy review (AB Identity, Aguirre site-plan board, Services WebGL title).

@@ -1,4 +1,4 @@
-# Insights: first 10 drafts (for Angelino's review, 2026-09-26)
+# Insights: drafts for Angelino's review (01–10: 2026-09-26, 11–15: 2026-09-27)
 
 None of these are published or in Webflow. Each file has front matter shaped for the Knowledge System's **Insights** collection (title, slug, theme, topics, related services/missions, meta description), an answer-first opening paragraph (the part search and AI assistants quote), the body, and **Review notes** at the bottom saying what's sourced from this build and what to double-check.
 
@@ -16,6 +16,11 @@ Voice: first person, plain, US spelling, a little playful. No invented clients, 
 | 08 | Why before how: what a philosophy degree taught me about building websites | Why before how | Webflow development, Brand |
 | 09 | One hour there, seven years here: Interstellar and why waiting feels longer than it is | Why before how | Performance, Motion |
 | 10 | The camel, the lion and the child: Nietzsche on scope creep | Why before how | Webflow development |
+| 11 | Plato's cave: what a crawler sees is not what your visitors see | Why before how | Webflow development, CMS integrations |
+| 12 | The Ship of Theseus: when does a redesign stop being the same brand? | Why before how | Brand, Design systems |
+| 13 | Amor fati: Nietzsche and learning to love Webflow's limits | Why before how | CMS integrations, Webflow development |
+| 14 | Descartes' method of doubt: publish, then check | Why before how | Webflow development, Performance |
+| 15 | Descartes' coordinates and a star chart of ideas | Why before how | Interactive 3D + data, CMS integrations |
 
 Proposed library themes: **Build notes** (Webflow tutorials from real builds) and **Why before how** (philosophy meets science). Topic tags are suggestions for the shared vocabulary; the integration chat maps them to the real Topics collection.
 

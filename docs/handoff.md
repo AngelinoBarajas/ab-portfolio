@@ -1,6 +1,20 @@
-# Session handoff (2026-09-26, SEO pass + playable boss; next: Knowledge System integration)
+# Session handoff (2026-09-28, Designer steps mostly done; next: the remaining optional steps)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
+
+## Next session: finish the optional Designer steps (`docs/designer-steps.md`)
+
+Walk Angelino through one step at a time: first explain **why** you recommend it (he decides per item), then the exact Navigator path, then verify on a webflow.io publish and tick the box. Staging only; ask before every publish or delete.
+- **Open, pending his decision:** **G5** (Home heading effect classes: recommended *skip*, script adds them and the canvas can't show the effect anyway; he hadn't answered), **G6** (Tools + Quotes list sort order), **G8** (Mission template: Tools chip color binding + Services rail dot binding), Nav tidy-up (`data-lenis-prevent` value typed `ture`).
+- **Parked:** D2 headshot (needs his photo), C1/C2 template JSON-LD (launch only: Webflow publishes `{{DOMAIN}}` empty), placeholder missions' empty `og:image` (set Social image or leave while noindex).
+- **Before touching code:** `git pull`; tags are shared with the CKS session (last used **v0.27.4**; message it which tag you take).
+
+## Latest (2026-09-27/28, Designer steps session) · verified on staging 2026-09-28
+
+- **Designer steps done + verified:** A (every CMS collection link renders its real `/<folder>/<slug>` in raw HTML: Observatory cards, Home signals, topic links, Home board, /work cards, Services rail + Pairs + hub Explore, Mission switcher), B (Observatory/Topics/Missions/Services template SEO + OG; Observatory/Topics og:image via template head `<meta>`), C1 robots meta (noindex on the 4 hidden/placeholder missions), D1 (Work cover alt from CMS), E1–E3 (forms renamed *Launch Brief* / *Contact Channel*, notification email confirmed), F1 favicon + webclip, F2 (subdomain indexing Off, auto sitemap On: sitemap only serves on a custom domain), N (mobile menu fits 320–991px, `/slug` stacked under each word, scrolls from the top on short phones), G1 (CMS field names Title Case), G2, G3 (hidden `h2.ab_sr` "Missions" on /work, badge line → text, footer Services column with all 8 services), G9, G10. G4 + G7 skipped.
+- **Code (all live):** core JS **0.27.0** (shared form success: no layout jump, beacon + scan reveal on every form) · core CSS **0.27.4** (mobile-menu pill, rich-text code blocks full width) · home + contact **0.27.0** · mission **0.27.1** (Shipped probe drifts) · services JS **0.27.3** (hero title lines fit on one line) + CSS **0.27.4** (card selection frame not clipped, square rail arrow, masked rail fade). Records: `docs/webflow-build-notes.md` from "Designer steps session".
+- **Content:** 5 new Observatory notes live (WB-04 Plato's cave, WB-05 Ship of Theseus, WB-06 Amor fati, WB-07 Descartes' doubt, WB-08 Cartesian star chart; drafts 11–15). Home hero lede, footer line and Home meta rewritten (general "websites", field notes on the how and the why). Service names Title Case in the CMS. Star chart stays hidden on phones (his call).
+- **Traps learned:** a Designer Page-settings Save overwrites custom code written by the API (reload the Designer after API writes); Webflow parses `{{…}}` in custom code and publishes it empty; `.w-richtext figure` is capped at 60%; a Text Block of inline links can't take new links (typing extends the neighbor); "+ Add Field" inserts at the cursor (check the raw tag); the Designer can show Overflow Visible while publishing hidden (use a code override); after a publish wait ~20 s before checking.
 
 ## Latest (2026-09-27, CKS debrief) · verified on staging 2026-09-27
 
@@ -202,9 +216,9 @@ Home Navigator now: `Body > page-wrapper > [Nav] · main-wrapper <main id="top">
 - **v0.24.0 / v0.24.1**: the boss fight is playable (arrows/WASD + Space; drag + hold on phones; aimed shots, dodgeable beam, enrage + spread, 3 shields, retry) with an anime finisher (pilot cut-in, 必殺技 · FINAL DEPLOY, mega beam, impact frames). Build notes › v0.24.0.
 - **10 Insights drafts** for review: `content/insights/drafts/` (README has the table). Not in Webflow.
 
-## Next session: Designer steps (all pending)
+## Designer steps: mostly done (2026-09-27/28), see "Next session" at the top
 
-**Start here:** `docs/designer-steps.md`, one consolidated checklist (crawlable links, template SEO/OG, template head code, alt/headshot, forms, site settings, optional cleanups). Walk Angelino through one step at a time, verify each on a webflow.io publish, tick the box. Staging only; ask before every publish or delete.
+The checklist is `docs/designer-steps.md`; sections A, B, E, F, N and G1/G2/G3/G9/G10 are done and verified; C (JSON-LD) moved to launch; the rest is listed at the top of this file.
 
 Knowledge System status: **live on staging at ab-knowledge v0.25.5** (all 7 pages), reviewed + approved by Angelino 2026-09-27 (hover scan, pan/zoom star chart, chip legend, card title wrap).
 

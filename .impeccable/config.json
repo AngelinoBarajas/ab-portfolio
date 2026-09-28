@@ -1,0 +1,35 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "code/src/ab-core.css"
+        ],
+        "createdAt": "2026-09-28T06:49:14.974Z",
+        "reason": "Claude: .t-stars is the AB Portfolio's established starfield heading effect (brand system; docs/designer-steps.md G5 adds it to Home headings), not decorative gradient text"
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "*",
+        "files": [
+          "code/src/ab-core.css"
+        ],
+        "createdAt": "2026-09-28T06:53:44.246Z",
+        "reason": "user confirmed 2026-09-28: keep the site's springy overshoot (selection frames, chips, dots) as brand motion"
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "*",
+        "files": [
+          "code/src/ab-services.css"
+        ],
+        "createdAt": "2026-09-28T06:53:44.492Z",
+        "reason": "user confirmed 2026-09-28: keep the site's springy overshoot (selection frames, chips, dots) as brand motion"
+      }
+    ]
+  }
+}

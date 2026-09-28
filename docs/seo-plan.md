@@ -114,9 +114,14 @@ Sitemap: https://<domain>/sitemap.xml
 
 1. **Missions template** › Settings › SEO: Title `[Name] · Mission debrief · Angelino Barajas`, Meta description `[Meta description]`. Open Graph: title + description "Same as SEO", OG image = **Social image** field.
 2. **Services template** › Settings › SEO: Title `[Name] · Services · Angelino Barajas`, Meta description `[Summary]`, OG "Same as SEO" (OG image already set to og-services).
-3. **Missions template** › Custom code › Head: `<meta name="robots" content="[Robots]">` then the block in `seo/jsonld/mission-template.head.html` (insert each `[Field]` with "+ Add field"). **Services template** › Head: `seo/jsonld/services-template.head.html`. Keep `{{DOMAIN}}` until launch, or paste at launch from `seo/jsonld/launch/`.
+3. **Missions template** › Custom code › Head: `<meta name="robots" content="[Robots]">` then the block in `seo/jsonld/mission-template.head.html` (insert each `[Field]` with "+ Add field"). **Services template** › Head: `seo/jsonld/services-template.head.html`. **The JSON-LD blocks go in at launch only**, pasted from `seo/jsonld/launch/`: Webflow parses `{{DOMAIN}}` as its own variable and publishes it empty (robots meta on Missions done 2026-09-27).
 4. **Crawlable mission links**: Home board frame link, Work mission card link, Services template related-mission card link → *Current Missions page*; Next card link → *Next mission* field.
 5. Work card cover Image › alt → from CMS.
 6. Rename the Process and Contact forms ("Email Form").
 7. Site settings › SEO: Auto-generate sitemap **on**, Disable Webflow subdomain indexing **on**. At launch: Global canonical URL + robots.txt (§5).
 8. Optional: Work card name H3 → H2; About badge h3s → text; footer Services column + Motion, Design systems, Performance.
+
+## Launch additions (2026-09-28, from the Designer-steps session)
+- After connecting the domain: `curl https://<domain>/sitemap.xml` (auto-generate is already On; webflow.io never serves it) → it should list the static pages, all missions/services/observations/topics, and **not** the 4 `noindex` missions (Daniel Aguirre Law + 3 placeholders): set those items / the template to exclude, since noindex + in-sitemap sends mixed signals. `curl https://<domain>/robots.txt` should allow crawling and carry the `Sitemap:` line (the "Remove sitemap.xml from robots.txt" toggle is Off).
+- Turn on **Use your global canonical URL as the base URL for each sitemap.xml entry** together with the global canonical URL.
+- Paste the Missions/Services template JSON-LD from `seo/jsonld/launch/` (can't go in earlier: Webflow publishes `{{DOMAIN}}` as empty).
