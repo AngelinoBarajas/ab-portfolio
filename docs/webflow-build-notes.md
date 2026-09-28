@@ -708,3 +708,28 @@ The debrief of the kip concept site (v2, 12 pages, source `X:/Claude-Skills/kip-
 - **CKS copy** (Angelino, same day): summary, cadet objective and meta rewritten around what the product does (one vocabulary connects the site; Voice Kit, nothing published without approval); Engineer objective unchanged.
 - **ab-home v0.28.4**: board frames animate: CKS = a mini version of the getcks.io hero loom (ported from `cks-src/js/cks.js`, veiled so the text stays crisp); kip = tangerine `#E85F2A`, white text, Sam/Nana/Rosa hopping (Web Animations, staggered); both pause off screen / hidden tab, still under reduced motion; on the phone deck the faces center and scale 1.3.
 - **ab-home v0.28.5**: Home "What I build" bento gets a colorful **Observatory** card (gradient blue → violet → signal, animated six-constellation star chart, chip flips Build notes / Why before how, hover lights every constellation) placed after Custom deploys; the Marks card drops to one row so every row stays full. Script-built for now; Designer step H6 makes it native.
+
+## Services depth · Flight computer + fixes + layout grid (v0.28.6 – v0.28.12, 2026-09-28, published to webflow.io, awaiting Angelino's review of the animations)
+
+Plan: Angelino's two ideas (spacecraft name + more oomph for "Under the hood"; more code + visuals/animations like the Home bento) became one section, **Flight computer**. Prototyped on staging copies for 3 services (`prototypes/fc/`, served by the `ab-proto` launch entry, port 4420), design approved; the last 5 went straight to Webflow at his call.
+
+**Flight computer** (`code/src/services/30-flight.js`, own IIFE because an early `return` would end the whole ab-services bundle; CSS appended to `ab-services.css`):
+
+| Part | How |
+|---|---|
+| Console | `.fc` › head (eyebrow, H2, lede, chip hints, channel tabs) + `.fc-mon` (bar: REC, `AB-0N · CODE · Flight computer`, state lamp, timecode) › `.fc-body` (`.fc-code` bordered panel + `.fc-view` with core `.scan .vig .roll .brk .osd`) › `.fc-foot` (Run, note chip, tools) |
+| Notes | trailing `// @key text`, `/* @key text */`, `<!-- @key text -->` in the snippet; stripped from display + Copy; `fc.cue(key)` lights the line and shows the note; hover/focus a marked line to read it |
+| Programs | `P.<name> = { label, cap, code (string or fn(fc)), tools, edit/editLine, flow, build(stage, fc) → { reset, play → gsap timeline, redraw?, act? } }`; `BY_SLUG` maps service → programs; `fc.run` re-runs after an in-viewport edit |
+| Per service | motion: reveal + ease · webgl-data: pins · design-systems: tokens · webflow-development: struct · custom-deploys: deploy · cms-integrations: sync · performance: lazy · branding: brand |
+| Boot | IntersectionObserver (35%) → code types in → runs once; Run replays; reduced motion jumps to the end state |
+| Phones | `flow: true` programs get `.fc-stage.is-flow` (in-flow stage that grows) below 768px |
+| Branding | no CMS Code → `10-sections` now keeps `#hood` when GSAP is present (`if (!hasGsap) sec.remove()`) |
+
+The code shown is each program's own annotated copy, not the CMS Code field (the CMS text has no `@` notes). Content rule kept: demo data only (cities, space-probe file names, "yourbrand.com"), no client claims.
+
+**Fixes v0.28.6** (core + mission): (1) kip mock `H = "'Baloo 2',…"`: an unquoted family with a bare number is invalid CSS, so the whole `font` shorthand was dropped (headline rendered as body text). (2) Footer email label lowercase + `.ab_footer_grid` last column `minmax(290px,1.5fr)` at 992–1439px: uppercase + tracking made it wider than its column at every width, clipping "Copy". (3) `.ab_light-bg` dot field: the ResizeObserver only re-clipped; now it also re-measures the canvas (early return when unchanged). Sections that fill after load (Observatory row) stretched the canvas ~1.7× and offset the cursor ring. (4) Warp arrival with a hash: `10-space` arrive() holds `#warpFlash` until `AB.arrived()` (called by the 30-motion re-aim) or 1.8 s; the fade used to reveal the page short of the target (About › Need a pilot showed the Home testimonials).
+
+**Layout grid** (v0.28.10–12): `.ab_lgrid` padding = gutter, `.ab_lgrid-inner` max width only (was max width *including* the gutter: columns ~33px inside the content at 1440); column gap 24 → 16px. Card rows set to a 16px column gap: Webflow classes `ab_sv_plan` (18), `ab_arc_grid` (20), `ab_quotes` (20) via `update_style` (row gaps unchanged); `div.ab_ks-grid{column-gap:16px}` in ab-core.css (ab-knowledge.css is pinned per page, v0.25.5 on most, and the Missions template head can't be rewritten by API). Toast built from computed values: "12 columns · 16px gap · 48px margins · 1360px max". Audit (14 page types, looking through `display:contents` list wrappers): card rows 0px off. Not changed on purpose: gapless strips (`ab_meta`, `ab_tel-grid`, `ab_metrics`, `ab_ks-cats`, `ab_ks-tstats`, `ab_ct-cells`) and 2-column splits (`ab_brief`, `ab_contact_grid`, `ab_crew_grid`, `ab_process_panel`, ...).
+
+**Deploy notes:** registered ABCore 0.28.6 / 0.28.12, ABMission 0.28.6, ABServices 0.28.8 / 0.28.9; site head + Services template head `<link>`s rewritten after reading them (backups in `backups/`). v0.28.7 is a stray tag (a failed command chain tagged the docs commit). jsDelivr cached a 404 for a file requested before its tag existed: purge it. Testing: local harness = staging HTML + local dist (strip `integrity` on swapped tags; it precedes `src`), headless Chrome `--virtual-time-budget` + a probe that clicks Run and advances `gsap.globalTimeline.time()`; headless stops rendering frames after load, so ResizeObserver/rAF behavior after load can't be tested there.
+
