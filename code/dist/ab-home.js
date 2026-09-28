@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.29.13 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.29.14 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -740,7 +740,13 @@ window.Webflow.push(function(){
         var dir = o.x >= lastX ? 1 : -1; lastX = o.x;
         gsap.set(beam, { x: toPx(o.x) }); glow.style.transform = 'scaleX(' + dir + ')';
         stars.forEach(function(st){ var d = Math.abs(+st.getAttribute('cx') - o.x); st.style.opacity = d < 18 ? 1 : Math.max(.35, +(st.style.opacity || .35) - .01); st.setAttribute('r', d < 18 ? 4.6 : 3); });
-        C.forEach(function(g, i){ if (!drawn[i] && o.x > g.p[0][0]){ drawn[i] = true; gsap.to(paths[i], { strokeDashoffset: 0, duration: .9, ease: 'power2.out' }); } });
+        // going right the beam draws each constellation as it reaches it; coming back it erases them in reverse,
+        // so every pass redraws the chart (nothing pops in all at once)
+        C.forEach(function(g, i){
+          var gx = g.p[0][0];
+          if (dir > 0 && !drawn[i] && o.x > gx){ drawn[i] = true; gsap.to(paths[i], { strokeDashoffset: 0, duration: .9, ease: 'power2.out', overwrite: true }); }
+          else if (dir < 0 && drawn[i] && o.x < g.p[g.p.length - 1][0]){ drawn[i] = false; gsap.to(paths[i], { strokeDashoffset: paths[i].getTotalLength(), duration: .9, ease: 'power2.in', overwrite: true }); }
+        });
       } });
       // signal arcs: a link between two constellations with a dot riding it (topics connect notes across groups)
       function cen(g){ var x = 0, y = 0; g.p.forEach(function(q){ x += q[0]; y += q[1]; }); return [x / g.p.length, y / g.p.length]; }
@@ -761,7 +767,8 @@ window.Webflow.push(function(){
         if (x){ loadAll(); sweep.play(); arcT = setInterval(arc, 2600); logT = setInterval(function(){ at = (at + 1) % Math.max(1, notes.length); paintLog(true); }, 3600); }
         else { sweep.pause(); clearInterval(arcT); clearInterval(logT); }
       });
-      if (card) card.addEventListener('pointerenter', function(){ gsap.to(paths, { strokeDashoffset: 0, duration: .6 }); arc(); });
+      // hover: the scan speeds up and fires a signal arc (it no longer reveals everything at once)
+      if (card){ card.addEventListener('pointerenter', function(){ sweep.timeScale(1.8); arc(); }); card.addEventListener('pointerleave', function(){ sweep.timeScale(1); }); }
     },
     observatoryCompact: function(v){
       // a tiny star chart: six constellations (the Observatory's topic groups) draw in turn; a chip flips between the two themes
