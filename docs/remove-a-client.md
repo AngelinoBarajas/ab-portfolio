@@ -39,3 +39,4 @@ Client names live **only in the CMS** (Missions and the collections that referen
 ## Currently hidden
 
 - **Daniel Aguirre Law** (2026-09-26, Angelino's call). The mission, its page and its quote stay in the CMS; Process examples for Webflow development and Performance now point at 510 Visuals.
+- **Northwind Roasters, Pulse Fitness, Halcyon Architects** (placeholders, 2026-09-28, Angelino's call). Still in the CMS, numbered 07–09.

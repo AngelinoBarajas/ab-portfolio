@@ -697,3 +697,11 @@ The debrief of the kip concept site (v2, 12 pages, source `X:/Claude-Skills/kip-
 - **Figma comment** is the real v2 fix: the sample log's Tylenol dose read like dosing advice → vitamin D, as directed.
 - **Copy (Angelino, 2026-09-28)**: summary, cadet objective and meta rewritten as a product pitch (the rotation of caregivers, the ambition), still labeled a concept; no invented numbers.
 - Verified at 1440 + 390: all 8 channels load (loops 1600×1000 / 468×1012), both coded scenes run, no console errors; 510 / AB Identity / Knowledge System / CKS unchanged; kip on /work, the switcher, CKS next card and its three service pages; title, description, og:image, no robots.
+
+### Same session, later (2026-09-28): order, placeholders, board, quotes, email
+- **Mission order** (Angelino): 510 Visuals 01 → CKS 02 → kip 03 → Knowledge System 04 → AB Identity 05 (number + sort), Next mission chained in that order, AB Identity → 510. Daniel Aguirre Law 06 (hidden). Placeholders hidden (**Hide from site** on, 07–09).
+- **Home board**: CKS + kip now **Featured on homepage** (all five on the board). ab-home **v0.28.3** draws their frames (CKS woven mark; kip's Ari, Nana, Rosa from the press-kit SVGs).
+- **510 card image**: the 510visuals.com homepage globe section ("From Brooklyn to the World"), captured with Playwright (wheel-scroll into place: the site's pinned sections make scrollTo land elsewhere), `prototypes/img/510-globe-cover.webp`.
+- **Testimonials**: placeholder quotes (bylines end in "(placeholder)") on 510, CKS, kip, Knowledge System so Incoming shows four cards. **Replace or clear before launch.**
+- **Email**: Site settings › Email = angelino@barajasdsgn.com; every `[data-bind="email"]` (menu, footer, contact) fills from it. The Designer fallback text in those elements still reads hello@[your-domain] in the raw HTML.
+- **Statement planet (Designer step, not done)**: tested by injection, values for `.ab_planet.is-statement`: base width `clamp(150px,27vw,410px)`, right `calc(clamp(150px,27vw,410px) * .62)`, top `14%`; Mobile landscape and below: width `clamp(200px,52vw,330px)`, right `-8vw`, top `3%`.
