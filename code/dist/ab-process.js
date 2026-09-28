@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process v0.30.6 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process v0.30.7 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abProcessInit) return;
@@ -342,10 +342,10 @@ window.Webflow.push(function(){
     track.style.height = (CARD_TOP + tallest + 40) + 'px';
     var f = CARD_TOP / 200;
     var step = Math.max(380, innerWidth * .3), x0 = Math.min(260, innerWidth * .18), h = track.offsetHeight;
-    // the finale: last card on the left of the screen, the destination planet on the right (the scroll ends there)
+    // the finale: last card on the left of the screen, the destination planet right of center at 58% (was 70%: it sat far right)
     var lastX = x0 + step * (wps.length - 1) + step * .35, viewL = lastX - 72, W = viewL + innerWidth - 40;
     D = Math.round(Math.max(150, Math.min(280, innerWidth * .2, h - 190)));
-    var xp = viewL + innerWidth * .7, dTop = Math.max(10, Math.round((h - D - 130) / 2)), yc = dTop + D / 2;
+    var xp = viewL + innerWidth * .58, dTop = Math.max(10, Math.round((h - D - 130) / 2)), yc = dTop + D / 2;
     dock.style.setProperty('--dock', D + 'px'); dock.style.left = Math.round(xp - 170) + 'px'; dock.style.top = dTop + 'px';
     if (dockPl) dockPl.style.setProperty('--sz', D + 'px');
     trackW = W; track.style.width = W + 'px'; svg.setAttribute('width', W); svg.setAttribute('height', h); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + h);
