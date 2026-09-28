@@ -1,4 +1,4 @@
-# Session handoff (2026-09-28, v0.29.16 on staging; next: Angelino's review, tablet/phone pass, Designer step I1)
+# Session handoff (2026-09-28, v0.29.17 on staging; next: Angelino's review, tablet/phone pass, Designer step I1)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -9,6 +9,10 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 - **Optional next depth (2b):** a small "Flight programs" collection (Service ref, order, label, code, note) for CH 02+ per service; needs a Designer step (list filtered by Service = current item).
 - **Still waiting from before:** `docs/designer-steps.md` › H1–H6, G5/G6/G8, Nav `ture` tidy-up.
 - **Before touching code:** `git pull`; tags are shared with parallel sessions. **Next free tag: `git fetch --tags && git tag --sort=-v:refname | head -1`** (v0.28.12 at the end of this session). **v0.28.7 is a stray tag** (docs commit ae2512d, same code as v0.28.6): never reuse it.
+
+## Latest (2026-09-28, v0.29.17) · verified on staging 2026-09-28
+
+- **About bookshelf:** six spines carry real titles (script: `about/00-about.js` › bookshelf TITLES), each on the genre spine that fits and keeping its color: The Little Prince (Kid lit), The Alchemist (Epic fantasy), Thus Spoke Zarathustra (Zarathustra), Plato's Republic (Philosophy), 1984 (first Sci-fi), Outliers (Mind). Knocking one off shows title + author + a line. ab-about JS + CSS **v0.29.17**. Optional Designer step: move the titles into the Designer elements (data-g / data-note / label) and drop the script map.
 
 ## Latest (2026-09-28, v0.29.14 → v0.29.16) · verified on staging 2026-09-28
 
