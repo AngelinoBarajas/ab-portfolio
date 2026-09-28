@@ -158,12 +158,14 @@
     var link = $('[data-dest-link]'); if (link) link.href = '/services/' + d.slug;
     // panel stops: each with a service link, "make main" and remove
     if (stopsBox){
-      stopsBox.innerHTML = stops.length ? '<div class="abp-stops-h">Stops on this mission</div>' + sel.slice(1).map(function(k, n){
+      stopsBox.innerHTML = (stops.length || sel[0] !== 0 ? '<button type="button" class="abp-reset" data-reset="">↺ Reset route</button>' : '') + (stops.length ? '<div class="abp-stops-h">Stops on this mission</div>' : '') + sel.slice(1).map(function(k, n){
         var s = DEST[k];
         return '<div class="abp-stop" style="--c:' + s.c + '"><i aria-hidden="true"></i><span class="abp-stop-n">' + (n + 2) + '</span><a href="/services/' + esc(s.slug) + '">' + esc(s.t1 + ' ' + s.t2) + '</a>' +
           '<button type="button" class="abp-stop-b" data-main="' + k + '" aria-label="Make ' + esc(s.short) + ' the main destination">Main</button>' +
           '<button type="button" class="abp-stop-b is-x" data-remove="' + k + '" aria-label="Remove ' + esc(s.short) + '">×</button></div>';
-      }).join('') : '';
+      }).join('');
+      // back to the default route: the first destination alone (stops cleared)
+      var rst = $('[data-reset]', stopsBox); if (rst) rst.addEventListener('click', function(){ sel = [0]; setMore(false); render(false, 'Route reset · ' + DEST[0].short); });
       $$('[data-main]', stopsBox).forEach(function(b){ b.addEventListener('click', function(){ makeMain(+b.getAttribute('data-main')); }); });
       $$('[data-remove]', stopsBox).forEach(function(b){ b.addEventListener('click', function(){ removeStop(+b.getAttribute('data-remove')); }); });
     }
@@ -342,6 +344,28 @@
   addEventListener('resize', function(){ if (innerWidth === lastW && (!wide || innerHeight === lastH)) return; lastW = innerWidth; lastH = innerHeight; clearTimeout(rsT); rsT = setTimeout(function(){ build(); if (window.ScrollTrigger) ScrollTrigger.refresh(); }, 250); });
 
   /* ---------- crew: boxes tick in as the lists scroll into view ---------- */
+  /* ---------- crew: comms signal between the two cards (relay node, packets both ways, the receiving card's edge
+     lights up) + a live waveform in the comms bar. CSS runs it; this only builds it and pauses it off screen ---------- */
+  (function(){
+    var link = $('.ab_crew_link'), grid = link && link.parentNode, bar = $('.ab_crew_comms'); if (!link) return;
+    var sig = document.createElement('div'); sig.className = 'abp-sig'; sig.setAttribute('aria-hidden', 'true');
+    sig.innerHTML = '<span class="abp-sig-beam"><i class="is-tx"></i><i class="is-rx"></i></span><span class="abp-sig-ring"></span><span class="abp-sig-ring"></span><span class="abp-sig-ring"></span>' +
+      '<span class="abp-sig-node"><svg viewBox="0 0 24 24"><path d="M5 15a9 9 0 0 1 9-9M8 15a6 6 0 0 1 6-6M11 15a3 3 0 0 1 3-3"/><circle cx="14" cy="15" r="1.6"/></svg></span>' +
+      '<span class="abp-sig-tag is-tx">TX</span><span class="abp-sig-tag is-rx">RX</span>';
+    link.appendChild(sig); grid.classList.add('has-sig');
+    if (bar){
+      var w = document.createElement('div'); w.className = 'abp-wave'; w.setAttribute('aria-hidden', 'true');
+      var d = 'M0 8'; for (var x = 0; x <= 240; x += 4) d += ' L' + x + ' ' + (8 + Math.sin(x / 7) * Math.sin(x / 31) * 6).toFixed(1);
+      w.innerHTML = '<i class="abp-wave-dot"></i><span class="abp-wave-scope"><svg viewBox="0 0 120 16" preserveAspectRatio="none"><path d="' + d + '"/></svg></span>';
+      var lab = $('.ab_crew_comms-label', bar); bar.insertBefore(w, lab ? lab.nextSibling : bar.firstChild);
+    }
+    if ('IntersectionObserver' in window){
+      grid.classList.add('is-idle'); if (bar) bar.classList.add('is-idle');
+      new IntersectionObserver(function(es){ es.forEach(function(e){ e.target.classList.toggle('is-idle', !e.isIntersecting); }); }).observe(grid);
+      if (bar) new IntersectionObserver(function(es){ bar.classList.toggle('is-idle', !es[0].isIntersecting); }).observe(bar);
+    }
+  })();
+
   $$('.ab_crew_tick').forEach(function(t){ t.innerHTML = '<svg viewBox="0 0 12 12"><path d="M1.5 6.5l3 3 6-7"/></svg>'; });
   $$('.ab_crew_col').forEach(function(col){
     var lis = $$('.ab_crew_item', col);
@@ -352,6 +376,18 @@
 
   /* ---------- launch form: destination chips (Webflow Forms posts it) ---------- */
   // multi-select: the first pick is the main destination; up to 3 here, "More than three" opens a field for the rest
+  var KS_KEY = 'ab:ks', ks = false, ksChip = null, ksField = null, ksSat = null;
+  try { ks = localStorage.getItem(KS_KEY) === '1'; } catch (e){}
+  var KS_ICON = '<svg class="abp-ks-ico" viewBox="0 0 14 11" aria-hidden="true"><path d="M2 8.5L7 2.5L12 8.5Z"/><circle cx="2" cy="8.5" r="1.6"/><circle cx="7" cy="2.5" r="2"/><circle cx="12" cy="8.5" r="1.6"/></svg>';
+  // the satellite follows the main destination (moved into its counter-rotating layer, so it stays upright)
+  function syncKs(){
+    if (ksChip) ksChip.setAttribute('aria-pressed', ks ? 'true' : 'false');
+    if (ksField) ksField.value = ks ? 'Complete knowledge system' : '';
+    if (!dests.length) return;
+    if (!ksSat){ ksSat = document.createElement('span'); ksSat.className = 'abp-ks'; ksSat.setAttribute('aria-hidden', 'true'); ksSat.innerHTML = '<span class="abp-ks-orb">' + KS_ICON + '</span>'; }
+    var host = $('.abp-counter', dests[sel[0]]); if (host && ksSat.parentNode !== host) host.appendChild(ksSat);
+    ksSat.classList.toggle('is-on', ks);
+  }
   var chips = $('[data-chips]'), moreBox = $('[data-more]'), moreChip = null;
   if (chips && DEST.length){
     chips.innerHTML = DEST.map(function(d, i){ return '<button type="button" class="abp-chip" data-i="' + i + '" aria-pressed="false" style="--c:' + d.c + '"><i aria-hidden="true"></i>' + esc(d.short) + '<span class="abp-chip-main">Main</span></button>'; }).join('') +
@@ -366,6 +402,19 @@
       sel.push(i); render(false, 'Stop added · ' + DEST[i].short);
     }); });
     moreChip = $('.abp-chip.is-more', chips);
+    // the Knowledge System add-on (same as the Home planner): rides along with any route, drawn as a satellite
+    // circling the main destination on the star chart; posted in its own "Add-ons" field
+    var ksRow = document.createElement('div'); ksRow.className = 'abp-addons';
+    ksRow.innerHTML = '<span class="abp-addon-label">Add-on</span><button type="button" class="abp-chip is-addon" data-ks="" aria-pressed="false" style="--c:#FFD29A">' + KS_ICON + '+ Complete knowledge system</button>';
+    chips.parentNode.insertBefore(ksRow, chips.nextSibling);
+    ksChip = $('[data-ks]', ksRow);
+    var fm = chips.closest('form');
+    if (fm && !$('input[name="Add-ons"]', fm)){ ksField = document.createElement('input'); ksField.type = 'hidden'; ksField.name = 'Add-ons'; ksField.value = ''; fm.appendChild(ksField); }
+    ksChip.addEventListener('click', function(){
+      ks = !ks; try { localStorage.setItem(KS_KEY, ks ? '1' : ''); } catch (e){}
+      syncKs(); if (toast) toast(ks ? 'Add-on · Complete knowledge system' : 'Add-on removed');
+      if (hasGsap && !reduce) gsap.fromTo(ksChip, { scale: .95 }, { scale: 1, duration: .45, ease: 'elastic.out(1,.4)' });
+    });
     if (moreChip) moreChip.addEventListener('click', function(){ setMore(moreChip.getAttribute('aria-pressed') !== 'true'); });
   }
   function setMore(on){
@@ -378,6 +427,7 @@
       var at = sel.indexOf(+b.getAttribute('data-i'));
       b.setAttribute('aria-pressed', at > -1 ? 'true' : 'false'); b.classList.toggle('is-main', at === 0 && sel.length > 1);
     });
+    syncKs();
     var field = $('[data-dest-field]');
     if (field) field.value = sel.map(function(k, n){ return DEST[k].name + (n === 0 && sel.length > 1 ? ' (main)' : ''); }).join(', ');
   }

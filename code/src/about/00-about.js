@@ -431,7 +431,7 @@
     }
     // tapping anywhere on the card asks the next question (links inside it still work)
     var phCard = box.closest('.ab_bento-card') || box;
-    phCard.style.cursor = 'pointer';
+    phCard.style.cursor = 'var(--hand, pointer)';
     phCard.addEventListener('click', function(e){ if (e.target.closest && e.target.closest('a')) return; next(); }); keyAct(box, next);
   })();
 

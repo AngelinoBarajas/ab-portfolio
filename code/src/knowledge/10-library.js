@@ -62,8 +62,13 @@
       });
       var plain = st.theme === 'all' && !st.topic && !words.length;
       items.forEach(function(it, i){ it.classList.toggle('is-feat', plain && i === 0); });
-      if (hasFlip){ var h1 = box.offsetHeight; gsap.fromTo(box, { height: h0 }, { height: h1, duration: .55, ease: 'power3.inOut', clearProps: 'height' }); }
+      // Growing: open to the new height at once (new cards fade in at their final spots, so an easing box let them sit over
+      // the section below). Shrinking: hold the old height until the cards have landed, then close the gap. Never clear it on the height tween's own clock: the stagger + enter/leave fades outlast it, and the list
+      // dropped to 0 for the tail of the flip (the light section below rode up over the cards).
+      var h1 = hasFlip ? box.offsetHeight : 0;
+      if (hasFlip) gsap.set(box, { height: Math.max(h0, h1) });
       if (hasFlip) Flip.from(state, { duration: .55, ease: 'power3.inOut', absolute: true, stagger: .02,
+        onComplete: function(){ gsap.killTweensOf(box); if (h1 < h0) gsap.fromTo(box, { height: h0 }, { height: h1, duration: .4, ease: 'power2.inOut', clearProps: 'height' }); else box.style.height = ''; },
         onEnter: function(els){ return gsap.fromTo(els, { opacity: 0, scale: .96 }, { opacity: 1, scale: 1, duration: .4 }); },
         onLeave: function(els){ return gsap.to(els, { opacity: 0, scale: .96, duration: .25 }); } });
       $$('[data-ks-shown], [data-ks-askn]').forEach(function(n){ n.textContent = shown; });

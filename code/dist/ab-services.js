@@ -471,11 +471,14 @@ window.Webflow.push(function(){
           .call(fc.cue, ['push']).to({}, { duration: .35 })
           .call(fc.cue, ['lat']).call(function(){ row.classList.add('hot'); }).to({}, { duration: .5 });
         var o = { p: 0 }, dot, from, target = -q[2] * Math.PI / 180 - .35, start;
-        tl.call(function(){
-          dot = document.createElement('i'); dot.className = 'gb-dot'; host.appendChild(dot);
+        // set-up lives in onStart (not a .call before the tween): a coarse or throttled tick could run the first onUpdate
+        // before a separate call, and the flight read an undefined start point
+        tl.to(o, { p: 1, duration: .9, ease: 'power2.inOut', onStart: function(){
+          if (dot) dot.remove(); dot = document.createElement('i'); dot.className = 'gb-dot'; host.appendChild(dot);
           var rr = row.getBoundingClientRect(), h = host.getBoundingClientRect(); from = [rr.right - h.left - 20, rr.top - h.top + rr.height / 2];
           start = rot; target = start + (((target - start) % (2 * Math.PI)) + 3 * Math.PI) % (2 * Math.PI) - Math.PI; // shortest turn
-        }).to(o, { p: 1, duration: .9, ease: 'power2.inOut', onUpdate: function(){
+        }, onUpdate: function(){
+          if (!from) return;
           rot = start + (target - start) * o.p;
           var to = toHost(Pj(q[1], q[2])), x = from[0] + (to[0] - from[0]) * o.p, y = from[1] + (to[1] - from[1]) * o.p - Math.sin(o.p * Math.PI) * 40;
           dot.style.left = x + 'px'; dot.style.top = y + 'px';
@@ -879,7 +882,10 @@ window.Webflow.push(function(){
     $$('.fc-ln', codeEl).forEach(function(l){ l.classList.remove('on'); });
     var t = inst.play();
     fc.running(t);
-    t.eventCallback('onComplete', function(){ setState('done'); });
+    // chain, don't replace: a program's own onComplete (the globe clears its busy flag there) must still run,
+    // or its tools (+ Add a CMS item) stay locked after the first run
+    var own = t.eventCallback('onComplete');
+    t.eventCallback('onComplete', function(){ if (own) own.apply(this, arguments); setState('done'); });
     if (reduce){ t.progress(1); setState('done'); var ks = Object.keys(parsed.notes); fc.cue(ks[ks.length - 1]); }
   }
   runBtn.addEventListener('click', run);

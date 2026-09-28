@@ -7,7 +7,23 @@
     var grid = $('#capabilities .ab_bento_grid'); if (!grid) return;
     var brand = $('[data-name="Card / branding"]', grid), deploys = $('[data-name="Card / deploys"]', grid);
     if (brand && brand.parentNode.classList.contains('is-tall')) brand.parentNode.classList.remove('is-tall');
-    if ($('[data-visual="observatory"]', grid) || !deploys) return;
+    // Planet card + Plot a trajectory share one card slot (one grid track each, desktop only: is-half); Field notes
+    // spans two cards (is-wide), next to Custom deploys. Rows: planet|trajectory|motion|brand, deploys|field notes, 3 cards
+    var spec = $('[data-name="Card / specimen"]', grid);
+    if (spec && !$('[data-visual="trajectory"]', grid)){
+      spec.parentNode.classList.remove('is-tall'); spec.parentNode.classList.add('is-half');
+      var tc = document.createElement('div'); tc.className = 'ab_bento_cell is-half';
+      tc.innerHTML = '<article data-name="Card / trajectory" data-selectable="" data-visual="trajectory" class="ab_bento-card is-trajectory" style="background:#0E1020;border-color:rgba(242,240,234,.12);color:#F2F0EA">' +
+        '<div class="ab_bento-card_viz" style="background:#07080D;border-color:rgba(242,240,234,.1)"></div>' +
+        '<div class="ab_bento-card_copy"><div class="ab_bento-card_label text-style-mono" style="color:rgba(242,240,234,.6)">Mission planner</div>' +
+        '<h3 class="ab_bento-card_title" style="color:#F2F0EA">Plot a trajectory</h3>' +
+        '<p class="ab_bento-card_text" style="color:rgba(242,240,234,.75)">Pick a destination, add stops, watch the route draw.</p></div>' +
+        '<a aria-label="Plot a trajectory: the mission planner" href="/services#trajectory" class="ab_bento-card_link" style="color:#F2F0EA;border-color:rgba(242,240,234,.45)">↗</a></article>';
+      spec.parentNode.parentNode.insertBefore(tc, spec.parentNode.nextSibling);
+      selFrame(tc.firstChild, 'Card / trajectory');
+    }
+    var obsCard = $('[data-visual="observatory"]', grid); if (obsCard) obsCard.closest('.ab_bento_cell').classList.add('is-wide');
+    if (obsCard || !deploys) return;
     var cell = document.createElement('div'); cell.className = 'ab_bento_cell';
     cell.innerHTML = '<article data-name="Card / observatory" data-selectable="" data-visual="observatory" class="ab_bento-card is-observatory" style="background:linear-gradient(135deg,#4C8DFF 0%,#7C5CFF 48%,#FF6A3D 100%);border-color:transparent;color:#fff">' +
       '<div class="ab_bento-card_viz" style="background:rgba(7,8,13,.28);border-color:rgba(255,255,255,.22)"></div>' +
@@ -15,14 +31,17 @@
       '<h3 class="ab_bento-card_title" style="color:#fff">Field notes from real builds</h3>' +
       '<p class="ab_bento-card_text" style="color:rgba(255,255,255,.88)">Articles on the how and the why: build notes from real projects and the ideas behind them, linked by topic.</p></div>' +
       '<a aria-label="The Observatory: articles and field notes" href="/observatory" class="ab_bento-card_link" style="color:#fff;border-color:rgba(255,255,255,.6)">↗</a></article>';
+    cell.classList.add('is-wide');
     deploys.parentNode.parentNode.insertBefore(cell, deploys.parentNode.nextSibling);
-    var card = cell.firstChild;
+    selFrame(cell.firstChild, 'Card / observatory');
     // the same selection frame core gives every [data-selectable] (core ran before this bundle)
-    var s = document.createElement('div'); s.className = 'sel'; s.setAttribute('aria-hidden', 'true');
-    s.innerHTML = '<i class="tl"></i><i class="tc"></i><i class="tr"></i><i class="ml"></i><i class="mr"></i><i class="bl"></i><i class="bc"></i><i class="br"></i><span class="sel-tag">Card / observatory</span><span class="sel-size"></span>';
-    card.appendChild(s); card.__sel = s;
-    card.addEventListener('mouseenter', function(){ $('.sel-size', s).textContent = Math.round(card.offsetWidth) + ' × ' + Math.round(card.offsetHeight); });
-    if (AB.cardFx) AB.cardFx(card);
+    function selFrame(card, tag){
+      var s = document.createElement('div'); s.className = 'sel'; s.setAttribute('aria-hidden', 'true');
+      s.innerHTML = '<i class="tl"></i><i class="tc"></i><i class="tr"></i><i class="ml"></i><i class="mr"></i><i class="bl"></i><i class="bc"></i><i class="br"></i><span class="sel-tag">' + tag + '</span><span class="sel-size"></span>';
+      card.appendChild(s); card.__sel = s;
+      card.addEventListener('mouseenter', function(){ $('.sel-size', s).textContent = Math.round(card.offsetWidth) + ' × ' + Math.round(card.offsetHeight); });
+      if (AB.cardFx) AB.cardFx(card);
+    }
   })();
 
   /* ---------- services bento (spotlight + tilt come from core AB.cardFx) ---------- */
@@ -99,7 +118,7 @@
         if (reduce) tw.progress(1).pause(); else if (!seen) tw.pause();
       }
       function next(){ ei = (ei + 1) % eases.length; play(); }
-      btn.addEventListener('click', next); $('svg', v).addEventListener('click', next); $('svg', v).style.cursor = 'pointer';
+      btn.addEventListener('click', next); $('svg', v).addEventListener('click', next); $('svg', v).style.cursor = 'var(--hand, pointer)';
       play();
       if (!reduce && window.IntersectionObserver) onView(v, function(on){ seen = on; if (!tw) return; if (on){ measure(); tw.resume(); } else tw.pause(); });
     },
@@ -171,6 +190,47 @@
       gsap.to(stars, { opacity: .55, duration: 1.2, repeat: -1, yoyo: true, stagger: { each: .23, from: 'random' }, ease: 'sine.inOut' });
       onView(v, function(x){ vis = x; x ? tl.play() : tl.pause(); });
       if (card) card.addEventListener('pointerenter', function(){ gsap.to(paths, { strokeDashoffset: 0, opacity: 1, duration: .6 }); gsap.to(stars, { scale: 1.2, duration: .4, stagger: .02, yoyo: true, repeat: 1 }); });
+    },
+    trajectory: function(v){
+      // Earth at the bottom; a rocket plots a route through three service planets (picked fresh each loop), each lights up
+      // as it arrives, and the ETA counts up. Same palette as the planner on /services
+      var SV = [['Website', '#146EF5'], ['3D', '#5eead4'], ['Motion', '#0AE448'], ['Brand', '#FF6A3D'], ['CMS', '#8fb1ff'], ['System', '#7c5cff'], ['Speed', '#ffd166'], ['Deploy', '#C9C7C0']];
+      var PT = [[36, 128, 7], [104, 86, 9], [58, 34, 11]], E = [70, 184], NS = 'http://www.w3.org/2000/svg';
+      var bg = ''; for (var k = 0; k < 22; k++) bg += '<circle cx="' + ((k * 61) % 136 + 2) + '" cy="' + ((k * 37) % 196 + 2) + '" r="' + (k % 5 ? .5 : .9) + '"/>';
+      var d = 'M' + E[0] + ' ' + E[1] + ' Q ' + (E[0] - 44) + ' 162 ' + PT[0][0] + ' ' + PT[0][1] + ' Q ' + 60 + ' 94 ' + PT[1][0] + ' ' + PT[1][1] + ' Q ' + 112 + ' 44 ' + PT[2][0] + ' ' + PT[2][1];
+      v.innerHTML = '<div class="v-traj" style="position:relative;width:100%;height:100%;min-height:150px;display:flex;align-items:center;justify-content:center;padding:8px">' +
+        '<svg viewBox="0 0 140 200" style="width:100%;height:100%;max-height:190px;display:block;overflow:visible" aria-hidden="true"><g fill="rgba(242,240,234,.45)">' + bg + '</g>' +
+        '<path class="ghost" d="' + d + '" fill="none" stroke="rgba(242,240,234,.22)" stroke-width="1" stroke-dasharray="2 3"/>' +
+        '<path class="done" d="' + d + '" fill="none" stroke="#FF6A3D" stroke-width="1.4"/>' +
+        '<circle cx="' + E[0] + '" cy="' + E[1] + '" r="6" fill="#4C8DFF"/><circle cx="' + (E[0] - 2) + '" cy="' + (E[1] - 2) + '" r="2.4" fill="#fff" opacity=".35"/>' +
+        '<text x="' + (E[0] + 10) + '" y="' + (E[1] + 3) + '" class="lb">EARTH</text>' +
+        PT.map(function(q, i){ return '<g class="pl" data-i="' + i + '"><circle class="ring" cx="' + q[0] + '" cy="' + q[1] + '" r="' + (q[2] + 4) + '" fill="none" stroke-width="1"/><circle class="body" cx="' + q[0] + '" cy="' + q[1] + '" r="' + q[2] + '"/>' +
+          '<circle cx="' + (q[0] - q[2] * .3) + '" cy="' + (q[1] - q[2] * .3) + '" r="' + (q[2] * .45) + '" fill="#fff" opacity=".22"/><text class="lb nm" x="' + (i === 1 ? q[0] - q[2] - 4 : q[0] + q[2] + 5) + '" y="' + (q[1] + 3) + '"' + (i === 1 ? ' text-anchor="end"' : '') + '></text></g>'; }).join('') +
+        '<g class="rk"><path d="M5 0 L-4 -3.4 L-2 0 L-4 3.4 Z" fill="#F2F0EA"/><path d="M-2.4 0 L-7 -1.4 L-7 1.4 Z" fill="#FF6A3D"/></g>' +
+        '<text class="lb eta" x="4" y="196">ETA 00 WK</text></svg></div>';
+      var svg = $('svg', v), done = $('.done', v), rk = $('.rk', v), eta = $('.eta', v), pls = $$('.pl', v), L = done.getTotalLength();
+      $$('.lb', v).forEach(function(t){ t.setAttribute('fill', 'rgba(242,240,234,.6)'); t.setAttribute('font-family', 'JetBrains Mono, monospace'); t.setAttribute('font-size', '7'); t.setAttribute('letter-spacing', '.8'); });
+      var at = [0, 0, 0]; // path length at each planet
+      (function(){ var best = [1e9, 1e9, 1e9]; for (var l = 0; l <= L; l += 1){ var pt = done.getPointAtLength(l); PT.forEach(function(q, i){ var dd = Math.hypot(pt.x - q[0], pt.y - q[1]); if (dd < best[i]){ best[i] = dd; at[i] = l; } }); } })();
+      function pick(){
+        var pool = SV.slice(), out = []; for (var i = 0; i < 3; i++) out.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+        pls.forEach(function(g, i){ $('.body', g).setAttribute('fill', 'rgba(242,240,234,.14)'); $('.ring', g).setAttribute('stroke', out[i][1]); $('.ring', g).style.opacity = 0; $('.nm', g).textContent = out[i][0].toUpperCase(); g.__c = out[i][1]; });
+      }
+      function place(l){ var a = done.getPointAtLength(Math.max(0, l)), b = done.getPointAtLength(Math.min(L, l + 1)); rk.setAttribute('transform', 'translate(' + a.x.toFixed(1) + ' ' + a.y.toFixed(1) + ') rotate(' + (Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI).toFixed(1) + ')'); }
+      function arrive(i){ var g = pls[i]; $('.body', g).setAttribute('fill', g.__c); if (hasGsap && !reduce) gsap.fromTo($('.ring', g), { opacity: 1, scale: .6, transformOrigin: '50% 50%' }, { opacity: 0, scale: 1.8, duration: .9, ease: 'power2.out' }); }
+      pick(); done.style.strokeDasharray = L; done.style.strokeDashoffset = L; place(0);
+      if (reduce || !hasGsap){ done.style.strokeDashoffset = 0; place(L - 1); pls.forEach(function(g, i){ arrive(i); }); eta.textContent = 'ETA 08 WK'; return; }
+      var o = { l: 0 }, tl = gsap.timeline({ paused: true, repeat: -1, repeatDelay: .2, onRepeat: pick });
+      tl.set(o, { l: 0 }).set(done, { strokeDashoffset: L, opacity: 1 }).set(rk, { opacity: 1 });
+      var prev = 0;
+      at.forEach(function(len, i){
+        tl.to(o, { l: len, duration: 1 + (len - prev) / 60, ease: 'power1.inOut', onUpdate: function(){ place(o.l); done.style.strokeDashoffset = L - o.l; eta.textContent = 'ETA ' + ('0' + Math.round(o.l / L * 8)).slice(-2) + ' WK'; } })
+          .call(arrive, [i]).to({}, { duration: .45 });
+        prev = len;
+      });
+      tl.to({}, { duration: 1.4 }).to([done, rk], { opacity: 0, duration: .4 });
+      onView(v, function(x){ x ? tl.play() : tl.pause(); });
+      var card = v.closest('.ab_bento-card'); if (card) card.addEventListener('pointerenter', function(){ tl.timeScale(1.8); }); if (card) card.addEventListener('pointerleave', function(){ tl.timeScale(1); });
     },
     meters: function(v){
       v.innerHTML = '<div class="v-meter"><div><span>LCP</span><b><i style="--v:.72"></i></b><span>&lt; 2.5 s</span></div><div><span>CLS</span><b><i style="--v:.9"></i></b><span>&lt; 0.1</span></div><div><span>Motion</span><b><i style="--v:1"></i></b><span>60 fps</span></div></div>';

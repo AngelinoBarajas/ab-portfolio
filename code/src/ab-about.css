@@ -108,7 +108,7 @@
 /* escape: the ship boosts far out past the disk, trailing a flame, then drifts back */
 .ab_bento-card[data-td] .ab_td_orbit.is-escape .ab_td_ship{transform:translateX(calc(var(--rf,110px) * 1.9)) scale(1.15);transition:transform 1.1s cubic-bezier(.3,1.4,.4,1);filter:drop-shadow(0 0 10px #FF6A3D) drop-shadow(0 0 22px rgba(255,106,61,.7))}
 /* the score: play button when flying close + a docked Spotify player */
-.abx-score{all:unset;position:absolute;right:24px;bottom:22px;z-index:7;display:flex;flex-direction:row-reverse;align-items:center;gap:10px;cursor:pointer;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .35s,transform .45s cubic-bezier(.2,.9,.2,1.3)}
+.abx-score{all:unset;position:absolute;right:24px;bottom:22px;z-index:7;display:flex;flex-direction:row-reverse;align-items:center;gap:10px;cursor:var(--hand,pointer);opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .35s,transform .45s cubic-bezier(.2,.9,.2,1.3)}
 .abx-score i{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--signal);box-shadow:0 0 0 5px rgba(255,106,61,.16),0 0 24px rgba(255,106,61,.5);transition:transform .25s,box-shadow .25s}
 .abx-score svg{width:18px;height:18px;margin-left:3px;fill:var(--on-signal)}
 .abx-score span{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;color:var(--star)}
@@ -119,7 +119,7 @@
 .ab_score{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:90;width:min(340px,calc(100vw - 32px));padding:8px;border:1px solid var(--hair2);background:rgba(10,11,20,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 18px 40px -12px rgba(0,0,0,.7);transform:translateY(140%);opacity:0;transition:transform .5s cubic-bezier(.2,.9,.2,1.1),opacity .3s}
 .ab_score.is-on{transform:none;opacity:1}
 .ab_score_h{display:flex;align-items:center;justify-content:space-between;padding:0 2px 6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust)}
-.ab_score_x{border:0;background:none;color:var(--star);font-size:18px;line-height:1;cursor:pointer;padding:0 4px}
+.ab_score_x{border:0;background:none;color:var(--star);font-size:18px;line-height:1;cursor:var(--hand,pointer);padding:0 4px}
 .ab_score_x:hover{color:var(--signal)}
 .ab_score_f iframe{display:block;border:0;border-radius:10px}
 .ab_td_rate-fill{transition:width .6s cubic-bezier(.2,.9,.2,1)}
@@ -166,10 +166,10 @@
 .ab_boss_stars{position:absolute;inset:-100% 0 0;background-image:radial-gradient(1.5px 1.5px at 20% 30%,#fff,transparent),radial-gradient(1px 1px at 70% 60%,#fff,transparent),radial-gradient(1.5px 1.5px at 40% 80%,#ffe6cf,transparent),radial-gradient(1px 1px at 85% 15%,#fff,transparent),radial-gradient(1px 1px at 10% 70%,#9b7dff,transparent);background-size:220px 220px;animation:ab-boss-stars 3s linear infinite;opacity:.7}
 @keyframes ab-boss-stars{to{transform:translateY(50%)}}
 .ab_boss_ctl{position:absolute;top:14px;right:14px;z-index:9;display:flex;gap:8px}
-.ab_boss_snd{padding:8px 12px;border:1px solid var(--hair2);background:rgba(7,8,13,.7);color:var(--dust);font:inherit;font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.ab_boss_snd{padding:8px 12px;border:1px solid var(--hair2);background:rgba(7,8,13,.7);color:var(--dust);font:inherit;font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:var(--hand,pointer)}
 .ab_boss_snd[aria-pressed="true"]{color:#4cf2a0;border-color:#4cf2a0}
 .ab_boss_snd:hover,.ab_boss_snd:focus-visible{border-color:var(--signal);outline:none}
-.ab_boss_x{position:relative;padding:8px 12px;border:1px solid var(--hair2);background:rgba(7,8,13,.7);color:var(--star);font:inherit;font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.ab_boss_x{position:relative;padding:8px 12px;border:1px solid var(--hair2);background:rgba(7,8,13,.7);color:var(--star);font:inherit;font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:var(--hand,pointer)}
 .ab_boss_x:hover,.ab_boss_x:focus-visible{border-color:var(--signal);color:var(--signal);outline:none}
 .ab_boss_hud{position:absolute;top:calc(10vh + 14px);left:16px;right:16px;z-index:3;display:grid;gap:8px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#ff5a6a;max-width:520px}
 .ab_boss_hp{display:block;height:12px;border:2px solid #ff5a6a;padding:2px}
@@ -219,7 +219,7 @@
 .ab_boss_lives i{display:block;width:16px;height:10px;background:#4cf2a0;box-shadow:2px 2px 0 #1b6b47;transition:opacity .2s steps(2)}
 .ab_boss_lives i.is-gone{opacity:.15}
 .ab_boss_help{position:absolute;left:16px;right:16px;bottom:calc(10vh + 16px);z-index:3;text-align:center;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--star);opacity:0;pointer-events:none}
-.ab_boss_over{position:absolute;inset:0;z-index:5;display:grid;place-content:center;gap:14px;padding:16px;text-align:center;background:rgba(7,8,13,.72);opacity:0;visibility:hidden;cursor:pointer}
+.ab_boss_over{position:absolute;inset:0;z-index:5;display:grid;place-content:center;gap:14px;padding:16px;text-align:center;background:rgba(7,8,13,.72);opacity:0;visibility:hidden;cursor:var(--hand,pointer)}
 .ab_boss_over b{font-family:var(--display);font-weight:900;font-stretch:125%;font-size:clamp(40px,9vw,110px);line-height:.9;text-transform:uppercase;color:#ff5a6a;text-shadow:6px 6px 0 #6b1b26}
 .ab_boss_over p{font-size:14px;letter-spacing:.04em}
 .ab_boss_over span{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#4cf2a0;animation:ab-boss-tele .9s steps(2) infinite}
@@ -265,7 +265,7 @@
 }
 
 /* side quests: the log on the Player one card + its panel; a gold crew badge once every quest is found */
-.abx-qlog{all:unset;display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:6px 10px;border:1px dashed rgba(76,242,160,.45);font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#4cf2a0;cursor:pointer;transition:border-color .2s,background-color .2s}
+.abx-qlog{all:unset;display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:6px 10px;border:1px dashed rgba(76,242,160,.45);font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#4cf2a0;cursor:var(--hand,pointer);transition:border-color .2s,background-color .2s}
 .abx-qlog:hover,.abx-qlog:focus-visible{border-style:solid;background:rgba(76,242,160,.08);outline:none}
 .abx-qlog b{font-weight:500;color:var(--star)}
 .abx-qp{position:fixed;inset:0;z-index:97;display:grid;place-items:center;padding:16px;background:rgba(4,5,9,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
@@ -274,7 +274,7 @@
 .abx-qp.is-on .abx-qp_box{transform:none}
 .abx-qp_box::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(180deg,rgba(255,255,255,.03) 0 1px,transparent 1px 3px)}
 .abx-qp_h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#4cf2a0}
-.abx-qp_x{all:unset;cursor:pointer;font-size:20px;line-height:1;color:var(--star);padding:0 4px}
+.abx-qp_x{all:unset;cursor:var(--hand,pointer);font-size:20px;line-height:1;color:var(--star);padding:0 4px}
 .abx-qp_x:hover,.abx-qp_x:focus-visible{color:var(--signal);outline:none}
 .abx-qp_t{margin:10px 0 4px;font-family:var(--display);font-weight:900;font-stretch:118%;font-size:clamp(26px,5vw,38px);line-height:1;text-transform:uppercase}
 .abx-qp_bar{height:10px;margin:14px 0 6px;border:2px solid #4cf2a0;padding:2px}
@@ -290,7 +290,7 @@
 .abx-qp_list li.is-done i{color:#4cf2a0}
 .abx-qp_list li.is-done b{color:#4cf2a0}
 .abx-qp_list li.is-done span{color:var(--dust)}
-.abx-qp_reset{all:unset;margin-top:14px;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.abx-qp_reset{all:unset;margin-top:14px;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust);text-decoration:underline;text-underline-offset:3px;cursor:var(--hand,pointer)}
 .abx-qp_reset:hover,.abx-qp_reset:focus-visible{color:var(--star);outline:none}
 .ab_badge.is-gold .ab_badge_face{box-shadow:0 40px 80px -40px rgba(0,0,0,.8),0 0 0 2px #f5c542,0 0 34px rgba(245,197,66,.45)}
 .ab_badge.is-gold .ab_badge_logo .lg-planet{fill:#f5c542}

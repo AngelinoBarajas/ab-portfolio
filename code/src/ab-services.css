@@ -73,7 +73,7 @@
 .sv-rail-wrap.is-over:not(.is-end) .ab_sv_rail{--fr:88px}
 /* the arrow is a chip: same 38px height and square corners, pinned to the chip row (rail padding-top 2px), not a
    floating circle; the rail keeps 46px (arrow + gap) of room at its end so the last chip scrolls clear of it */
-.sv-rail-more{position:absolute;right:0;top:2px;z-index:6;width:38px;height:38px;margin:0;padding:0;display:none;place-items:center;border:1px solid var(--hair2);border-radius:0;background:var(--void);color:var(--star);font-family:var(--mono);font-size:14px;line-height:1;cursor:pointer;transition:border-color .2s,color .2s,transform .3s}
+.sv-rail-more{position:absolute;right:0;top:2px;z-index:6;width:38px;height:38px;margin:0;padding:0;display:none;place-items:center;border:1px solid var(--hair2);border-radius:0;background:var(--void);color:var(--star);font-family:var(--mono);font-size:14px;line-height:1;cursor:var(--hand,pointer);transition:border-color .2s,color .2s,transform .3s}
 .sv-rail-wrap.is-over .ab_sv_rail{padding-right:46px}
 .sv-rail-wrap.is-over .sv-rail-more{display:grid}
 .sv-rail-wrap.is-over:not(.is-end) .sv-rail-more span{animation:sv-nudge 1.6s ease-in-out infinite}
@@ -106,7 +106,7 @@
 
 /* channels (one per program) */
 .fc-chans{display:flex;flex-wrap:wrap;gap:8px}
-.fc-chan{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--hair2);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dust);transition:border-color .2s,color .2s,background-color .2s}
+.fc-chan{all:unset;cursor:var(--hand,pointer);display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--hair2);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dust);transition:border-color .2s,color .2s,background-color .2s}
 .fc-chan i{font-style:normal;color:var(--soft)}
 .fc-chan:hover{border-color:rgba(255,106,61,.5);color:var(--star)}
 .fc-chan[aria-selected="true"]{border-color:var(--signal);color:var(--star);background:rgba(255,106,61,.1)}
@@ -159,7 +159,7 @@
 
 /* footer: run + note + tools */
 .fc-foot{display:flex;align-items:stretch;border-top:1px solid var(--hair);min-height:58px}
-.fc-run{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:10px;padding:0 22px;background:var(--signal);color:var(--on-signal,#07080d);font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;transition:filter .2s}
+.fc-run{all:unset;cursor:var(--hand,pointer);display:inline-flex;align-items:center;gap:10px;padding:0 22px;background:var(--signal);color:var(--on-signal,#07080d);font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;transition:filter .2s}
 .fc-run:hover{filter:brightness(1.1)}
 .fc-run:focus-visible{outline:2px solid var(--select);outline-offset:-4px}
 .fc-run svg{width:10px;height:10px;fill:currentColor}
@@ -168,7 +168,7 @@
 .fc-note span{transition:opacity .2s}
 .fc-tools{display:flex;align-items:center;flex-wrap:wrap;gap:6px;padding:8px 14px;border-left:1px solid var(--hair)}
 .fc-tools:empty{display:none}
-.fc-tool{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border:1px solid var(--hair2);font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dust);transition:border-color .2s,color .2s,background-color .2s}
+.fc-tool{all:unset;cursor:var(--hand,pointer);display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border:1px solid var(--hair2);font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dust);transition:border-color .2s,color .2s,background-color .2s}
 .fc-tool:hover{border-color:rgba(255,106,61,.5);color:var(--star)}
 .fc-tool[aria-pressed="true"]{border-color:var(--star);color:var(--star);background:rgba(255,255,255,.06)}
 .fc-tool:focus-visible{outline:2px solid var(--select);outline-offset:2px}
@@ -309,7 +309,7 @@
 .wf{width:100%;height:100%;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:16px;align-items:stretch}
 .wf-tree{display:flex;flex-direction:column;gap:2px;padding:10px 6px;border:1px solid var(--hair2);background:#0b0c14;font-family:var(--mono);font-size:10.5px}
 .wf-cap,.dp-cap,.sy-cap{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dust);padding:0 4px 8px}
-.wf-row{all:unset;cursor:pointer;display:flex;align-items:center;gap:7px;padding-top:5px;padding-bottom:5px;padding-right:6px;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background-color .2s,color .2s}
+.wf-row{all:unset;cursor:var(--hand,pointer);display:flex;align-items:center;gap:7px;padding-top:5px;padding-bottom:5px;padding-right:6px;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background-color .2s,color .2s}
 .wf-row i{flex:0 0 auto;width:8px;height:8px;border:1px solid currentColor}
 .wf-row:hover{color:var(--star)}
 .wf-row.on{background:rgba(76,141,255,.22);color:#fff}
@@ -334,7 +334,7 @@
 .dp-col{min-width:0}
 .dp-cap b{color:var(--signal);font-weight:400}
 .dp-files{display:flex;flex-direction:column;gap:4px}
-.dp-f{all:unset;cursor:pointer;display:flex;align-items:center;gap:8px;height:26px;padding:0 10px;border:1px solid var(--hair2);background:#0b0c14;font-family:var(--mono);font-size:11px;color:var(--soft);transition:border-color .2s,color .2s}
+.dp-f{all:unset;cursor:var(--hand,pointer);display:flex;align-items:center;gap:8px;height:26px;padding:0 10px;border:1px solid var(--hair2);background:#0b0c14;font-family:var(--mono);font-size:11px;color:var(--soft);transition:border-color .2s,color .2s}
 .dp-f b{flex:1;font-weight:400;color:var(--star)}
 .dp-f em{font-style:normal;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:1px 5px;border:1px dashed var(--select);color:var(--select);display:none}
 .dp-f.is-draft em{display:inline}

@@ -42,7 +42,7 @@
         '<path class="ahead"/><path class="done"/><g class="wps"></g>' + $('.ab_process_traj-svg .ship', mission).outerHTML + '</svg>';
       svg = $('svg', vt); ahead = $('.ahead', svg); done = $('.done', svg); ship = $('.ship', svg); wpsG = $('.wps', svg);
       steps.forEach(function(s, i){
-        var g = document.createElementNS(NS, 'g'); g.setAttribute('class', 'wp'); g.style.cursor = 'pointer';
+        var g = document.createElementNS(NS, 'g'); g.setAttribute('class', 'wp'); g.style.cursor = 'var(--hand, pointer)';
         g.innerHTML = '<circle class="pulse" r="11"/><circle class="ring" r="11"/><text class="wp-n" text-anchor="middle" dy="3.2">' + pad2(i + 1) + '</text>';
         g.addEventListener('click', function(){ go(i); }); wpsG.appendChild(g); wps.push(g);
       });
