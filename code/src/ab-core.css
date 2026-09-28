@@ -339,6 +339,10 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 .v-sys_ramp{display:flex;align-items:baseline;gap:8px;font-family:var(--f);font-weight:800;color:var(--star);transition:font-family .6s}
 .v-sys_ramp span{transition:font-size .6s}
 .v-sys_ramp span:nth-child(1){font-size:calc(10px * var(--x) * var(--x) * var(--x) * var(--x))}.v-sys_ramp span:nth-child(2){font-size:calc(10px * var(--x) * var(--x) * var(--x))}.v-sys_ramp span:nth-child(3){font-size:calc(10px * var(--x) * var(--x))}.v-sys_ramp span:nth-child(4){font-size:calc(10px * var(--x));color:var(--b)}
+/* the themes change type sizes and fonts, never the card's size: fixed boxes, the content scales inside them */
+.v-sys_card{box-sizing:border-box;height:122px;justify-content:center;overflow:hidden}
+.v-sys_card strong{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.v-sys_ramp{height:36px;line-height:1;align-items:flex-end;overflow:hidden}
 /* narrow CMS card: the webhook hop drops out so sources and Webflow CMS don't collide */
 .v-pipe{container-type:inline-size}
 @container (max-width:330px){.v-pipe .node.hook{display:none}}
