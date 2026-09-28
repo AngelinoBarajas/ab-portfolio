@@ -82,6 +82,17 @@ Back up the current field first (paste into `webflow/backup/`). Insert each `[Fi
 - [ ] **H6. (optional) Make the Observatory bento card native** (Home › `section_services` › `ab_bento_grid`). Today ab-home v0.28.5 builds it: it drops the Marks card (`Card / branding`) to one row by removing `is-tall` from its `ab_bento_cell`, and inserts an `ab_bento_cell` › `article.ab_bento-card.is-observatory` (`data-visual="observatory"`) right after Custom deploys. To make it native: in the Designer remove `is-tall` from the branding cell, duplicate the Design systems cell, move it right after Custom deploys, set `data-name="Card / observatory"` and `data-visual="observatory"`, background gradient `135deg #4C8DFF → #7C5CFF → #FF6A3D`, text white, label *The Observatory*, title *Field notes from real builds*, text *Articles on the how and the why: build notes from real projects and the ideas behind them, linked by topic.*, link `/observatory`. The script then only draws the star chart into it. Benefit: the card's copy is in the raw HTML (crawlers, no-JS) and editable in the Designer.
 - [ ] **H5. (CMS, before launch) Placeholder testimonials**: Missions › 510 Visuals, CKS, kip, Knowledge System › Client quote + Quote by all end in "(placeholder)". Replace with real quotes or clear both fields (empty quotes drop out of Incoming automatically).
 
+## I. Flight computer (Services depth session, design approved 2026-09-28)
+
+- [ ] **I1. Rename "Under the hood" → "Flight computer"** (Services template › `section_sv-hood#hood`). **Wait until all 8 services have a program**: until then the 5 without one still show the plain snippet, and this heading + lede would promise a console that isn't there. The script already shows the new text on the 3 finished services, so visitors see it today; this step puts it in the raw HTML (crawlers, no-JS).
+  1. Navigator › `section_sv-hood` › … › `ab_sv_code_copy` › eyebrow `text-style-eyebrow`: `/engineer · under the hood` → `/engineer · flight computer`
+  2. The H2 `#hood-h`: first text `Under the ` → `Flight `; the outline span (`t-outline`) `hood` → `computer`
+  3. The lede `ab_sec-h_lede`: → `The code that flies this service. Run a program and watch what each line does.`
+  4. The frame label span (`ab_frame-label`, first child of the section): `▢ under-the-hood` → `▢ flight-computer`
+  5. Section Settings › Custom attributes: `data-frame` `under-the-hood` → `flight-computer` (keep the id `hood`: the script finds the section by it)
+  6. Optional: Navigator display name "Under the hood" → "Flight computer"
+  - Verify: `curl` `/services/performance` shows "Flight computer" in the raw HTML; `/services/motion` console still builds.
+
 ---
 
 ## Not Designer (content Angelino supplies)
