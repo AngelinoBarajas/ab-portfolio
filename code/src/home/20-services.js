@@ -59,11 +59,15 @@
     if (!minis){
       var av = $('[data-bind="availability"]'), when = av ? av.textContent.replace(/^\s*available\s*/i, '').trim() : '';
       minis = document.createElement('div'); minis.className = 'ab_bento_cell is-minis';
+      // the quarter as three months (Q4 → OCT NOV DEC); this month is lit, earlier ones are spent
+      var qm = /Q([1-4])\s*(\d{4})?/i.exec(when), MON = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'], now = new Date(), months = '';
+      if (qm){ var q0 = (+qm[1] - 1) * 3, yr = +(qm[2] || now.getFullYear()); for (var mi = 0; mi < 3; mi++){ var m = q0 + mi, st = (yr === now.getFullYear() && m === now.getMonth()) ? ' is-now' : (yr < now.getFullYear() || (yr === now.getFullYear() && m < now.getMonth())) ? ' is-past' : ''; months += '<span class="mini-m' + st + '">' + MON[m] + '</span>'; }
+        if (months.indexOf('is-now') < 0 && months.indexOf('is-past') < 0) months = months.replace('class="mini-m"', 'class="mini-m is-next"'); }
       minis.innerHTML =
-        '<article data-name="Card / availability" data-selectable="" class="ab_bento-card is-mini"><div class="mini-k"><i class="mini-dot" aria-hidden="true"></i><span>Now booking</span></div>' +
+        '<article data-name="Card / availability" data-selectable="" class="ab_bento-card is-mini is-book"><div class="mini-k"><span><i class="mini-dot" aria-hidden="true"></i>Now booking</span>' + (months ? '<span class="mini-months" aria-hidden="true">' + months + '</span>' : '') + '</div>' +
           '<h3 class="ab_bento-card_title">' + esc(when || 'New missions') + '</h3><p class="mini-p">Taking on new missions. Discovery calls are 30 minutes.</p>' +
           '<a class="ab_bento-card_link" href="/contact#call" aria-label="Book a discovery call">↗</a></article>' +
-        '<article data-name="Card / reply" data-selectable="" class="ab_bento-card is-mini"><div class="mini-k"><span class="mini-ping" aria-hidden="true"><i></i><i></i></span><span>Reply time</span></div>' +
+        '<article data-name="Card / reply" data-selectable="" class="ab_bento-card is-mini is-reply"><div class="mini-k"><span>Reply time</span><span class="mini-bubble" aria-hidden="true"><i></i><i></i><i></i></span></div>' +
           '<h3 class="ab_bento-card_title">&lt; 1 business day</h3><p class="mini-p">A real person on the other end, not a ticket queue.</p>' +
           '<a class="ab_bento-card_link" href="/contact" aria-label="Send a message">↗</a></article>';
       $$('.ab_bento-card', minis).forEach(function(c){ if (AB.cardFx) AB.cardFx(c); });
@@ -122,14 +126,40 @@
     },
     planet: function(v){
       v.classList.add('v-planet');
-      v.innerHTML = '<span class="cap-tag" style="left:16px;top:14px">FIG. 01 · DRAG ME</span><span class="cap-tag" style="right:16px;bottom:14px">RING TILT −18°</span><span class="cap-tag" style="left:16px;bottom:14px">SEED 42</span>' +
+      v.innerHTML = '<span class="cap-tag" style="left:16px;top:14px">FIG. 01 · DRAG · TAP TO MORPH</span><span class="cap-tag t-tilt" style="right:16px;bottom:14px">RING TILT −18°</span><span class="cap-tag t-seed" style="left:16px;bottom:14px">SEED 42</span>' +
         '<div class="ab_planet is-drag" data-planet="gas" data-seed="42" data-colors="#1d2350,#3f4fa8,#8fb1ff,#e9d9ff,#2b1f5c" data-ring="#f0e6ff,#9a8cd6,#4d4488" data-tilt="-18" data-spin="50" data-glow="rgba(143,177,255,.45)" data-label="Specimen planet" data-drag></div>';
       var pw = $('.ab_planet', v); buildPlanet(pw);
-      if (!canDrag) return;
+      // tap / click (not a drag) morphs it into a new planet: new type, palette, ring and seed, rebuilt mid-shrink
+      var LOOKS = [
+        ['gas', '#1d2350,#3f4fa8,#8fb1ff,#e9d9ff,#2b1f5c', 'rgba(143,177,255,.45)'], ['gas', '#3a1d10,#b8552a,#f2a65a,#fde3c0,#5c2a14', 'rgba(242,166,90,.4)'],
+        ['ice', '#0f2a3a,#3f8fa8,#9fe8ff,#eaffff', 'rgba(159,232,255,.4)'], ['lava', '#140807,#3a1510,#ff6a3d,#ffd27a', 'rgba(255,106,61,.45)'],
+        ['rocky', '#1a1a1f,#4a4550,#8a8290,#c9c2cc', 'rgba(201,194,204,.25)'], ['terra', '#0e3a5c,#1e6e8c,#3f8f4a,#a88b5c,#f2f0ea', 'rgba(76,141,255,.35)'],
+        ['gas', '#12301f,#1f7a4a,#5eead4,#d8fff2,#0c2418', 'rgba(94,234,212,.4)'], ['ice', '#2a1d4a,#7c5cff,#c4b5ff,#f4efff', 'rgba(124,92,255,.4)']
+      ], look = 0, busy = false, tSeed = $('.t-seed', v), tTilt = $('.t-tilt', v);
+      function morph(){
+        if (busy) return; busy = true;
+        look = (look + 1 + Math.floor(Math.random() * (LOOKS.length - 1))) % LOOKS.length;
+        var L = LOOKS[look], seed = 1 + Math.floor(Math.random() * 998), ring = L[0] === 'gas' || Math.random() < .35, tilt = -8 - Math.floor(Math.random() * 22);
+        function swap(){
+          pw.innerHTML = ''; pw.__built = false; pw.__body = null;
+          pw.setAttribute('data-planet', L[0]); pw.setAttribute('data-colors', L[1]); pw.setAttribute('data-glow', L[2]); pw.setAttribute('data-seed', seed);
+          if (ring){ var c = L[1].split(','); pw.setAttribute('data-ring', [c[c.length - 2] || c[1], c[1], c[0]].join(',')); pw.setAttribute('data-tilt', tilt); } else pw.removeAttribute('data-ring');
+          buildPlanet(pw);
+          if (tSeed) tSeed.textContent = 'SEED ' + seed;
+          if (tTilt) tTilt.textContent = ring ? 'RING TILT −' + Math.abs(tilt) + '°' : 'NO RING';
+          if (AB.quest) AB.quest('spin');
+        }
+        if (!hasGsap || reduce){ swap(); busy = false; return; }
+        gsap.timeline({ onComplete: function(){ busy = false; } })
+          .to(pw, { scale: .55, filter: 'brightness(2.2) blur(6px)', duration: .35, ease: 'power2.in' })
+          .call(swap)
+          .to(pw, { scale: 1, filter: 'brightness(1) blur(0px)', duration: .9, ease: 'elastic.out(1,.55)', clearProps: 'filter' });
+      }
+      if (!canDrag){ pw.addEventListener('click', morph); return; }
       var back;
       function sched(){ if (back) back.kill(); back = gsap.delayedCall(4, function(){ gsap.to(pw, { x: 0, y: 0, rotation: 0, duration: 1.4, ease: 'elastic.out(1,.5)' }); }); }
-      Draggable.create(pw, { type: 'x,y', bounds: v, inertia: true, edgeResistance: .6,
-        onPress: function(){ if (back) back.kill(); }, onDragEnd: sched, onThrowComplete: sched });
+      Draggable.create(pw, { type: 'x,y', bounds: v, inertia: true, edgeResistance: .6, minimumMovement: 4,
+        onPress: function(){ if (back) back.kill(); }, onClick: morph, onDragEnd: sched, onThrowComplete: sched });
       nudge(pw, sched);
     },
     easing: function(v){

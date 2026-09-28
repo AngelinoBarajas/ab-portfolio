@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.29.15 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.29.16 · github.com/AngelinoBarajas/ab-portfolio */
 /* click cursor: a spacesuit glove (hotspot on the fingertip); every clickable uses var(--hand) */
 :root{--hand:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 32 32%22%3E%3Cg stroke=%22%230B0C14%22 stroke-width=%221.3%22 stroke-linejoin=%22round%22%3E%3Crect x=%222.6%22 y=%2213.6%22 width=%225.8%22 height=%2210.5%22 rx=%222.9%22 transform=%22rotate%28-42 5.5 18.8%29%22 fill=%22%23E4E1D8%22/%3E%3Crect x=%229.5%22 y=%221.2%22 width=%226.4%22 height=%2217%22 rx=%223.2%22 fill=%22%23F7F5EF%22/%3E%3Crect x=%2215.6%22 y=%2210.2%22 width=%225.4%22 height=%229.5%22 rx=%222.7%22 fill=%22%23F7F5EF%22/%3E%3Crect x=%2220.6%22 y=%2211.4%22 width=%225.2%22 height=%228.8%22 rx=%222.6%22 fill=%22%23F7F5EF%22/%3E%3Crect x=%2225.2%22 y=%2213%22 width=%224.6%22 height=%227.8%22 rx=%222.3%22 fill=%22%23F7F5EF%22/%3E%3Cpath d=%22M8.4 16.5H29.6V21.5C29.6 25 27.2 27 24 27H14C10.6 27 8.4 24.6 8.4 21.5Z%22 fill=%22%23F7F5EF%22/%3E%3Crect x=%229.2%22 y=%2225.4%22 width=%2220.6%22 height=%225.6%22 rx=%221.4%22 fill=%22%23FF6A3D%22/%3E%3C/g%3E%3Cg stroke=%22%238A8FA3%22 stroke-width=%22.8%22 fill=%22none%22 stroke-linecap=%22round%22%3E%3Cpath d=%22M10.6 7.2H14.8M10.6 11.8H14.8M12 21.2H26%22/%3E%3C/g%3E%3Cpath d=%22M9.2 28.2H29.8%22 stroke=%22%230B0C14%22 stroke-width=%22.8%22/%3E%3C/svg%3E") 12 1,pointer}
 a[href],button:not(:disabled),[role="button"],summary,label[for],select,input[type="submit"],input[type="checkbox"],input[type="radio"]{cursor:var(--hand)}
@@ -821,18 +821,37 @@ section:hover > .ab_frame-label{color:var(--_color---ui--select)}
 .v-traj-stars i{position:absolute;border-radius:50%;background:#F2F0EA}
 /* narrow phones: the big menu links scale with the screen so the longest one (OBSERVATORY) fits; wider screens keep 45px */
 @media (max-width:479px){.ab_menu_link{font-size:min(45px,9vw)}}
-/* Home bento: two mini cards stacked in one slot (availability + reply time) */
+/* Home bento: two mini cards stacked in one slot, each with its own look: a light booking card with the quarter's
+   months, and a signal-orange reply card with a typing bubble */
 .ab_bento_cell.is-minis{display:flex;flex-direction:column;gap:16px}
-.ab_bento-card.is-mini{flex:1 1 0;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:6px;padding:clamp(18px,1.6vw,26px);background:#0E1020;border-color:rgba(242,240,234,.12);color:#F2F0EA}
-.ab_bento-card.is-mini .ab_bento-card_title{margin:0;font-size:clamp(22px,1.9vw,30px);color:#F2F0EA}
-.ab_bento-card.is-mini .mini-k{display:flex;align-items:center;gap:8px;font-family:var(--_typography---font--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,240,234,.6)}
-.ab_bento-card.is-mini .mini-p{margin:0;padding-right:44px;font-size:14px;line-height:1.45;color:rgba(242,240,234,.72)}
-.ab_bento-card.is-mini .ab_bento-card_link{color:#F2F0EA;border-color:rgba(242,240,234,.45)}
-.mini-dot{width:8px;height:8px;border-radius:50%;background:#3BE38A;box-shadow:0 0 0 0 rgba(59,227,138,.6);animation:mini-pulse 2s ease-out infinite}
-@keyframes mini-pulse{0%{box-shadow:0 0 0 0 rgba(59,227,138,.6)}70%{box-shadow:0 0 0 9px rgba(59,227,138,0)}100%{box-shadow:0 0 0 0 rgba(59,227,138,0)}}
-.mini-ping{position:relative;width:10px;height:10px}
-.mini-ping i{position:absolute;inset:0;border-radius:50%;border:1.5px solid var(--_color---brand--signal);animation:mini-ping 2.4s ease-out infinite}
-.mini-ping i+i{animation-delay:1.2s}
-.mini-ping::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--_color---brand--signal)}
-@keyframes mini-ping{0%{transform:scale(.4);opacity:1}100%{transform:scale(2.4);opacity:0}}
-@media (prefers-reduced-motion:reduce){.mini-dot,.mini-ping i{animation:none}}
+.ab_bento-card.is-mini{flex:1 1 0;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:6px;padding:clamp(18px,1.6vw,26px)}
+.ab_bento-card.is-mini .ab_bento-card_title{margin:0;font-size:clamp(22px,1.9vw,30px)}
+.ab_bento-card.is-mini .mini-k{display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--_typography---font--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase}
+.ab_bento-card.is-mini .mini-k > span:first-child{display:inline-flex;align-items:center;gap:8px}
+.ab_bento-card.is-mini .mini-p{margin:0;padding-right:44px;font-size:14px;line-height:1.45}
+/* booking: light card, months strip */
+.ab_bento-card.is-book{background:#FBFAF6;border-color:rgba(11,12,20,.12);color:#0B0C14}
+.ab_bento-card.is-book .ab_bento-card_title{color:#0B0C14}
+.ab_bento-card.is-book .mini-k{color:rgba(11,12,20,.55)}
+.ab_bento-card.is-book .mini-p{color:rgba(11,12,20,.68)}
+.ab_bento-card.is-book .ab_bento-card_link{color:#0B0C14;border-color:rgba(11,12,20,.3)}
+.mini-dot{width:8px;height:8px;border-radius:50%;background:#1fc07c;animation:mini-pulse 2s ease-out infinite}
+@keyframes mini-pulse{0%{box-shadow:0 0 0 0 rgba(31,192,124,.55)}70%{box-shadow:0 0 0 9px rgba(31,192,124,0)}100%{box-shadow:0 0 0 0 rgba(31,192,124,0)}}
+.mini-months{display:inline-flex;gap:4px}
+.mini-m{padding:3px 6px;border:1px solid rgba(11,12,20,.18);font-size:9.5px;letter-spacing:.1em;color:rgba(11,12,20,.6)}
+.mini-m.is-past{opacity:.4;text-decoration:line-through}
+.mini-m.is-next{border-color:#1fc07c;color:#0f8f58}
+.mini-m.is-now{background:#1fc07c;border-color:#1fc07c;color:#0B0C14;animation:mini-glow 2.4s ease-in-out infinite}
+@keyframes mini-glow{50%{box-shadow:0 0 0 3px rgba(31,192,124,.25)}}
+/* reply: signal orange, typing bubble */
+.ab_bento-card.is-reply{background:var(--_color---brand--signal);border-color:var(--_color---brand--signal);color:#0B0C14}
+.ab_bento-card.is-reply .ab_bento-card_title{color:#0B0C14}
+.ab_bento-card.is-reply .mini-k{color:rgba(11,12,20,.7)}
+.ab_bento-card.is-reply .mini-p{color:rgba(11,12,20,.82)}
+.ab_bento-card.is-reply .ab_bento-card_link{color:#0B0C14;border-color:rgba(11,12,20,.45)}
+.ab_bento-card.is-reply::before{background:radial-gradient(280px circle at var(--mx) var(--my),rgba(255,255,255,.22),transparent 70%)}
+.mini-bubble{display:inline-flex;align-items:center;gap:4px;padding:7px 10px;background:#0B0C14;border-radius:12px 12px 12px 2px}
+.mini-bubble i{width:5px;height:5px;border-radius:50%;background:#F2F0EA;animation:mini-type 1.2s ease-in-out infinite}
+.mini-bubble i:nth-child(2){animation-delay:.15s}.mini-bubble i:nth-child(3){animation-delay:.3s}
+@keyframes mini-type{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-4px);opacity:1}}
+@media (prefers-reduced-motion:reduce){.mini-dot,.mini-m.is-now,.mini-bubble i{animation:none}}
