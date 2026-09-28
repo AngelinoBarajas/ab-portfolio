@@ -1,4 +1,4 @@
-# Session handoff (2026-09-28, v0.29.11 on staging; next: Angelino's review, tablet/phone pass, Designer step I1)
+# Session handoff (2026-09-28, v0.29.13 on staging; next: Angelino's review, tablet/phone pass, Designer step I1)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -18,7 +18,7 @@ Live: ab-core JS + CSS **v0.29.10**, ab-home **v0.29.8**, ab-process JS + CSS **
 - **Plot a trajectory** card: diagonal route bottom left → top right over a full HTML starfield.
 - **KNS flag** on the flight plan cards of both route scrollers (/process, /services).
 - **COMMS wave:** seamless 240-unit irregular tile as a mask, 9s loop, one service color at a time with slow fades (56s cycle, orange first); fills the label's row on phones.
-- **Open:** "OBSERVATORY" overflows the mobile menu at 390px (big 45px links); left as is because Angelino asked not to change their size. Offered: shrink them to ~9vw only on narrow phones.
+- **v0.29.12–13 (core CSS):** on narrow phones (<480px) the big menu links scale to `min(45px, 9vw)` so OBSERVATORY fits (checked 360 + 390px); HQ button sits higher with more room above WORK. Core CSS is v0.29.13, core JS v0.29.10.
 
 ## Latest (2026-09-28, v0.29.3 → v0.29.7) · verified on staging 2026-09-28
 
