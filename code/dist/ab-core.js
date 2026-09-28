@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.29.8 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.29.9 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -218,7 +218,7 @@ window.Webflow.push(function(){
       if (ds.label && el.hasAttribute('data-drag')){ el.setAttribute('role', 'img'); el.setAttribute('aria-label', 'Draggable planet: ' + ds.label); el.tabIndex = 0; }
       else el.setAttribute('aria-hidden', 'true');
     }
-    var paint = function(){ var W = sz > 160 ? 512 : sz > 70 ? 256 : 128; tex.style.backgroundImage = 'url(' + makeTexture(type, cols, seed, W) + ')'; requestAnimationFrame(function(){ tex.classList.add('on'); }); };
+    var paint = function(){ var W = sz > 160 ? 512 : sz > 70 ? 256 : 128; tex.style.setProperty('--tex', 'url(' + makeTexture(type, cols, seed, W) + ')'); requestAnimationFrame(function(){ tex.classList.add('on'); }); };
     if ('requestIdleCallback' in window) requestIdleCallback(paint, { timeout: 800 }); else setTimeout(paint, 30);
   }
   var planets = $$('.ab_planet[data-planet]');

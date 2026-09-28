@@ -39,10 +39,13 @@ html.ab-warp-in body::after{content:"";position:fixed;inset:0;z-index:70;pointer
 .ab_planet.is-drag{cursor:grab;touch-action:none;z-index:3}
 .ab_planet.is-drag:active{cursor:grabbing}
 .ab_planet .sphere{position:absolute;inset:0;border-radius:50%;z-index:2;background:var(--base,#2a2440);box-shadow:0 0 calc(var(--sz) * .35) var(--glow,transparent)}
-.ab_planet .tex{position:absolute;inset:0;border-radius:50%;background-size:200% 100%;background-repeat:repeat-x;opacity:0;transition:opacity .7s ease;animation:ab-pspin var(--spin,40s) linear infinite;animation-direction:var(--dir,normal)}
+/* the surface spins on the compositor: a strip two texture tiles wide (one tile = 2 planet widths, the 2:1 map)
+   slides left by one tile and loops; the old background-position spin repainted every frame (choppy scroll past big planets) */
+.ab_planet .tex{position:absolute;inset:0;border-radius:50%;overflow:hidden;opacity:0;transition:opacity .7s ease}
+.ab_planet .tex::before{content:"";position:absolute;top:0;left:0;width:400%;height:100%;background-image:var(--tex);background-size:50% 100%;background-repeat:repeat-x;will-change:transform;animation:ab-pspin var(--spin,40s) linear infinite;animation-direction:var(--dir,normal)}
 .ab_planet .tex.on{opacity:1}
 .ab_planet .sphere::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.16),transparent 42%),radial-gradient(circle at 50% 50%,transparent 58%,rgba(0,0,0,.4) 100%);box-shadow:inset calc(var(--sz) * -.16) calc(var(--sz) * -.1) calc(var(--sz) * .26) rgba(0,0,0,.9),inset calc(var(--sz) * .05) calc(var(--sz) * .04) calc(var(--sz) * .12) rgba(255,240,225,.16)}
-@keyframes ab-pspin{to{background-position:200% 0}}
+@keyframes ab-pspin{from{transform:translate3d(-50%,0,0)}to{transform:translate3d(0,0,0)}}
 .ab_planet .pring{position:absolute;left:50%;top:50%;width:calc(var(--rs,2.3) * 100%);aspect-ratio:1;transform:translate(-50%,-50%) rotate(var(--tilt,-14deg));pointer-events:none}
 .ab_planet .pring-back{z-index:1}.ab_planet .pring-front{z-index:3}
 .ab_planet .pring > i{position:absolute;inset:0;border-radius:50%;transform:scaleY(var(--open,.24));
@@ -696,7 +699,7 @@ section:hover > .ab_frame-label{color:var(--select)}
 
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion:reduce){
-  .bh-lens i,.bh-disk i,.ab_planet .tex{animation:none}
+  .bh-lens i,.bh-disk i,.ab_planet .tex::before{animation:none}
   .button.is-nav,.button.is-nav .ab_button-shine::after{animation:none}
   .t-outline,.t-stars,.orb b,.ab_nebula,.ab_nav_status-dot,.ab_transmission_live::before,.ab_planner_led,.v-pipe .line i,.v-term .cur{animation:none}
   .button.is-primary::before{transition:none}

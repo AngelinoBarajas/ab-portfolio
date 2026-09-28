@@ -402,3 +402,7 @@ html:has(.section_hub-hero),.main-wrapper:has(.section_hub-hero){overflow-anchor
   .ab_planet.hb-peek{transition:none}
 }
 @media (max-width:767px){.ab_hub-go{min-width:24px;min-height:24px}}
+/* flight plan cards: KNS flag while the add-on rides along */
+.hb-ks-flag{display:inline-flex;align-items:center;gap:5px;margin-left:auto;margin-right:10px;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:#FFD29A}
+.hb-ks-flag[hidden]{display:none}
+.hb-ks-flag .hb-ks-ico{--sat:#FFD29A;width:16px;height:8px}

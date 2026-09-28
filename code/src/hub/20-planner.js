@@ -19,6 +19,12 @@
     var host = main > -1 ? ports[main] : null;
     if (host && ks){ if (ksOrb.parentNode !== host) host.appendChild(ksOrb); } else if (ksOrb.parentNode) ksOrb.parentNode.removeChild(ksOrb);
     $$('[data-ks-chip]', panel || document).forEach(function(c){ c.setAttribute('aria-pressed', ks ? 'true' : 'false'); });
+    // the flight plan cards carry a small KNS flag while the add-on rides along (before the 1 / 6 counter)
+    $$('.ab_hub-wp_top').forEach(function(top){
+      var f = $('.hb-ks-flag', top);
+      if (!f){ f = document.createElement('span'); f.className = 'hb-ks-flag'; f.title = 'KNS · Knowledge system rides along'; f.innerHTML = KS_ICO + 'KNS'; top.insertBefore(f, top.lastElementChild); }
+      f.hidden = !ks;
+    });
     // the flight plan's touchdown planet gets the same satellite on its own orbit
     var fd = $('.hbf-dock');
     if (fd){

@@ -407,8 +407,12 @@
     var bar = $('.ab_crew_comms');
     if (bar){
       var w = document.createElement('div'); w.className = 'abp-wave'; w.setAttribute('aria-hidden', 'true');
-      var d = 'M0 8'; for (var x = 0; x <= 240; x += 4) d += ' L' + x + ' ' + (8 + Math.sin(x / 7) * Math.sin(x / 31) * 6).toFixed(1);
-      w.innerHTML = '<i class="abp-wave-dot"></i><span class="abp-wave-scope"><svg viewBox="0 0 120 16" preserveAspectRatio="none"><path d="' + d + '"/></svg></span>';
+      // one 60-unit tile of a wave that is periodic over exactly 60 units, so sliding it by one tile loops without a seam;
+      // it masks a gradient of the service colors (the form chips), which drifts slowly across it
+      var d = 'M0 8'; for (var x = 0; x <= 60; x += 1) d += ' L' + x + ' ' + (8 + Math.sin(x / 60 * Math.PI * 2) * 3 + Math.sin(x / 15 * Math.PI * 2) * 3).toFixed(2);
+      var tile = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 16"><path d="' + d + '" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+      w.innerHTML = '<i class="abp-wave-dot"></i><span class="abp-wave-scope"><i></i></span>';
+      $('.abp-wave-scope', w).style.setProperty('--wave', 'url("data:image/svg+xml,' + encodeURIComponent(tile) + '")');
       var lab = $('.ab_crew_comms-label', bar); bar.insertBefore(w, lab ? lab.nextSibling : bar.firstChild);
     }
     if ('IntersectionObserver' in window && bar){
@@ -444,6 +448,12 @@
     if (!ksSat){ ksSat = document.createElement('span'); ksSat.className = 'abp-ks'; ksSat.setAttribute('aria-hidden', 'true'); ksSat.innerHTML = '<span class="abp-ks-orb">' + KS_ICON + '</span>'; }
     var host = $('.abp-counter', dests[sel[0]]); if (host && ksSat.parentNode !== host) host.appendChild(ksSat);
     ksSat.classList.toggle('is-on', ks);
+    // the flight plan cards carry a small KNS flag while the add-on rides along
+    $$('.ab_route_card-top').forEach(function(top){
+      var f = $('.abp-ks-flag', top);
+      if (!f){ f = document.createElement('span'); f.className = 'abp-ks-flag'; f.title = 'KNS · Knowledge system rides along'; f.innerHTML = KS_ICON + 'KNS'; top.insertBefore(f, top.lastElementChild); }
+      f.hidden = !ks;
+    });
     // touchdown: the same satellite orbits the landed planet when the add-on rides along
     var dsys = $('.abp-dock-sys');
     if (dsys){

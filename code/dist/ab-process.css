@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process.css v0.29.8 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process.css v0.29.9 · github.com/AngelinoBarajas/ab-portfolio */
 /* Process (/process) · the flight planner. Loaded from the page <head>.
    Only what the Designer can't hold: font-stretch, outline text, script-built pieces (abp-*: chart planets + orbits,
    route path / ship / pad, gauge, chips, form fields), state classes (.is-on, aria-pressed), pseudos and reduced motion.
@@ -184,10 +184,15 @@
 .abp-wave{display:flex;align-items:center;gap:8px;flex:none}
 .abp-wave-dot{width:6px;height:6px;border-radius:50%;background:var(--_color---brand--signal);animation:abp-wave-dot 1.2s ease-in-out infinite}
 @keyframes abp-wave-dot{50%{opacity:.25}}
-.abp-wave-scope{display:block;width:72px;height:16px;overflow:hidden;position:relative}
-.abp-wave-scope svg{position:absolute;left:0;top:0;width:144px;height:16px;animation:abp-wave-run 3s linear infinite}
-.abp-wave-scope path{fill:none;stroke:var(--_color---brand--signal);stroke-width:1.4;vector-effect:non-scaling-stroke}
-@keyframes abp-wave-run{to{transform:translateX(-72px)}}
+.abp-wave-scope{display:block;position:relative;width:96px;height:16px;overflow:hidden}
+.abp-wave-scope i{position:absolute;inset:0;background:linear-gradient(90deg,#146EF5,#5eead4,#0AE448,#FF6A3D,#C9C7C0,#8fb1ff,#7c5cff,#ffd166,#146EF5);background-size:480px 100%;-webkit-mask:var(--wave) 0 50%/60px 16px repeat-x;mask:var(--wave) 0 50%/60px 16px repeat-x;animation:abp-wave-run 1.6s linear infinite,abp-wave-hue 9s linear infinite}
+@keyframes abp-wave-run{to{-webkit-mask-position:-60px 50%;mask-position:-60px 50%}}
+@keyframes abp-wave-hue{to{background-position:480px 0}}
+@media (max-width:767px){.abp-wave{flex:1 1 40%;min-width:0}.abp-wave-scope{flex:1;width:auto}.ab_crew_comms > div:not(.ab_crew_comms-label):not(.abp-wave){flex:1 1 100%}}
+/* flight plan cards: KNS flag while the add-on rides along */
+.abp-ks-flag{display:inline-flex;align-items:center;gap:5px;margin-left:auto;margin-right:10px;font-family:var(--_typography---font--mono);font-size:9.5px;letter-spacing:.12em;color:#FFD29A;vertical-align:middle}
+.abp-ks-flag[hidden]{display:none}
+.abp-ks-flag .abp-ks-ico{width:16px;height:8px}
 
 /* timeline dials + gauge */
 .ab_eta_opt:last-child{border-right:0}

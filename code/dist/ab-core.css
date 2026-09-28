@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.29.8 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.29.9 · github.com/AngelinoBarajas/ab-portfolio */
 /* click cursor: a spacesuit glove (hotspot on the fingertip); every clickable uses var(--hand) */
 :root{--hand:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 32 32%22%3E%3Cg stroke=%22%230B0C14%22 stroke-width=%221.3%22 stroke-linejoin=%22round%22%3E%3Crect x=%222.6%22 y=%2213.6%22 width=%225.8%22 height=%2210.5%22 rx=%222.9%22 transform=%22rotate%28-42 5.5 18.8%29%22 fill=%22%23E4E1D8%22/%3E%3Crect x=%229.5%22 y=%221.2%22 width=%226.4%22 height=%2217%22 rx=%223.2%22 fill=%22%23F7F5EF%22/%3E%3Crect x=%2215.6%22 y=%2210.2%22 width=%225.4%22 height=%229.5%22 rx=%222.7%22 fill=%22%23F7F5EF%22/%3E%3Crect x=%2220.6%22 y=%2211.4%22 width=%225.2%22 height=%228.8%22 rx=%222.6%22 fill=%22%23F7F5EF%22/%3E%3Crect x=%2225.2%22 y=%2213%22 width=%224.6%22 height=%227.8%22 rx=%222.3%22 fill=%22%23F7F5EF%22/%3E%3Cpath d=%22M8.4 16.5H29.6V21.5C29.6 25 27.2 27 24 27H14C10.6 27 8.4 24.6 8.4 21.5Z%22 fill=%22%23F7F5EF%22/%3E%3Crect x=%229.2%22 y=%2225.4%22 width=%2220.6%22 height=%225.6%22 rx=%221.4%22 fill=%22%23FF6A3D%22/%3E%3C/g%3E%3Cg stroke=%22%238A8FA3%22 stroke-width=%22.8%22 fill=%22none%22 stroke-linecap=%22round%22%3E%3Cpath d=%22M10.6 7.2H14.8M10.6 11.8H14.8M12 21.2H26%22/%3E%3C/g%3E%3Cpath d=%22M9.2 28.2H29.8%22 stroke=%22%230B0C14%22 stroke-width=%22.8%22/%3E%3C/svg%3E") 12 1,pointer}
 a[href],button:not(:disabled),[role="button"],summary,label[for],select,input[type="submit"],input[type="checkbox"],input[type="radio"]{cursor:var(--hand)}
@@ -40,10 +40,13 @@ html.ab-warp-in body::after{content:"";position:fixed;inset:0;z-index:70;pointer
 .ab_planet.is-drag{cursor:grab;touch-action:none;z-index:3}
 .ab_planet.is-drag:active{cursor:grabbing}
 .ab_planet .sphere{position:absolute;inset:0;border-radius:50%;z-index:2;background:var(--base,#2a2440);box-shadow:0 0 calc(var(--sz) * .35) var(--glow,transparent)}
-.ab_planet .tex{position:absolute;inset:0;border-radius:50%;background-size:200% 100%;background-repeat:repeat-x;opacity:0;transition:opacity .7s ease;animation:ab-pspin var(--spin,40s) linear infinite;animation-direction:var(--dir,normal)}
+/* the surface spins on the compositor: a strip two texture tiles wide (one tile = 2 planet widths, the 2:1 map)
+   slides left by one tile and loops; the old background-position spin repainted every frame (choppy scroll past big planets) */
+.ab_planet .tex{position:absolute;inset:0;border-radius:50%;overflow:hidden;opacity:0;transition:opacity .7s ease}
+.ab_planet .tex::before{content:"";position:absolute;top:0;left:0;width:400%;height:100%;background-image:var(--tex);background-size:50% 100%;background-repeat:repeat-x;will-change:transform;animation:ab-pspin var(--spin,40s) linear infinite;animation-direction:var(--dir,normal)}
 .ab_planet .tex.on{opacity:1}
 .ab_planet .sphere::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.16),transparent 42%),radial-gradient(circle at 50% 50%,transparent 58%,rgba(0,0,0,.4) 100%);box-shadow:inset calc(var(--sz) * -.16) calc(var(--sz) * -.1) calc(var(--sz) * .26) rgba(0,0,0,.9),inset calc(var(--sz) * .05) calc(var(--sz) * .04) calc(var(--sz) * .12) rgba(255,240,225,.16)}
-@keyframes ab-pspin{to{background-position:200% 0}}
+@keyframes ab-pspin{from{transform:translate3d(-50%,0,0)}to{transform:translate3d(0,0,0)}}
 .ab_planet .pring{position:absolute;left:50%;top:50%;width:calc(var(--rs,2.3) * 100%);aspect-ratio:1;transform:translate(-50%,-50%) rotate(var(--tilt,-14deg));pointer-events:none}
 .ab_planet .pring-back{z-index:1}.ab_planet .pring-front{z-index:3}
 .ab_planet .pring > i{position:absolute;inset:0;border-radius:50%;transform:scaleY(var(--open,.24));
@@ -697,7 +700,7 @@ section:hover > .ab_frame-label{color:var(--_color---ui--select)}
 
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion:reduce){
-  .bh-lens i,.bh-disk i,.ab_planet .tex{animation:none}
+  .bh-lens i,.bh-disk i,.ab_planet .tex::before{animation:none}
   .button.is-nav,.button.is-nav .ab_button-shine::after{animation:none}
   .t-outline,.t-stars,.orb b,.ab_nebula,.ab_nav_status-dot,.ab_transmission_live::before,.ab_planner_led,.v-pipe .line i,.v-term .cur{animation:none}
   .button.is-primary::before{transition:none}
