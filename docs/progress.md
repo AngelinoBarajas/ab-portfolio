@@ -25,4 +25,5 @@
 - [~] 8c. SEO + schema pass (2026-09-26): metadata, OG images, Missions SEO fields live on staging; JSON-LD drafted for launch; Designer steps open (`docs/seo-plan.md` §6)
 - [x] 8d. About extras: touch thrusters fix (v0.23.5), playable boss fight + anime finisher (v0.24.1)
 - [ ] 8e. Knowledge System integrated into the site (next session) + first Insights (10 drafts in `content/insights/drafts/`, awaiting review)
+- [~] 6j. New mission: **CKS** debrief (`/work/cks`, #05, Test flight) built + on staging 2026-09-27 (ab-mission v0.26.0 → v0.26.6, then v0.27.1 from the Designer-steps session); awaiting Angelino's review. Same session: manifest tiles + orbit status + Figma-in-stack on every debrief
 - [ ] 9. Angelino approves → publish

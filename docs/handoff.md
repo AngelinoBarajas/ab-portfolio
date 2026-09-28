@@ -2,11 +2,14 @@
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
-## Latest (2026-09-27, CKS debrief)
+## Latest (2026-09-27, CKS debrief) · verified on staging 2026-09-27
 
-- **CKS mission debrief (#05) built + published to webflow.io** (`/work/cks`, code v0.26.1). Details: `docs/webflow-build-notes.md` › CKS mission debrief. Awaiting Angelino's review.
-- **Test flight** Mission Type = proof-of-concept badge (cards, filter chip, debrief hero). CKS has it; add it to kip when kip is built.
-- On getcks.io launch the monitor swaps to the live site by itself; only the Status field needs flipping to Live.
+- **CKS mission debrief (#05) live on webflow.io** (`/work/cks`), awaiting Angelino's review. Verified: ab-mission JS **v0.27.1** (v0.27.1 = the Designer-steps session's shipped-probe drift on top of this session's v0.26.6), ab-mission CSS **v0.26.5**, ab-core **v0.27.0** (still carries the Test flight code), ab-work **v0.26.1**. Full record: `docs/webflow-build-notes.md` › CKS mission debrief (+ review round 1, manifest tiles + orbit).
+- **Monitor (8 channels):** Style lab `cks-styles` · Design → build · On a phone · Site plan `cks-plan` (CKS's own FigJam weave, not the shared board) · Woven on scroll · Grow the map · Sketch tool · Publish once. Coded + interactive (`code/src/mission/22-cks.js`); Style lab + Sketch swap to the real getcks.io pages once `getcks.io/favicon.svg` answers (404 today). Launch day: only flip Missions › CKS › Status to Live. If the site lives under `/cks/`, change `MOCKS.cks.live.base`.
+- **All debriefs changed:** manifest page tiles draw each page, looks per mission in `30-mission.js` `TSTYLE` (build: 510 + Aguirre · woven: CKS · blueprint: fallback); status card = orbit (in orbit circles, live transmits, shipped drifts with a flag); telemetry word units drawn small. **Figma is first in every real mission's stack.**
+- **Test flight** Mission Type (proof of concept): badge on cards, filter chip on /work, hero chip, Glossary term; not counted as a discipline. CKS has it; give it to kip.
+- **Debrief rules from Angelino** (memory `feedback_mission-debrief-rules`): unique site plan per debrief (510, Aguirre, Knowledge System still on the shared board), never "generated"/"one Python script" (say coded by hand after ideation + wireframes), By the numbers = what it does for a prospect.
+- **Open:** Angelino's review of `/work/cks`; kip debrief (#06, plan in `docs/kip-cks-mission-plan.md`; CKS half superseded by what shipped); unique site plans for 510 / Aguirre / Knowledge System; `cms/seed/_draft-new-missions*.json` CKS entries are stale drafts (Webflow is the source of truth).
 
 ## Where things stand
 
