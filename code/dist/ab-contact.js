@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-contact v0.28.9 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-contact v0.28.10 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abContactInit) return;

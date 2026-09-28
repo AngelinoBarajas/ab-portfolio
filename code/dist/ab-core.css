@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.28.9 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.28.10 · github.com/AngelinoBarajas/ab-portfolio */
 /* =========================================================
    AB Portfolio · ab-core.css (site-wide)
    Only what the Webflow Designer can't express: pseudo-elements, state
@@ -497,9 +497,11 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 .ab_alt{background:rgba(138,143,163,.35);box-shadow:0 0 0 1px rgba(7,8,13,.25)}
 .ab_alt-lab{position:absolute;right:10px;bottom:0;padding:3px 7px;background:rgba(7,8,13,.82);border:1px solid rgba(255,255,255,.12);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);font-family:var(--_typography---font--mono);font-size:11px;color:#F2F0EA;white-space:nowrap;transform:translateY(50%)}
 @media (max-width:900px){.ab_alt{display:none}}
-.ab_lgrid{position:fixed;inset:0;z-index:55;pointer-events:none;opacity:0;transition:opacity .3s}
+/* same nesting as the page: gutters on the full width (padding-global), then the max width inside them (container-large).
+   The max width used to include the gutters, so the columns sat ~33px inside the content on each side at 1440 */
+.ab_lgrid{position:fixed;inset:0;z-index:55;pointer-events:none;opacity:0;transition:opacity .3s;padding-inline:var(--_spacing---layout--gutter)}
 .ab_lgrid.on{opacity:1}
-.ab_lgrid-inner{height:100%;max-width:var(--_spacing---layout--max-width);margin-inline:auto;padding-inline:var(--_spacing---layout--gutter);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px}
+.ab_lgrid-inner{height:100%;max-width:var(--_spacing---layout--max-width);margin-inline:auto;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px}
 .ab_lgrid i{background:rgba(255,72,72,.07);border-inline:1px solid rgba(255,72,72,.16)}
 @media (max-width:767px){.ab_lgrid-inner{grid-template-columns:repeat(4,minmax(0,1fr));column-gap:16px}.ab_lgrid i:nth-child(n+5){display:none}}
 
