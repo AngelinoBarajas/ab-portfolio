@@ -152,6 +152,8 @@
 .ab_book::before{top:12px}
 .ab_book::after{bottom:12px}
 .ab_book_label{writing-mode:vertical-rl;transform:rotate(180deg)}
+/* real titles: same label size as the genres, on one line */
+.ab_book.is-title .ab_book_label{white-space:nowrap}
 .ab_book:hover,.ab_book:focus-visible{transform:translateY(-14px);box-shadow:inset -3px 0 0 rgba(0,0,0,.18),0 14px 20px -10px rgba(11,12,20,.4)}
 .ab_book.is-lean{transform:rotate(-7deg)}
 .ab_book.is-lean:hover,.ab_book.is-lean:focus-visible{transform:rotate(-7deg) translateY(-14px)}

@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.29.16 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.29.17 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -515,6 +515,22 @@ window.Webflow.push(function(){
   (function(){
     var shelf = $('[data-shelf]'); if (!shelf) return;
     var note = $('[data-shelf-note]', shelf), nt;
+    // real titles on six spines (the rest stay genres): each lands on the spine that already fits it, keeps its color,
+    // and gets enough height for the title; knocking it off shows title + author + a line
+    var TITLES = {
+      'Kid lit (shared)': ['The Little Prince', 'Antoine de Saint-Exupéry · A pilot, a small planet and what actually matters.', 186],
+      'Epic fantasy': ['The Alchemist', 'Paulo Coelho · Follow the omens. Still do.', 206],
+      'Zarathustra': ['Thus Spoke Zarathustra', 'Friedrich Nietzsche · Camel, lion, child: it became the scope creep note.', 214],
+      'Philosophy': ["Plato's Republic", 'Plato · The cave became the note on what crawlers see.', 196],
+      'Sci-fi': ['1984', 'George Orwell · Why plain, honest language matters.', 190],
+      'Mind': ['Outliers', 'Malcolm Gladwell · Ten thousand hours, give or take.', 172]
+    }, used = {};
+    $$('[data-book]', shelf).forEach(function(b){
+      var t = TITLES[b.getAttribute('data-g')];
+      if (!t || used[t[0]]) return; used[t[0]] = true;
+      b.setAttribute('data-g', t[0]); b.setAttribute('data-note', t[1]); b.setAttribute('data-h', String(Math.max(+b.getAttribute('data-h') || 0, t[2])));
+      b.classList.add('is-title'); var lb = $('.ab_book_label', b); if (lb) lb.textContent = t[0];
+    });
     $$('[data-book]', shelf).forEach(function(b){
       var c = b.getAttribute('data-c'), h = b.getAttribute('data-h'), fg = b.getAttribute('data-fg');
       if (c) b.style.backgroundColor = c; if (h) b.style.height = h + 'px'; if (fg) b.style.color = fg;
