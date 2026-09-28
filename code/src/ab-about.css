@@ -265,6 +265,22 @@
 }
 
 /* side quests: the log on the Player one card + its panel; a gold crew badge once every quest is found */
+.abx-qx{margin-top:14px;display:grid;gap:8px;font-family:var(--mono)}
+.abx-qx_top{display:flex;justify-content:space-between;align-items:baseline;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(76,242,160,.75)}
+.abx-qx_top b{font-weight:500;color:var(--star);letter-spacing:.08em}
+.abx-qx_bar{display:flex;gap:3px;height:8px}
+.abx-qx_bar i{flex:1;background:rgba(76,242,160,.12);border:1px solid rgba(76,242,160,.25);transition:background .4s,box-shadow .4s}
+.abx-qx_bar i.is-on{background:#4cf2a0;border-color:#4cf2a0;box-shadow:0 0 8px rgba(76,242,160,.45)}
+.abx-qx_bar i.is-new{animation:abx-qx-pulse 1s ease-out 3}
+@keyframes abx-qx-pulse{50%{box-shadow:0 0 16px 3px rgba(76,242,160,.9);background:#eafff3}}
+.abx-qx_feed{list-style:none;margin:0;padding:8px 10px;display:grid;gap:5px;background:rgba(7,8,13,.35);border:1px solid rgba(76,242,160,.18);min-height:66px}
+.abx-qx_feed li{display:flex;gap:8px;align-items:baseline;font-size:11px;line-height:1.35;color:var(--soft);min-width:0}
+.abx-qx_feed li i{font-style:normal;color:#4cf2a0;flex:none}
+.abx-qx_feed li span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.abx-qx_feed li em{font-style:normal;color:var(--dust);flex:none;font-size:10px}
+.abx-qx_feed li.is-hint{color:var(--dust)}.abx-qx_feed li.is-hint i{color:rgba(76,242,160,.5)}
+.abx-qx_feed li.is-new span{color:var(--star)}
+@media (prefers-reduced-motion:reduce){.abx-qx_bar i.is-new{animation:none}}
 .abx-qlog{all:unset;display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:6px 10px;border:1px dashed rgba(76,242,160,.45);font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#4cf2a0;cursor:var(--hand,pointer);transition:border-color .2s,background-color .2s}
 .abx-qlog:hover,.abx-qlog:focus-visible{border-style:solid;background:rgba(76,242,160,.08);outline:none}
 .abx-qlog b{font-weight:500;color:var(--star)}
@@ -295,3 +311,14 @@
 .ab_badge.is-gold .ab_badge_face{box-shadow:0 40px 80px -40px rgba(0,0,0,.8),0 0 0 2px #f5c542,0 0 34px rgba(245,197,66,.45)}
 .ab_badge.is-gold .ab_badge_logo .lg-planet{fill:#f5c542}
 @media (prefers-reduced-motion:reduce){.abx-qp,.abx-qp_box,.abx-qp_bar i{transition:none}}
+/* quest bar + feed on the light "Between launches" section */
+.theme-light .abx-qx_top{color:#0f8f58}
+.theme-light .abx-qx_top b{color:#0B0C14}
+.theme-light .abx-qx_bar i{background:rgba(15,143,88,.08);border-color:rgba(15,143,88,.28)}
+.theme-light .abx-qx_bar i.is-on{background:#1fc07c;border-color:#0f8f58;box-shadow:0 0 6px rgba(31,192,124,.4)}
+.theme-light .abx-qx_feed{background:#fff;border-color:rgba(11,12,20,.12)}
+.theme-light .abx-qx_feed li{color:#2a2d3a}
+.theme-light .abx-qx_feed li i{color:#0f8f58}
+.theme-light .abx-qx_feed li em,.theme-light .abx-qx_feed li.is-hint{color:#6b6f80}
+.theme-light .abx-qx_feed li.is-hint i{color:rgba(15,143,88,.6)}
+.theme-light .abx-qx_feed li.is-new span{color:#0B0C14;font-weight:500}
