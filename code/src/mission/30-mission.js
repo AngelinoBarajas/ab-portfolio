@@ -197,8 +197,9 @@
     var src = $('[data-field="benefits"]'), ul = $('#params');
     var B = src ? src.textContent.split(/\n+/).map(function(s){ return s.trim(); }).filter(Boolean) : [];
     if (!B.length || !ul) return;
-    ul.insertAdjacentHTML('afterend', '<div class="ab_benefits"><div class="ab_benefits_h">Benefits for the people using it</div><ul class="ab_params ab_benefits_l">' +
-      B.map(function(b, i){ var k = b.indexOf(':'); return '<li><span>B-' + pad2(i + 1) + '</span><span class="ab_param_t">' + (k > 0 ? '<b>' + esc(b.slice(0, k)) + '</b>' + esc(b.slice(k)) : esc(b)) + '</span></li>'; }).join('') + '</ul></div>');
+    // reuses the parameters' own Designer classes (eyebrow + list), so it needs no stylesheet release
+    ul.insertAdjacentHTML('afterend', '<div class="ab_benefits" style="margin-top:32px"><div class="text-style-eyebrow ab_brief_params-h">Benefits for the people using it</div><ul class="ab_params ab_benefits_l" role="list">' +
+      B.map(function(b, i){ var k = b.indexOf(':'); return '<li><span>B-' + pad2(i + 1) + '</span><span class="ab_param_t">' + (k > 0 ? '<b style="color:var(--star);font-weight:600">' + esc(b.slice(0, k)) + '</b>' + esc(b.slice(k)) : esc(b)) + '</span></li>'; }).join('') + '</ul></div>');
   })();
 
   var codeBlock = AB.codeBlock;

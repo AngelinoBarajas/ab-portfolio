@@ -77,9 +77,7 @@ html.menu-open .crew-dock{opacity:0;visibility:hidden;pointer-events:none}
 /* ---------- briefing params ---------- */
 .ab_params li{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--hair);color:var(--soft)}
 .ab_params li span{font-family:var(--mono);font-size:12px;color:var(--signal)}
-/* benefits for the people using it (optional Benefits field), listed under the parameters */
-.ab_benefits{margin-top:32px}
-.ab_benefits_h{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dust);padding-bottom:10px;border-bottom:1px solid var(--hair)}
+/* benefits for the people using it (optional Benefits field): the label before the colon stands out */
 .ab_benefits_l .ab_param_t b{color:var(--star);font-weight:600}
 body:not(.eng) [data-eng-only]{display:none}
 body.eng [data-cadet-only]{display:none}
