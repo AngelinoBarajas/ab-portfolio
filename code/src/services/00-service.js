@@ -32,6 +32,24 @@
     if (h && t1){ h.setAttribute('aria-label', NAME); h.innerHTML = '<span class="ab_dbh_word" aria-hidden="true">' + esc(t1) + '</span> ' + (t2 ? '<span class="ab_dbh_word t-outline" aria-hidden="true">' + esc(t2) + '</span>' : ''); }
     set('name', NAME);
     document.title = NAME + ' · Services · Angelino Barajas';
+    // long lines (DEVELOPMENT, interaction, Heavy visuals,) shrink to fit the page column; short ones keep the
+    // Designer size. offsetWidth ignores the drag-toy transforms, so a thrown word doesn't skew it; resize covers
+    // phone rotation (an address-bar resize keeps the width, so nothing changes).
+    if (!h) return;
+    var box = h.closest('.container-large') || h.parentNode, raf = 0;
+    function fit(){
+      raf = 0;
+      var room = box.getBoundingClientRect().right - h.getBoundingClientRect().left;
+      // each line stays ONE line (a line with a space, "Content that", used to wrap into a 3rd/4th line)
+      $$('.ab_dbh_word', h).forEach(function(w){
+        w.style.fontSize = ''; w.style.maxWidth = 'none'; w.style.whiteSpace = 'nowrap';
+        var need = w.offsetWidth, fs = parseFloat(getComputedStyle(w).fontSize);
+        if (room > 0 && need > room) w.style.fontSize = Math.floor(fs * room / need * .98) + 'px';
+      });
+    }
+    fit();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    addEventListener('resize', function(){ if (!raf) raf = requestAnimationFrame(fit); });
   })();
 
   var RAIL = $$('#svRail .ab_sv_rail_link').map(function(a, i){

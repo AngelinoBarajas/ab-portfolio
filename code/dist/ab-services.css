@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-services.css v0.27.2 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-services.css v0.27.3 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · Services template (/services/[slug]) · loaded in the template <head>.
    Webflow classes carry the layout; this file holds states, pseudo-elements and descendant rules Webflow can't. */
 
@@ -16,6 +16,9 @@
 
 /* ---------- problems solved ---------- */
 .ab_sv_s{transition:border-color .3s,translate .4s cubic-bezier(.2,.9,.2,1)}
+/* the hover selection frame (.sel, inset -1px, handles at -5px) sits outside the card: Webflow keeps publishing
+   overflow:hidden on .ab_sv_s even with Visible set in the Designer, so override it here (2 classes beat 1) */
+.ab_sv_solve .ab_sv_s{overflow:visible}
 .ab_sv_s:hover{border-color:rgba(255,106,61,.5);translate:0 -4px}
 .ab_sv_s_before{transition:color .4s}
 .ab_sv_s.on .ab_sv_s_before{color:#3BE38A}
