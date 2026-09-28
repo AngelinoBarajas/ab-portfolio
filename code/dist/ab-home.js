@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.29.14 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.29.15 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -517,18 +517,34 @@ window.Webflow.push(function(){
 
   /* ---------- bento layout (6 tracks, dense): tall and wide cards zig-zag so every row is full
        Webflow (4×2) · 3D (2×2)
-       Custom deploys (2×2) · Planet · Trajectory / Motion · Brand
+       Custom deploys · Motion · Planet / two minis (availability + reply time) · Brand · Trajectory
+       (dark cards on the outside columns, the light ones make a middle spine)
        Field notes (4) · CMS
        Systems · Performance (4)
      Tablet/phone fall back to Webflow's 2- and 1-column rules for is-tall / is-wide ---------- */
   (function(){
     var grid = $('#capabilities .ab_bento_grid'); if (!grid) return;
     function cell(n){ var c = $('[data-name="Card / ' + n + '"]', grid); return c && c.closest('.ab_bento_cell'); }
-    var order = ['deploys', 'specimen', 'trajectory', 'motion', 'branding', 'observatory', 'cms-integrations', 'systems', 'performance'].map(cell);
+    // two mini cards share the slot under Custom deploys (stacked, together as tall as the Motion card): quick,
+    // useful signals with a small effect. Availability reads the nav's CMS-bound line so it never goes stale
+    var minis = cell('availability');
+    if (!minis){
+      var av = $('[data-bind="availability"]'), when = av ? av.textContent.replace(/^\s*available\s*/i, '').trim() : '';
+      minis = document.createElement('div'); minis.className = 'ab_bento_cell is-minis';
+      minis.innerHTML =
+        '<article data-name="Card / availability" data-selectable="" class="ab_bento-card is-mini"><div class="mini-k"><i class="mini-dot" aria-hidden="true"></i><span>Now booking</span></div>' +
+          '<h3 class="ab_bento-card_title">' + esc(when || 'New missions') + '</h3><p class="mini-p">Taking on new missions. Discovery calls are 30 minutes.</p>' +
+          '<a class="ab_bento-card_link" href="/contact#call" aria-label="Book a discovery call">↗</a></article>' +
+        '<article data-name="Card / reply" data-selectable="" class="ab_bento-card is-mini"><div class="mini-k"><span class="mini-ping" aria-hidden="true"><i></i><i></i></span><span>Reply time</span></div>' +
+          '<h3 class="ab_bento-card_title">&lt; 1 business day</h3><p class="mini-p">A real person on the other end, not a ticket queue.</p>' +
+          '<a class="ab_bento-card_link" href="/contact" aria-label="Send a message">↗</a></article>';
+      $$('.ab_bento-card', minis).forEach(function(c){ if (AB.cardFx) AB.cardFx(c); });
+    }
+    var order = ['deploys', 'motion', 'specimen', 'availability', 'branding', 'trajectory', 'observatory', 'cms-integrations', 'systems', 'performance'].map(function(n){ return n === 'availability' ? minis : cell(n); });
     if (order.some(function(c){ return !c; })) return;
-    var set = { deploys: 'is-tall', observatory: 'is-wide', performance: 'is-wide' };
-    ['deploys', 'specimen', 'trajectory', 'motion', 'branding', 'observatory', 'cms-integrations', 'systems', 'performance'].forEach(function(n, i){
-      var c = order[i]; c.classList.remove('is-tall', 'is-wide', 'is-half');
+    var set = { observatory: 'is-wide', performance: 'is-wide' };
+    ['deploys', 'motion', 'specimen', 'availability', 'branding', 'trajectory', 'observatory', 'cms-integrations', 'systems', 'performance'].forEach(function(n, i){
+      var c = order[i]; if (n !== 'availability') c.classList.remove('is-tall', 'is-wide', 'is-half');
       if (set[n]) c.classList.add(set[n]);
       grid.appendChild(c);
     });

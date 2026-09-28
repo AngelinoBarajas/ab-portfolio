@@ -820,3 +820,18 @@ section:hover > .ab_frame-label{color:var(--select)}
 .v-traj-stars i{position:absolute;border-radius:50%;background:#F2F0EA}
 /* narrow phones: the big menu links scale with the screen so the longest one (OBSERVATORY) fits; wider screens keep 45px */
 @media (max-width:479px){.ab_menu_link{font-size:min(45px,9vw)}}
+/* Home bento: two mini cards stacked in one slot (availability + reply time) */
+.ab_bento_cell.is-minis{display:flex;flex-direction:column;gap:16px}
+.ab_bento-card.is-mini{flex:1 1 0;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:6px;padding:clamp(18px,1.6vw,26px);background:#0E1020;border-color:rgba(242,240,234,.12);color:#F2F0EA}
+.ab_bento-card.is-mini .ab_bento-card_title{margin:0;font-size:clamp(22px,1.9vw,30px);color:#F2F0EA}
+.ab_bento-card.is-mini .mini-k{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,240,234,.6)}
+.ab_bento-card.is-mini .mini-p{margin:0;padding-right:44px;font-size:14px;line-height:1.45;color:rgba(242,240,234,.72)}
+.ab_bento-card.is-mini .ab_bento-card_link{color:#F2F0EA;border-color:rgba(242,240,234,.45)}
+.mini-dot{width:8px;height:8px;border-radius:50%;background:#3BE38A;box-shadow:0 0 0 0 rgba(59,227,138,.6);animation:mini-pulse 2s ease-out infinite}
+@keyframes mini-pulse{0%{box-shadow:0 0 0 0 rgba(59,227,138,.6)}70%{box-shadow:0 0 0 9px rgba(59,227,138,0)}100%{box-shadow:0 0 0 0 rgba(59,227,138,0)}}
+.mini-ping{position:relative;width:10px;height:10px}
+.mini-ping i{position:absolute;inset:0;border-radius:50%;border:1.5px solid var(--signal);animation:mini-ping 2.4s ease-out infinite}
+.mini-ping i+i{animation-delay:1.2s}
+.mini-ping::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--signal)}
+@keyframes mini-ping{0%{transform:scale(.4);opacity:1}100%{transform:scale(2.4);opacity:0}}
+@media (prefers-reduced-motion:reduce){.mini-dot,.mini-ping i{animation:none}}
