@@ -1,4 +1,4 @@
-# Session handoff (2026-09-28, v0.29.7 on staging; next: Angelino's review, chip dead-zone report, tablet/phone pass, Designer step I1)
+# Session handoff (2026-09-28, v0.29.7 on staging; next: Angelino's review, tablet/phone pass, Designer step I1)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -39,7 +39,7 @@ Live on webflow.io: ab-core JS + CSS **v0.29.0**, ab-home **v0.29.1**, ab-proces
 - **About › Player one:** quest progress bar (one segment per quest) + live feed of finds and hints.
 - **Spacesuit glove cursor** site-wide: `--hand` in ab-core.css, every `cursor:pointer` → `var(--hand,pointer)`.
 - **Observatory:** field notes 16 + 17 imported (WB-09 less-is-a-bore, WB-10 mercury-gemini-apollo); CKS mission id added to `docs/webflow-cms-ids.json`.
-- **Open:** Angelino is re-testing a possible "dead zone" on the Observatory topic chips (not reproducible: nothing overlaps them at any scroll position). Nothing checked at tablet/phone widths yet for the new Home layout, Crew signal or Player one feed.
+- **Open:** nothing checked at tablet/phone widths yet for the new Home layout, Crew satellite or Player one feed. (The Observatory topic-chip "dead zone" was on Angelino's end: gone on re-test, 2026-09-28.)
 
 ## Latest (2026-09-28, Services depth session) · verified on staging 2026-09-28
 
