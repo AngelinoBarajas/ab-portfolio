@@ -1,4 +1,4 @@
-# Session handoff (2026-09-28, v0.29.2 on staging; next: Angelino's review, chip dead-zone report, tablet/phone pass, Designer step I1)
+# Session handoff (2026-09-28, v0.29.7 on staging; next: Angelino's review, chip dead-zone report, tablet/phone pass, Designer step I1)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -9,6 +9,16 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 - **Optional next depth (2b):** a small "Flight programs" collection (Service ref, order, label, code, note) for CH 02+ per service; needs a Designer step (list filtered by Service = current item).
 - **Still waiting from before:** `docs/designer-steps.md` › H1–H6, G5/G6/G8, Nav `ture` tidy-up.
 - **Before touching code:** `git pull`; tags are shared with parallel sessions. **Next free tag: `git fetch --tags && git tag --sort=-v:refname | head -1`** (v0.28.12 at the end of this session). **v0.28.7 is a stray tag** (docs commit ae2512d, same code as v0.28.6): never reuse it.
+
+## Latest (2026-09-28, v0.29.3 → v0.29.7) · verified on staging 2026-09-28
+
+Live: ab-core JS **v0.29.2**, core CSS **v0.29.6**, ab-home **v0.29.7**, ab-process JS + CSS **v0.29.7**, ab-hub JS + CSS **v0.29.7**, ab-contact CSS **v0.29.4**.
+- **One satellite glyph** (`.sat-ico` in core CSS: two panels on arms + a solid body; size/color per context via `--sat`) for every add-on chip, orbiting satellite, clickable satellite and the Crew satellite.
+- **KNS · Knowledge system** add-on (localStorage `ab:ks`, shared by Home planner, /process form + star chart, /services map + panel): clickable satellite on the /process chart and the /services map (not a stop); when on, a small satellite orbits the main planet and both touchdown planets. Form value "KNS · Knowledge system".
+- **Touchdowns match:** /process now uses the /services buttons (Request this mission · Book a call · Re-plot route), 14px gaps, green "Touchdown" label.
+- **Chips:** Home planner look everywhere (square fills, color border + 14% tint); /services pick chips too; contact stations keep round dots (pick one).
+- **Home:** Custom deploys is the tall bento card with a code → deploy terminal (index.html, site.css, app.js, then the deploy log; scenes padded to one height); Field notes beam spans the panel and glides back and forth; Performance shows six meters in two columns.
+- **Crew satellite** glides back and forth (yoyo).
 
 ## Latest (2026-09-28, v0.29.2) · verified on staging 2026-09-28
 
