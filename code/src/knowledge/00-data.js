@@ -29,6 +29,34 @@
   var DOT = { 'webflow-development': '#146EF5', 'webgl-data': '#5eead4', motion: '#0AE448', branding: '#FF6A3D', 'custom-deploys': '#C9C7C0', 'cms-integrations': '#8fb1ff', 'design-systems': '#7c5cff', performance: '#ffd166' };
   var URL_T = '/topics/', URL_O = '/observatory/', URL_M = '/work/', URL_S = '/services/';
 
+  // hero title halves (topic + article pages): the Designer's 48px floor let one long word ("performance",
+  // "Micro-interaction") run off a phone column. Shrink a half only when its longest word is wider than the column;
+  // everything else keeps the Designer size. Same idea as the service hero (services JS v0.27.3).
+  function fitTitle(h1){
+    if (!h1) return;
+    var box = h1.closest('.container-large') || h1.parentNode, raf = 0;
+    function fit(){
+      raf = 0;
+      var room = box.getBoundingClientRect().right - h1.getBoundingClientRect().left;
+      if (room <= 0) return;
+      $$('.ab_dbh_word', h1).forEach(function(w){
+        w.style.fontSize = '';
+        var longest = 0;
+        // lines may break at spaces and after hyphens, so only the longest unbreakable piece has to fit
+        w.textContent.trim().replace(/-/g, '-\n').split(/\s+/).forEach(function(word){
+          var m = document.createElement('span');
+          m.className = w.className; m.textContent = word;
+          m.style.cssText = 'position:absolute;visibility:hidden;display:inline-block;white-space:nowrap;max-width:none';
+          w.parentNode.appendChild(m); longest = Math.max(longest, m.offsetWidth); m.parentNode.removeChild(m);
+        });
+        if (longest > room) w.style.fontSize = Math.floor(parseFloat(getComputedStyle(w).fontSize) * room / longest * .98) + 'px';
+      });
+    }
+    fit();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    addEventListener('resize', function(){ if (!raf) raf = requestAnimationFrame(fit); });
+  }
+
   function txt(root, sel){ var n = sel ? $(sel, root) : root; return n ? n.textContent.replace(/\s+/g, ' ').trim() : ''; }
   function f(root, k){ return txt(root, '[data-f="' + k + '"]') || txt(root, '[data-field="' + k + '"]'); }
   function item(n){ return n.closest('.w-dyn-item') || n.parentNode; }

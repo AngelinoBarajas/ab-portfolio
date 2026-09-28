@@ -8,6 +8,7 @@
     var eb = $('[data-ks-eyebrow]'); if (eb) eb.textContent = C.code + ' · ' + C.name + ' · constellation ' + pad2(C.i + 1) + ' of 06';
     var h1 = $('[data-ks-title]');
     if (h1){ var w = h1.textContent.trim().split(' '); h1.innerHTML = w.length > 1 ? '<span class="ab_dbh_word">' + esc(w.slice(0, -1).join(' ')) + '</span> <span class="ab_dbh_word t-outline">' + esc(w[w.length - 1]) + '</span>' : '<span class="ab_dbh_word">' + esc(w[0]) + '</span>'; }
+    fitTitle(h1);
 
     // mini constellation: this category only, re-centered on its center
     var mini = $('[data-ks-mini]'), cx0 = CENTER[T.cat];

@@ -7,6 +7,7 @@
     // title: "Smooth scroll without the stutter: Lenis + GSAP" → solid first half, outlined second half
     var h1 = $('[data-ks-title]');
     if (h1){ var m = h1.textContent.match(/^(.+?[:.?])\s+(.+)$/); h1.innerHTML = m ? '<span class="ab_dbh_word">' + esc(m[1]) + '</span> <span class="ab_dbh_word t-outline">' + esc(m[2]) + '</span>' : '<span class="ab_dbh_word">' + esc(h1.textContent) + '</span>'; }
+    fitTitle(h1);
     var ans = $('[data-ks-answer]'); if (ans && ans.textContent.indexOf('`') > -1) ans.innerHTML = ticks(ans.textContent);
     var achips = $('[data-ks-achips]'); if (achips) achips.innerHTML = X.topics.map(function(s){ return chip(s); }).join('');
 

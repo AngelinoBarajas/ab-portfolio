@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-knowledge v0.27.6 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-knowledge v0.27.7 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abKnowledgeInit) return;
@@ -34,6 +34,34 @@ window.Webflow.push(function(){
   // service accent colors (Color fields can't bind; same map as ab-process / ab-hub)
   var DOT = { 'webflow-development': '#146EF5', 'webgl-data': '#5eead4', motion: '#0AE448', branding: '#FF6A3D', 'custom-deploys': '#C9C7C0', 'cms-integrations': '#8fb1ff', 'design-systems': '#7c5cff', performance: '#ffd166' };
   var URL_T = '/topics/', URL_O = '/observatory/', URL_M = '/work/', URL_S = '/services/';
+
+  // hero title halves (topic + article pages): the Designer's 48px floor let one long word ("performance",
+  // "Micro-interaction") run off a phone column. Shrink a half only when its longest word is wider than the column;
+  // everything else keeps the Designer size. Same idea as the service hero (services JS v0.27.3).
+  function fitTitle(h1){
+    if (!h1) return;
+    var box = h1.closest('.container-large') || h1.parentNode, raf = 0;
+    function fit(){
+      raf = 0;
+      var room = box.getBoundingClientRect().right - h1.getBoundingClientRect().left;
+      if (room <= 0) return;
+      $$('.ab_dbh_word', h1).forEach(function(w){
+        w.style.fontSize = '';
+        var longest = 0;
+        // lines may break at spaces and after hyphens, so only the longest unbreakable piece has to fit
+        w.textContent.trim().replace(/-/g, '-\n').split(/\s+/).forEach(function(word){
+          var m = document.createElement('span');
+          m.className = w.className; m.textContent = word;
+          m.style.cssText = 'position:absolute;visibility:hidden;display:inline-block;white-space:nowrap;max-width:none';
+          w.parentNode.appendChild(m); longest = Math.max(longest, m.offsetWidth); m.parentNode.removeChild(m);
+        });
+        if (longest > room) w.style.fontSize = Math.floor(parseFloat(getComputedStyle(w).fontSize) * room / longest * .98) + 'px';
+      });
+    }
+    fit();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    addEventListener('resize', function(){ if (!raf) raf = requestAnimationFrame(fit); });
+  }
 
   function txt(root, sel){ var n = sel ? $(sel, root) : root; return n ? n.textContent.replace(/\s+/g, ' ').trim() : ''; }
   function f(root, k){ return txt(root, '[data-f="' + k + '"]') || txt(root, '[data-field="' + k + '"]'); }
@@ -253,6 +281,7 @@ window.Webflow.push(function(){
     // title: "Smooth scroll without the stutter: Lenis + GSAP" → solid first half, outlined second half
     var h1 = $('[data-ks-title]');
     if (h1){ var m = h1.textContent.match(/^(.+?[:.?])\s+(.+)$/); h1.innerHTML = m ? '<span class="ab_dbh_word">' + esc(m[1]) + '</span> <span class="ab_dbh_word t-outline">' + esc(m[2]) + '</span>' : '<span class="ab_dbh_word">' + esc(h1.textContent) + '</span>'; }
+    fitTitle(h1);
     var ans = $('[data-ks-answer]'); if (ans && ans.textContent.indexOf('`') > -1) ans.innerHTML = ticks(ans.textContent);
     var achips = $('[data-ks-achips]'); if (achips) achips.innerHTML = X.topics.map(function(s){ return chip(s); }).join('');
 
@@ -475,6 +504,7 @@ window.Webflow.push(function(){
     var eb = $('[data-ks-eyebrow]'); if (eb) eb.textContent = C.code + ' · ' + C.name + ' · constellation ' + pad2(C.i + 1) + ' of 06';
     var h1 = $('[data-ks-title]');
     if (h1){ var w = h1.textContent.trim().split(' '); h1.innerHTML = w.length > 1 ? '<span class="ab_dbh_word">' + esc(w.slice(0, -1).join(' ')) + '</span> <span class="ab_dbh_word t-outline">' + esc(w[w.length - 1]) + '</span>' : '<span class="ab_dbh_word">' + esc(w[0]) + '</span>'; }
+    fitTitle(h1);
 
     // mini constellation: this category only, re-centered on its center
     var mini = $('[data-ks-mini]'), cx0 = CENTER[T.cat];
