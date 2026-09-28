@@ -66,5 +66,22 @@ Back up the current field first (paste into `webflow/backup/`). Insert each `[Fi
 - [x] G9. (done 2026-09-28: combo `section_process-crew.theme-light` Padding Top `clamp(40px, 6vw, 96px)`; space above the heading 299→243 desktop, 211→141 phone; first try landed in Margin, Alt-click cleared it) Process crew section: shorter top spacing. Source: shared `.theme-light` padding `clamp(110px,13vw,180px)` + margin `clamp(20px,4vw,48px)` on top of the inner `padding-section-medium` 64px (~194px above the content vs 64 elsewhere). Fix on the combo `section_process-crew.theme-light` only, never on `theme-light`.
 - [x] G10. (Designer showed Visible but Webflow kept publishing `overflow:hidden`; fixed in code, ab-services v0.27.3 `.ab_sv_solve .ab_sv_s{overflow:visible}`, verified) Services template › Problems solved cards `ab_sv_s` (BASE) › Overflow **Visible** (found 2026-09-28: `overflow:hidden` clipped the hover selection frame, which sits at inset -1px with handles at -5px, so its border never showed; nothing else in the card extends past its edges; scanned 9 page types, only this one clips a `.sel`).
 
+## H. Added 2026-09-28 (kip debrief session): do these in one sitting
+
+**First:** reload the Designer. This session wrote page code and CMS through the API (Observatory head, Mission/Home/Knowledge scripts, CMS items), and a stale Page-settings Save would overwrite it.
+
+- [ ] **H1. Home statement planet** (`/`, `section_statement` › `.ab_planet.is-statement`, the teal ringed planet next to "Build the part people screenshot"). Tested by injection on staging at 320–1440, nothing overflows:
+  - **Desktop (base):** Width `clamp(150px, 27vw, 410px)` (was 24vw / 360px) · Right `calc(clamp(150px, 27vw, 410px) * 0.62)` (was × 0.7) · Top `14%` (was 8%). Result: ~12% bigger, lower, still clear of the headline.
+  - **Mobile Landscape (applies down to phones):** Width `clamp(200px, 52vw, 330px)` · Right `-8vw` · Top `3%`. Result: bigger, bleeds off the top-right corner behind the heading, fills the empty space.
+  - Verify: `/` at 1440 and 390 on staging; the headline must stay on top of the planet.
+- [ ] **H2. Benefits list on missions** (Mission template › `section_briefing` › `ab_brief_side`): select the hidden `div.ab_cms-source` under the parameters list (attribute `data-field="params"`) › Duplicate › bind the copy's text to **Benefits** (new Missions field) › change its attribute to `data-field="benefits"`. The script lists the lines under Mission parameters as "Benefits for the people using it" (reuses the parameters' classes, no CSS). Verify: `/work/kip` shows B-01…B-04; other missions (Benefits empty) show nothing new.
+- [ ] **H3. Email fallback text** → `angelino@barajasdsgn.com` in every `[data-bind="email"]` element: Nav component › mobile menu › `ab_menu_foot` span; Footer component › `#footEmail` button label; Contact page › email button label (`is-contact`). Visitors already see the right address (the script fills it from Site settings › Email); this fixes the raw HTML for crawlers and no-JS. Verify: `curl` any page, no `your-domain` left.
+- [ ] **H4. (optional) Mission template stylesheet link** (Page settings › Custom code › head, **keep the robots `<meta>` binding below it untouched**): change the ab-mission.css link to
+  `<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.28.4/code/dist/ab-mission.prod.css" integrity="sha384-cN5rSLnIcJZugZozlUAvBrBSrbndlU9JToeelXU0PfMzLKRObdozUwyRVaL0XHAS" crossorigin="anonymous">`
+  (was v0.26.5). Nothing visible depends on it: the new mobile-channel centering and Benefits styling are inline in the script. Not done through the API because a full rewrite of that head block risks the Designer-bound robots field.
+- [ ] **H5. (CMS, before launch) Placeholder testimonials**: Missions › 510 Visuals, CKS, kip, Knowledge System › Client quote + Quote by all end in "(placeholder)". Replace with real quotes or clear both fields (empty quotes drop out of Incoming automatically).
+
+---
+
 ## Not Designer (content Angelino supplies)
 Placeholders in `docs/placeholders.md` (email, socials, 4 pin images, testimonials, `[X–Y weeks]`), metrics numbers, pin coordinates (Lincoln Center / ON NYC), copy review (AB Identity, Aguirre site-plan board, Services WebGL title).
