@@ -344,35 +344,57 @@
   addEventListener('resize', function(){ if (innerWidth === lastW && (!wide || innerHeight === lastH)) return; lastW = innerWidth; lastH = innerHeight; clearTimeout(rsT); rsT = setTimeout(function(){ build(); if (window.ScrollTrigger) ScrollTrigger.refresh(); }, 250); });
 
   /* ---------- crew: boxes tick in as the lists scroll into view ---------- */
-  /* ---------- crew: comms signal between the two cards (relay node, packets both ways, the receiving card's edge
-     lights up) + a live waveform in the comms bar. CSS runs it; this only builds it and pauses it off screen ---------- */
+  /* ---------- crew: a satellite on orbit above the two cards. When it passes over a card it drops a signal cone,
+     the card's edge lights and its checklist re-ticks. Drag it and it springs back to its orbit. The comms bar gets
+     a live waveform. Paused off screen ---------- */
   (function(){
     var link = $('.ab_crew_link'), grid = link && link.parentNode, bar = $('.ab_crew_comms'); if (!link) return;
-    var sig = document.createElement('div'); sig.className = 'abp-sig'; sig.setAttribute('aria-hidden', 'true');
-    sig.innerHTML = '<span class="abp-sig-beam"><i class="is-tx"></i><i class="is-rx"></i></span><span class="abp-sig-ring"></span><span class="abp-sig-ring"></span><span class="abp-sig-ring"></span>' +
-      '<span class="abp-sig-node"><svg viewBox="0 0 24 24"><path d="M5 15a9 9 0 0 1 9-9M8 15a6 6 0 0 1 6-6M11 15a3 3 0 0 1 3-3"/><circle cx="14" cy="15" r="1.6"/></svg></span>' +
-      '<span class="abp-sig-tag is-tx">TX</span><span class="abp-sig-tag is-rx">RX</span>';
-    link.appendChild(sig); grid.classList.add('has-sig');
-    // the dish turns toward the pointer anywhere in the section (mouse only); it rests facing up-right, i.e. -45deg
-    var dish = $('.abp-sig-node svg', sig), sec = link.closest('section') || grid;
-    if (dish && hasGsap && !reduce && window.matchMedia && matchMedia('(hover: hover)').matches){
-      gsap.set(dish, { transformOrigin: '58% 62%' });
-      var turn = gsap.quickTo(dish, 'rotation', { duration: .5, ease: 'power3.out' }), last = 0;
-      sec.addEventListener('pointermove', function(e){
-        var r = sig.getBoundingClientRect(), a = Math.atan2(e.clientY - r.top, e.clientX - r.left) * 180 / Math.PI + 45;
-        a = last + ((a - last + 540) % 360 - 180); last = a; turn(a); // shortest way round
-      });
-      sec.addEventListener('pointerleave', function(){ last = Math.round(last / 360) * 360; turn(last); });
+    var cols = $$('.ab_crew_col', grid);
+    var orbit = document.createElement('div'); orbit.className = 'abp-sat-orbit'; orbit.setAttribute('aria-hidden', 'true');
+    orbit.innerHTML = '<div class="abp-sat"><span class="abp-sat-cone"></span><svg viewBox="0 0 64 26">' +
+      '<path class="arm" d="M16 13H24M40 13H48"/><rect class="pan" x="1" y="7" width="15" height="12"/><rect class="pan" x="48" y="7" width="15" height="12"/>' +
+      '<path class="cell" d="M6 7V19M11 7V19M53 7V19M58 7V19M1 13H16M48 13H63"/>' +
+      '<rect class="body" x="24" y="5" width="16" height="16"/><rect class="win" x="28" y="9" width="8" height="5"/>' +
+      '<path class="ant" d="M32 21V24M28 25.5Q32 22.5 36 25.5"/><circle class="led" cx="36.5" cy="18" r="1.3"/></svg></div>';
+    grid.appendChild(orbit); grid.classList.add('has-sat');
+    var sat = $('.abp-sat', orbit), cone = $('.abp-sat-cone', orbit);
+    function ping(col){
+      col.classList.remove('is-ping'); void col.offsetWidth; col.classList.add('is-ping');
+      var lis = $$('.ab_crew_item', col);
+      lis.forEach(function(li, i){ li.classList.remove('is-on'); setTimeout(function(){ li.classList.add('is-on'); }, 140 + 110 * i); });
     }
+    if (!hasGsap || reduce){ sat.style.left = '50%'; return; }
+    // the orbit: left to right across the section with a slow bob and roll; a card is pinged as the satellite crosses its middle
+    var o = { p: 0 }, dragging = false, hit = [], W = 0;
+    function measure(){ W = grid.clientWidth; }
+    measure(); addEventListener('resize', measure);
+    var loop = gsap.to(o, { p: 1, duration: 16, ease: 'none', repeat: -1, paused: true, onRepeat: function(){ hit = []; }, onUpdate: function(){
+      if (dragging) return;
+      var x = -60 + (W + 120) * o.p, y = Math.sin(o.p * Math.PI * 4) * 6, rot = Math.sin(o.p * Math.PI * 2) * 6;
+      gsap.set(sat, { x: x, y: y, rotation: rot });
+      cols.forEach(function(col, i){
+        var mid = col.offsetLeft + col.offsetWidth / 2, near = Math.abs(x + 42 - mid) < col.offsetWidth * .28;
+        if (near && !hit[i]){ hit[i] = true; ping(col); cone.classList.add('is-on'); setTimeout(function(){ cone.classList.remove('is-on'); }, 1400); }
+      });
+    } });
+    if (window.Draggable){
+      Draggable.create(sat, { type: 'x,y', bounds: grid.parentNode, inertia: !!window.InertiaPlugin,
+        onPress: function(){ dragging = true; cone.classList.remove('is-on'); },
+        onRelease: function(){ var d = this; gsap.delayedCall(.6, function(){ gsap.to(sat, { x: -60 + (W + 120) * o.p, y: 0, rotation: 0, duration: 1.2, ease: 'elastic.out(1,.5)', onComplete: function(){ dragging = false; } }); }); } });
+    }
+    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ es[0].isIntersecting ? loop.play() : loop.pause(); }).observe(grid);
+    else loop.play();
+  })();
+  (function(){
+    var bar = $('.ab_crew_comms');
     if (bar){
       var w = document.createElement('div'); w.className = 'abp-wave'; w.setAttribute('aria-hidden', 'true');
       var d = 'M0 8'; for (var x = 0; x <= 240; x += 4) d += ' L' + x + ' ' + (8 + Math.sin(x / 7) * Math.sin(x / 31) * 6).toFixed(1);
       w.innerHTML = '<i class="abp-wave-dot"></i><span class="abp-wave-scope"><svg viewBox="0 0 120 16" preserveAspectRatio="none"><path d="' + d + '"/></svg></span>';
       var lab = $('.ab_crew_comms-label', bar); bar.insertBefore(w, lab ? lab.nextSibling : bar.firstChild);
     }
-    if ('IntersectionObserver' in window){
-      grid.classList.add('is-idle'); if (bar) bar.classList.add('is-idle');
-      new IntersectionObserver(function(es){ es.forEach(function(e){ e.target.classList.toggle('is-idle', !e.isIntersecting); }); }).observe(grid);
+    if ('IntersectionObserver' in window && bar){
+      bar.classList.add('is-idle');
       if (bar) new IntersectionObserver(function(es){ bar.classList.toggle('is-idle', !es[0].isIntersecting); }).observe(bar);
     }
   })();

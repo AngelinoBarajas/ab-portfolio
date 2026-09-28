@@ -36,7 +36,7 @@ Here are the planks I decided were the keel:
 - **A small set of named tokens.** Void, deep, panel, starlight, signal. New sections pick from them instead of inventing colors.
 - **Three type roles.** Display, body and mono, each with a job.
 
-Everything else is replaceable planking. The planets change color per project. Sections get rebuilt, animations get swapped, new pages appear. The Observatory you're reading is one of the newest parts of the site, and it still looks like it's always been here, because it was built from the same keel.
+Everything else is replaceable planking. The planets change color per project. Sections get rebuilt, animations get swapped, new pages appear. The Observatory you're reading is one of the newest parts of the site, and it still looks like it's always been here, because it was built from the same keel. That fixed keel is also what lets the rest of the site be loud, which is the argument of [Less is a bore](/observatory/less-is-a-bore-maximalist-web-design).
 
 ## Structure over material
 

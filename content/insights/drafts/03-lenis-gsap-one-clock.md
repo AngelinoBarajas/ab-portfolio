@@ -38,7 +38,7 @@ new IntersectionObserver(function (entries) {
 }).observe(document.querySelector('.scene'));
 ```
 
-Same for hidden tabs: stop the loop when `document.hidden` is true.
+Same for hidden tabs: stop the loop when `document.hidden` is true. If the thing you're pausing is a 3D scene, [Interactive 3D in Webflow that doesn't wreck your mobile score](/observatory/interactive-3d-webflow-performance) covers the rest: loading it late and drawing fewer pixels on phones.
 
 ## Two smaller ones
 

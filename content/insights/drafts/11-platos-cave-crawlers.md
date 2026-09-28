@@ -38,7 +38,7 @@ The page looked right. The shadow was wrong.
 
 In the allegory, freedom starts when a prisoner turns around and sees the fire and the objects. It hurts, the light is too bright, and the old shadows seem more real for a while. Then the prisoner climbs out.
 
-On a website, turning around is less dramatic. It means opening the page source (not the inspector, which shows the rendered page, but the actual file) and reading it the way a machine would. The fix on my site was just as unglamorous: in the Webflow Designer, each card's link was set to the current CMS item's page instead of a static page. After one publish, the raw HTML carried the real address, `/observatory/` plus the note's slug, on every card. The script that used to patch the links is now redundant.
+On a website, turning around is less dramatic. It means opening the page source (not the inspector, which shows the rendered page, but the actual file) and reading it the way a machine would. The fix on my site was just as unglamorous: in the Webflow Designer, each card's link was set to the current CMS item's page instead of a static page. After one publish, the raw HTML carried the real address, `/observatory/` plus the note's slug, on every card. The script that used to patch the links is now redundant. If you want the step-by-step version, including a whole-site check with `curl`, it's in [Your Webflow project pages might be invisible to Google](/observatory/crawlable-collection-links-webflow).
 
 ## What belongs outside the cave
 

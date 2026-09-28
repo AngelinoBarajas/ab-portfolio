@@ -103,6 +103,14 @@
 .ab_ks-tabs button[aria-pressed="true"] b{color:var(--on-signal);opacity:.7}
 .ab_ks-readout{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dust)}
 .ab_ks-readout b{color:var(--star);font-weight:500}
+.ab_ks-readout_r{display:inline-flex;gap:18px;align-items:center}
+.ab_ks-readout button[data-ks-sort]{color:var(--star)}
+.ab_ks-readout button[data-ks-sort]:hover,.ab_ks-readout button[data-ks-sort]:focus-visible{color:var(--signal)}
+.ab_ks-jump{display:inline-flex;align-items:center;gap:8px;margin-left:10px;padding:0 14px;min-height:40px;border:1px dashed var(--signal);background:transparent;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--star);cursor:var(--hand,pointer);transition:background .2s,border-style .2s,color .2s;vertical-align:top}
+.ab_ks-jump svg{width:13px;height:13px;fill:var(--signal);transition:transform .5s cubic-bezier(.2,.9,.2,1.4)}
+.ab_ks-jump:hover,.ab_ks-jump:focus-visible{border-style:solid;background:rgba(255,106,61,.12);outline:none}
+.ab_ks-jump:hover svg,.ab_ks-jump:focus-visible svg{transform:rotate(144deg) scale(1.2)}
+@media (max-width:479px){.ab_ks-jump{margin:10px 0 0;width:100%;justify-content:center}}
 .ab_ks-readout button{border:0;background:none;color:var(--signal);font:inherit;letter-spacing:inherit;text-transform:inherit;cursor:var(--hand,pointer);padding:0}
 .ab_ks-empty{display:none;padding:60px 20px;text-align:center;border:1px dashed var(--hair2);font-family:var(--mono);font-size:13px;color:var(--dust);position:relative;z-index:3}
 .ab_ks-empty.is-on{display:block}

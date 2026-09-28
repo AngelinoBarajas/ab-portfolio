@@ -1,4 +1,18 @@
 
+  /* ---------- nav: you are here. Webflow marks exact matches (w--current); detail pages mark their parent section
+     (/work/x → Work, /services/x → Services, /observatory/x + /topics → Observatory), in the bar and the menu ---------- */
+  (function(){
+    var path = location.pathname.replace(/\/+$/, '') || '/', SEC = { work: '/work', services: '/services', observatory: '/observatory', topics: '/observatory' };
+    var top = path.split('/')[1] || '', parent = SEC[top];
+    if (!parent) return;
+    $$('.ab_nav_link, .ab_menu_link').forEach(function(a){
+      var h = (a.getAttribute('href') || '').replace(/\/+$/, '');
+      if (h !== parent) return;
+      a.classList.add('is-current');
+      if (!a.hasAttribute('aria-current')) a.setAttribute('aria-current', path === parent ? 'page' : 'true');
+    });
+  })();
+
   /* ---------- selection UI ([data-selectable]: Figma-style box, handles, name + size tags) ---------- */
   function addSel(el){
     var s = document.createElement('div'); s.className = 'sel'; s.setAttribute('aria-hidden', 'true');

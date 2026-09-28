@@ -40,7 +40,7 @@ None of these are evil. Some are even right, for some projects. The problem is t
 
 This is the stage most projects skip, and it's the one that matters. The lion looks at everything the camel carried and asks which of it actually serves the goal we agreed on. Then it says no to the rest, out loud.
 
-Scope creep isn't a villain. It's the natural result of never having a lion. Every request sounds reasonable on its own; only a clear purpose ("why before how") lets you say no without it feeling arbitrary. The "no" usually isn't forever, either. Often it's "not in this launch".
+Scope creep isn't a villain. It's the natural result of never having a lion. Every request sounds reasonable on its own; only a clear purpose ("why before how") lets you say no without it feeling arbitrary. The "no" usually isn't forever, either. Often it's "not in this launch". (I wrote about where that purpose comes from in [Why before how](/observatory/why-before-how-philosophy-web-design).)
 
 What the lion actually sounds like, on a real project:
 
@@ -60,7 +60,7 @@ Both are lion sentences. They're not against richness; this site has a playable 
 
 Only after the no can you really create. The child isn't carrying anyone's leftover burdens. Nietzsche calls it "a wheel rolling out of itself", a first movement, play. With a smaller, clearer scope, the design gets bolder, the build gets cleaner, and the launch actually happens.
 
-I think this is why prototyping feels like play when the scope is right. You're not negotiating anymore; you're making. The best ideas on a project usually show up in this stage, because there's finally room for them.
+I think this is why prototyping feels like play when the scope is right. You're not negotiating anymore; you're making. The best ideas on a project usually show up in this stage, because there's finally room for them. [Mercury, Gemini, Apollo](/observatory/mercury-gemini-apollo-start-big-website) is about how I size that first prototype.
 
 ## In practice
 

@@ -52,10 +52,10 @@ The maximalist part is easy to see: procedural planets, a drifting starfield, a 
 
 - **One accent color.** Everything is built from a small set of dark tokens and a single orange. When the motion is loud, the palette stays quiet.
 - **A strict system underneath.** Square corners, three type roles (display, body, mono), a shared grid. Every color, size and space comes from a variable, not a one-off value.
-- **Every animation has a reason.** Motion explains a sequence, shows a relationship or rewards a click. If the only reason is "it's cool", it's cut. (More on that in *Why before how*.)
+- **Every animation has a reason.** Motion explains a sequence, shows a relationship or rewards a click. If the only reason is "it's cool", it's cut. (More on that in [Why before how](/observatory/why-before-how-philosophy-web-design).)
 - **Reduced motion is respected everywhere.** Every animation checks the visitor's settings first. The site stays whole when the magic is off.
 - **Heavy things load late.** 3D waits until it's needed, so the page is usable before the planets arrive.
-- **Tap is not hover.** Everything was checked on a phone, because most of the reasons the web got boring were phone reasons.
+- **Tap is not hover.** Everything was checked on a phone, because most of the reasons the web got boring were phone reasons. (The bug that taught me that one is in [Tap is not hover](/observatory/tap-is-not-hover-touch-bugs).)
 
 That's the answer to the fair objection, "didn't the web get simple for good reasons?" It did. Performance, accessibility and phones were the reasons, and they're still the rules. The difference is that the tools now let you honor all of them and still build something with a pulse.
 

@@ -52,7 +52,7 @@ That's why good loading design isn't only about making things faster (though do 
 
 ## Designing with the second clock
 
-On this site, moving between pages is a short warp: the stars stretch, then the next page arrives. It isn't there to delay you. It gives the eye something to follow during the moment the next page is loading anyway, so the wait is occupied instead of blank. When a visitor has asked for reduced motion, the warp becomes a simple fade, because an occupied wait should never cost someone their comfort.
+On this site, moving between pages is a short warp: the stars stretch, then the next page arrives. It isn't there to delay you. It gives the eye something to follow during the moment the next page is loading anyway, so the wait is occupied instead of blank. When a visitor has asked for reduced motion, the warp becomes a simple fade, because an occupied wait should never cost someone their comfort. (How to keep the meaning when the movement goes is in [Reduced motion without losing the magic](/observatory/reduced-motion-without-losing-the-magic).)
 
 The same idea runs through every heavy piece I build. A 3D globe loads only when it's about to come into view, and there's always something readable above it. The expensive thing arrives while you're already busy with the useful thing.
 

@@ -56,7 +56,7 @@ A few of the questions I actually ask on a first call, all of them versions of S
 
 A lot of philosophy is defining terms carefully so an argument doesn't slide around. Websites have the same problem. If "services", "solutions" and "what we do" mean slightly different things on different pages, visitors get lost, and so do search engines and AI assistants. Naming things once and using the names consistently is half of good structure.
 
-It's the idea behind the shared vocabulary on this site: every topic in the Observatory is defined once, in a sentence, and every article, mission and service points to the same words. It's a small, very old philosophical habit turned into a CMS collection.
+It's the idea behind the shared vocabulary on this site: every topic in the Observatory is defined once, in a sentence, and every article, mission and service points to the same words. It's a small, very old philosophical habit turned into a CMS collection. You can see those words laid out as a map in [Descartes' coordinates and a star chart of ideas](/observatory/cartesian-coordinates-star-chart).
 
 ## Why, then how
 

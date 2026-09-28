@@ -27,7 +27,7 @@ Website tools are full of confident messages. "Saved." "Published." "Updated suc
 - A custom code field written, read back correctly, and then quietly overwritten when someone saved the page's settings in another window.
 - A publish that completed without errors and changed nothing public, because it wasn't told which domains to publish to.
 
-None of these were dramatic failures. Each tool told the truth about its own step. The page just wasn't what anyone thought. So the rule on this project is Descartes' rule: after every publish, I read the live page's raw HTML and look for the thing that was supposed to change. If it's not there, it didn't happen.
+None of these were dramatic failures. Each tool told the truth about its own step. The page just wasn't what anyone thought. So the rule on this project is Descartes' rule: after every publish, I read the live page's raw HTML and look for the thing that was supposed to change. If it's not there, it didn't happen. (Why the raw HTML, and not the page in the browser, is the subject of [Plato's cave](/observatory/platos-cave-crawlers-raw-html).)
 
 ## Rule two: divide the difficulty
 

@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.29.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.29.2 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -479,17 +479,16 @@ window.Webflow.push(function(){
     var grid = $('#capabilities .ab_bento_grid'); if (!grid) return;
     var brand = $('[data-name="Card / branding"]', grid), deploys = $('[data-name="Card / deploys"]', grid);
     if (brand && brand.parentNode.classList.contains('is-tall')) brand.parentNode.classList.remove('is-tall');
-    // Planet card + Plot a trajectory: one card wide, two rows tall each (same as the 3D card), with Motion over Brand
-    // beside them; Field notes spans two cards (is-wide) next to Custom deploys, then the last three cards
+    // Planet card + Plot a trajectory: short one-row cards; the layout itself is set by the reorder below
     var spec = $('[data-name="Card / specimen"]', grid);
     if (spec && !$('[data-visual="trajectory"]', grid)){
-      spec.parentNode.classList.add('is-tall');
-      var tc = document.createElement('div'); tc.className = 'ab_bento_cell is-tall';
+      spec.parentNode.classList.remove('is-tall');
+      var tc = document.createElement('div'); tc.className = 'ab_bento_cell';
       tc.innerHTML = '<article data-name="Card / trajectory" data-selectable="" data-visual="trajectory" class="ab_bento-card is-trajectory" style="background:#0E1020;border-color:rgba(242,240,234,.12);color:#F2F0EA">' +
         '<div class="ab_bento-card_viz" style="background:#07080D;border-color:rgba(242,240,234,.1)"></div>' +
         '<div class="ab_bento-card_copy"><div class="ab_bento-card_label text-style-mono" style="color:rgba(242,240,234,.6)">Mission planner</div>' +
         '<h3 class="ab_bento-card_title" style="color:#F2F0EA">Plot a trajectory</h3>' +
-        '<p class="ab_bento-card_text" style="color:rgba(242,240,234,.75)">Pick a destination, add stops and watch the route and timeline come together.</p></div>' +
+        '<p class="ab_bento-card_text" style="color:rgba(242,240,234,.75)">Pick a destination, add stops, watch the route draw.</p></div>' +
         '<a aria-label="Plot a trajectory: the mission planner" href="/services#trajectory" class="ab_bento-card_link" style="color:#F2F0EA;border-color:rgba(242,240,234,.45)">↗</a></article>';
       spec.parentNode.parentNode.insertBefore(tc, spec.parentNode.nextSibling);
       selFrame(tc.firstChild, 'Card / trajectory');
@@ -514,6 +513,25 @@ window.Webflow.push(function(){
       card.addEventListener('mouseenter', function(){ $('.sel-size', s).textContent = Math.round(card.offsetWidth) + ' × ' + Math.round(card.offsetHeight); });
       if (AB.cardFx) AB.cardFx(card);
     }
+  })();
+
+  /* ---------- bento layout (6 tracks, dense): tall and wide cards zig-zag so every row is full
+       Webflow (4×2) · 3D (2×2)
+       Motion (2×2) · Planet · Trajectory / Deploys · Brand
+       Field notes (4) · CMS
+       Systems · Performance (4)
+     Tablet/phone fall back to Webflow's 2- and 1-column rules for is-tall / is-wide ---------- */
+  (function(){
+    var grid = $('#capabilities .ab_bento_grid'); if (!grid) return;
+    function cell(n){ var c = $('[data-name="Card / ' + n + '"]', grid); return c && c.closest('.ab_bento_cell'); }
+    var order = ['motion', 'specimen', 'trajectory', 'deploys', 'branding', 'observatory', 'cms-integrations', 'systems', 'performance'].map(cell);
+    if (order.some(function(c){ return !c; })) return;
+    var set = { motion: 'is-tall', observatory: 'is-wide', performance: 'is-wide' };
+    ['motion', 'specimen', 'trajectory', 'deploys', 'branding', 'observatory', 'cms-integrations', 'systems', 'performance'].forEach(function(n, i){
+      var c = order[i]; c.classList.remove('is-tall', 'is-wide', 'is-half');
+      if (set[n]) c.classList.add(set[n]);
+      grid.appendChild(c);
+    });
   })();
 
   /* ---------- services bento (spotlight + tilt come from core AB.cardFx) ---------- */
@@ -747,8 +765,8 @@ window.Webflow.push(function(){
       var PT = [[36, 128, 7], [104, 86, 9], [58, 34, 11]], E = [70, 184], NS = 'http://www.w3.org/2000/svg';
       var bg = ''; for (var k = 0; k < 22; k++) bg += '<circle cx="' + ((k * 61) % 136 + 2) + '" cy="' + ((k * 37) % 196 + 2) + '" r="' + (k % 5 ? .5 : .9) + '"/>';
       var d = 'M' + E[0] + ' ' + E[1] + ' Q ' + (E[0] - 44) + ' 162 ' + PT[0][0] + ' ' + PT[0][1] + ' Q ' + 60 + ' 94 ' + PT[1][0] + ' ' + PT[1][1] + ' Q ' + 112 + ' 44 ' + PT[2][0] + ' ' + PT[2][1];
-      v.innerHTML = '<div class="v-traj" style="position:relative;width:100%;height:100%;min-height:220px;display:flex;align-items:center;justify-content:center;padding:12px">' +
-        '<svg viewBox="0 0 140 200" style="width:100%;height:100%;max-height:360px;display:block;overflow:visible" aria-hidden="true"><g fill="rgba(242,240,234,.45)">' + bg + '</g>' +
+      v.innerHTML = '<div class="v-traj" style="position:relative;width:100%;height:100%;min-height:150px;display:flex;align-items:center;justify-content:center;padding:8px">' +
+        '<svg viewBox="0 0 140 200" style="width:100%;height:100%;max-height:170px;display:block;overflow:visible" aria-hidden="true"><g fill="rgba(242,240,234,.45)">' + bg + '</g>' +
         '<path class="ghost" d="' + d + '" fill="none" stroke="rgba(242,240,234,.22)" stroke-width="1" stroke-dasharray="2 3"/>' +
         '<path class="done" d="' + d + '" fill="none" stroke="#FF6A3D" stroke-width="1.4"/>' +
         '<circle cx="' + E[0] + '" cy="' + E[1] + '" r="6" fill="#4C8DFF"/><circle cx="' + (E[0] - 2) + '" cy="' + (E[1] - 2) + '" r="2.4" fill="#fff" opacity=".35"/>' +

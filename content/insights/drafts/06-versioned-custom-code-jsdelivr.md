@@ -38,7 +38,7 @@ The `integrity` attribute tells the browser what the file must hash to. If the C
 ## Two gotchas from real deploys
 
 - **Don't name files `*.min.js`.** jsDelivr can serve its own minified copy of a `.min.js` path, which won't match your hash. Name builds `*.prod.js`.
-- **Verify before you switch.** A brand-new tag can take a minute to appear on the CDN. Fetch the file, hash it, compare with your build's hash, and only then update Webflow.
+- **Verify before you switch.** A brand-new tag can take a minute to appear on the CDN. Fetch the file, hash it, compare with your build's hash, and only then update Webflow. It's the same habit I describe in [Descartes' method of doubt](/observatory/descartes-method-of-doubt-publish-then-check): a tool saying it worked isn't the same as seeing it.
 
 ## The handoff payoff
 

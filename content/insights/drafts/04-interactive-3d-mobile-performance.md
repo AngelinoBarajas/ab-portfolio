@@ -42,7 +42,7 @@ renderer.setPixelRatio(matchMedia('(pointer: coarse)').matches ? 1 : Math.min(de
 
 ## Rule 4: a fallback that still tells the story
 
-For visitors with **reduced motion** turned on, and for older devices, show a still frame of the scene with the same information. The point of the 3D is the information; the motion is a bonus.
+For visitors with **reduced motion** turned on, and for older devices, show a still frame of the scene with the same information. The point of the 3D is the information; the motion is a bonus. (Designing that still frame on purpose, rather than just switching things off, is the subject of [Reduced motion without losing the magic](/observatory/reduced-motion-without-losing-the-magic).)
 
 ## Rule 5: measure on a real phone
 

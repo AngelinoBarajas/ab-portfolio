@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.29.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.29.2 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -399,6 +399,20 @@ window.Webflow.push(function(){
   Object.assign(AB, { toast: toast, copyText: copyText, fmt: fmt, buildPlanet: buildPlanet, planets: planets, sf: sf, warp: warp, go: go, inject: inject });
 
   /* ===== core/20-ui.js ===== */
+
+  /* ---------- nav: you are here. Webflow marks exact matches (w--current); detail pages mark their parent section
+     (/work/x → Work, /services/x → Services, /observatory/x + /topics → Observatory), in the bar and the menu ---------- */
+  (function(){
+    var path = location.pathname.replace(/\/+$/, '') || '/', SEC = { work: '/work', services: '/services', observatory: '/observatory', topics: '/observatory' };
+    var top = path.split('/')[1] || '', parent = SEC[top];
+    if (!parent) return;
+    $$('.ab_nav_link, .ab_menu_link').forEach(function(a){
+      var h = (a.getAttribute('href') || '').replace(/\/+$/, '');
+      if (h !== parent) return;
+      a.classList.add('is-current');
+      if (!a.hasAttribute('aria-current')) a.setAttribute('aria-current', path === parent ? 'page' : 'true');
+    });
+  })();
 
   /* ---------- selection UI ([data-selectable]: Figma-style box, handles, name + size tags) ---------- */
   function addSel(el){

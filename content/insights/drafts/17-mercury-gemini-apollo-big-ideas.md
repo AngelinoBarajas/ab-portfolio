@@ -47,7 +47,7 @@ This site was a big, slightly crazy idea too: a portfolio built like a space pro
 
 - **Prototypes first.** Every page was designed and built as a plain HTML prototype, where it was cheap to throw things away. Only approved pages were rebuilt in Webflow, and the prototypes became the spec.
 - **Staging before the world.** Everything ships to a test address first and gets checked there. The real domain comes last.
-- **Every release has a number.** Each version of the custom code is tagged, so any step can be undone.
+- **Every release has a number.** Each version of the custom code is tagged, so any step can be undone. [Versioned custom code for Webflow](/observatory/webflow-custom-code-github-jsdelivr) shows the setup.
 - **Test flights are labeled.** Concept projects on this site carry a *Test flight* badge: a proof of concept, flown to answer a question, not a finished product. [CKS](/work/cks) is one.
 
 ## Keep the Moon, shrink the step
@@ -58,7 +58,7 @@ The mistake isn't dreaming too big. Kennedy's goal was ridiculous, and that was 
 - **List the scary questions.** Not features. Questions, like "can this run on a phone?" or "will the team actually update this?"
 - **Fly the scariest one first.** Small, fast, real content, real device.
 - **Decide after each flight.** Keep going, change course, or scrap it. A cancelled test flight is cheap. A cancelled launch isn't.
-- **Say no to extra payload.** New ideas go on the list for a later mission, not onto this one. (Scope creep has its own note: *The camel, the lion and the child*.)
+- **Say no to extra payload.** New ideas go on the list for a later mission, not onto this one. (Scope creep has its own note: [The camel, the lion and the child](/observatory/nietzsche-three-metamorphoses-scope-creep).)
 
 A big idea doesn't need a big first step. It needs a first step that tells you something.
 
