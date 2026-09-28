@@ -238,7 +238,7 @@
 .abp-con-deco::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(180deg,rgba(255,255,255,.028) 0 1px,transparent 1px 3px);-webkit-mask:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent);mask:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent)}
 .abp-con-deco::before{content:"";position:absolute;left:6px;right:6px;top:0;height:100%;background:linear-gradient(180deg,transparent calc(100% - 90px),color-mix(in srgb,var(--gc) 8%,transparent) calc(100% - 45px),transparent);animation:abp-scan 7s linear infinite}
 @keyframes abp-scan{from{transform:translateY(-100%)}to{transform:translateY(12%)}}
-.abp-console>*:not(.abp-con-deco){position:relative;z-index:1}
+.abp-console>*:not(.abp-con-deco):not(.sel){position:relative;z-index:1} /* not .sel: the selection box must stay absolute */
 .abp-con-top{display:flex;align-items:center;gap:8px;margin:-4px 0 14px;padding:0 18px 10px;border-bottom:1px dashed rgba(255,255,255,.1);font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dust)}
 .abp-con-led{width:7px;height:7px;border-radius:50%;background:var(--gc);box-shadow:0 0 8px var(--gc);animation:ab-blink 1.6s infinite}
 .abp-con-read{margin-left:auto;color:var(--dust)}
