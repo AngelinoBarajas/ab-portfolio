@@ -81,7 +81,7 @@
     chartSat = document.createElement('button'); chartSat.type = 'button'; chartSat.className = 'abp-kssat'; chartSat.setAttribute('aria-pressed', 'false');
     chartSat.setAttribute('aria-label', 'Knowledge system add-on');
     chartSat.style.left = (50 + Math.cos(ka) * kr).toFixed(2) + '%'; chartSat.style.top = (50 + Math.sin(ka) * kr).toFixed(2) + '%';
-    chartSat.innerHTML = '<span class="abp-counter"><span class="abp-kssat-body"><svg viewBox="0 0 44 22" aria-hidden="true"><rect class="p" x="1" y="6" width="11" height="10"/><rect class="p" x="32" y="6" width="11" height="10"/><path class="a" d="M12 11H16M28 11H32"/><rect class="b" x="16" y="4" width="12" height="14"/><circle class="l" cx="22" cy="11" r="2.2"/></svg></span><span class="abp-tag">Knowledge system</span><span class="abp-kssat-state">+ Add-on</span></span>';
+    chartSat.innerHTML = '<span class="abp-counter"><span class="abp-kssat-body"><svg class="sat-ico " viewBox="0 0 24 12" aria-hidden="true"><path class="sp" d="M1 3.5h6v5H1zM17 3.5h6v5h-6z"/><path class="sa" d="M7 6h3M14 6h3"/><rect class="sb" x="10" y="2.5" width="4" height="7"/></svg></span><span class="abp-tag">Knowledge system</span><span class="abp-kssat-state">+ Add-on</span></span>';
     chartSat.addEventListener('click', function(){ toggleKs(chartSat); });
     spin.appendChild(chartSat);
   }
@@ -360,11 +360,7 @@
     var link = $('.ab_crew_link'), grid = link && link.parentNode, bar = $('.ab_crew_comms'); if (!link) return;
     var cols = $$('.ab_crew_col', grid);
     var orbit = document.createElement('div'); orbit.className = 'abp-sat-orbit'; orbit.setAttribute('aria-hidden', 'true');
-    orbit.innerHTML = '<div class="abp-sat"><span class="abp-sat-cone"></span><svg viewBox="0 0 64 26">' +
-      '<path class="arm" d="M16 13H24M40 13H48"/><rect class="pan" x="1" y="7" width="15" height="12"/><rect class="pan" x="48" y="7" width="15" height="12"/>' +
-      '<path class="cell" d="M6 7V19M11 7V19M53 7V19M58 7V19M1 13H16M48 13H63"/>' +
-      '<rect class="body" x="24" y="5" width="16" height="16"/><rect class="win" x="28" y="9" width="8" height="5"/>' +
-      '<path class="ant" d="M32 21V24M28 25.5Q32 22.5 36 25.5"/><circle class="led" cx="36.5" cy="18" r="1.3"/></svg></div>';
+    orbit.innerHTML = '<div class="abp-sat"><span class="abp-sat-cone"></span><svg class="sat-ico " viewBox="0 0 24 12" aria-hidden="true"><path class="sp" d="M1 3.5h6v5H1zM17 3.5h6v5h-6z"/><path class="sa" d="M7 6h3M14 6h3"/><rect class="sb" x="10" y="2.5" width="4" height="7"/></svg></div>';
     grid.appendChild(orbit); grid.classList.add('has-sat');
     var sat = $('.abp-sat', orbit), cone = $('.abp-sat-cone', orbit);
     function ping(col){
@@ -423,7 +419,7 @@
   // multi-select: the first pick is the main destination; up to 3 here, "More than three" opens a field for the rest
   var KS_KEY = 'ab:ks', ks = false, ksChip = null, ksField = null, ksSat = null;
   try { ks = localStorage.getItem(KS_KEY) === '1'; } catch (e){}
-  var KS_ICON = '<svg class="abp-ks-ico" viewBox="0 0 14 11" aria-hidden="true"><path d="M2 8.5L7 2.5L12 8.5Z"/><circle cx="2" cy="8.5" r="1.6"/><circle cx="7" cy="2.5" r="2"/><circle cx="12" cy="8.5" r="1.6"/></svg>';
+  var KS_ICON = '<svg class="sat-ico abp-ks-ico" viewBox="0 0 24 12" aria-hidden="true"><path class="sp" d="M1 3.5h6v5H1zM17 3.5h6v5h-6z"/><path class="sa" d="M7 6h3M14 6h3"/><rect class="sb" x="10" y="2.5" width="4" height="7"/></svg>';
   // the satellite follows the main destination (moved into its counter-rotating layer, so it stays upright)
   function toggleKs(from){
     ks = !ks; try { localStorage.setItem(KS_KEY, ks ? '1' : ''); } catch (e){}

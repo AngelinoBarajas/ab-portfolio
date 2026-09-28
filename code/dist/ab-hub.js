@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-hub v0.29.4 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-hub v0.29.5 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHubInit) return;
@@ -383,6 +383,22 @@ window.Webflow.push(function(){
     return 'M' + A[0].toFixed(1) + ' ' + A[1].toFixed(1) + ' Q' + (mx - dy * bend).toFixed(1) + ' ' + (my + dx * bend).toFixed(1) + ' ' + B[0].toFixed(1) + ' ' + B[1].toFixed(1);
   }
   var itin = null, hint = null, ports = [];
+  // the Knowledge-system add-on: a satellite on the map (not a stop) and a chip in the trajectory; shared with the
+  // /process form through localStorage ab:ks, like the route goes through ab:dest
+  var KS_ICO = '<svg class="sat-ico hb-ks-ico" viewBox="0 0 24 12" aria-hidden="true"><path class="sp" d="M1 3.5h6v5H1zM17 3.5h6v5h-6z"/><path class="sa" d="M7 6h3M14 6h3"/><rect class="sb" x="10" y="2.5" width="4" height="7"/></svg>';
+  var ks = false, ksBtn = null, ksOrb = null; try { ks = localStorage.getItem('ab:ks') === '1'; } catch (e){}
+  function syncKs(){
+    if (ksBtn){ ksBtn.classList.toggle('is-on', ks); ksBtn.setAttribute('aria-pressed', ks ? 'true' : 'false'); $('.hb-kssat-state', ksBtn).textContent = ks ? 'Add-on · on' : '+ Add-on'; }
+    if (!ksOrb){ ksOrb = document.createElement('span'); ksOrb.className = 'hb-ks-orb'; ksOrb.setAttribute('aria-hidden', 'true'); ksOrb.innerHTML = '<i>' + KS_ICO + '</i>'; }
+    var host = main > -1 ? ports[main] : null;
+    if (host && ks){ if (ksOrb.parentNode !== host) host.appendChild(ksOrb); } else if (ksOrb.parentNode) ksOrb.parentNode.removeChild(ksOrb);
+    $$('[data-ks-chip]', panel || document).forEach(function(c){ c.setAttribute('aria-pressed', ks ? 'true' : 'false'); });
+  }
+  function toggleKs(from){
+    ks = !ks; try { localStorage.setItem('ab:ks', ks ? '1' : ''); } catch (e){}
+    syncKs(); toast(ks ? 'Add-on · Complete knowledge system' : 'Add-on removed');
+    if (from && hasGsap && !reduce) gsap.fromTo(from, { scale: .92 }, { scale: 1, duration: .5, ease: 'elastic.out(1,.4)', clearProps: 'scale' });
+  }
   if (map){
     map.insertAdjacentHTML('beforeend', '<svg class="hb-map-svg" viewBox="0 0 1000 520" preserveAspectRatio="none" aria-hidden="true"><g class="hb-arcs">' +
       ROUTES.map(function(r, k){ return '<path class="hb-arc" data-k="' + r.k + '" d="' + arcD(PORT[r.a], PORT[r.b], k % 2 ? .22 : -.22) + '"/>'; }).join('') +
@@ -399,6 +415,11 @@ window.Webflow.push(function(){
       b.addEventListener('click', function(){ clickPort(s.i); });
       map.appendChild(b); ports.push(b);
     });
+    ksBtn = document.createElement('button'); ksBtn.type = 'button'; ksBtn.className = 'hb-kssat'; ksBtn.style.left = '47%'; ksBtn.style.top = '12%';
+    ksBtn.setAttribute('aria-label', 'Knowledge system add-on'); ksBtn.setAttribute('aria-pressed', 'false');
+    ksBtn.innerHTML = '<span class="hb-kssat-body"><svg class="sat-ico " viewBox="0 0 24 12" aria-hidden="true"><path class="sp" d="M1 3.5h6v5H1zM17 3.5h6v5h-6z"/><path class="sa" d="M7 6h3M14 6h3"/><rect class="sb" x="10" y="2.5" width="4" height="7"/></svg></span><span class="hb-port-code">KNS</span><span class="hb-kssat-state">+ Add-on</span>';
+    ksBtn.addEventListener('click', function(){ toggleKs(ksBtn); });
+    map.appendChild(ksBtn);
     onView(map, function(v){ if (v) $$('.hb-port-pl', map).forEach(build); }, { rootMargin: '600px' });
   }
   function sel(){ return main > -1 ? [main].concat(stops) : []; }
@@ -467,8 +488,9 @@ window.Webflow.push(function(){
         legs += '<li style="--c:' + o.c + '" class="' + (w ? '' : 'is-custom') + '"><b>' + esc(o.short) + ' · ' + esc(o.code) + '</b><small>' + (w ? 'Stop ' + (k + 1) + ' · transfer orbit' : 'Stop ' + (k + 1) + ' · custom transfer, planned on the discovery call') + '</small>' + (w ? '<br>' + esc(w) : '') + '</li>';
       });
       var all = flownAll(chosen);
+      var ksChip = '<div class="hb-pl-k" style="margin-top:14px"><span>Add-on</span></div><div class="hb-pl-pick"><button type="button" class="is-addon" data-ks-chip="" aria-pressed="' + ks + '" style="--c:#E0A458">' + KS_ICO + '+ Complete knowledge system</button></div>';
       h += '<div class="hb-pl-b"><div class="hb-pl-k"><span>Your trajectory</span><span>' + chosen.length + ' destination' + (chosen.length > 1 ? 's' : '') + '</span></div><ol class="hb-legs">' + legs + '</ol>' +
-        '<div class="hb-flown" style="margin-top:14px">' + (all.length ? 'Flown before · ' + flownLinks(all) : 'No mission has flown this exact trajectory yet · yours could be first') + '</div></div>';
+        '<div class="hb-flown" style="margin-top:14px">' + (all.length ? 'Flown before · ' + flownLinks(all) : 'No mission has flown this exact trajectory yet · yours could be first') + '</div>' + ksChip + '</div>';
       h += '<div class="hb-pl-b' + (step === 3 ? ' is-next' : '') + '">' + (step === 3 ? '<span class="hb-pl-tag">Next</span>' : '') + '<div class="hb-pl-go">' +
         btnHTML('is-primary', '#flight', flightOpen() && fsel.join() === chosen.join() ? 'Fly it again' : 'Launch the flight plan', '→', ' data-launch') + '</div>' +
         '<p class="hb-pl-note">Your flight plan warps in below: six stages, re-plotted for this trajectory.</p></div>';
@@ -477,6 +499,8 @@ window.Webflow.push(function(){
     if (animate && !reduce){ panel.classList.remove('is-ping'); void panel.offsetWidth; panel.classList.add('is-ping'); }
     $$('[data-pick]', panel).forEach(function(b){ b.addEventListener('click', function(){ clickPort(+b.getAttribute('data-pick')); }); });
     $$('[data-stop]', panel).forEach(function(b){ b.addEventListener('click', function(){ clickPort(+b.getAttribute('data-stop')); }); });
+    $$('[data-ks-chip]', panel).forEach(function(b){ b.addEventListener('click', function(){ toggleKs(b); }); });
+    syncKs();
     var rs = $('[data-reset]', panel); if (rs) rs.addEventListener('click', function(){ main = -1; stops = []; drawPlan(false); });
     var go = $('[data-launch]', panel);
     if (go) go.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); launchFlight(); });

@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.29.4 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.29.5 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -1028,7 +1028,7 @@ window.Webflow.push(function(){
     if (!$('#plAddonsField', form) && typesRow){ var hf = document.createElement('input'); hf.type = 'hidden'; hf.name = 'Add-ons'; hf.id = 'plAddonsField'; hf.value = ''; typesRow.parentNode.appendChild(hf); }
     var chips = $$('.ab_planner_chip:not([data-addon]):not(.is-unsure)', form), addons = $$('.ab_planner_chip[data-addon]', form);
     // add-ons wear the Knowledge-system satellite icon (the same one as the /process form)
-    addons.forEach(function(c){ if (!$('svg', c)) c.insertAdjacentHTML('afterbegin', '<svg class="ab-ks-ico" viewBox="0 0 14 11" aria-hidden="true"><path d="M2 8.5L7 2.5L12 8.5Z"/><circle cx="2" cy="8.5" r="1.6"/><circle cx="7" cy="2.5" r="2"/><circle cx="12" cy="8.5" r="1.6"/></svg>'); });
+    addons.forEach(function(c){ if (!$('svg', c)) c.insertAdjacentHTML('afterbegin', '<svg class="sat-ico ab-ks-ico" viewBox="0 0 24 12" aria-hidden="true"><path class="sp" d="M1 3.5h6v5H1zM17 3.5h6v5h-6z"/><path class="sa" d="M7 6h3M14 6h3"/><rect class="sb" x="10" y="2.5" width="4" height="7"/></svg>'); });
     var fType = $('#plTypesField'), fBud = $('#plBudField'), fBrief = $('#plBriefField'), fAdd = $('#plAddonsField');
     chips.concat(addons).forEach(function(c){ c.setAttribute('aria-pressed', 'false'); });
     var sg = $('.pl-stars', form), s = '';
@@ -1084,8 +1084,7 @@ window.Webflow.push(function(){
       // the Knowledge System add-on: a small linked-node satellite on a wide orbit
       if (st.add && st.add.length){
         var a2 = mt * .45 + 1, R2 = cur.r + 34, sx = cur.x + Math.cos(a2) * R2, sy = cur.y + Math.sin(a2) * R2 * .32, op = Math.sin(a2) > 0 ? .95 : .45;
-        out += '<g opacity="' + op + '" stroke="#FFD29A" stroke-width=".8" fill="#FFD29A"><path d="M' + (sx - 4).toFixed(1) + ' ' + (sy + 2).toFixed(1) + 'L' + sx.toFixed(1) + ' ' + (sy - 3).toFixed(1) + 'L' + (sx + 4).toFixed(1) + ' ' + (sy + 2).toFixed(1) + 'Z" fill="none"/>' +
-          '<circle cx="' + (sx - 4).toFixed(1) + '" cy="' + (sy + 2).toFixed(1) + '" r="1.4"/><circle cx="' + sx.toFixed(1) + '" cy="' + (sy - 3).toFixed(1) + '" r="1.8"/><circle cx="' + (sx + 4).toFixed(1) + '" cy="' + (sy + 2).toFixed(1) + '" r="1.4"/></g>';
+        out += '<g opacity="' + op + '" transform="translate(' + (sx - 7.2).toFixed(1) + ' ' + (sy - 3.6).toFixed(1) + ') scale(.6)"><path d="M1 3.5h6v5H1zM17 3.5h6v5h-6z" fill="none" stroke="#FFD29A" stroke-width="1.3" vector-effect="non-scaling-stroke"/><path d="M7 6h3M14 6h3" stroke="#FFD29A" stroke-width="1.3" vector-effect="non-scaling-stroke"/><rect x="10" y="2.5" width="4" height="7" fill="#FFD29A"/></g>';
       }
       moons.innerHTML = out;
     }
