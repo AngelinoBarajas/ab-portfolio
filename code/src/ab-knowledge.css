@@ -128,6 +128,9 @@
 @media (max-width:479px){.ab_dbh.is-ks .ab_dbh_title.is-ks{font-size:min(46px,calc((100vw - 2rem) / 9.5))}}
 /* hero record line (dot · Observatory · 15 observations · 27 topics) is ~359px as one flex row: below 480 it squashed,
    broke mid-piece and ran off the column. Scale its type to the column (dot + gap = 24px fixed) and keep it one line. */
+/* theme tabs (All · Build notes · Why before how) need ~391px on one line: on a phone the third wrapped under the
+   first two and left an empty bordered gap. Full width, tabs share it, type scales to the column. */
+@media (max-width:479px){.ab_ks-tabs{display:flex;flex-wrap:nowrap;width:100%}.ab_ks-tabs button{flex:1 1 auto;justify-content:center;padding:11px 6px;gap:6px;letter-spacing:.04em;white-space:nowrap;font-size:min(12px,calc((100vw - 2rem) / 30))}}
 @media (max-width:479px){.ab_dbh.is-ks .ab_rec{font-size:min(12px,calc((100vw - 2rem - 24px) / 29));letter-spacing:.1em;white-space:nowrap}}
 
 /* ---------- article ---------- */
