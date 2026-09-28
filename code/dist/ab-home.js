@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.29.5 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.29.6 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -632,21 +632,50 @@ window.Webflow.push(function(){
       if (card) card.addEventListener('pointerenter', function(){ gsap.fromTo(orb, { rotation: 0 }, { rotation: -360, svgOrigin: '0 0', duration: 1.6, ease: 'power3.inOut' }); });
     },
     terminal: function(v){
-      // a full deploy log: the card is tall now, so the whole run fits (build, checks, edge, live)
-      var ok = '<span class="ok">✓</span> ', lines = ['<span class="hi">$</span> git push origin main', '→ building site with Astro', '&nbsp;&nbsp;' + ok + '14 pages · 3 collections', '&nbsp;&nbsp;' + ok + 'images optimized · −62%', ok + 'build complete in 8.4s', '→ running checks',
-        '&nbsp;&nbsp;' + ok + 'Lighthouse 98 · 100 · 100 · 100', '&nbsp;&nbsp;' + ok + 'links 212 / 212', '&nbsp;&nbsp;' + ok + 'reduced motion respected', '→ deploying to the edge', '&nbsp;&nbsp;' + ok + '31 regions warm', ok + 'live at <span class="hi">yourbrand.com</span>'];
-      v.innerHTML = '<div class="v-term"><div class="bar"><i></i><i></i><i></i></div><div class="out"></div></div>';
-      var out = $('.out', v), vis = false, running = false;
-      // every line is always in the layout; typing only toggles visibility, so the card never changes height
-      out.innerHTML = lines.map(function(l){ return '<div class="ln">' + l + '</div>'; }).join('') + '<div class="ln"><span class="cur"></span></div>';
-      var rows = $$('.ln', out);
+      // code → deploy: the editor types index.html, site.css and app.js, then the terminal runs the whole deploy.
+      // Every scene is padded to the same number of lines, so the card never changes height between scenes
+      var ok = '<span class="ok">✓</span> ', ind = '&nbsp;&nbsp;';
+      var SC = [
+        { tab: 'index.html', lines: ['<span class="k">&lt;main</span> <span class="a">class</span>=<span class="s">"page"</span><span class="k">&gt;</span>', ind + '<span class="k">&lt;h1</span> <span class="a">class</span>=<span class="s">"hero"</span><span class="k">&gt;</span>Built to launch<span class="k">&lt;/h1&gt;</span>', ind + '<span class="k">&lt;a</span> <span class="a">class</span>=<span class="s">"btn"</span> <span class="a">href</span>=<span class="s">"/start"</span><span class="k">&gt;</span>Start<span class="k">&lt;/a&gt;</span>', '<span class="k">&lt;/main&gt;</span>', '<span class="k">&lt;script</span> <span class="a">src</span>=<span class="s">"app.js"</span> <span class="a">defer</span><span class="k">&gt;&lt;/script&gt;</span>'] },
+        { tab: 'site.css', lines: ['<span class="k">:root</span> { <span class="a">--signal</span>: <span class="s">#FF6A3D</span>; }', '<span class="k">.hero</span> { <span class="a">font-size</span>: <span class="s">clamp(3rem, 8vw, 8rem)</span>; }', '<span class="k">.btn</span> { <span class="a">background</span>: <span class="s">var(--signal)</span>; }', '<span class="k">@media</span> (prefers-reduced-motion: reduce) {', ind + '<span class="k">*</span> { <span class="a">animation</span>: <span class="s">none</span>; }', '}'] },
+        { tab: 'app.js', lines: ['<span class="c">// motion that survives a copy edit</span>', '<span class="a">gsap</span>.from(<span class="s">\'.hero\'</span>, { y: <span class="s">40</span>, opacity: <span class="s">0</span> });', '<span class="k">document</span>.querySelectorAll(<span class="s">\'.btn\'</span>)', ind + '.forEach(<span class="k">function</span> (b) {', ind + ind + 'b.addEventListener(<span class="s">\'click\'</span>, launch);', ind + '});'] },
+        { tab: 'terminal', term: true, lines: ['<span class="hi">$</span> git push origin main', '→ building site with Astro', ind + ok + '14 pages · 3 collections', ind + ok + 'images optimized · −62%', ok + 'build complete in 8.4s', '→ running checks', ind + ok + 'Lighthouse 98 · 100 · 100 · 100', ind + ok + 'links 212 / 212', ind + ok + 'reduced motion respected', '→ deploying to the edge', ind + ok + '31 regions warm', ind + ok + 'CDN purged · v1.4.2 tagged', ok + 'live at <span class="hi">yourbrand.com</span>', ok + '0 errors · 0 warnings', '<span class="hi">$</span> <span class="cur"></span>'] }
+      ];
+      var N = Math.max.apply(null, SC.map(function(x){ return x.lines.length; }));
+      v.innerHTML = '<div class="v-term"><div class="bar"><i></i><i></i><i></i><span class="tabs">' + SC.map(function(x, i){ return '<span data-t="' + i + '">' + x.tab + '</span>'; }).join('') + '</span></div><div class="out"></div></div>';
+      var out = $('.out', v), tabs = $$('.tabs span', v), vis = false, running = false, timers = [];
+      function scene(k){
+        var x = SC[k], html = '';
+        tabs.forEach(function(t, i){ t.classList.toggle('on', i === k); });
+        for (var i = 0; i < N; i++) html += '<div class="ln">' + (x.lines[i] || '&nbsp;') + '</div>';
+        out.innerHTML = html; out.classList.toggle('is-term', !!x.term);
+        var rows = $$('.ln', out).slice(0, x.lines.length);
+        rows.forEach(function(r){ r.style.visibility = 'hidden'; });
+        return rows;
+      }
+      function later(fn, ms){ timers.push(setTimeout(fn, ms)); }
       function run(){
         if (running) return; running = true;
-        rows.forEach(function(r){ r.style.visibility = 'hidden'; });
-        var i = 0;
-        (function nx(){ if (i < rows.length){ rows[i++].style.visibility = 'visible'; setTimeout(nx, 380); } else setTimeout(function(){ running = false; if (vis) run(); }, 4200); })();
+        var k = 0;
+        (function next(){
+          if (!vis){ running = false; return; }
+          var rows = scene(k), i = 0, step = SC[k].term ? 300 : 230;
+          (function nx(){
+            if (i < rows.length){
+              var r = rows[i++]; r.style.visibility = 'visible';
+              // type each line in (stepped reveal), terminal lines just appear like output
+              if (hasGsap && !SC[k].term){ var n = Math.max(6, Math.min(40, r.textContent.length)); gsap.fromTo(r, { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: n * .014, ease: 'steps(' + n + ')', clearProps: 'clipPath' }); }
+              later(nx, step);
+            } else {
+              var hold = SC[k].term ? 3800 : 900; k = (k + 1) % SC.length;
+              later(next, hold);
+            }
+          })();
+        })();
       }
-      onView(v, function(x){ vis = x; if (x && !reduce) run(); });
+      if (reduce){ scene(3).forEach(function(r){ r.style.visibility = 'visible'; }); return; }
+      scene(0);
+      onView(v, function(x){ vis = x; if (x) run(); else { timers.forEach(clearTimeout); timers = []; running = false; } });
     },
     pipeline: function(v){
       v.innerHTML = '<div class="v-pipe"><div class="node src"><span>Airtable</span><span>Sheets</span><span>API</span></div><div class="node">Webhook</div><div class="node dst">Webflow CMS</div><div class="line"><i></i><i></i><i></i></div></div>';
@@ -665,13 +694,13 @@ window.Webflow.push(function(){
       var grid = ''; for (var gx = 52; gx < W; gx += 52) grid += '<path d="M' + gx + ' 0V' + H + '"/>'; for (var gy = 44; gy < H; gy += 44) grid += '<path d="M0 ' + gy + 'H' + W + '"/>';
       var bg = ''; for (var k = 0; k < 60; k++) bg += '<circle cx="' + ((k * 83) % W) + '" cy="' + ((k * 47) % H) + '" r="' + (k % 6 ? .6 : 1.1) + '"/>';
       v.innerHTML = '<div class="v-obsw" style="position:relative;width:100%;height:100%;min-height:190px;display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px;padding:14px">' +
+        '<div class="v-obsw-chart" style="position:relative;min-width:0;min-height:0"><i class="beam" aria-hidden="true" style="position:absolute;top:-14px;bottom:-14px;left:0;width:2px;background:rgba(255,255,255,.6);box-shadow:0 0 10px rgba(255,255,255,.5);pointer-events:none;will-change:transform"><b style="position:absolute;top:0;bottom:0;right:100%;width:56px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.16));transform-origin:100% 50%"></b></i>' +
         '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%;display:block;overflow:visible" aria-hidden="true">' +
         '<g stroke="rgba(255,255,255,.07)" stroke-width="1">' + grid + '</g><g fill="rgba(255,255,255,.45)">' + bg + '</g><g class="lk"></g>' +
         C.map(function(g, i){ return '<g class="cst" data-i="' + i + '"><path d="M' + g.p.map(function(q){ return q.join(' '); }).join('L') + '" fill="none" stroke="' + g.c + '" stroke-width="1.3" stroke-linecap="round" opacity=".9"/>' +
           g.p.map(function(q){ return '<circle class="st" cx="' + q[0] + '" cy="' + q[1] + '" r="3" fill="' + g.c + '"/>'; }).join('') +
           '<text x="' + g.p[0][0] + '" y="' + (g.p[0][1] - 10) + '" fill="' + g.c + '" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5" opacity=".85">' + g.k + '</text></g>'; }).join('') +
-        '<rect class="sw" x="0" y="0" width="2" height="' + H + '" fill="rgba(255,255,255,.55)"/><rect class="swg" x="-40" y="0" width="40" height="' + H + '" fill="url(#obsSw)"/>' +
-        '<defs><linearGradient id="obsSw" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".16"/></linearGradient></defs></svg>' +
+        '</svg></div>' +
         '<div class="v-log" style="display:flex;flex-direction:column;gap:8px;min-width:0;font-family:var(--mono);color:#fff">' +
           '<div style="display:flex;justify-content:space-between;gap:8px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.8"><span>Signal log</span><span class="n">— notes</span></div>' +
           '<ul class="rows" style="list-style:none;margin:0;padding:0;display:grid;gap:6px;flex:1;align-content:start"></ul>' +
@@ -703,10 +732,13 @@ window.Webflow.push(function(){
       if (reduce || !hasGsap){ loadAll(); return; }
       paths.forEach(function(p){ var L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; });
       gsap.set(stars, { transformOrigin: '50% 50%', opacity: .35 });
-      // the beam sweeps left to right; constellations draw in as it passes and stars flare under it
-      var sw = $('.sw', v), swg = $('.swg', v), o = { x: -20 }, drawn = [];
-      var sweep = gsap.to(o, { x: W + 20, duration: 7, ease: 'none', repeat: -1, paused: true, onRepeat: function(){ drawn = []; paths.forEach(function(p){ gsap.to(p, { strokeDashoffset: p.getTotalLength(), duration: .01 }); }); }, onUpdate: function(){
-        sw.setAttribute('x', o.x); swg.setAttribute('x', o.x - 40);
+      // the beam glides back and forth across the whole panel (easing at each end, its glow trailing behind it);
+      // constellations draw in on the first pass and stay, stars flare each time it crosses them
+      var box = $('.v-obsw-chart', v), beam = $('.beam', v), glow = $('.beam b', v), o = { x: 0 }, drawn = [], lastX = 0;
+      function toPx(x){ var w = box.clientWidth, h = box.clientHeight, k = Math.min(w / W, h / H) || 0; return (w - W * k) / 2 + x * k; }
+      var sweep = gsap.to(o, { x: W, duration: 7, ease: 'sine.inOut', repeat: -1, yoyo: true, paused: true, onUpdate: function(){
+        var dir = o.x >= lastX ? 1 : -1; lastX = o.x;
+        gsap.set(beam, { x: toPx(o.x) }); glow.style.transform = 'scaleX(' + dir + ')';
         stars.forEach(function(st){ var d = Math.abs(+st.getAttribute('cx') - o.x); st.style.opacity = d < 18 ? 1 : Math.max(.35, +(st.style.opacity || .35) - .01); st.setAttribute('r', d < 18 ? 4.6 : 3); });
         C.forEach(function(g, i){ if (!drawn[i] && o.x > g.p[0][0]){ drawn[i] = true; gsap.to(paths[i], { strokeDashoffset: 0, duration: .9, ease: 'power2.out' }); } });
       } });
@@ -802,7 +834,9 @@ window.Webflow.push(function(){
       var card = v.closest('.ab_bento-card'); if (card) card.addEventListener('pointerenter', function(){ tl.timeScale(1.8); }); if (card) card.addEventListener('pointerleave', function(){ tl.timeScale(1); });
     },
     meters: function(v){
-      v.innerHTML = '<div class="v-meter"><div><span>LCP</span><b><i style="--v:.72"></i></b><span>&lt; 2.5 s</span></div><div><span>CLS</span><b><i style="--v:.9"></i></b><span>&lt; 0.1</span></div><div><span>Motion</span><b><i style="--v:1"></i></b><span>60 fps</span></div></div>';
+      // six readings (two columns when the card is wide): loading, stability, response, motion, audit, access
+      var M = [['LCP', .72, '&lt; 2.5 s'], ['CLS', .9, '&lt; 0.1'], ['INP', .84, '&lt; 200 ms'], ['Motion', 1, '60 fps'], ['Lighthouse', .98, '98 / 100'], ['A11y', 1, '100 / 100']];
+      v.innerHTML = '<div class="v-meter">' + M.map(function(m){ return '<div><span>' + m[0] + '</span><b><i style="--v:' + m[1] + '"></i></b><span>' + m[2] + '</span></div>'; }).join('') + '</div>';
       if (!reduce && hasGsap) ScrollTrigger.create({ trigger: v, start: 'top 85%', once: true, onEnter: function(){ gsap.from($$('.v-meter b i', v), { scaleX: 0, duration: 1.2, stagger: .15, ease: 'power3.out' }); } });
     }
   };
