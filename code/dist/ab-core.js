@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.28.5 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.28.6 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -384,7 +384,13 @@ window.Webflow.push(function(){
     if (flag && hasGsap && !reduce && flash){
       gsap.set(flash, { opacity: 1 }); sf.state.warp = 1;
       html.classList.remove('ab-warp-in');
-      gsap.timeline().to(flash, { opacity: 0, duration: .6, ease: 'power2.out' }, .05).to(sf.state, { warp: 0, duration: 1.1, ease: 'power2.out' }, 0);
+      var out = function(){ out = null; gsap.timeline().to(flash, { opacity: 0, duration: .6, ease: 'power2.out' }, .05).to(sf.state, { warp: 0, duration: 1.1, ease: 'power2.out' }, 0); };
+      // arriving at an anchor (/#launch): the first jump lands short while late layout grows above the target, so the
+      // fade showed the sections in between (About → Home testimonials). Stay covered until 30-motion re-aims (AB.arrived)
+      var hid = location.hash.length > 1 ? location.hash.slice(1) : '', tgt = null;
+      try { tgt = hid && document.getElementById(decodeURIComponent(hid)); } catch (e){}
+      if (tgt){ AB.arrived = function(){ if (out) out(); }; setTimeout(AB.arrived, 1800); }
+      else out();
     } else html.classList.remove('ab-warp-in');
     // back/forward cache: a page restored mid-warp would keep its flash up
     addEventListener('pageshow', function(e){ if (e.persisted && flash){ if (hasGsap) gsap.set(flash, { opacity: 0 }); else flash.style.opacity = 0; flash.style.pointerEvents = ''; sf.state.warp = 0; } });
@@ -763,7 +769,7 @@ window.Webflow.push(function(){
     if (!t) return;
     var touched = false, mark = function(){ touched = true; };
     ['wheel', 'touchmove', 'keydown'].forEach(function(ev){ addEventListener(ev, mark, { passive: true, once: true }); });
-    function aim(){ if (touched) return; if (window.ScrollTrigger) ScrollTrigger.refresh(); scrollToTarget(t); }
+    function aim(){ if (!touched){ if (window.ScrollTrigger) ScrollTrigger.refresh(); scrollToTarget(t); } if (AB.arrived) AB.arrived(); } // AB.arrived: lift the warp-in cover (10-space)
     function start(){ setTimeout(aim, 150); setTimeout(aim, 900); setTimeout(aim, 2000); }
     if (document.readyState === 'complete') start(); else addEventListener('load', start);
   })();
@@ -948,10 +954,12 @@ window.Webflow.push(function(){
     }
     /* ---------- light sections: dot field that reacts to the cursor ---------- */
     $$('.ab_light-bg').forEach(function(bg){
-      arcClip(bg); if (window.ResizeObserver) new ResizeObserver(function(){ arcClip(bg); }).observe(bg);
+      // the section can grow after load (CMS lists, scripts filling cards, fonts): re-measure the canvas with the clip,
+      // or the dot field stretches to the new box and the cursor ring lands off the pointer
+      arcClip(bg); if (window.ResizeObserver) new ResizeObserver(function(){ arcClip(bg); size(); }).observe(bg);
       var c = document.createElement('canvas'); bg.appendChild(c);
       var ctx = c.getContext('2d'), W, H, dots = [], GAP = 24, mx = -9999, my = -9999, vis = false, live = 0, ripples = [];
-      function size(){ W = bg.offsetWidth; H = bg.offsetHeight; c.width = W; c.height = H; dots = []; for (var y = GAP / 2; y < H; y += GAP) for (var x = GAP / 2; x < W; x += GAP) dots.push({ x: x, y: y, ox: 0, oy: 0, s: 0 }); draw(); }
+      function size(){ var w = bg.offsetWidth, h = bg.offsetHeight; if (w === W && h === H) return; W = w; H = h; c.width = W; c.height = H; dots = []; for (var y = GAP / 2; y < H; y += GAP) for (var x = GAP / 2; x < W; x += GAP) dots.push({ x: x, y: y, ox: 0, oy: 0, s: 0 }); draw(); }
       function draw(){
         ctx.clearRect(0, 0, W, H); var R = 170, moving = false, now = performance.now();
         ripples = ripples.filter(function(rp){ return now - rp.t < 1600; }); if (ripples.length) moving = true;

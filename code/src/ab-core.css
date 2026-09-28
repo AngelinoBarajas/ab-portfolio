@@ -471,6 +471,10 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 .ab_footer_link:hover::before,.ab_footer_link:focus-visible::before{transform:scale(1)}
 .ab_footer_link:focus-visible{color:var(--star);transform:translateX(6px)}
 .ab_footer_email-copy{font-size:11px;text-transform:uppercase;letter-spacing:.1em}
+/* the email reads lowercase (uppercase + tracking made it ~60px wider than its column, clipping "Copy");
+   992–1439px the email column keeps room for the address + Copy */
+.ab_footer_col .button.is-email .ab_button-label{text-transform:none;letter-spacing:.01em}
+@media (min-width:992px) and (max-width:1439px){.ab_footer_grid{grid-template-columns:minmax(0,1.3fr) minmax(0,.8fr) minmax(0,.8fr) minmax(0,.8fr) minmax(290px,1.5fr)}}
 .ab_footer_wordmark .wl{display:inline-block;cursor:pointer;color:transparent;-webkit-text-stroke:1px rgba(242,240,234,.4);background-image:var(--starfill);background-size:180px 180px;-webkit-background-clip:text;background-clip:text;transition:-webkit-text-stroke-color .25s,color .25s}
 .ab_footer_wordmark .wl.hot{-webkit-text-stroke-color:var(--signal)}
 .ab_footer_wordmark .wl.lit{color:var(--signal);-webkit-text-stroke-color:var(--signal)}

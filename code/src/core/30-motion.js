@@ -23,7 +23,7 @@
     if (!t) return;
     var touched = false, mark = function(){ touched = true; };
     ['wheel', 'touchmove', 'keydown'].forEach(function(ev){ addEventListener(ev, mark, { passive: true, once: true }); });
-    function aim(){ if (touched) return; if (window.ScrollTrigger) ScrollTrigger.refresh(); scrollToTarget(t); }
+    function aim(){ if (!touched){ if (window.ScrollTrigger) ScrollTrigger.refresh(); scrollToTarget(t); } if (AB.arrived) AB.arrived(); } // AB.arrived: lift the warp-in cover (10-space)
     function start(){ setTimeout(aim, 150); setTimeout(aim, 900); setTimeout(aim, 2000); }
     if (document.readyState === 'complete') start(); else addEventListener('load', start);
   })();
@@ -208,10 +208,12 @@
     }
     /* ---------- light sections: dot field that reacts to the cursor ---------- */
     $$('.ab_light-bg').forEach(function(bg){
-      arcClip(bg); if (window.ResizeObserver) new ResizeObserver(function(){ arcClip(bg); }).observe(bg);
+      // the section can grow after load (CMS lists, scripts filling cards, fonts): re-measure the canvas with the clip,
+      // or the dot field stretches to the new box and the cursor ring lands off the pointer
+      arcClip(bg); if (window.ResizeObserver) new ResizeObserver(function(){ arcClip(bg); size(); }).observe(bg);
       var c = document.createElement('canvas'); bg.appendChild(c);
       var ctx = c.getContext('2d'), W, H, dots = [], GAP = 24, mx = -9999, my = -9999, vis = false, live = 0, ripples = [];
-      function size(){ W = bg.offsetWidth; H = bg.offsetHeight; c.width = W; c.height = H; dots = []; for (var y = GAP / 2; y < H; y += GAP) for (var x = GAP / 2; x < W; x += GAP) dots.push({ x: x, y: y, ox: 0, oy: 0, s: 0 }); draw(); }
+      function size(){ var w = bg.offsetWidth, h = bg.offsetHeight; if (w === W && h === H) return; W = w; H = h; c.width = W; c.height = H; dots = []; for (var y = GAP / 2; y < H; y += GAP) for (var x = GAP / 2; x < W; x += GAP) dots.push({ x: x, y: y, ox: 0, oy: 0, s: 0 }); draw(); }
       function draw(){
         ctx.clearRect(0, 0, W, H); var R = 170, moving = false, now = performance.now();
         ripples = ripples.filter(function(rp){ return now - rp.t < 1600; }); if (ripples.length) moving = true;

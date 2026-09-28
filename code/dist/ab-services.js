@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-services v0.28.5 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-services v0.28.6 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abServicesInit) return;

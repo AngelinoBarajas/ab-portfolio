@@ -305,7 +305,13 @@
     if (flag && hasGsap && !reduce && flash){
       gsap.set(flash, { opacity: 1 }); sf.state.warp = 1;
       html.classList.remove('ab-warp-in');
-      gsap.timeline().to(flash, { opacity: 0, duration: .6, ease: 'power2.out' }, .05).to(sf.state, { warp: 0, duration: 1.1, ease: 'power2.out' }, 0);
+      var out = function(){ out = null; gsap.timeline().to(flash, { opacity: 0, duration: .6, ease: 'power2.out' }, .05).to(sf.state, { warp: 0, duration: 1.1, ease: 'power2.out' }, 0); };
+      // arriving at an anchor (/#launch): the first jump lands short while late layout grows above the target, so the
+      // fade showed the sections in between (About → Home testimonials). Stay covered until 30-motion re-aims (AB.arrived)
+      var hid = location.hash.length > 1 ? location.hash.slice(1) : '', tgt = null;
+      try { tgt = hid && document.getElementById(decodeURIComponent(hid)); } catch (e){}
+      if (tgt){ AB.arrived = function(){ if (out) out(); }; setTimeout(AB.arrived, 1800); }
+      else out();
     } else html.classList.remove('ab-warp-in');
     // back/forward cache: a page restored mid-warp would keep its flash up
     addEventListener('pageshow', function(e){ if (e.persisted && flash){ if (hasGsap) gsap.set(flash, { opacity: 0 }); else flash.style.opacity = 0; flash.style.pointerEvents = ''; sf.state.warp = 0; } });
