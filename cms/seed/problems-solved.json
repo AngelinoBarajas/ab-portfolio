@@ -10,7 +10,7 @@
     "engineer": "Pins are read from the Projects collection through data attributes. Invisible hitboxes handle hover and tap, and nearby pins group into clusters.",
     "snippet": "// one pin per location — nearby projects cluster into a single pin\nvar CLUSTER_DEG = 0.6; // ~65km at NYC latitude\nCMS_PROJECTS.forEach(function (p) {\n  var existing = null;\n  for (var ci = 0; ci < CMS_CLUSTERS.length; ci++) {\n    var c = CMS_CLUSTERS[ci];\n    if (Math.abs(c.lat - p.lat) < CLUSTER_DEG && Math.abs(c.lng - p.lng) < CLUSTER_DEG) { existing = c; break; }\n  }\n  if (existing) existing.projects.push(p);\n  else CMS_CLUSTERS.push({ lat: p.lat, lng: p.lng, city: p.city, projects: [p] });\n});",
     "demo": "live",
-    "sort": 1
+    "sort": 10
   },
   {
     "name": "Add a project once and it shows up everywhere",
@@ -23,7 +23,7 @@
     "engineer": "Webflow can't bind a switch to an attribute, so the globe reads two filtered Collection Lists and the grid filters to case studies only.",
     "snippet": "projects.push({\n  city: el.getAttribute('data-globe-city') || '',\n  lat: lat, lng: lng,\n  title: el.getAttribute('data-globe-title') || '',\n  img: imgEl ? imgEl.getAttribute('src') : '',\n  slug: '/projects/' + (el.getAttribute('data-globe-slug') || ''),\n  hasCaseStudy: el.getAttribute('data-globe-has-case-study') !== 'false'\n});",
     "demo": "live",
-    "sort": 2
+    "sort": 20
   },
   {
     "name": "Let the videos do the selling",
@@ -36,7 +36,7 @@
     "engineer": "The scroll distance lives on one runway element, calibrated per breakpoint (160 / 150 / 135 / 120vh). A parent's overflow: hidden was silently killing sticky, so it became overflow: clip.",
     "snippet": null,
     "demo": null,
-    "sort": 3
+    "sort": 30
   },
   {
     "name": "Big visuals that still load fast on a phone",
@@ -49,7 +49,7 @@
     "engineer": "An IntersectionObserver starts and stops each render loop. A bug that started the loop twice was removed, which halved the CPU cost. Below the mobile breakpoint a 150px SVG replaces the canvas.",
     "snippet": "new IntersectionObserver(function (e) {\n  visible = e[0].isIntersecting;\n  if (visible && !running) { running = true; requestAnimationFrame(loop); }\n}, { rootMargin: '200px' }).observe(canvas);\nfunction loop() { if (!visible) { running = false; return; } render(); requestAnimationFrame(loop); }",
     "demo": "mobile",
-    "sort": 4
+    "sort": 40
   },
   {
     "name": "Explain a technical process without a wall of text",
@@ -62,7 +62,7 @@
     "engineer": "Wireframe platonic solids in Three.js. Page CSS was trimmed from 16 sections to 8 to stay under Webflow's silent page-CSS limit.",
     "snippet": null,
     "demo": "plan",
-    "sort": 5
+    "sort": 50
   },
   {
     "name": "Prove \"we serve families nationwide\"",
@@ -75,7 +75,7 @@
     "engineer": "A D3 projection over us-atlas TopoJSON. The nation is drawn once to a hidden canvas and each dot reads one pixel, replacing about 22,000 geometry checks with a ~7ms pass. Popups float in a fixed layer so the map's clipping can't cut them off.",
     "snippet": "// rasterize the nation once, then each dot reads one pixel (~7ms)\nctx.fill(nationPath);\nvar px = ctx.getImageData(0, 0, w, h).data;\ndots = grid.filter(function (d) { return px[(d.y * w + d.x) * 4 + 3] > 0; });",
     "demo": "live",
-    "sort": 1
+    "sort": 10
   },
   {
     "name": "A new case win becomes a new pin",
@@ -88,7 +88,7 @@
     "engineer": "Pins come from a hidden Collection List through data attributes. Nearby pins cluster automatically.",
     "snippet": "function getCases() {\n  var src = document.querySelectorAll('[class*=\"case-map_source\"] .case-map_item');\n  if (!src.length) return INLINE_CASES;\n  // ...\n  var lat = parseFloat(readField(el, d, 'lat'));\n  var lng = parseFloat(readField(el, d, 'lng'));\n  // no usable coordinates: skip it rather than let NaN reach the projection\n  if (!isFinite(lat) || !isFinite(lng)) continue;\n}",
     "demo": "page",
-    "sort": 2
+    "sort": 20
   },
   {
     "name": "Spanish-speaking families feel at home",
@@ -101,7 +101,7 @@
     "engineer": "Copy ships in both languages and a toggle swaps it in place, saving the choice for the next visit.",
     "snippet": "(function () {\n  if (window.__daLangInit) return;\n  window.__daLangInit = true;\n  var DICT = { \"Request a Consultation\": \"Solicite una Consulta\" /* … */ };\n  var REV = {}; for (var k in DICT) { REV[DICT[k]] = k; }\n  // choice persists in localStorage and sets <html lang>\n})();",
     "demo": null,
-    "sort": 3
+    "sort": 30
   },
   {
     "name": "Show up for the questions clients actually ask",
@@ -114,7 +114,7 @@
     "engineer": "Topics, Insights and Practice Areas are cross-referenced collections, and the category and vocabulary hubs are generated from the same references.",
     "snippet": null,
     "demo": null,
-    "sort": 4
+    "sort": 40
   },
   {
     "name": "Updates ship without breaking the site",
@@ -127,7 +127,7 @@
     "engineer": "Five page stylesheets load from GitHub through a CDN, each pinned to an exact commit so caches can't serve stale code. Rolling back is a one-line pin change.",
     "snippet": "<!-- each page head holds one pinned line; a change ships by moving the pin -->\n<link rel=\"stylesheet\" href=\"…/homepage.css@37f5238\">\n<!-- rollback = re-pin the previous commit -->",
     "demo": null,
-    "sort": 5
+    "sort": 50
   },
   {
     "name": "One mark from favicon to billboard",
@@ -140,7 +140,7 @@
     "engineer": "At 16px the square merged into the ring, so the small version enlarges the square and snaps strokes to whole pixels.",
     "snippet": null,
     "demo": "apps",
-    "sort": 1
+    "sort": 10
   },
   {
     "name": "Visitors always know where to click",
@@ -153,7 +153,7 @@
     "engineer": "Signal orange is a single token. Decorative states use separate tokens, so accent creep can't happen by accident.",
     "snippet": ":root {\n  --signal: #FF6A3D;    /* actions and highlights only */\n  --select: #4C8DFF;    /* canvas selection UI, never an action */\n}\na.btn-primary, .is-active { color: var(--on-signal); background: var(--signal); }",
     "demo": null,
-    "sort": 2
+    "sort": 20
   },
   {
     "name": "Readable for everyone",
@@ -166,7 +166,7 @@
     "engineer": "Checked against WCAG 2.2 AA and AAA. The on-accent text color is a token, so every new button inherits it.",
     "snippet": ":root { --on-signal: #07080D; }   /* 7 : 1 on the accent */\n.btn-primary { background: var(--signal); color: var(--on-signal); }",
     "demo": "invert",
-    "sort": 3
+    "sort": 30
   },
   {
     "name": "One system for every surface",
@@ -179,6 +179,6 @@
     "engineer": "Tokens map one-to-one to Webflow variables, so a color change in one place updates the whole site.",
     "snippet": ":root {\n  --void: #07080D; --deep: #0E1020; --panel: #161A2E;\n  --star: #F2F0EA; --signal: #FF6A3D; --select: #4C8DFF;\n}\n/* one-to-one with the Webflow variables panel */",
     "demo": "grid",
-    "sort": 4
+    "sort": 40
   }
 ]

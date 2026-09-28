@@ -1,4 +1,4 @@
-# Session handoff (2026-09-28, v0.29 session closed: v0.29.17 on staging; next: Angelino's review, tablet/phone pass, Designer step I1)
+# Session handoff (2026-09-28, v0.30.0 tweak batch on staging; next: Angelino's review, Designer steps J1/J2 + I1, tablet/phone pass)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -13,6 +13,17 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 5. **Optional next depth (2b):** a small "Flight programs" collection for CH 02+ per service (needs a Designer list filtered by Service).
 
 **Before touching code:** `git pull`; tags are shared with parallel sessions: `git fetch --tags && git tag --sort=-v:refname | head -1` (**v0.29.17** at the end of this session). **v0.28.7 is a stray tag**: never reuse it. After tagging, wait ~40 s and purge jsDelivr before hashing (a 404 fetched too early gets cached: hit twice this session).
+
+## Latest (2026-09-28, v0.30.0 tweak batch) · published to webflow.io 2026-09-28
+Live: ab-core JS + CSS, ab-home, ab-process JS + CSS, ab-hub JS + CSS, ab-knowledge JS + CSS (/observatory, /topics + both templates; Home still loads knowledge 0.25.5), ab-contact CSS all **v0.30.0**; head script `abwarpin` **0.4.0**. Backup of replaced heads: `backups/2026-09-28-v0.30.0-before.txt`.
+- **First visit warps in** (abwarpin 0.4.0 sets `ab:warp-in=first` once per session; core arrive() plays a slower drop out of hyperspace).
+- **Home:** Reply time card = slow conic orange→peach aura + twinkling sparks; easing dot is HTML (no stretch); planner route centered (Earth at 110,138); board layers zoom to their frame (~126%), same layer again = fit; fake cursor waits while zoomed; CMS card sources colored (Airtable gold, Sheets green, API violet), packets turn Webflow blue on arrival, "+1 item"; Design systems card = token set re-skinning a card/button/type scale (AB · Nova · Terra, auto every 3.2 s, clickable); nav logo orange on Home; badge Est. 1987 + services lede (script, Designer steps J1/J2); transmission auto-advances (4.2 s + 30 ms/char, pauses on hover/off screen) with a scramble plot-in; 6 book quotes added to the Quotes CMS (11 total, also in the footer rotator).
+- **Contact:** Other channels email = mono lowercase address + Copy, full width; cells 2×2 at 992–1439.
+- **/observatory:** research drones fly in, beam a field note (real codes/titles) to the planet, fly off (7–12 s, max 2). Browse-by-topic + /topics vocabulary headroom removed (`.section_ks-browse .ab_ks-pad{padding-top:0}`).
+- **/topics star chart:** six distinct constellation shapes, glowing titles with code lines + brackets, per-category nebulae, zoom controls bottom-right.
+- **/process:** Crew card has a turning service-color gradient border + gradient ticks; COMMS bar = chip + contact-style scope stacked left, updates right; route-length rows each own a color, gauge arc blends the chosen colors, instrument-panel face-lift, needle wobble + arc pulse.
+- **/services hub:** launch pass grows (~1.12) and centers on desktop hover, tilt applies once lifted; touch/narrow/reduced motion unchanged.
+- **CMS:** field note WB-09 AOL Hometown dates (around 2000; shut down Oct 31, 2008). All Sort fields ×10 (213 items; backup `backups/2026-09-28-sort-before.json`).
 
 ## Latest (2026-09-28, v0.29.17) · verified on staging 2026-09-28
 

@@ -4,76 +4,76 @@
     "mission": "510-visuals",
     "value": 11,
     "suffix": "",
-    "sort": 1
+    "sort": 10
   },
   {
     "name": "WebGL scenes",
     "mission": "510-visuals",
     "value": 5,
     "suffix": "",
-    "sort": 2
+    "sort": 20
   },
   {
     "name": "scripts, each with a double-init guard",
     "mission": "510-visuals",
     "value": 13,
     "suffix": "",
-    "sort": 3
+    "sort": 30
   },
   {
     "name": "breakpoints hand-calibrated",
     "mission": "510-visuals",
     "value": 4,
     "suffix": "",
-    "sort": 4
+    "sort": 40
   },
   {
     "name": "states on the case map",
     "mission": "daniel-aguirre-law",
     "value": 14,
     "suffix": "",
-    "sort": 1
+    "sort": 10
   },
   {
     "name": "languages, one toggle",
     "mission": "daniel-aguirre-law",
     "value": 2,
     "suffix": "",
-    "sort": 2
+    "sort": 20
   },
   {
     "name": "terms in the content vocabulary",
     "mission": "daniel-aguirre-law",
     "value": 58,
     "suffix": "",
-    "sort": 3
+    "sort": 30
   },
   {
     "name": "page stylesheets served by CDN",
     "mission": "daniel-aguirre-law",
     "value": 5,
     "suffix": "",
-    "sort": 4
+    "sort": 40
   },
   {
     "name": "color tokens",
     "mission": "ab-identity",
     "value": 6,
     "suffix": "",
-    "sort": 1
+    "sort": 10
   },
   {
     "name": "type roles",
     "mission": "ab-identity",
     "value": 3,
     "suffix": "",
-    "sort": 2
+    "sort": 20
   },
   {
     "name": "px border radius",
     "mission": "ab-identity",
     "value": 0,
     "suffix": "",
-    "sort": 3
+    "sort": 30
   }
 ]

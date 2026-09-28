@@ -46,7 +46,7 @@
     "quote-by": "[Name] · 5 TEN",
     "next-mission": "daniel-aguirre-law",
     "featured": true,
-    "sort": 1,
+    "sort": 10,
     "services": [
       "webflow-development",
       "webgl-data",
@@ -102,7 +102,7 @@
     "quote-by": "[Name] · Wallingford, CT",
     "next-mission": "ab-identity",
     "featured": true,
-    "sort": 2,
+    "sort": 20,
     "services": [
       "webflow-development",
       "webgl-data",
@@ -154,7 +154,7 @@
     "quote-by": null,
     "next-mission": "510-visuals",
     "featured": true,
-    "sort": 3,
+    "sort": 30,
     "services": [
       "motion",
       "branding",
@@ -181,7 +181,7 @@
     "planet-colors": "#3a2418,#7a4a2a,#c08050,#2a1a10",
     "planet-glow": "rgba(224,164,94,.3)",
     "number": 4,
-    "sort": 4,
+    "sort": 40,
     "featured": false,
     "services": [
       "branding"
@@ -209,7 +209,7 @@
     "planet-ring": "#9fe8ff,#1f6f8b,#0b2a3a",
     "planet-glow": "rgba(76,242,160,.28)",
     "number": 5,
-    "sort": 5,
+    "sort": 50,
     "featured": false,
     "services": [
       "design-systems"
@@ -236,7 +236,7 @@
     "planet-colors": "#1c3a4a,#2f6b5a,#6f8a5a,#b89c6a,#e9e6df",
     "planet-glow": "rgba(194,65,45,.25)",
     "number": 6,
-    "sort": 6,
+    "sort": 60,
     "featured": false,
     "services": [
       "webflow-development",

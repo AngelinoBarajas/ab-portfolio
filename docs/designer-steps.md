@@ -95,5 +95,11 @@ Back up the current field first (paste into `webflow/backup/`). Insert each `[Fi
 
 ---
 
+## J. Added 2026-09-28 (v0.30.0 tweak batch): text the script sets for now
+- **J1 Home hero badge:** Home › hero › `.ab_hero_badge` HTML Embed: change `Est. 2026` → `Est. 1987` in the `<textPath>` and `established 2026` → `established 1987` in the aria-label. (`home/00-hero.js` rewrites it until then; source copy in `webflow/build/home/hero.html` is already updated.)
+- **J2 Home services lede:** Home › `#capabilities` › `p.ab_section-lede`: replace "Eight services and one planet you can throw." with "Eight services, one orbit: everything a site needs to launch, grow and keep working long after day one." (`home/20-services.js` swaps it only while the old text is there.)
+
+---
+
 ## Not Designer (content Angelino supplies)
 Placeholders in `docs/placeholders.md` (email, socials, 4 pin images, testimonials, `[X–Y weeks]`), metrics numbers, pin coordinates (Lincoln Center / ON NYC), copy review (AB Identity, Aguirre site-plan board, Services WebGL title).

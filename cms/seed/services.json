@@ -31,7 +31,7 @@
       "webflow-development-2",
       "webflow-development-3"
     ],
-    "sort": 1,
+    "sort": 10,
     "solve-1-problem": "Every text change needs a developer.",
     "solve-1-heading": "Your team edits it",
     "solve-1-answer": "Content lives in the CMS and sections are built to be reused, so updates take minutes, not tickets.",
@@ -101,7 +101,7 @@
       "webgl-data-2",
       "webgl-data-3"
     ],
-    "sort": 2,
+    "sort": 20,
     "solve-1-problem": "Your reach is a paragraph nobody reads.",
     "solve-1-heading": "Show it, don’t describe it",
     "solve-1-answer": "A product, a space or a dataset becomes something visitors can explore, updated straight from the CMS.",
@@ -172,7 +172,7 @@
       "motion-2",
       "motion-3"
     ],
-    "sort": 3,
+    "sort": 30,
     "solve-1-problem": "The site is static and forgettable.",
     "solve-1-heading": "Something to remember",
     "solve-1-answer": "A signature interaction gives visitors a reason to stay, play and share the link.",
@@ -240,7 +240,7 @@
       "branding-2",
       "branding-3"
     ],
-    "sort": 4,
+    "sort": 40,
     "solve-1-problem": "The logo falls apart at small sizes.",
     "solve-1-heading": "Built on a grid",
     "solve-1-answer": "A constructed mark with clear proportions that stays sharp from 16 pixels up.",
@@ -305,7 +305,7 @@
       "custom-deploys-2",
       "custom-deploys-3"
     ],
-    "sort": 5,
+    "sort": 50,
     "solve-1-problem": "Webflow cannot do what you need.",
     "solve-1-heading": "The right engine",
     "solve-1-answer": "When logins, big datasets or custom logic outgrow Webflow, a coded build takes over.",
@@ -376,7 +376,7 @@
       "cms-integrations-2",
       "cms-integrations-3"
     ],
-    "sort": 6,
+    "sort": 60,
     "solve-1-problem": "Content lives in five places.",
     "solve-1-heading": "One source of truth",
     "solve-1-answer": "Update the sheet or database you already use, and the site follows.",
@@ -446,7 +446,7 @@
       "design-systems-2",
       "design-systems-3"
     ],
-    "sort": 7,
+    "sort": 70,
     "solve-1-problem": "Every new page drifts a little further.",
     "solve-1-heading": "Consistency by default",
     "solve-1-answer": "Shared tokens and components make the right choice the easy one.",
@@ -516,7 +516,7 @@
       "performance-2",
       "performance-3"
     ],
-    "sort": 8,
+    "sort": 80,
     "solve-1-problem": "The site is beautiful and slow.",
     "solve-1-heading": "Beautiful and fast",
     "solve-1-answer": "Heavy pieces wait until they are needed, so the first screen loads right away.",

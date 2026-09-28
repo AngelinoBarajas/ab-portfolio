@@ -7,7 +7,7 @@
     "image": "",
     "image-2": "",
     "mode": "",
-    "sort": 1,
+    "sort": 10,
     "_id": "live"
   },
   {
@@ -18,7 +18,7 @@
     "image": "",
     "image-2": "",
     "mode": "",
-    "sort": 2,
+    "sort": 20,
     "_id": "design"
   },
   {
@@ -29,7 +29,7 @@
     "image": "",
     "image-2": "",
     "mode": "",
-    "sort": 3,
+    "sort": 30,
     "_id": "mobile"
   },
   {
@@ -40,7 +40,7 @@
     "image": "",
     "image-2": "",
     "mode": "",
-    "sort": 4,
+    "sort": 40,
     "_id": "plan"
   },
   {
@@ -51,7 +51,7 @@
     "image": "",
     "image-2": "",
     "mode": "",
-    "sort": 5,
+    "sort": 50,
     "_id": "shot"
   },
   {
@@ -62,7 +62,7 @@
     "image": "",
     "image-2": "",
     "mode": "",
-    "sort": 1,
+    "sort": 10,
     "_id": "live"
   },
   {
@@ -73,7 +73,7 @@
     "image": "",
     "image-2": "",
     "mode": "",
-    "sort": 2,
+    "sort": 20,
     "_id": "design"
   },
   {
@@ -84,7 +84,7 @@
     "image": "",
     "image-2": "",
     "mode": "",
-    "sort": 3,
+    "sort": 30,
     "_id": "mobile"
   },
   {
@@ -95,7 +95,7 @@
     "image": "",
     "image-2": "",
     "mode": "",
-    "sort": 4,
+    "sort": 40,
     "_id": "page"
   },
   {
@@ -106,7 +106,7 @@
     "image": "",
     "image-2": "",
     "mode": "build",
-    "sort": 1,
+    "sort": 10,
     "_id": "mark"
   },
   {
@@ -117,7 +117,7 @@
     "image": "",
     "image-2": "",
     "mode": "grid",
-    "sort": 2,
+    "sort": 20,
     "_id": "grid"
   },
   {
@@ -128,7 +128,7 @@
     "image": "",
     "image-2": "",
     "mode": "light",
-    "sort": 3,
+    "sort": 30,
     "_id": "invert"
   },
   {
@@ -139,7 +139,7 @@
     "image": "",
     "image-2": "",
     "mode": "",
-    "sort": 4,
+    "sort": 40,
     "_id": "apps"
   }
 ]
