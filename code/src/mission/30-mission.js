@@ -46,6 +46,13 @@
     return { id: cid, kind: (/^cks-/.test(cid) ? cid : ({ sketch: 'sketch', vector: 'vector', graph: 'graph', library: 'library', voice: 'voice', setup: 'setup', video: 'video', schema: 'schema', portable: 'portable' })[cid]) || (it.getAttribute('data-kind') || 'img').toLowerCase(), mode: (it.getAttribute('data-mode') || '').toLowerCase(),
       label: it.getAttribute('data-label') || ('Channel ' + (i + 1)), caption: it.getAttribute('data-caption') || '', src: imgs[0] || '', before: imgs[0] || '', after: imgs[1] || imgs[0] || '' };
   });
+  // image channels whose loops live in the repo (MOCKS[slug].img: id → [loop, still], on jsDelivr, so Webflow can't flatten
+  // an animated WebP); reduced motion or Save-Data shows the still. A CMS image, when set, still wins.
+  (function(){
+    var MI = MOCKS[SLUG] && MOCKS[SLUG].img; if (!MI) return;
+    var still = reduce || !!(navigator.connection && navigator.connection.saveData);
+    CH.forEach(function(c){ var L = MI[c.id]; if (!L || c.src) return; c.src = still ? (L[1] || L[0]) : L[0]; c.before = c.src; c.after = L[1] || L[0]; });
+  })();
   var PINS = $$('[data-pins-source] .w-dyn-item').map(function(item){
     var it = $('[data-pin]', item) || item;
     var im = $('img', it), src = im && im.getAttribute('src');
@@ -184,6 +191,15 @@
     ul.innerHTML = PARAMS.map(function(p, i){ return '<li><span>P-' + pad2(i + 1) + '</span><span class="ab_param_t">' + esc(p) + '</span></li>'; }).join('');
   })();
 
+  /* ---------- briefing: benefits for the people using it (one per line, no numbers; optional field) ---------- */
+  (function(){
+    var src = $('[data-field="benefits"]'), ul = $('#params');
+    var B = src ? src.textContent.split(/\n+/).map(function(s){ return s.trim(); }).filter(Boolean) : [];
+    if (!B.length || !ul) return;
+    ul.insertAdjacentHTML('afterend', '<div class="ab_benefits"><div class="ab_benefits_h">Benefits for the people using it</div><ul class="ab_params ab_benefits_l">' +
+      B.map(function(b, i){ var k = b.indexOf(':'); return '<li><span>B-' + pad2(i + 1) + '</span><span class="ab_param_t">' + (k > 0 ? '<b>' + esc(b.slice(0, k)) + '</b>' + esc(b.slice(k)) : esc(b)) + '</span></li>'; }).join('') + '</ul></div>');
+  })();
+
   var codeBlock = AB.codeBlock;
   function showBtn(id, label){ return '<button type="button" class="button is-ghost ab_mc-show" data-show="' + esc(id) + '"><span class="ab_button-label">' + label + '</span><span class="ab_button-arrow" aria-hidden="true">↑</span></button>'; }
   function hasCh(id){ return CH.some(function(c){ return c.id === id; }); }
@@ -313,7 +329,8 @@
     var TSTYLE = {
       '510-visuals': ['build', '#1c1e24', '#d0e0e3', '#5eead4', 'linear-gradient(135deg,#5a8a94,#1c2227)', '#4a5a60'],
       'daniel-aguirre-law': ['build', '#FCF6EC', '#1a2840', '#891E2D', 'linear-gradient(135deg,#A88B5C,#efe2c8)', '#c9bda8'],
-      'cks': ['woven', '#F7F5F0', '#0B1B2B', '#EF5B3F', 'linear-gradient(135deg,#2F5BEA,#139E8A)', '#C9CED4']
+      'cks': ['woven', '#F7F5F0', '#0B1B2B', '#EF5B3F', 'linear-gradient(135deg,#2F5BEA,#139E8A)', '#C9CED4'],
+      'kip': ['build', '#FFF4E6', '#1E1B2E', '#FF7A45', 'linear-gradient(135deg,#FFC94A,#5FD3A8)', '#E6D3BD']
     };
     var TS = TSTYLE[SLUG] || ['blueprint'], THREADS = ['#F2A93B', '#EF5B3F', '#139E8A', '#2F5BEA'];
     function g(c, l, t, w, h){ return '<i class="' + c + '" style="left:' + l + '%;top:' + t + '%;width:' + w + '%;height:' + h + '%"></i>'; }

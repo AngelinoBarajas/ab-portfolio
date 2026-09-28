@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission v0.27.9 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission v0.28.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abMissionInit) return;
@@ -259,6 +259,112 @@ window.Webflow.push(function(){
       }
     };
   })();
+  // kip: a concept baby log (kip-site/kip). Figma frame = the home hero; phone = the Today screen and the shift handoff,
+  // copy taken from the site's app screens. Image channels are recorded loops of the real site, served from this repo on
+  // jsDelivr (`img`: channel id → [loop, still]); the loop plays unless reduced motion or Save-Data asks for the still.
+  (function(){
+    // the six characters, from the site's press-kit SVGs (kip-site/kip/img/kit)
+    var KC = {
+      ari: '<path d="M60 10C86 10 104 36 106 64c2 30-16 50-46 50S12 94 14 64C16 36 34 10 60 10Z" fill="#FF7A45"/><path d="M58 11c-4-9 4-15 12-11" fill="none" stroke="#FF7A45" stroke-width="7" stroke-linecap="round"/><ellipse cx="40" cy="72" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><ellipse cx="80" cy="72" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><circle cx="47" cy="62" r="4.6" fill="#1E1B2E"/><circle cx="73" cy="62" r="4.6" fill="#1E1B2E"/><path d="M53 75 Q60 82 67 75" fill="none" stroke="#1E1B2E" stroke-width="3.6" stroke-linecap="round"/>',
+      sam: '<rect x="24" y="8" width="72" height="108" rx="36" fill="#6FA8FF"/><path d="M52 10c2-8 12-8 14-2" fill="none" stroke="#6FA8FF" stroke-width="6" stroke-linecap="round"/><path d="M44 44h10M66 44h10" stroke="#1E1B2E" stroke-width="3.2" stroke-linecap="round"/><ellipse cx="42" cy="66" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><ellipse cx="78" cy="66" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><circle cx="49" cy="56" r="4.6" fill="#1E1B2E"/><circle cx="71" cy="56" r="4.6" fill="#1E1B2E"/><path d="M52 67 Q60 79 68 67 Z" fill="#1E1B2E"/>',
+      nana: '<circle cx="60" cy="22" r="13" fill="#FFC94A"/><path d="M8 114C8 58 28 32 60 32s52 26 52 82Z" fill="#FFC94A"/><ellipse cx="38" cy="82" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><ellipse cx="82" cy="82" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><circle cx="45" cy="72" r="4.6" fill="#1E1B2E"/><circle cx="75" cy="72" r="4.6" fill="#1E1B2E"/><path d="M53 85 Q60 92 67 85" fill="none" stroke="#1E1B2E" stroke-width="3.6" stroke-linecap="round"/><circle cx="45" cy="72" r="10" fill="none" stroke="#1E1B2E" stroke-width="2.8"/><circle cx="75" cy="72" r="10" fill="none" stroke="#1E1B2E" stroke-width="2.8"/><path d="M55 72h10" stroke="#1E1B2E" stroke-width="2.8"/>',
+      rosa: '<path d="M60 24c-6-12 0-20 10-22 2 10-2 18-10 22Z" fill="#2E9E76"/><path d="M60 24c-4-10-14-12-22-8 4 8 12 11 22 8Z" fill="#5FD3A8"/><path d="M20 58c0-24 14-34 40-34s40 10 40 34v20c0 26-14 36-40 36S20 104 20 78Z" fill="#5FD3A8"/><ellipse cx="40" cy="76" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><ellipse cx="80" cy="76" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><circle cx="47" cy="66" r="4.6" fill="#1E1B2E"/><circle cx="73" cy="66" r="4.6" fill="#1E1B2E"/><path d="M53 79 Q60 86 67 79" fill="none" stroke="#1E1B2E" stroke-width="3.6" stroke-linecap="round"/>',
+      jo: '<g fill="#FF8FA3"><circle cx="38" cy="44" r="24"/><circle cx="82" cy="44" r="24"/><circle cx="60" cy="32" r="24"/><circle cx="30" cy="80" r="26"/><circle cx="90" cy="80" r="26"/><rect x="28" y="40" width="64" height="74" rx="30"/></g><ellipse cx="40" cy="76" rx="6" ry="3.6" fill="#FF7A45" opacity=".55"/><ellipse cx="80" cy="76" rx="6" ry="3.6" fill="#FF7A45" opacity=".55"/><path d="M42 68 Q47 61 52 68" fill="none" stroke="#1E1B2E" stroke-width="3.6" stroke-linecap="round"/><path d="M68 68 Q73 61 78 68" fill="none" stroke="#1E1B2E" stroke-width="3.6" stroke-linecap="round"/><path d="M53 79 Q60 86 67 79" fill="none" stroke="#1E1B2E" stroke-width="3.6" stroke-linecap="round"/>',
+      june: '<path d="M60 26c30 0 48 22 48 48s-18 40-48 40-48-14-48-40 18-48 48-48Z" fill="#FFF4E6" stroke="#1E1B2E" stroke-width="4"/><path d="M58 27c-8-10 0-20 10-16 6 3 2 10-3 8" fill="none" stroke="#1E1B2E" stroke-width="4" stroke-linecap="round"/><ellipse cx="39" cy="82" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><ellipse cx="81" cy="82" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><path d="M41 71 Q46 76 51 71" fill="none" stroke="#1E1B2E" stroke-width="3.2" stroke-linecap="round"/><path d="M69 71 Q74 76 79 71" fill="none" stroke="#1E1B2E" stroke-width="3.2" stroke-linecap="round"/><ellipse cx="60" cy="86" rx="3.2" ry="3.8" fill="#1E1B2E"/>'
+    };
+    function ch(n, s){ return '<svg viewBox="0 0 120 120" style="width:' + s + 'px;height:' + s + 'px;display:block;flex:none" aria-hidden="true">' + KC[n] + '</svg>'; }
+    var MARK = '<svg viewBox="0 0 64 64" style="width:15px;height:15px;display:block" aria-hidden="true"><path d="M32 4C50 4 60 18 60 34S50 60 32 60 4 50 4 34 14 4 32 4Z" fill="#FF7A45"/><path d="M38 16a14 14 0 1 0 12 22 11 11 0 1 1-12-22Z" fill="#FFF4E6"/><circle cx="24" cy="40" r="3" fill="#1E1B2E"/></svg>';
+    // unquoted on purpose: these go inside style="..." attributes
+    var H = 'Baloo 2,Arial Rounded MT Bold,ui-rounded,sans-serif', B = 'Nunito Sans,system-ui,sans-serif';
+    var INK = '#1E1B2E', TAN = '#FF7A45', CREAM = '#FFF4E6', BUTTER = '#FFC94A', MINT = '#5FD3A8', SKY = '#6FA8FF', ROSE = '#FF8FA3';
+    var LOOP = 'https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.28.0/prototypes/img/';
+    // one log entry, as on the site: face, icon tint, what, who and when
+    function entry(who, name, tint, what, when, cls){
+      return '<div class="kxe' + (cls ? ' ' + cls : '') + '" style="display:flex;align-items:center;gap:8px;background:#fff;border:2px solid ' + INK + ';border-radius:14px;padding:6px 9px;margin-bottom:6px">' + ch(who, 26) +
+        '<span style="display:flex;flex-direction:column;min-width:0"><b style="font:800 10.5px/1.2 ' + B + ';color:' + INK + '"><i style="display:inline-block;width:8px;height:8px;border-radius:3px;background:' + tint + ';margin-right:5px"></i>' + what + '</b><span style="font:400 8.5px/1.3 ' + B + ';color:#4A4560">logged by <b>' + name + '</b> · ' + when + '</span></span></div>';
+    }
+    var LOG = entry('nana', 'Nana', MINT, 'Diaper · wet', '1:52 pm') + entry('rosa', 'Rosa', '#14204F', 'Nap · 1h 40m', '11:30 am') + entry('sam', 'Sam', TAN, 'Breast · L 12m, R 9m', '11:05 am') + entry('ari', 'Ari', ROSE, 'Vitamin D · as directed', '9:02 am');
+    MOCKS.kip = {
+      accent: TAN,
+      fontCss: 'https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito+Sans:wght@400;700;800&display=swap',
+      img: {
+        story: [LOOP + 'kip-ch-story-anim.webp', LOOP + 'kip-ch-story.webp'],
+        roles: [LOOP + 'kip-ch-roles-anim.webp', LOOP + 'kip-ch-roles.webp'],
+        night: [LOOP + 'kip-ch-night-anim.webp', LOOP + 'kip-ch-night.webp'],
+        report: [LOOP + 'kip-ch-report-anim.webp', LOOP + 'kip-ch-report.webp'],
+        cast: [LOOP + 'kip-ch-cast-anim.webp', LOOP + 'kip-ch-cast.webp'],
+        'try': [LOOP + 'kip-ch-try-anim.webp', LOOP + 'kip-ch-try.webp']
+      },
+      file: 'kip — Product site', page: 'Home', frame: 'Desktop · Hero', url: 'kip (concept)',
+      bg: TAN, hover: 'cta',
+      comment: { on: 'phone', by: 'Review', text: 'A Tylenol dose for an 8-week-old in the sample log reads like dosing advice.', reply: 'Every example dose is now vitamin D, as directed. The site shows patterns, never doses.' },
+      els: [
+        { id: 'blob', name: 'Shape / butter blob', icon: 'img', type: 'Vector', x: 590, y: 150, w: 360, h: 475, wire: 'img',
+          props: { fill: BUTTER },
+          html: '<div style="position:absolute;inset:0;background:' + BUTTER + ';border-radius:46% 54% 50% 50% / 55% 50% 50% 45%"></div>' },
+        { id: 'nav', name: 'Nav / header', icon: 'comp', type: 'Component', x: 0, y: 0, w: 1000, h: 46, wire: 'nav',
+          props: { fill: CREAM },
+          html: '<div style="height:100%;background:' + CREAM + ';border-bottom:2px solid ' + INK + ';display:flex;align-items:center;gap:16px;padding:0 20px 0 26px;font:700 9px ' + B + ';color:' + INK + '">' + MARK + '<b style="font:800 15px ' + H + ';margin-left:-10px">kip</b><span style="margin-left:auto;background:' + BUTTER + ';border:2px solid ' + INK + ';border-radius:999px;padding:3px 9px">Home</span><span>Village</span><span>Insights</span><span>Try it</span><span>Pricing</span><span style="border:2px solid ' + INK + ';border-radius:999px;padding:3px 9px;font-weight:400">Search · Ctrl K</span><span style="background:' + INK + ';color:' + CREAM + ';border-radius:999px;padding:6px 11px">Try it yourself</span></div>' },
+        { id: 'heading', name: 'H1 / One little log', icon: 'text', type: 'Text', x: 48, y: 96, w: 500, h: 204, wire: 'lines:3:big',
+          props: { fill: INK, font: 'Baloo 2', weight: 'ExtraBold', size: '112', lh: '90%', ls: '-2.5%' },
+          html: '<div style="font:800 64px/.92 ' + H + ';letter-spacing:-.025em;color:' + INK + '"><div>One little log.</div><div>The whole village</div><div>in it.</div></div>' },
+        { id: 'lede', name: 'Lede / what kip does', icon: 'text', type: 'Text', x: 48, y: 320, w: 440, h: 74, wire: 'lines:4',
+          props: { fill: INK, font: 'Nunito Sans', weight: 'Regular', size: '21', lh: '150%' },
+          html: '<p style="margin:0;font:400 13px/1.5 ' + B + ';color:' + INK + '">kip keeps track of June’s feeds, naps, diapers and meds, with everyone who looks after her writing in the same place. So nobody has to text “did she eat?” at 2pm ever again.</p>' },
+        { id: 'cta', name: 'Buttons / hero', icon: 'comp', type: 'Component', x: 48, y: 414, w: 330, h: 42, wire: 'btn',
+          props: { fill: CREAM, font: 'Nunito Sans', weight: 'ExtraBold', size: '17' },
+          html: '<div style="display:flex;gap:10px;height:100%"><span class="hv" style="flex:1;border-radius:999px;background:' + CREAM + ';color:' + INK + ';border:2px solid ' + INK + ';box-shadow:0 4px 0 ' + INK + ';font:800 10.5px ' + B + ';display:flex;align-items:center;justify-content:center">▶ Try it yourself</span><span style="flex:1;border-radius:999px;background:' + INK + ';color:' + CREAM + ';font:800 10.5px ' + B + ';display:flex;align-items:center;justify-content:center">Join early access</span></div>' },
+        { id: 'note', name: 'Note / this is a concept', icon: 'text', type: 'Text', x: 48, y: 480, w: 440, h: 44, wire: 'lines:2',
+          props: { fill: INK, font: 'Nunito Sans', weight: 'Bold', size: '15' },
+          html: '<div style="display:flex;gap:9px;align-items:center;font:700 9.5px/1.4 ' + B + ';color:' + INK + '">' + ch('june', 30) + '<span>kip is a concept. There’s no app to download, just this site and a baby named June, who is 8 weeks old and made up.</span></div>' },
+        { id: 'phone', name: 'Phone / Today screen', icon: 'comp', type: 'Component', x: 646, y: 84, w: 248, h: 541, wire: 'img',
+          props: { fill: CREAM },
+          html: '<div style="position:absolute;inset:0;background:' + INK + ';border-radius:38px 38px 0 0;padding:9px 9px 0"><div style="height:100%;background:' + CREAM + ';border-radius:30px 30px 0 0;padding:26px 12px 0;overflow:hidden">' +
+            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">' + ch('june', 32) + '<span><b style="display:block;font:800 15px/1 ' + H + ';color:' + INK + '">June</b><span style="font:400 8.5px ' + B + ';color:#4A4560">8 weeks, 2 days</span></span><span style="margin-left:auto;display:flex">' + ch('ari', 20) + ch('sam', 20) + ch('rosa', 20) + '</span></div>' +
+            '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px">' + [[TAN, 'Feed'], ['#14204F', 'Sleep'], [MINT, 'Diaper'], [ROSE, 'Med']].map(function(q){ return '<span style="text-align:center;font:800 7.5px ' + B + ';color:' + INK + '"><i style="display:block;height:30px;border-radius:10px;border:2px solid ' + INK + ';background:' + q[0] + ';margin-bottom:3px"></i>' + q[1] + '</span>'; }).join('') + '</div>' +
+            '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><b style="font:800 12px ' + H + ';color:' + INK + '">Today</b><span style="font:400 8px ' + B + ';color:#4A4560">9 entries from 4 people</span></div>' +
+            entry('nana', 'Nana', TAN, 'Bottle · 4 oz', '2:14 pm') + LOG + '</div></div>' }
+      ],
+      mobile: {
+        bg: CREAM, statusFg: INK,
+        html: '<style>' +
+          '.kxm .kxe.kx-in{max-height:0;margin:0;padding-top:0;padding-bottom:0;border-width:0;opacity:0;overflow:hidden;transition:max-height .5s,margin .5s,padding .5s,opacity .4s}' +
+          '.ph.kx-new .kxm .kxe.kx-in{max-height:60px;margin-bottom:6px;padding:6px 9px;border-width:2px;opacity:1}' +
+          '.kxm .kx-ban{position:absolute;left:10px;right:10px;top:44px;z-index:5;transform:translateY(-140%);transition:transform .45s cubic-bezier(.3,1.4,.5,1)}' +
+          '.ph.kx-banner .kxm .kx-ban{transform:none}' +
+          '.kxm .kx-ho{position:absolute;inset:0;z-index:6;background:' + CREAM + ';padding:62px 16px 0;transform:translateY(100%);transition:transform .55s cubic-bezier(.2,.8,.2,1)}' +
+          '.ph.kx-ho .kxm .kx-ho{transform:none}' +
+          '</style>' +
+          '<div class="kxm" style="padding:56px 14px 30px;font-family:' + B + ';color:' + INK + '">' +
+            '<div style="display:flex;align-items:center;gap:9px;margin-bottom:12px">' + ch('june', 40) + '<span><b style="display:block;font:800 19px/1 ' + H + '">June</b><span style="font:400 10px ' + B + ';color:#4A4560">8 weeks, 2 days</span></span><span style="margin-left:auto;display:flex">' + ch('ari', 24) + ch('sam', 24) + ch('rosa', 24) + '</span></div>' +
+            '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">' + [[TAN, 'Feed'], ['#14204F', 'Sleep'], [MINT, 'Diaper'], [ROSE, 'Med']].map(function(q){ return '<span style="text-align:center;font:800 9px ' + B + '"><i style="display:block;height:44px;border-radius:14px;border:2px solid ' + INK + ';background:' + q[0] + ';margin-bottom:4px"></i>' + q[1] + '</span>'; }).join('') + '</div>' +
+            '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px"><b style="font:800 15px ' + H + '">Today</b><span style="font:400 9.5px ' + B + ';color:#4A4560">entries from 4 people</span></div>' +
+            entry('nana', 'Nana', TAN, 'Bottle · 4 oz', '2:14 pm', 'kx-in') + LOG +
+          '</div>',
+        nav: '<div class="kxm"><div class="kx-ban" style="background:' + INK + ';color:' + CREAM + ';border-radius:16px;padding:9px 11px;display:flex;align-items:center;gap:9px;box-shadow:0 10px 24px rgba(30,27,46,.35);font-family:' + B + '">' + ch('rosa', 28) + '<span><b style="display:block;font:800 11px ' + B + '">Rosa started her shift</b><span style="font:400 9px ' + B + ';opacity:.8">Here’s what you missed. Tap to hand over.</span></span></div>' +
+          '<div class="kx-ho">' +
+            '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">' + ch('rosa', 44) + '<b style="font:800 19px/1.1 ' + H + ';color:' + INK + '">Hi Rosa. Since you left:</b></div>' +
+            '<p style="margin:0 0 12px;font:400 10px ' + B + ';color:#4A4560">Monday 6:10 pm to now, logged by Ari, Sam and Jo</p>' +
+            '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">' + [['2', 'feeds', TAN], ['1', 'nap', SKY], ['3', 'diapers', MINT]].map(function(s){ return '<div style="border:2px solid ' + INK + ';border-radius:14px;background:' + s[2] + ';padding:10px 8px;text-align:center;color:' + INK + '"><b style="display:block;font:800 24px/1 ' + H + '">' + s[0] + '</b><span style="font:700 9.5px ' + B + '">' + s[1] + '</span></div>'; }).join('') + '</div>' +
+            '<div style="border:2px solid ' + INK + ';border-radius:14px;background:#fff;padding:10px 12px;margin-bottom:16px;font:400 10px ' + B + ';color:' + INK + '"><b style="display:block;font:800 11px ' + B + '">Last feed</b>11:05 by Sam</div>' +
+            '<div class="kx-go" style="background:' + INK + ';color:' + CREAM + ';border-radius:999px;padding:13px;text-align:center;font:800 12px ' + B + '">Start my shift</div>' +
+          '</div></div>',
+        notes: [
+          { t: 'One shared log', d: 'Every feed, nap and diaper carries the face of whoever logged it.' },
+          { t: 'Someone else logged it', d: 'Nana’s bottle lands at the top of the same list everyone sees.' },
+          { t: 'The handoff', d: 'When Rosa starts her shift, one tap shows everything since she left.' },
+          { t: 'Start informed', d: 'She taps Start my shift and she’s caught up, with no phone call.' }
+        ],
+        steps: [
+          { note: 0, hold: 1.8 },
+          { note: 1, add: 'kx-new', hold: 2 },
+          { note: 2, add: 'kx-banner', hold: 1.1 }, { tap: '.kx-ban', add: 'kx-ho', hold: 2.6 },
+          { note: 3, tap: '.kx-go', remove: 'kx-ho', hold: .3 }, { remove: 'kx-banner', hold: 1.6 },
+          { note: -1, remove: 'kx-new', hold: .6 }
+        ]
+      }
+    };
+  })();
   MOCKS['daniel-aguirre-law'].cms = {
     site: 'Daniel Aguirre Law', collection: 'Case Results', url: 'danielaguirre.law',
     eyebrow: 'PROVEN NATIONWIDE', title: 'Immigration cases won, family by family.',
@@ -315,6 +421,8 @@ window.Webflow.push(function(){
       var w = mk('div', 'stg-w'); sc.stg = mk('div', 'stg' + (sc.portrait ? ' is-p' : '') + ' stg-' + sc.kind);
       sc.stg.style.width = sc.SW + 'px'; sc.stg.style.height = sc.SH + 'px';
       sc.stg.style.setProperty('--acc', sc.M.mock.accent || '#FF6A3D');
+      // a mission can bring its own typefaces for its mock scenes (kip: Baloo 2 + Nunito Sans), loaded once
+      if (sc.M.mock.fontCss && !document.getElementById('mk-fonts')){ var fl = document.createElement('link'); fl.id = 'mk-fonts'; fl.rel = 'stylesheet'; fl.href = sc.M.mock.fontCss; document.head.appendChild(fl); }
       w.appendChild(sc.stg); v.appendChild(w);
       (EXT[sc.kind] || ({ figma: buildFigma, phone: buildPhone, flow: buildFlow, exploded: buildExplode, cms: buildCms, sketch: buildSketch, vector: buildVector })[sc.kind])(sc);
       fit(sc);
@@ -2247,6 +2355,13 @@ window.Webflow.push(function(){
     return { id: cid, kind: (/^cks-/.test(cid) ? cid : ({ sketch: 'sketch', vector: 'vector', graph: 'graph', library: 'library', voice: 'voice', setup: 'setup', video: 'video', schema: 'schema', portable: 'portable' })[cid]) || (it.getAttribute('data-kind') || 'img').toLowerCase(), mode: (it.getAttribute('data-mode') || '').toLowerCase(),
       label: it.getAttribute('data-label') || ('Channel ' + (i + 1)), caption: it.getAttribute('data-caption') || '', src: imgs[0] || '', before: imgs[0] || '', after: imgs[1] || imgs[0] || '' };
   });
+  // image channels whose loops live in the repo (MOCKS[slug].img: id → [loop, still], on jsDelivr, so Webflow can't flatten
+  // an animated WebP); reduced motion or Save-Data shows the still. A CMS image, when set, still wins.
+  (function(){
+    var MI = MOCKS[SLUG] && MOCKS[SLUG].img; if (!MI) return;
+    var still = reduce || !!(navigator.connection && navigator.connection.saveData);
+    CH.forEach(function(c){ var L = MI[c.id]; if (!L || c.src) return; c.src = still ? (L[1] || L[0]) : L[0]; c.before = c.src; c.after = L[1] || L[0]; });
+  })();
   var PINS = $$('[data-pins-source] .w-dyn-item').map(function(item){
     var it = $('[data-pin]', item) || item;
     var im = $('img', it), src = im && im.getAttribute('src');
@@ -2385,6 +2500,15 @@ window.Webflow.push(function(){
     ul.innerHTML = PARAMS.map(function(p, i){ return '<li><span>P-' + pad2(i + 1) + '</span><span class="ab_param_t">' + esc(p) + '</span></li>'; }).join('');
   })();
 
+  /* ---------- briefing: benefits for the people using it (one per line, no numbers; optional field) ---------- */
+  (function(){
+    var src = $('[data-field="benefits"]'), ul = $('#params');
+    var B = src ? src.textContent.split(/\n+/).map(function(s){ return s.trim(); }).filter(Boolean) : [];
+    if (!B.length || !ul) return;
+    ul.insertAdjacentHTML('afterend', '<div class="ab_benefits"><div class="ab_benefits_h">Benefits for the people using it</div><ul class="ab_params ab_benefits_l">' +
+      B.map(function(b, i){ var k = b.indexOf(':'); return '<li><span>B-' + pad2(i + 1) + '</span><span class="ab_param_t">' + (k > 0 ? '<b>' + esc(b.slice(0, k)) + '</b>' + esc(b.slice(k)) : esc(b)) + '</span></li>'; }).join('') + '</ul></div>');
+  })();
+
   var codeBlock = AB.codeBlock;
   function showBtn(id, label){ return '<button type="button" class="button is-ghost ab_mc-show" data-show="' + esc(id) + '"><span class="ab_button-label">' + label + '</span><span class="ab_button-arrow" aria-hidden="true">↑</span></button>'; }
   function hasCh(id){ return CH.some(function(c){ return c.id === id; }); }
@@ -2514,7 +2638,8 @@ window.Webflow.push(function(){
     var TSTYLE = {
       '510-visuals': ['build', '#1c1e24', '#d0e0e3', '#5eead4', 'linear-gradient(135deg,#5a8a94,#1c2227)', '#4a5a60'],
       'daniel-aguirre-law': ['build', '#FCF6EC', '#1a2840', '#891E2D', 'linear-gradient(135deg,#A88B5C,#efe2c8)', '#c9bda8'],
-      'cks': ['woven', '#F7F5F0', '#0B1B2B', '#EF5B3F', 'linear-gradient(135deg,#2F5BEA,#139E8A)', '#C9CED4']
+      'cks': ['woven', '#F7F5F0', '#0B1B2B', '#EF5B3F', 'linear-gradient(135deg,#2F5BEA,#139E8A)', '#C9CED4'],
+      'kip': ['build', '#FFF4E6', '#1E1B2E', '#FF7A45', 'linear-gradient(135deg,#FFC94A,#5FD3A8)', '#E6D3BD']
     };
     var TS = TSTYLE[SLUG] || ['blueprint'], THREADS = ['#F2A93B', '#EF5B3F', '#139E8A', '#2F5BEA'];
     function g(c, l, t, w, h){ return '<i class="' + c + '" style="left:' + l + '%;top:' + t + '%;width:' + w + '%;height:' + h + '%"></i>'; }

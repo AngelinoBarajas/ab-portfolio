@@ -35,6 +35,8 @@
       var w = mk('div', 'stg-w'); sc.stg = mk('div', 'stg' + (sc.portrait ? ' is-p' : '') + ' stg-' + sc.kind);
       sc.stg.style.width = sc.SW + 'px'; sc.stg.style.height = sc.SH + 'px';
       sc.stg.style.setProperty('--acc', sc.M.mock.accent || '#FF6A3D');
+      // a mission can bring its own typefaces for its mock scenes (kip: Baloo 2 + Nunito Sans), loaded once
+      if (sc.M.mock.fontCss && !document.getElementById('mk-fonts')){ var fl = document.createElement('link'); fl.id = 'mk-fonts'; fl.rel = 'stylesheet'; fl.href = sc.M.mock.fontCss; document.head.appendChild(fl); }
       w.appendChild(sc.stg); v.appendChild(w);
       (EXT[sc.kind] || ({ figma: buildFigma, phone: buildPhone, flow: buildFlow, exploded: buildExplode, cms: buildCms, sketch: buildSketch, vector: buildVector })[sc.kind])(sc);
       fit(sc);

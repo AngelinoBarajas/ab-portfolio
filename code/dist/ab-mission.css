@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission.css v0.27.9 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission.css v0.28.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · ab-mission.css · Mission template (/work/[slug]) only. Script-built parts + states the Designer cannot express. */
 /* ---------- monitor internals (views are built by ab-mission; the monitor frame/decor lives in ab-core.css) ---------- */
 .ab_screen canvas{max-width:100%}
@@ -78,6 +78,10 @@ html.menu-open .crew-dock{opacity:0;visibility:hidden;pointer-events:none}
 /* ---------- briefing params ---------- */
 .ab_params li{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--_color---neutral--hair);color:var(--_color---text--secondary)}
 .ab_params li span{font-family:var(--_typography---font--mono);font-size:12px;color:var(--_color---brand--signal)}
+/* benefits for the people using it (optional Benefits field), listed under the parameters */
+.ab_benefits{margin-top:32px}
+.ab_benefits_h{font-family:var(--_typography---font--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--_color---text--tertiary);padding-bottom:10px;border-bottom:1px solid var(--_color---neutral--hair)}
+.ab_benefits_l .ab_param_t b{color:var(--_color---text--primary);font-weight:600}
 body:not(.eng) [data-eng-only]{display:none}
 body.eng [data-cadet-only]{display:none}
 /* ---------- mission control scenes (figma / phone / flow / exploded / cms) ---------- */
