@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-knowledge v0.27.7 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-knowledge v0.27.8 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abKnowledgeInit) return;
@@ -237,12 +237,19 @@ window.Webflow.push(function(){
     var hasFlip = hasGsap && window.Flip && !reduce;
     function apply(){
       var state = hasFlip ? Flip.getState(items) : null, shown = 0, first = null, words = st.q.toLowerCase().split(/\s+/).filter(Boolean);
+      // Flip's absolute:true lifts every card out of flow, so the list collapsed to 0 for the whole tween and the
+      // section below jumped up, then snapped back. Hold the list at its old height and ease it to the new one.
+      // A quick second click lands mid-tween: the state above already caught the cards where they are, so finish the
+      // running flip (back in flow) before measuring, or the new height would read as 0.
+      var box = items[0].parentNode, h0 = box.offsetHeight;
+      if (hasFlip){ Flip.killFlipsOf(items, true); gsap.killTweensOf(box); box.style.height = ''; }
       cards.forEach(function(a, i){
         var ok = (st.theme === 'all' || a.__theme === st.theme) && (!st.topic || a.__topics.indexOf(st.topic) > -1) && words.every(function(w){ return a.__q.indexOf(w) > -1; });
         items[i].classList.toggle('is-hid', !ok); if (ok){ shown++; if (!first) first = a; }
       });
       var plain = st.theme === 'all' && !st.topic && !words.length;
       items.forEach(function(it, i){ it.classList.toggle('is-feat', plain && i === 0); });
+      if (hasFlip){ var h1 = box.offsetHeight; gsap.fromTo(box, { height: h0 }, { height: h1, duration: .55, ease: 'power3.inOut', clearProps: 'height' }); }
       if (hasFlip) Flip.from(state, { duration: .55, ease: 'power3.inOut', absolute: true, stagger: .02,
         onEnter: function(els){ return gsap.fromTo(els, { opacity: 0, scale: .96 }, { opacity: 1, scale: 1, duration: .4 }); },
         onLeave: function(els){ return gsap.to(els, { opacity: 0, scale: .96, duration: .25 }); } });
