@@ -380,20 +380,25 @@
     function measure(){ W = grid.clientWidth; }
     // width can read 0 at startup (layout not settled yet), so re-measure on view and fall back to a live read
     function posX(p){ if (!W) measure(); return 8 + Math.max(0, W - 84 - 16) * p; } // 84 = satellite width
+    // phones: the cards stack, so the satellite (smaller) travels down the right side from above the first card to
+    // the gap above the second, and back; each card is pinged at its stop
+    var mq = window.matchMedia ? matchMedia('(max-width: 767px)') : null;
+    function stacked(){ return !!(mq && mq.matches); }
+    function pos(p){ if (!stacked()) return [posX(p), 0]; if (!W) measure(); return [Math.max(0, W - 60 - 12), (cols[1] ? cols[1].offsetTop : 0) * p]; } // 60 = phone satellite width
     measure(); addEventListener('resize', measure);
     var loop = gsap.to(o, { p: 1, duration: 10, ease: 'sine.inOut', repeat: -1, yoyo: true, paused: true, onRepeat: function(){ hit = []; }, onUpdate: function(){
       if (dragging) return;
-      var x = posX(o.p), y = Math.sin(o.p * Math.PI * 4) * 6, rot = Math.sin(o.p * Math.PI * 2) * 6;
+      var xy = pos(o.p), x = xy[0], st = stacked(), y = xy[1] + Math.sin(o.p * Math.PI * 4) * (st ? 4 : 6), rot = Math.sin(o.p * Math.PI * 2) * 6;
       gsap.set(sat, { x: x, y: y, rotation: rot });
       cols.forEach(function(col, i){
-        var mid = col.offsetLeft + col.offsetWidth / 2, near = Math.abs(x + 42 - mid) < col.offsetWidth * .28;
+        var mid = col.offsetLeft + col.offsetWidth / 2, near = st ? (i === 0 ? o.p < .04 : o.p > .96) : Math.abs(x + 42 - mid) < col.offsetWidth * .28;
         if (near && !hit[i]){ hit[i] = true; ping(col); cone.classList.add('is-on'); setTimeout(function(){ cone.classList.remove('is-on'); }, 1400); }
       });
     } });
     if (window.Draggable){
       Draggable.create(sat, { type: 'x,y', bounds: grid.parentNode, inertia: !!window.InertiaPlugin,
         onPress: function(){ dragging = true; cone.classList.remove('is-on'); },
-        onRelease: function(){ var d = this; gsap.delayedCall(.6, function(){ gsap.to(sat, { x: posX(o.p), y: 0, rotation: 0, duration: 1.2, ease: 'elastic.out(1,.5)', onComplete: function(){ dragging = false; } }); }); } });
+        onRelease: function(){ var d = this; gsap.delayedCall(.6, function(){ gsap.to(sat, { x: pos(o.p)[0], y: pos(o.p)[1], rotation: 0, duration: 1.2, ease: 'elastic.out(1,.5)', onComplete: function(){ dragging = false; } }); }); } });
     }
     if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ if (es[0].isIntersecting){ measure(); loop.play(); } else loop.pause(); }).observe(grid);
     else loop.play();

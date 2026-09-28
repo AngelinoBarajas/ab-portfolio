@@ -281,7 +281,11 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 .v-term .bar{display:flex;gap:6px;margin-bottom:10px}.v-term .bar i{width:9px;height:9px;background:#2a2d3d}
 .v-term .ok{color:#3BE38A}.v-term .hi{color:var(--signal)}
 /* the editor scenes: file tabs + light syntax colors */
-.v-term{display:flex;flex-direction:column;overflow:hidden}
+/* bento cards never grow past their column: long one-line content (the terminal's code lines) clips inside instead */
+.ab_bento_cell,.ab_bento-card,.ab_bento-card_viz{min-width:0}
+.ab_bento-card_viz{max-width:100%}
+.v-term{display:flex;flex-direction:column;overflow:hidden;min-width:0;max-width:100%}
+@media (max-width:767px){.v-term{font-size:11px;padding:12px}}
 .v-term .bar{align-items:center}
 .v-term .tabs{display:flex;gap:2px;margin-left:10px;min-width:0;overflow:hidden}
 .v-term .tabs span{padding:2px 8px;font-size:10.5px;letter-spacing:.04em;color:var(--dust);border-bottom:1px solid transparent;white-space:nowrap;transition:color .2s,border-color .2s}
@@ -804,3 +808,6 @@ section:hover > .ab_frame-label{color:var(--select)}
 @media (prefers-reduced-motion:reduce){.abx-sig i,.abx-scan{animation:none!important}}
 /* Home: Field notes spans two cards; cap its star chart so the row stays the height of its neighbors */
 .ab_bento_cell.is-wide .v-obs svg{height:clamp(150px,15vw,210px)!important}
+/* Home › Plot a trajectory: a starfield over the whole panel (HTML, so it fills any card shape) */
+.v-traj-stars{position:absolute;inset:0;pointer-events:none}
+.v-traj-stars i{position:absolute;border-radius:50%;background:#F2F0EA}

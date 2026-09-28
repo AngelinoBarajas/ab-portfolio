@@ -321,22 +321,24 @@
       if (card) card.addEventListener('pointerenter', function(){ gsap.to(paths, { strokeDashoffset: 0, opacity: 1, duration: .6 }); gsap.to(stars, { scale: 1.2, duration: .4, stagger: .02, yoyo: true, repeat: 1 }); });
     },
     trajectory: function(v){
-      // Earth at the bottom; a rocket plots a route through three service planets (picked fresh each loop), each lights up
-      // as it arrives, and the ETA counts up. Same palette as the planner on /services
+      // a diagonal route: Earth bottom left, three service planets climbing to the top right (picked fresh each loop),
+      // each lights up as the rocket arrives, and the ETA counts up. Same palette as the planner on /services.
+      // The starfield is an HTML layer over the whole panel, so it fills the card whatever its shape
       var SV = [['Website', '#146EF5'], ['3D', '#5eead4'], ['Motion', '#0AE448'], ['Brand', '#FF6A3D'], ['CMS', '#8fb1ff'], ['System', '#7c5cff'], ['Speed', '#ffd166'], ['Deploy', '#C9C7C0']];
-      var PT = [[36, 128, 7], [104, 86, 9], [58, 34, 11]], E = [70, 184], NS = 'http://www.w3.org/2000/svg';
-      var bg = ''; for (var k = 0; k < 22; k++) bg += '<circle cx="' + ((k * 61) % 136 + 2) + '" cy="' + ((k * 37) % 196 + 2) + '" r="' + (k % 5 ? .5 : .9) + '"/>';
-      var d = 'M' + E[0] + ' ' + E[1] + ' Q ' + (E[0] - 44) + ' 162 ' + PT[0][0] + ' ' + PT[0][1] + ' Q ' + 60 + ' 94 ' + PT[1][0] + ' ' + PT[1][1] + ' Q ' + 112 + ' 44 ' + PT[2][0] + ' ' + PT[2][1];
-      v.innerHTML = '<div class="v-traj" style="position:relative;width:100%;height:100%;min-height:150px;display:flex;align-items:center;justify-content:center;padding:8px">' +
-        '<svg viewBox="0 0 140 200" style="width:100%;height:100%;max-height:170px;display:block;overflow:visible" aria-hidden="true"><g fill="rgba(242,240,234,.45)">' + bg + '</g>' +
+      var PT = [[96, 92, 7], [178, 60, 9], [262, 26, 11]], E = [20, 118], NS = 'http://www.w3.org/2000/svg';
+      var bg = ''; for (var k = 0; k < 90; k++){ var sz = k % 9 ? 1 : 2; bg += '<i style="left:' + ((k * 37.3) % 100).toFixed(1) + '%;top:' + ((k * 61.7) % 100).toFixed(1) + '%;width:' + sz + 'px;height:' + sz + 'px;opacity:' + (k % 4 ? .35 : .8) + '"></i>'; }
+      var d = 'M' + E[0] + ' ' + E[1] + ' Q 44 78 ' + PT[0][0] + ' ' + PT[0][1] + ' Q 134 104 ' + PT[1][0] + ' ' + PT[1][1] + ' Q 206 18 ' + PT[2][0] + ' ' + PT[2][1];
+      v.innerHTML = '<div class="v-traj" style="position:relative;width:100%;height:100%;min-height:150px;display:flex;align-items:center;justify-content:center;padding:10px 12px;overflow:hidden">' +
+        '<span class="v-traj-stars" aria-hidden="true">' + bg + '</span>' +
+        '<svg viewBox="0 0 290 136" style="position:relative;width:100%;height:100%;max-height:190px;display:block;overflow:visible" aria-hidden="true">' +
         '<path class="ghost" d="' + d + '" fill="none" stroke="rgba(242,240,234,.22)" stroke-width="1" stroke-dasharray="2 3"/>' +
         '<path class="done" d="' + d + '" fill="none" stroke="#FF6A3D" stroke-width="1.4"/>' +
         '<circle cx="' + E[0] + '" cy="' + E[1] + '" r="6" fill="#4C8DFF"/><circle cx="' + (E[0] - 2) + '" cy="' + (E[1] - 2) + '" r="2.4" fill="#fff" opacity=".35"/>' +
         '<text x="' + (E[0] + 10) + '" y="' + (E[1] + 3) + '" class="lb">EARTH</text>' +
         PT.map(function(q, i){ return '<g class="pl" data-i="' + i + '"><circle class="ring" cx="' + q[0] + '" cy="' + q[1] + '" r="' + (q[2] + 4) + '" fill="none" stroke-width="1"/><circle class="body" cx="' + q[0] + '" cy="' + q[1] + '" r="' + q[2] + '"/>' +
-          '<circle cx="' + (q[0] - q[2] * .3) + '" cy="' + (q[1] - q[2] * .3) + '" r="' + (q[2] * .45) + '" fill="#fff" opacity=".22"/><text class="lb nm" x="' + (i === 1 ? q[0] - q[2] - 4 : q[0] + q[2] + 5) + '" y="' + (q[1] + 3) + '"' + (i === 1 ? ' text-anchor="end"' : '') + '></text></g>'; }).join('') +
+          '<circle cx="' + (q[0] - q[2] * .3) + '" cy="' + (q[1] - q[2] * .3) + '" r="' + (q[2] * .45) + '" fill="#fff" opacity=".22"/><text class="lb nm" x="' + q[0] + '" y="' + (q[1] + q[2] + 11) + '" text-anchor="middle"></text></g>'; }).join('') +
         '<g class="rk"><path d="M5 0 L-4 -3.4 L-2 0 L-4 3.4 Z" fill="#F2F0EA"/><path d="M-2.4 0 L-7 -1.4 L-7 1.4 Z" fill="#FF6A3D"/></g>' +
-        '<text class="lb eta" x="4" y="196">ETA 00 WK</text></svg></div>';
+        '<text class="lb eta" x="4" y="10">ETA 00 WK</text></svg></div>';
       var svg = $('svg', v), done = $('.done', v), rk = $('.rk', v), eta = $('.eta', v), pls = $$('.pl', v), L = done.getTotalLength();
       $$('.lb', v).forEach(function(t){ t.setAttribute('fill', 'rgba(242,240,234,.6)'); t.setAttribute('font-family', 'JetBrains Mono, monospace'); t.setAttribute('font-size', '7'); t.setAttribute('letter-spacing', '.8'); });
       var at = [0, 0, 0]; // path length at each planet
