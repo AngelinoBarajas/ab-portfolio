@@ -1,4 +1,4 @@
-# Session handoff (2026-09-28, v0.29 batch on staging; next: Angelino's review, chip dead-zone report, tablet/phone pass, Designer step I1)
+# Session handoff (2026-09-28, v0.29.2 on staging; next: Angelino's review, chip dead-zone report, tablet/phone pass, Designer step I1)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
@@ -9,6 +9,15 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 - **Optional next depth (2b):** a small "Flight programs" collection (Service ref, order, label, code, note) for CH 02+ per service; needs a Designer step (list filtered by Service = current item).
 - **Still waiting from before:** `docs/designer-steps.md` › H1–H6, G5/G6/G8, Nav `ture` tidy-up.
 - **Before touching code:** `git pull`; tags are shared with parallel sessions. **Next free tag: `git fetch --tags && git tag --sort=-v:refname | head -1`** (v0.28.12 at the end of this session). **v0.28.7 is a stray tag** (docs commit ae2512d, same code as v0.28.6): never reuse it.
+
+## Latest (2026-09-28, v0.29.2) · verified on staging 2026-09-28
+
+Live: ab-core JS + CSS **v0.29.2**, ab-home **v0.29.2**, ab-process JS + CSS **v0.29.2**, ab-knowledge JS **v0.29.2** (/observatory + Observatory/Topics templates) and CSS **v0.29.2** on /observatory. Everything else as in v0.29 below.
+- **Nav "you are here":** the current section keeps its orange underline + diamond; detail pages mark their parent (/work/x → Work, /services/x → Services, /observatory/x + /topics → Observatory), bar and menu ("You are here").
+- **Crew roles:** the relay node is gone; a satellite orbits above the two cards, drops a signal cone on the one below (edge lights, list re-ticks), draggable and springs back. COMMS bar waveform kept.
+- **Home bento:** Webflow + 3D / Motion (tall) · Planet · Trajectory / Deploys · Brand / Field notes (wide) · CMS / Systems · Performance (wide). Order set by script (`20-services.js` › bento layout).
+- **Observatory:** newest first by default (the CMS list is oldest first, the script flips it) + "Newest first ↓ / Oldest first ↑" toggle + "Hyperjump to a random note" (picks from what the filters show, warps via AB.go).
+- **Field notes:** 14 cross-links added across notes 03, 04, 06, 08, 09, 10, 11, 12, 14, 16, 17 (drafts are the source; CMS bodies byte-checked against the importer output).
 
 ## Latest (2026-09-28, v0.29 batch) · verified on staging 2026-09-28
 
