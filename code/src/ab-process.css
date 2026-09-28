@@ -184,9 +184,10 @@
 .abp-wave-dot{width:6px;height:6px;border-radius:50%;background:var(--signal);animation:abp-wave-dot 1.2s ease-in-out infinite}
 @keyframes abp-wave-dot{50%{opacity:.25}}
 .abp-wave-scope{display:block;position:relative;width:96px;height:16px;overflow:hidden}
-.abp-wave-scope i{position:absolute;inset:0;background:linear-gradient(90deg,#146EF5,#5eead4,#0AE448,#FF6A3D,#C9C7C0,#8fb1ff,#7c5cff,#ffd166,#146EF5);background-size:480px 100%;-webkit-mask:var(--wave) 0 50%/60px 16px repeat-x;mask:var(--wave) 0 50%/60px 16px repeat-x;animation:abp-wave-run 1.6s linear infinite,abp-wave-hue 9s linear infinite}
-@keyframes abp-wave-run{to{-webkit-mask-position:-60px 50%;mask-position:-60px 50%}}
-@keyframes abp-wave-hue{to{background-position:480px 0}}
+.abp-wave-scope i{position:absolute;inset:0;background:#FF6A3D;-webkit-mask:var(--wave) 0 50%/240px 16px repeat-x;mask:var(--wave) 0 50%/240px 16px repeat-x;animation:abp-wave-run 9s linear infinite,abp-wave-hue 56s linear infinite}
+@keyframes abp-wave-run{to{-webkit-mask-position:-240px 50%;mask-position:-240px 50%}}
+/* one service color at a time, easing slowly into the next (orange first) */
+@keyframes abp-wave-hue{0%,6%{background:#FF6A3D}12.5%,18.5%{background:#146EF5}25%,31%{background:#5eead4}37.5%,43.5%{background:#0AE448}50%,56%{background:#7c5cff}62.5%,68.5%{background:#ffd166}75%,81%{background:#8fb1ff}87.5%,93.5%{background:#C9C7C0}100%{background:#FF6A3D}}
 @media (max-width:767px){.abp-wave{flex:1 1 40%;min-width:0}.abp-wave-scope{flex:1;width:auto}.ab_crew_comms > div:not(.ab_crew_comms-label):not(.abp-wave){flex:1 1 100%}}
 /* flight plan cards: KNS flag while the add-on rides along */
 .abp-ks-flag{display:inline-flex;align-items:center;gap:5px;margin-left:auto;margin-right:10px;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:#FFD29A;vertical-align:middle}

@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process v0.29.10 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process v0.29.11 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abProcessInit) return;
@@ -413,10 +413,11 @@ window.Webflow.push(function(){
     var bar = $('.ab_crew_comms');
     if (bar){
       var w = document.createElement('div'); w.className = 'abp-wave'; w.setAttribute('aria-hidden', 'true');
-      // one 60-unit tile of a wave that is periodic over exactly 60 units, so sliding it by one tile loops without a seam;
-      // it masks a gradient of the service colors (the form chips), which drifts slowly across it
-      var d = 'M0 8'; for (var x = 0; x <= 60; x += 1) d += ' L' + x + ' ' + (8 + Math.sin(x / 60 * Math.PI * 2) * 3 + Math.sin(x / 15 * Math.PI * 2) * 3).toFixed(2);
-      var tile = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 16"><path d="' + d + '" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+      // one 240-unit tile of an irregular wave (four sines whose periods all divide 240, so sliding by one tile loops
+      // without a seam); it masks a single color that fades slowly from service color to service color
+      var d = 'M0 8', T2 = Math.PI * 2 / 240;
+      for (var x = 0; x <= 240; x += 1){ var y = 8 + 2.6 * Math.sin(T2 * x + .3) + 2.2 * Math.sin(T2 * 3 * x + 1.1) + 1.5 * Math.sin(T2 * 7 * x + 2) + 1 * Math.sin(T2 * 13 * x + .5); d += ' L' + x + ' ' + Math.max(1, Math.min(15, y)).toFixed(2); }
+      var tile = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 16"><path d="' + d + '" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
       w.innerHTML = '<i class="abp-wave-dot"></i><span class="abp-wave-scope"><i></i></span>';
       $('.abp-wave-scope', w).style.setProperty('--wave', 'url("data:image/svg+xml,' + encodeURIComponent(tile) + '")');
       var lab = $('.ab_crew_comms-label', bar); bar.insertBefore(w, lab ? lab.nextSibling : bar.firstChild);
