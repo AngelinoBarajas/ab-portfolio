@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.29.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.29.1 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -479,17 +479,17 @@ window.Webflow.push(function(){
     var grid = $('#capabilities .ab_bento_grid'); if (!grid) return;
     var brand = $('[data-name="Card / branding"]', grid), deploys = $('[data-name="Card / deploys"]', grid);
     if (brand && brand.parentNode.classList.contains('is-tall')) brand.parentNode.classList.remove('is-tall');
-    // Planet card + Plot a trajectory share one card slot (one grid track each, desktop only: is-half); Field notes
-    // spans two cards (is-wide), next to Custom deploys. Rows: planet|trajectory|motion|brand, deploys|field notes, 3 cards
+    // Planet card + Plot a trajectory: one card wide, two rows tall each (same as the 3D card), with Motion over Brand
+    // beside them; Field notes spans two cards (is-wide) next to Custom deploys, then the last three cards
     var spec = $('[data-name="Card / specimen"]', grid);
     if (spec && !$('[data-visual="trajectory"]', grid)){
-      spec.parentNode.classList.remove('is-tall'); spec.parentNode.classList.add('is-half');
-      var tc = document.createElement('div'); tc.className = 'ab_bento_cell is-half';
+      spec.parentNode.classList.add('is-tall');
+      var tc = document.createElement('div'); tc.className = 'ab_bento_cell is-tall';
       tc.innerHTML = '<article data-name="Card / trajectory" data-selectable="" data-visual="trajectory" class="ab_bento-card is-trajectory" style="background:#0E1020;border-color:rgba(242,240,234,.12);color:#F2F0EA">' +
         '<div class="ab_bento-card_viz" style="background:#07080D;border-color:rgba(242,240,234,.1)"></div>' +
         '<div class="ab_bento-card_copy"><div class="ab_bento-card_label text-style-mono" style="color:rgba(242,240,234,.6)">Mission planner</div>' +
         '<h3 class="ab_bento-card_title" style="color:#F2F0EA">Plot a trajectory</h3>' +
-        '<p class="ab_bento-card_text" style="color:rgba(242,240,234,.75)">Pick a destination, add stops, watch the route draw.</p></div>' +
+        '<p class="ab_bento-card_text" style="color:rgba(242,240,234,.75)">Pick a destination, add stops and watch the route and timeline come together.</p></div>' +
         '<a aria-label="Plot a trajectory: the mission planner" href="/services#trajectory" class="ab_bento-card_link" style="color:#F2F0EA;border-color:rgba(242,240,234,.45)">↗</a></article>';
       spec.parentNode.parentNode.insertBefore(tc, spec.parentNode.nextSibling);
       selFrame(tc.firstChild, 'Card / trajectory');
@@ -635,6 +635,83 @@ window.Webflow.push(function(){
       v.innerHTML = '<div class="v-tok">' + ['#07080D', '#161A2E', '#F2F0EA', '#FF6A3D', '#4C8DFF', '#7C5CFF'].map(function(c){ return '<i style="background:' + c + '" title="' + c + '"></i>'; }).join('') + '<div class="ramp"><span>Aa</span><span>Aa</span><span>Aa</span><span>Aa</span></div></div>';
     },
     observatory: function(v){
+      // wide card (two cards across): a full star chart + a live signal log of real notes; narrow: the compact chart
+      if (v.clientWidth < 560) return VIZ.observatoryCompact(v);
+      var C = [
+        { k: 'WHO', c: '#FFD166', p: [[38, 62], [76, 40], [110, 72], [84, 102]] }, { k: 'WHAT', c: '#5eead4', p: [[168, 42], [204, 64], [238, 46], [262, 74]] },
+        { k: 'HOW', c: '#ffffff', p: [[316, 72], [348, 42], [386, 62], [418, 38], [466, 60]] }, { k: 'WATCH', c: '#8fb1ff', p: [[56, 160], [94, 142], [130, 172], [104, 198]] },
+        { k: 'IDEAS', c: '#FF9E80', p: [[206, 150], [242, 182], [280, 156], [304, 192]] }, { k: 'KNOWN', c: '#c4b5ff', p: [[366, 152], [404, 178], [442, 152], [484, 176]] }
+      ], W = 520, H = 220, NS = 'http://www.w3.org/2000/svg';
+      var grid = ''; for (var gx = 52; gx < W; gx += 52) grid += '<path d="M' + gx + ' 0V' + H + '"/>'; for (var gy = 44; gy < H; gy += 44) grid += '<path d="M0 ' + gy + 'H' + W + '"/>';
+      var bg = ''; for (var k = 0; k < 60; k++) bg += '<circle cx="' + ((k * 83) % W) + '" cy="' + ((k * 47) % H) + '" r="' + (k % 6 ? .6 : 1.1) + '"/>';
+      v.innerHTML = '<div class="v-obsw" style="position:relative;width:100%;height:100%;min-height:190px;display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px;padding:14px">' +
+        '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%;display:block;overflow:visible" aria-hidden="true">' +
+        '<g stroke="rgba(255,255,255,.07)" stroke-width="1">' + grid + '</g><g fill="rgba(255,255,255,.45)">' + bg + '</g><g class="lk"></g>' +
+        C.map(function(g, i){ return '<g class="cst" data-i="' + i + '"><path d="M' + g.p.map(function(q){ return q.join(' '); }).join('L') + '" fill="none" stroke="' + g.c + '" stroke-width="1.3" stroke-linecap="round" opacity=".9"/>' +
+          g.p.map(function(q){ return '<circle class="st" cx="' + q[0] + '" cy="' + q[1] + '" r="3" fill="' + g.c + '"/>'; }).join('') +
+          '<text x="' + g.p[0][0] + '" y="' + (g.p[0][1] - 10) + '" fill="' + g.c + '" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5" opacity=".85">' + g.k + '</text></g>'; }).join('') +
+        '<rect class="sw" x="0" y="0" width="2" height="' + H + '" fill="rgba(255,255,255,.55)"/><rect class="swg" x="-40" y="0" width="40" height="' + H + '" fill="url(#obsSw)"/>' +
+        '<defs><linearGradient id="obsSw" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".16"/></linearGradient></defs></svg>' +
+        '<div class="v-log" style="display:flex;flex-direction:column;gap:8px;min-width:0;font-family:var(--mono);color:#fff">' +
+          '<div style="display:flex;justify-content:space-between;gap:8px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.8"><span>Signal log</span><span class="n">— notes</span></div>' +
+          '<ul class="rows" style="list-style:none;margin:0;padding:0;display:grid;gap:6px;flex:1;align-content:start"></ul>' +
+          '<span class="chip" style="align-self:flex-start;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:5px 9px;border:1px solid rgba(255,255,255,.45);background:rgba(7,8,13,.25)">BN · Build notes</span></div></div>';
+      var svg = $('svg', v), stars = $$('.st', v), paths = $$('.cst path', v), rowsEl = $('.rows', v), chip = $('.chip', v), nEl = $('.n', v), lk = $('.lk', v), card = v.closest('.ab_bento-card');
+      // notes: the Home cards now, the full Observatory list once the card is on screen
+      var notes = $$('[data-ks-card]').map(function(a){ return { code: txt(a, '[data-field="code"]'), t: txt(a, '.ab_ks-card_h') || a.getAttribute('data-slug'), th: a.getAttribute('data-theme') || '' }; }).filter(function(n){ return n.code; }), at = 0, fetched = false;
+      function txt(el, sel){ var n = $(sel, el); return n ? n.textContent.trim() : ''; }
+      function rowHTML(n, on){ return '<li style="display:flex;gap:8px;align-items:baseline;min-width:0;font-size:11px;line-height:1.35;padding:6px 8px;background:' + (on ? 'rgba(255,255,255,.14)' : 'rgba(7,8,13,.22)') + ';border-left:2px solid ' + (on ? '#fff' : 'transparent') + '"><b style="font-weight:500;flex:none;opacity:.9">' + esc(n.code) + '</b><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:' + (on ? 1 : .72) + '">' + esc(n.t) + '</span></li>'; }
+      function paintLog(fresh){
+        if (!notes.length) return;
+        nEl.textContent = notes.length + ' notes';
+        var out = ''; for (var i = 0; i < Math.min(4, notes.length); i++) out += rowHTML(notes[(at + i) % notes.length], !i);
+        rowsEl.innerHTML = out;
+        var cur = notes[at % notes.length]; chip.textContent = /why/i.test(cur.th) || /^WB/.test(cur.code) ? 'WB · Why before how' : 'BN · Build notes';
+        if (fresh && hasGsap && !reduce) gsap.from(rowsEl.firstChild, { x: -10, opacity: 0, duration: .45, ease: 'power3.out' });
+      }
+      function loadAll(){
+        if (fetched || !window.fetch || !window.DOMParser) return; fetched = true;
+        fetch('/observatory').then(function(r){ return r.ok ? r.text() : ''; }).then(function(h){
+          if (!h) return; var d = new DOMParser().parseFromString(h, 'text/html');
+          var all = [].slice.call(d.querySelectorAll('[data-ks-card]')).map(function(a){ return { code: txt(a, '[data-field="code"]'), t: txt(a, '.ab_ks-card_h') || a.getAttribute('data-slug'), th: a.getAttribute('data-theme') || '' }; }).filter(function(n){ return n.code; });
+          // newest first: highest number, WB and BN interleaved by number
+          all.sort(function(a, b){ return (parseInt(b.code.replace(/\D/g, ''), 10) || 0) - (parseInt(a.code.replace(/\D/g, ''), 10) || 0); });
+          if (all.length){ notes = all; at = 0; paintLog(); }
+        }).catch(function(){});
+      }
+      paintLog();
+      if (reduce || !hasGsap){ loadAll(); return; }
+      paths.forEach(function(p){ var L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; });
+      gsap.set(stars, { transformOrigin: '50% 50%', opacity: .35 });
+      // the beam sweeps left to right; constellations draw in as it passes and stars flare under it
+      var sw = $('.sw', v), swg = $('.swg', v), o = { x: -20 }, drawn = [];
+      var sweep = gsap.to(o, { x: W + 20, duration: 7, ease: 'none', repeat: -1, paused: true, onRepeat: function(){ drawn = []; paths.forEach(function(p){ gsap.to(p, { strokeDashoffset: p.getTotalLength(), duration: .01 }); }); }, onUpdate: function(){
+        sw.setAttribute('x', o.x); swg.setAttribute('x', o.x - 40);
+        stars.forEach(function(st){ var d = Math.abs(+st.getAttribute('cx') - o.x); st.style.opacity = d < 18 ? 1 : Math.max(.35, +(st.style.opacity || .35) - .01); st.setAttribute('r', d < 18 ? 4.6 : 3); });
+        C.forEach(function(g, i){ if (!drawn[i] && o.x > g.p[0][0]){ drawn[i] = true; gsap.to(paths[i], { strokeDashoffset: 0, duration: .9, ease: 'power2.out' }); } });
+      } });
+      // signal arcs: a link between two constellations with a dot riding it (topics connect notes across groups)
+      function cen(g){ var x = 0, y = 0; g.p.forEach(function(q){ x += q[0]; y += q[1]; }); return [x / g.p.length, y / g.p.length]; }
+      var arcT = null;
+      function arc(){
+        var a = Math.floor(Math.random() * 6), b = (a + 1 + Math.floor(Math.random() * 5)) % 6, p0 = cen(C[a]), p1 = cen(C[b]);
+        var mx = (p0[0] + p1[0]) / 2, my = Math.min(p0[1], p1[1]) - 40, d = 'M' + p0[0] + ' ' + p0[1] + 'Q' + mx + ' ' + my + ' ' + p1[0] + ' ' + p1[1];
+        var path = document.createElementNS(NS, 'path'); path.setAttribute('d', d); path.setAttribute('fill', 'none'); path.setAttribute('stroke', C[b].c); path.setAttribute('stroke-width', '1'); path.setAttribute('stroke-dasharray', '3 4'); path.setAttribute('opacity', '.7');
+        var dot = document.createElementNS(NS, 'circle'); dot.setAttribute('r', '2.6'); dot.setAttribute('fill', '#fff'); lk.appendChild(path); lk.appendChild(dot);
+        var L = path.getTotalLength(), q = { t: 0 };
+        gsap.timeline({ onComplete: function(){ path.remove(); dot.remove(); } })
+          .from(path, { opacity: 0, duration: .3 })
+          .to(q, { t: 1, duration: 1.4, ease: 'power1.inOut', onUpdate: function(){ var pt = path.getPointAtLength(q.t * L); dot.setAttribute('cx', pt.x); dot.setAttribute('cy', pt.y); } }, 0)
+          .to([path, dot], { opacity: 0, duration: .5 }, '+=.3');
+      }
+      var logT = null;
+      onView(v, function(x){
+        if (x){ loadAll(); sweep.play(); arcT = setInterval(arc, 2600); logT = setInterval(function(){ at = (at + 1) % Math.max(1, notes.length); paintLog(true); }, 3600); }
+        else { sweep.pause(); clearInterval(arcT); clearInterval(logT); }
+      });
+      if (card) card.addEventListener('pointerenter', function(){ gsap.to(paths, { strokeDashoffset: 0, duration: .6 }); arc(); });
+    },
+    observatoryCompact: function(v){
       // a tiny star chart: six constellations (the Observatory's topic groups) draw in turn; a chip flips between the two themes
       var C = [
         { c: '#FFD166', p: [[22, 34], [44, 22], [62, 40], [48, 58]] }, { c: '#5eead4', p: [[98, 20], [120, 34], [140, 24]] },
@@ -670,8 +747,8 @@ window.Webflow.push(function(){
       var PT = [[36, 128, 7], [104, 86, 9], [58, 34, 11]], E = [70, 184], NS = 'http://www.w3.org/2000/svg';
       var bg = ''; for (var k = 0; k < 22; k++) bg += '<circle cx="' + ((k * 61) % 136 + 2) + '" cy="' + ((k * 37) % 196 + 2) + '" r="' + (k % 5 ? .5 : .9) + '"/>';
       var d = 'M' + E[0] + ' ' + E[1] + ' Q ' + (E[0] - 44) + ' 162 ' + PT[0][0] + ' ' + PT[0][1] + ' Q ' + 60 + ' 94 ' + PT[1][0] + ' ' + PT[1][1] + ' Q ' + 112 + ' 44 ' + PT[2][0] + ' ' + PT[2][1];
-      v.innerHTML = '<div class="v-traj" style="position:relative;width:100%;height:100%;min-height:150px;display:flex;align-items:center;justify-content:center;padding:8px">' +
-        '<svg viewBox="0 0 140 200" style="width:100%;height:100%;max-height:190px;display:block;overflow:visible" aria-hidden="true"><g fill="rgba(242,240,234,.45)">' + bg + '</g>' +
+      v.innerHTML = '<div class="v-traj" style="position:relative;width:100%;height:100%;min-height:220px;display:flex;align-items:center;justify-content:center;padding:12px">' +
+        '<svg viewBox="0 0 140 200" style="width:100%;height:100%;max-height:360px;display:block;overflow:visible" aria-hidden="true"><g fill="rgba(242,240,234,.45)">' + bg + '</g>' +
         '<path class="ghost" d="' + d + '" fill="none" stroke="rgba(242,240,234,.22)" stroke-width="1" stroke-dasharray="2 3"/>' +
         '<path class="done" d="' + d + '" fill="none" stroke="#FF6A3D" stroke-width="1.4"/>' +
         '<circle cx="' + E[0] + '" cy="' + E[1] + '" r="6" fill="#4C8DFF"/><circle cx="' + (E[0] - 2) + '" cy="' + (E[1] - 2) + '" r="2.4" fill="#fff" opacity=".35"/>' +

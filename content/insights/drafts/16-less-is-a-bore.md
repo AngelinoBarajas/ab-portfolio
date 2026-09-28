@@ -13,9 +13,13 @@ meta_description: Websites got boring for good reasons that mostly expired. Why 
 
 ## The web used to be weird
 
-If you were online in the early 2000s, you remember it. Flash intros with a "skip" button. Portfolio sites that were entire little worlds, with custom cursors, sound, menus that unfolded like machines. A lot of it was slow, some of it was unusable, and almost none of it worked with a screen reader. But you remembered where you'd been.
+My first website was an AOL Hometown page. If you had one, you remember how it went: pick a background, then keep adding GIFs until the page felt like you. A spinning logo of the team you'd defend to anyone. An animated Dragon Ball Z sprite powering up in the corner. Whatever you loved that week, moving.
 
-Then, in a few short years, it all got quiet.
+None of it was good design, and none of it needed to be. Those pages weren't trying to convert anyone. They were trying to say *this is who I am*, and they did. You could land on a stranger's page and know in two seconds what they loved. And when you finally got your GIF to spin in the right spot, it felt like you'd built something. Because you had.
+
+The bigger sites of that era were strange in their own way. Flash intros with a "skip" button. Portfolios that were entire little worlds, with custom cursors, sound, menus that unfolded like machines. A lot of it was slow, some of it was unusable, and almost none of it worked with a screen reader. But you remembered where you'd been.
+
+Then, in a few short years, it all got quiet. And that feeling, of a page that was unmistakably *someone's*, went with it. It's been bugging me ever since.
 
 ## What happened, roughly in order
 
@@ -57,6 +61,8 @@ That's the answer to the fair objection, "didn't the web get simple for good rea
 
 ## Why I bet on it
 
+This site is my attempt to get that Hometown feeling back, with twenty-odd years of craft behind it. The spinning logo is now a planet drawn in code. The space background actually drifts. It's the same impulse: make the page feel like the person who made it, and feel proud when the thing finally spins in the right spot.
+
 A portfolio is a promise about what you can build. A quiet template would have promised "I can use a template." This site is the argument: that a website can feel like a place, and still load fast, read well, work on a phone and respect someone who gets motion sick.
 
 Maximalism without taste is noise. Minimalism without a reason is a bore. The work is in the middle, where every loud thing has earned its place.
@@ -68,4 +74,4 @@ Maximalism without taste is noise. Minimalism without a reason is a bore. The wo
 - Quotes: "less is more" (Mies) and "less is a bore" (Venturi, 1966), both short and widely attributed. Nietzsche's Apollonian/Dionysian from *The Birth of Tragedy* (1872), paraphrased.
 - Site facts from this build (`CLAUDE.md`, `tokens/tokens.json`): one accent #FF6A3D, square corners, display/body/mono roles, variables for every value, reduced-motion check in every animation, lazy 3D, tap-vs-hover QA.
 - Links to note 08 (*Why before how*) by title; add the real link on import.
-- Angelino: this is your point of view piece. Swap in a personal memory of the old web (a site you loved?) in "The web used to be weird" if you have one.
+- AOL Hometown memory is Angelino's own (2026-09-28): GIFs, a spinning sports-team logo, a Dragon Ball Z sprite, pages that felt like the person, the sense of accomplishment. Kept to exactly what he described.

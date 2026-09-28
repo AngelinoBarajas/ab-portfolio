@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process v0.29.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process v0.29.1 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abProcessInit) return;
@@ -359,6 +359,17 @@ window.Webflow.push(function(){
       '<span class="abp-sig-node"><svg viewBox="0 0 24 24"><path d="M5 15a9 9 0 0 1 9-9M8 15a6 6 0 0 1 6-6M11 15a3 3 0 0 1 3-3"/><circle cx="14" cy="15" r="1.6"/></svg></span>' +
       '<span class="abp-sig-tag is-tx">TX</span><span class="abp-sig-tag is-rx">RX</span>';
     link.appendChild(sig); grid.classList.add('has-sig');
+    // the dish turns toward the pointer anywhere in the section (mouse only); it rests facing up-right, i.e. -45deg
+    var dish = $('.abp-sig-node svg', sig), sec = link.closest('section') || grid;
+    if (dish && hasGsap && !reduce && window.matchMedia && matchMedia('(hover: hover)').matches){
+      gsap.set(dish, { transformOrigin: '58% 62%' });
+      var turn = gsap.quickTo(dish, 'rotation', { duration: .5, ease: 'power3.out' }), last = 0;
+      sec.addEventListener('pointermove', function(e){
+        var r = sig.getBoundingClientRect(), a = Math.atan2(e.clientY - r.top, e.clientX - r.left) * 180 / Math.PI + 45;
+        a = last + ((a - last + 540) % 360 - 180); last = a; turn(a); // shortest way round
+      });
+      sec.addEventListener('pointerleave', function(){ last = Math.round(last / 360) * 360; turn(last); });
+    }
     if (bar){
       var w = document.createElement('div'); w.className = 'abp-wave'; w.setAttribute('aria-hidden', 'true');
       var d = 'M0 8'; for (var x = 0; x <= 240; x += 4) d += ' L' + x + ' ' + (8 + Math.sin(x / 7) * Math.sin(x / 31) * 6).toFixed(1);
