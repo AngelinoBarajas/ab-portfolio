@@ -198,7 +198,7 @@
 .ab_shelf.ab_shelf{box-shadow:inset 0 16px 18px -14px rgba(11,12,20,.22)}
 .ab_shelf .ab_shelf_floor{top:auto;bottom:0;height:18px;z-index:0;background:linear-gradient(180deg,#6a6d80 0,#3c3e50 7px,#15161f 7px,#3a3c50 8px,#0B0C14 9px,#0B0C14 100%)}
 .ab_shelf .ab_shelf_floor::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:56px;pointer-events:none;background:linear-gradient(0deg,rgba(11,12,20,.16),rgba(11,12,20,.05) 40%,transparent)}
-.ab_shelf .ab_book{--lift:0px;--tilt:0deg;--lean:0deg;--sc:1;z-index:1;margin-bottom:12px;transform-origin:50% 100%;transform:translateY(var(--lift)) rotate(calc(var(--lean) + var(--tilt))) scale(var(--sc));transition:transform .45s cubic-bezier(.2,.9,.2,1.3),box-shadow .3s;background-image:linear-gradient(90deg,rgba(255,255,255,.22),rgba(255,255,255,.07) 16%,rgba(255,255,255,0) 38%,rgba(0,0,0,0) 62%,rgba(0,0,0,.1) 80%,rgba(0,0,0,.34));box-shadow:0 2px 3px -1px rgba(11,12,20,.55),2px 0 4px -2px rgba(11,12,20,.35)}
+.ab_shelf .ab_book{--lift:0px;--tilt:0deg;--lean:0deg;--sc:1;z-index:1;margin-bottom:12px;transform-origin:50% 100%;transform:translateY(var(--lift)) rotate(calc(var(--lean) + var(--tilt))) scale(var(--sc));transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .3s;background-image:linear-gradient(90deg,rgba(255,255,255,.22),rgba(255,255,255,.07) 16%,rgba(255,255,255,0) 38%,rgba(0,0,0,0) 62%,rgba(0,0,0,.1) 80%,rgba(0,0,0,.34));box-shadow:0 2px 3px -1px rgba(11,12,20,.55),2px 0 4px -2px rgba(11,12,20,.35)}
 .ab_book::before,.ab_book::after{content:"";position:absolute;left:3px;right:3px;height:2px;background:rgba(255,255,255,.35)}
 .ab_book::before{top:12px}
 .ab_book::after{bottom:12px}
@@ -213,10 +213,10 @@
 .ab_shelf .ab_book.is-current:focus-visible{--lift:-12px}
 /* desktop hover: the spine under the pointer lifts + tips, its neighbors lean away to make room (no touch, no reduced motion) */
 @media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
-  .ab_shelf .ab_book:hover{--lift:-13px;--tilt:-2.5deg;box-shadow:0 16px 18px -10px rgba(11,12,20,.45),0 2px 3px -1px rgba(11,12,20,.3)}
-  .ab_shelf .ab_book.is-current:hover{--lift:-12px}
-  .ab_shelf .ab_book:hover+.ab_book{--tilt:2deg;--lift:-2px}
-  .ab_shelf .ab_book:has(+.ab_book:hover){--tilt:-2deg;--lift:-2px}
+  .ab_shelf .ab_book.is-hot{--lift:-13px;--tilt:-2.5deg;box-shadow:0 16px 18px -10px rgba(11,12,20,.45),0 2px 3px -1px rgba(11,12,20,.3)}
+  .ab_shelf .ab_book.is-current.is-hot{--lift:-12px}
+  .ab_shelf .ab_book.is-hot-r{--tilt:2deg;--lift:-2px}
+  .ab_shelf .ab_book.is-hot-l{--tilt:-2deg;--lift:-2px}
 }
 .ab_shelf .ab_book.is-out{z-index:3;transition:none}
 @media (prefers-reduced-motion:reduce){.ab_shelf .ab_book{transition:none}}

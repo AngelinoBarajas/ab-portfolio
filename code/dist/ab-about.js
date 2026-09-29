@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.31.4 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.31.5 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -692,13 +692,37 @@ window.Webflow.push(function(){
         if (note){ note.innerHTML = '<b>' + esc(b.getAttribute('data-g') || '') + (b.__cur ? ' · reading now' : '') + '</b>' + esc(b.getAttribute('data-note') || 'Always one on the nightstand.'); note.classList.add('show'); clearTimeout(nt); nt = setTimeout(function(){ note.classList.remove('show'); }, 2600); }
         if (reduce || !hasGsap || b.__busy) return;
         b.__busy = true; b.classList.add('is-out');
+        // a clean fall: nudge up, tip over the bottom-right corner (gravity: slow start, fast finish), a small rebound, rest,
+        // then stand back up; one pivot the whole way so nothing jumps
+        gsap.set(b, { transformOrigin: '100% 100%' });
         gsap.timeline({ onComplete: function(){ b.__busy = false; b.classList.remove('is-out'); gsap.set(b, { clearProps: 'transform' }); } })
-          .to(b, { y: -18, duration: .2, ease: 'power2.out' })
-          .to(b, { rotation: 78, x: 14, y: 12, duration: .5, ease: 'bounce.out', transformOrigin: '100% 100%' })
-          .to(b, { rotation: 0, x: 0, y: 0, duration: .7, ease: 'elastic.out(1,.6)', delay: 1.1 });
+          .to(b, { y: -10, duration: .16, ease: 'power2.out' })
+          .to(b, { rotation: 74, y: 0, duration: .42, ease: 'power2.in' })
+          .to(b, { rotation: 68, duration: .12, ease: 'power1.out' })
+          .to(b, { rotation: 74, duration: .14, ease: 'power1.in' })
+          .to(b, { rotation: 0, duration: .55, ease: 'power3.out', delay: 1.1 });
       }
       b.addEventListener('click', knock); keyAct(b, knock);
     });
+    // hover by the pointer's x over each book's resting slot (offsetLeft ignores transforms), not by :hover on the book:
+    // a lifted book used to slide out from under the cursor, drop, get hovered again and flicker between books
+    var books = $$('[data-book]', shelf), hot = null;
+    function setHot(h){
+      if (h === hot) return;
+      books.forEach(function(x){ x.classList.remove('is-hot', 'is-hot-l', 'is-hot-r'); });
+      hot = h; if (!h) return;
+      var i = books.indexOf(h); h.classList.add('is-hot');
+      if (books[i - 1]) books[i - 1].classList.add('is-hot-l'); if (books[i + 1]) books[i + 1].classList.add('is-hot-r');
+    }
+    if (!coarse && !reduce){
+      shelf.addEventListener('pointermove', function(e){
+        if (e.pointerType !== 'mouse') return;
+        var pick = null, op = books[0] && books[0].offsetParent, x = op ? e.clientX - op.getBoundingClientRect().left : 0;
+        for (var i = 0; op && i < books.length; i++){ var b = books[i]; if (x >= b.offsetLeft - 2 && x <= b.offsetLeft + b.offsetWidth + 2){ pick = b; break; } }
+        setHot(pick);
+      });
+      shelf.addEventListener('pointerleave', function(){ setHot(null); });
+    }
   })();
 
   /* ===== about/10-boss.js ===== */
