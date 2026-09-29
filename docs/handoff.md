@@ -12,7 +12,17 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 4. **Tablet / phone pass** of v0.29 + v0.30 work: Home bento (tokens + CMS cards use container queries under ~360/330px), Process crew/COMMS/gauge at 390, launch pass (desktop-only lift), Observatory drones at ~1024 (the readout can briefly overlap the title), transmission satellite hidden under 1200px.
 5. **Still waiting from before:** `docs/designer-steps.md` › H1–H6, G5/G6/G8, Nav `ture` tidy-up; optional "Flight programs" collection (2b); Mission Types Sort not renumbered (the only collection with a Sort field left at 1–12).
 
-**Before touching code:** `git pull`; tags are shared with parallel sessions: `git fetch --tags && git tag --sort=-v:refname | head -1` (**v0.30.12** at the end of this session). **v0.28.7 is a stray tag**: never reuse it. After tagging, poll jsDelivr for the tag before purging and hashing (`backups/cdncheck.sh` does it: edit its tag + file list).
+**Before touching code:** `git pull`; tags are shared with parallel sessions: `git fetch --tags && git tag --sort=-v:refname | head -1` (**v0.31.0** at the end of this session). **v0.28.7 is a stray tag**: never reuse it. After tagging, poll jsDelivr for the tag before purging and hashing (`backups/cdncheck.sh` does it: edit its tag + file list).
+
+## Latest (2026-09-28, v0.31.0) · verified on staging 2026-09-28
+Live: ab-core JS + CSS **v0.31.0**, ab-home JS **v0.31.0** (+ knowledge 0.25.5), ab-about JS + CSS **v0.31.0**, ab-knowledge JS + CSS **v0.31.0** on /observatory only (/topics + templates unchanged), ab-contact CSS **v0.31.0**. Backup: `backups/2026-09-28-v0.31.0-before.txt`.
+- About crew: `crew3d` in `about/00-about.js` (tilted plane, depth scale, sun-side lighting, pointer tilt; `.ab_crew_sys.is-3d` hides the Designer orbits; legend kept). Bookshelf: depth, `CURRENT` = The Alchemist (moved to the middle so phones see it), hover lean via custom properties, `.is-out` drops the transition.
+- Next card ≥992px: planet 1.9× card height (520–880px), centre past the bottom-right corner; `layout()` aims the ship at the visible upper-left; ringed planets lose their ring off-card. `core/38-next.js` › size().
+- Back to top: `core/42-top.js` (`.ab_top`), after 1.5 screens on pages > 2.5 screens; phones show on scroll up; hidden with the mobile menu open and when the footer fills the lower half.
+- Observatory drones: parking spot stored as an offset from the planet, beam `transformOrigin 0% 50%`, everything re-placed in a gsap.ticker per drone; packets travel by `left` %. RX readout hidden ≤767px.
+- Home meter: Gargantua distance (1.5B km, squared falloff, Miller's planet at 46–54%, "Event horizon" at the end), fills from the top, black hole dot at the foot.
+- Home Field notes compact chart: background stars R2-scattered. Contact: `input.button.is-primary:hover` background fill; `.abc-dish` bottom mask fade.
+- Prototype pending his OK: Thinker v2 (low-poly, orange faceted helmet) in `prototypes/about-cards.html`. Forms validation layer in progress.
 
 ## Latest (2026-09-28, v0.30.12) · verified on staging 2026-09-28
 Live: ab-about CSS **v0.30.12** (JS 0.29.17). `.section_about-off .padding-section-medium{padding-top:0}`: first content 300→180px desktop, 174→110px phone (matches Home › Services + service Further reading).
