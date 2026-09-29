@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.31.8 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.31.9 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -534,8 +534,8 @@ window.Webflow.push(function(){
     var HX = 565 / 701, HY = 300 / 833; // tether clip on his backpack, as a fraction of the drawing
     function geo(){ var b = box.getBoundingClientRect(), f = fig.getBoundingClientRect(); return { W: b.width, H: b.height, fw: fig.offsetWidth, fh: fig.offsetHeight, fl: fig.offsetLeft, ft: fig.offsetTop }; }
     function draw(){
-      var g = geo(), bob = reduce ? 0 : Math.sin(S.t * .9) * 5, x = S.x, y = S.y + bob, r = S.r + (reduce ? 0 : Math.sin(S.t * .55) * 3);
-      fig.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) rotate(' + r.toFixed(2) + 'deg)';
+      var g = S.free ? S.g0 : geo(), bob = reduce ? 0 : Math.sin(S.t * .9) * 5, x = S.x, y = S.y + bob, r = S.r + (reduce ? 0 : Math.sin(S.t * .55) * 3);
+      if (!S.free){ S.g0 = g; fig.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) rotate(' + r.toFixed(2) + 'deg)'; }
       // attach point: rotate the backpack clip around the figure's centre
       var cx = g.fl + g.fw / 2, cy = g.ft + g.fh / 2, ax = g.fl + g.fw * HX - cx, ay = g.ft + g.fh * HY - cy, rr = r * Math.PI / 180;
       var P = [cx + x + ax * Math.cos(rr) - ay * Math.sin(rr), cy + y + ax * Math.sin(rr) + ay * Math.cos(rr)], A = [g.W * .86, g.H];
@@ -544,6 +544,13 @@ window.Webflow.push(function(){
       var up = P[1] < A[1] - 20, L = Math.sqrt(Math.pow(P[0] - A[0], 2) + Math.pow(P[1] - A[1], 2)) || 1, slack = Math.max(0, 1 - L / (g.H * 1.2)) * 40;
       var c1y = up ? A[1] - Math.min(g.H * .32, L * .5) : A[1] + Math.min(60, L * .5), c2y = up ? P[1] + 70 : P[1] - 40;
       var d = 'M' + A[0].toFixed(1) + ' ' + A[1].toFixed(1) + ' C ' + (A[0] + 6 + slack).toFixed(1) + ' ' + c1y.toFixed(1) + ', ' + (P[0] + 44 + slack * .5).toFixed(1) + ' ' + c2y.toFixed(1) + ', ' + P[0].toFixed(1) + ' ' + P[1].toFixed(1);
+      S.L = L;
+      if (S.free){
+        // snapped: the cut end whips back toward the frame edge and disappears
+        var k = S.rec; if (k <= 0){ cord.style.display = 'none'; return; }
+        var ex = A[0] + (S.cut[0] - A[0]) * k, ey = A[1] + (S.cut[1] - A[1]) * k;
+        d = 'M' + A[0].toFixed(1) + ' ' + A[1].toFixed(1) + ' Q ' + (A[0] + (ex - A[0]) * .5 + 30 * k).toFixed(1) + ' ' + (A[1] + (ey - A[1]) * .5).toFixed(1) + ', ' + ex.toFixed(1) + ' ' + ey.toFixed(1);
+      }
       cp.forEach(function(p){ p.setAttribute('d', d); });
     }
     var last = performance.now(), sy = window.scrollY, on = true, run = false;
@@ -555,10 +562,11 @@ window.Webflow.push(function(){
         S.vy += -Math.max(-2400, Math.min(2400, v)) * .026; S.vr += -v * .0012;
         S.vx += -S.x * 9 * dt * 6; S.vy += -S.y * 9 * dt * 6; S.vr += -S.r * 8 * dt * 6;
         var damp = Math.pow(.06, dt); S.vx *= damp; S.vy *= damp; S.vr *= damp;
+        var sp = Math.sqrt(S.vx * S.vx + S.vy * S.vy), MAX = 900; if (sp > MAX){ S.vx *= MAX / sp; S.vy *= MAX / sp; }
         S.x += S.vx * dt; S.y += S.vy * dt; S.r += S.vr * dt;
-        var g = geo(), lim = g.fh * .45; S.y = Math.max(-lim, Math.min(lim, S.y)); S.x = Math.max(-g.fw * .6, Math.min(g.fw * .3, S.x));
       }
-      draw();
+      if (S.free) S.rec = Math.max(0, S.rec - dt * 3.2);
+      if (!S.gone) draw(); else if (S.rec > 0 || cord.style.display !== 'none') draw();
       if (on && !reduce) requestAnimationFrame(frame); else run = false;
     }
     function start(){ if (run || reduce) return; run = true; last = performance.now(); sy = window.scrollY; requestAnimationFrame(frame); }
@@ -567,8 +575,40 @@ window.Webflow.push(function(){
     // drag him around; let go and the tether reels him home
     fig.style.touchAction = 'none';
     fig.addEventListener('pointerdown', function(e){ e.stopPropagation(); S.drag = true; S.moved = false; S.px = e.clientX; S.py = e.clientY; S.ox = S.x; S.oy = S.y; try { fig.setPointerCapture(e.pointerId); } catch (err){} fig.classList.add('is-held'); });
-    fig.addEventListener('pointermove', function(e){ if (!S.drag) return; var mx = e.clientX - S.px, my = e.clientY - S.py; if (Math.abs(mx) + Math.abs(my) > 4) S.moved = true; S.x = S.ox + mx; S.y = S.oy + my; S.r = mx * .06; if (reduce) draw(); });
-    function drop(){ if (!S.drag) return; S.drag = false; S.vx = S.vy = 0; S.vr = 0; fig.classList.remove('is-held'); if (AB.quest && S.moved) AB.quest('spin'); if (reduce){ S.x = S.y = S.r = 0; draw(); } }
+    fig.addEventListener('pointermove', function(e){
+      if (!S.drag) return;
+      var now = performance.now(), mdt = Math.max(8, now - (S.mt || now - 16)) / 1000; S.mt = now;
+      S.pvx = (e.clientX - (S.lx == null ? e.clientX : S.lx)) / mdt; S.pvy = (e.clientY - (S.ly == null ? e.clientY : S.ly)) / mdt; S.lx = e.clientX; S.ly = e.clientY;
+      var mx = e.clientX - S.px, my = e.clientY - S.py; if (Math.abs(mx) + Math.abs(my) > 4) S.moved = true; S.x = S.ox + mx; S.y = S.oy + my; S.r = mx * .06; draw();
+      if (!reduce && S.L > box.offsetHeight * 1.6 + 60) snap(e);
+    });
+    // pulled too far: the tether snaps and he drifts off into space, slowly tumbling, until the page is reloaded.
+    // He moves to a fixed layer on <body> first, so drifting past the page edge never adds a horizontal scrollbar.
+    function snap(e){
+      S.drag = false; S.free = true; S.rec = 1; fig.classList.remove('is-held');
+      try { fig.releasePointerCapture(e.pointerId); } catch (err){}
+      var g = geo(), r = fig.getBoundingClientRect(), cxv = r.left + r.width / 2, cyv = r.top + r.height / 2;
+      S.cut = [g.fl + g.fw * HX + S.x, g.ft + g.fh * HY + S.y];
+      var w = fig.offsetWidth, h = fig.offsetHeight;
+      document.body.appendChild(fig);
+      fig.classList.add('is-adrift');
+      fig.style.cssText = 'position:fixed;left:' + (cxv - w / 2) + 'px;top:' + (cyv - h / 2) + 'px;width:' + w + 'px;height:' + h + 'px;right:auto;z-index:60;pointer-events:none;margin:0';
+      // keep the throw's direction, but never slower than a gentle drift away from the card
+      var vx = S.pvx || 0, vy = S.pvy || 0, sp = Math.sqrt(vx * vx + vy * vy), dir = sp > 40 ? [vx / sp, vy / sp] : [cxv > innerWidth / 2 ? 1 : -1, -.4];
+      sp = Math.max(160, Math.min(900, sp * .6));
+      var F = { x: 0, y: 0, vx: dir[0] * sp, vy: dir[1] * sp, r: S.r, vr: (dir[0] >= 0 ? 1 : -1) * (30 + Math.random() * 30) }, lt = performance.now();
+      (function drift(now){
+        var dt = Math.min(.05, (now - lt) / 1000); lt = now;
+        F.x += F.vx * dt; F.y += F.vy * dt; F.r += F.vr * dt; F.vx *= Math.pow(.97, dt); F.vy *= Math.pow(.97, dt);
+        fig.style.transform = 'translate(' + F.x.toFixed(1) + 'px,' + F.y.toFixed(1) + 'px) rotate(' + F.r.toFixed(1) + 'deg)';
+        var q = fig.getBoundingClientRect();
+        if (q.right < -60 || q.left > innerWidth + 60 || q.bottom < -60 || q.top > innerHeight + 60){ fig.parentNode.removeChild(fig); S.gone = true; return; }
+        requestAnimationFrame(drift);
+      })(lt);
+      if (AB.quest) AB.quest('untethered');
+      start();
+    }
+    function drop(){ if (!S.drag) return; S.drag = false; S.lx = S.ly = null; S.vx = S.vy = 0; S.vr = 0; fig.classList.remove('is-held'); if (AB.quest && S.moved) AB.quest('spin'); if (reduce){ S.x = S.y = S.r = 0; draw(); } }
     fig.addEventListener('pointerup', drop); fig.addEventListener('pointercancel', drop);
     fig.addEventListener('click', function(e){ if (S.moved) e.stopPropagation(); }, true);
     function think(k){
