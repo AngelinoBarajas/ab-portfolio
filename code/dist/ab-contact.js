@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-contact v0.31.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-contact v0.32.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abContactInit) return;
@@ -36,7 +36,10 @@ window.Webflow.push(function(){
       '<linearGradient id="abcBackG" x1="0" x2="1"><stop offset="0" stop-color="#1a1e34"/><stop offset="1" stop-color="#07080d"/></linearGradient>' +
       '<linearGradient id="abcCliffG" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#171b33"/><stop offset=".45" stop-color="#0c0e1c"/><stop offset="1" stop-color="#07080d"/></linearGradient>' +
       '<linearGradient id="abcFadeG" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".14" stop-color="#fff"/><stop offset=".34" stop-color="#000"/></linearGradient>' +
-      '<mask id="abcCliffM" maskUnits="userSpaceOnUse" x="0" y="680" width="900" height="760"><rect x="0" y="680" width="900" height="760" fill="url(#abcFadeG)"/></mask></defs>' +
+      '<mask id="abcCliffM" maskUnits="userSpaceOnUse" x="0" y="680" width="900" height="760"><rect x="0" y="680" width="900" height="760" fill="url(#abcFadeG)"/></mask>' +
+      // the signal cone fades out toward its lower edge instead of ending in a hard line where the hero clips it
+      '<linearGradient id="abcConeF" gradientUnits="userSpaceOnUse" x1="0" y1="260" x2="0" y2="820"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>' +
+      '<mask id="abcConeM" maskUnits="userSpaceOnUse" x="-1500" y="-300" width="1700" height="1300"><rect x="-1500" y="-300" width="1700" height="1300" fill="url(#abcConeF)"/></mask></defs>' +
     '<g mask="url(#abcCliffM)"><path d="M236 712 L300 708 L420 711 L520 706 L640 710 L900 704 L900 1420 L60 1420 L92 1330 L70 1250 L118 1170 L104 1090 L150 1010 L138 930 L182 860 L170 790 L214 740 Z" fill="url(#abcCliffG)"/>' +
       '<g fill="none" stroke="rgba(255,255,255,.07)"><path d="M214 762 L330 752 L470 762 L620 754"/><path d="M176 880 L300 868 L420 882 L560 872 L720 880"/><path d="M142 1032 L280 1020 L430 1034 L600 1024"/><path d="M110 1190 L260 1178 L400 1192"/></g>' +
       '<path d="M236 712 L214 740 L170 790 L182 860 L138 930 L150 1010 L104 1090 L118 1170 L70 1250 L92 1330 L60 1420" fill="none" stroke="rgba(255,255,255,.14)"/>' +
@@ -46,7 +49,7 @@ window.Webflow.push(function(){
       '<path d="M372 470 L390 336 L408 470" stroke-width="3" stroke="rgba(255,255,255,.3)"/><rect x="300" y="700" width="180" height="10" fill="#0E1020"/></g>' +
     '<circle class="abc-beacon" cx="468" cy="694" r="3.5" fill="#FF6A3D"/>' +
     '<g class="abc-aim" transform="rotate(-14 390 330)">' +
-      '<polygon class="abc-cone" points="120,330 -1400,-240 -1400,900" fill="url(#abcConeG)"/>' +
+      '<polygon class="abc-cone" points="120,330 -1400,-240 -1400,900" fill="url(#abcConeG)" mask="url(#abcConeM)"/>' +
       '<g class="abc-rings" fill="none" stroke-width="3"><path d="M120 262 A 80 80 0 0 0 120 398"/><path d="M120 262 A 80 80 0 0 0 120 398"/><path d="M120 262 A 80 80 0 0 0 120 398"/></g>' +
       '<path d="M300 90 C 440 130 470 530 300 570 Z" fill="url(#abcBackG)" stroke="rgba(255,255,255,.18)"/>' +
       '<rect x="400" y="306" width="46" height="48" fill="#0E1020" stroke="rgba(255,255,255,.22)"/>' +
@@ -140,7 +143,7 @@ window.Webflow.push(function(){
     bars.forEach(function(b, i){ b.classList.toggle('is-on', i < n); });
     if (meterT) meterT.textContent = WORDS[n];
   }
-  [fName, fEmail, msg].forEach(function(inp){ if (inp) inp.addEventListener('input', function(){ energy = Math.min(1.2, energy + .18); meter(); if (err) err.textContent = ''; }); });
+  [fName, fEmail, msg].forEach(function(inp){ if (inp) inp.addEventListener('input', function(){ energy = Math.min(1.2, energy + .18); meter(); }); });
 
   /* ---------- the dish: aims at the cursor, scans slowly on touch ---------- */
   var ang = -14, target = -14, pointerSeen = false;
@@ -192,15 +195,18 @@ window.Webflow.push(function(){
   if (form){
     var cleared = false, submitBtn = $('input[type="submit"], button[type="submit"]', form);
     var done = box ? $('.w-form-done', box) : null;
+    // missing data: core/43-validate (inline line per field + a summary above Transmit); the old one-line err box retires
+    if (err) err.hidden = true;
+    var chk = AB.formCheck && AB.formCheck(form, { btn: submitBtn, at: $('.abc-go', form), holdTag: 'Hold transmission', rules: [
+      { el: fName, name: 'name', need: 'Add your name so I know who’s calling.' },
+      { el: fEmail, name: 'email', need: 'I need an email to radio back.', bad: 'That email looks off. Mind checking it?' },
+      { el: msg, name: 'message', need: 'Add a line or two so the signal has something to carry.', test: function(el){ return el.value.trim().length < 2 ? 'need' : ''; } }
+    ] });
     form.addEventListener('submit', function(e){
       if (cleared){ cleared = false; return; } // second pass: Webflow's handler takes it from here
       e.preventDefault(); e.stopPropagation();
       if (form.classList.contains('is-sending')) return;
-      var say = function(txt, el){ if (err) err.textContent = txt; if (el) el.focus(); };
-      if (!fName || !fName.value.trim()) return say('Add your name so I know who’s calling.', fName);
-      if (!fEmail || !EMAIL.test(fEmail.value.trim())) return say('That email looks off. Mind checking it?', fEmail);
-      if (!msg || msg.value.trim().length < 2) return say('Add a line or two so the signal has something to carry.', msg);
-      if (err) err.textContent = '';
+      if (chk && !chk.ok()) return;
       if (reason) reason.value = ST[cur].v;
       var sentF = done ? $('[data-ct-sentf]', done) : null; if (sentF) sentF.textContent = ST[cur].f.toFixed(1);
       function hand(){
@@ -210,7 +216,7 @@ window.Webflow.push(function(){
         else if (window.jQuery) window.jQuery(form).trigger('submit');
         else { cleared = false; form.submit(); }
       }
-      if (reduce || !hasGsap || !scope || !packet){ hand(); return; }
+      if (reduce || !hasGsap || !scope || !packet){ setTimeout(hand, 0); return; } // a requestSubmit() inside this submit event is ignored
       form.classList.add('is-sending');
       // the packet rides the signal line from the form to the dish, then the dish fires
       var sw = scope.getBoundingClientRect(), fr = box.getBoundingClientRect(), dr = dish ? dish.getBoundingClientRect() : sw;
@@ -238,7 +244,7 @@ window.Webflow.push(function(){
     var again = done ? $('[data-ct-again]', done) : null;
     if (again) again.addEventListener('click', function(e){
       e.preventDefault(); e.stopPropagation();
-      form.reset(); done.style.display = 'none'; done.__shown = false; form.style.display = '';
+      form.reset(); if (chk) chk.reset(); done.style.display = 'none'; done.__shown = false; form.style.display = '';
       pick(cur, true); meter(); if (fName) fName.focus();
     });
   }

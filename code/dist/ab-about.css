@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about.css v0.31.9 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about.css v0.32.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · About page (/about). Loaded with a page-head <link>. Layout, type and color live on the
    Webflow classes; this holds what the Designer can't: keyframes, 3D, pseudos, descendant rules and
    the state classes ab-about.js toggles. */
@@ -172,12 +172,8 @@
 .ab_bento-card:has(> .is-astro){z-index:3}
 .is-ph.is-astro .ab_ph_q{color:#F2F0EA}
 .abpa-sky{border-radius:inherit}
-.abpa-far{position:absolute;left:12%;bottom:18%;width:34px;height:34px;opacity:.85;animation:abpa-far 40s ease-in-out infinite alternate}
-.abpa-far::before{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 34% 32%,#c9b8ff,#7c5cff 48%,#2a1d6b 100%);box-shadow:0 0 18px rgba(124,92,255,.35)}
-.abpa-far b{position:absolute;left:-40%;right:-40%;top:42%;height:16%;border-radius:50%;border:1.5px solid rgba(255,179,107,.75);transform:rotate(-16deg);-webkit-mask-image:linear-gradient(180deg,#000 45%,transparent 45%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,transparent 50%,#000 50%)}
-.abpa-far::after{content:"";position:absolute;left:-40%;right:-40%;top:42%;height:16%;border-radius:50%;border:1.5px solid rgba(255,179,107,.35);transform:rotate(-16deg);z-index:-1}
-@keyframes abpa-far{to{transform:translate(10px,-6px)}}
-@media (prefers-reduced-motion:reduce){.abpa-far{animation:none}}
+.abpa-far{position:absolute;left:9%;bottom:14%;width:clamp(48px,20%,80px);aspect-ratio:1;opacity:.92;will-change:transform}
+.abpa-far .ab_planet{position:absolute;inset:0;width:100%}
 .is-ph.is-astro .ab_ph_mark{display:none}
 .is-ph.is-astro .ab_ph_no,.is-ph.is-astro .ab_ph_q{position:relative;z-index:2;pointer-events:none}
 .is-ph.is-astro .ab_ph_q{max-width:56%}

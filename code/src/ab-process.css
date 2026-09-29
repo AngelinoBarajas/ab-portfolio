@@ -304,6 +304,7 @@
 .abp-form label{display:block;margin:0;font-weight:400}
 .abp-in{display:block;width:100%;height:auto;margin:0;padding:13px 14px;border:1px solid var(--hair2);background:var(--void);color:var(--star);font:inherit;font-size:16px;border-radius:0;transition:border-color .2s}
 .abp-in:focus{outline:none;border-color:var(--signal)}
+.abp-form > .abx-sum{margin:0} /* the form grid's gap already spaces it */
 textarea.abp-in{min-height:120px;resize:vertical}
 select.abp-in{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--dust) 50%),linear-gradient(135deg,var(--dust) 50%,transparent 50%);background-position:calc(100% - 20px) 55%,calc(100% - 15px) 55%;background-size:5px 5px;background-repeat:no-repeat}
 .abp-form .button{justify-self:start;border:0;cursor:var(--hand,pointer)}

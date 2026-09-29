@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission.css v0.31.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission.css v0.32.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · ab-mission.css · Mission template (/work/[slug]) only. Script-built parts + states the Designer cannot express. */
 /* ---------- monitor internals (views are built by ab-mission; the monitor frame/decor lives in ab-core.css) ---------- */
 .ab_screen canvas{max-width:100%}
@@ -1334,6 +1334,9 @@ body.eng .crew-dock .dot{background:#7cc4ff;box-shadow:0 0 10px #7cc4ff}
 .cx-gogo{display:flex;align-items:center;gap:12px;margin-top:8px}
 .cx-add{all:unset;cursor:var(--hand,pointer);background:#EF5B3F;color:var(--ink);font:700 13px var(--cxf);padding:10px 16px;border-radius:999px;white-space:nowrap}
 .cx-note{font:500 11.5px var(--cxf);color:var(--ink3)}
+.cx-note.is-err{color:#C2410C;font-weight:600}
+.cx-grow input[aria-invalid="true"]{border-color:#C2410C}
+.cx-grow fieldset.is-err .cx-tc{border-color:rgba(194,65,12,.55)}
 .cx-gx{position:absolute;overflow:hidden;cursor:grab;touch-action:none}
 .cx-gx.is-drag{cursor:grabbing}
 .cx-gin{position:absolute;inset:0}

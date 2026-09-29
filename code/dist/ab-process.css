@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process.css v0.31.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process.css v0.32.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* Process (/process) · the flight planner. Loaded from the page <head>.
    Only what the Designer can't hold: font-stretch, outline text, script-built pieces (abp-*: chart planets + orbits,
    route path / ship / pad, gauge, chips, form fields), state classes (.is-on, aria-pressed), pseudos and reduced motion.
@@ -305,6 +305,7 @@
 .abp-form label{display:block;margin:0;font-weight:400}
 .abp-in{display:block;width:100%;height:auto;margin:0;padding:13px 14px;border:1px solid var(--_color---neutral--hair-strong);background:var(--_color---neutral--void);color:var(--_color---text--primary);font:inherit;font-size:16px;border-radius:0;transition:border-color .2s}
 .abp-in:focus{outline:none;border-color:var(--_color---brand--signal)}
+.abp-form > .abx-sum{margin:0} /* the form grid's gap already spaces it */
 textarea.abp-in{min-height:120px;resize:vertical}
 select.abp-in{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--_color---text--tertiary) 50%),linear-gradient(135deg,var(--_color---text--tertiary) 50%,transparent 50%);background-position:calc(100% - 20px) 55%,calc(100% - 15px) 55%;background-size:5px 5px;background-repeat:no-repeat}
 .abp-form .button{justify-self:start;border:0;cursor:var(--hand,pointer)}

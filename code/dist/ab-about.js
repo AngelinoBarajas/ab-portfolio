@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.31.9 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.32.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -518,7 +518,8 @@ window.Webflow.push(function(){
     }).join('');
     box.classList.add('is-astro');
     // deep space behind him (the badge's sky: nebula + two drifting star layers + the odd shooting star) and a far planet
-    box.insertAdjacentHTML('afterbegin', '<div class="ab_badge_sky abpa-sky" aria-hidden="true"><i class="neb"></i><i class="st is-a"></i><i class="st is-b"></i><i class="shoot"></i><span class="abpa-far"><b></b></span></div>');
+    box.insertAdjacentHTML('afterbegin', '<div class="ab_badge_sky abpa-sky" aria-hidden="true"><i class="neb"></i><i class="st is-a"></i><i class="st is-b"></i><i class="shoot"></i><span class="abpa-far"><span class="ab_planet" data-planet="gas" data-seed="17" data-colors="#2a1d6b,#5b3fd1,#9d85ff,#e6ddff,#3a2a8a" data-ring="#ffd9b3,#ff9e6a,#8a4a2a" data-tilt="-16" data-spin="60" data-glow="rgba(124,92,255,.4)"></span></span></div>');
+    var far = $('.abpa-far', box); if (AB.buildPlanet) AB.buildPlanet($('.ab_planet', far));
     box.insertAdjacentHTML('beforeend',
       '<div class="abpa-cordw" aria-hidden="true"><svg class="abpa-cord"><path class="c0"/><path class="c1"/><path class="c4"/><path class="c2"/><path class="c3"/></svg></div>' +
       '<div class="abpa" aria-hidden="true"><svg viewBox="0 0 701 833">' +
@@ -530,7 +531,7 @@ window.Webflow.push(function(){
     var fig = $('.abpa', box), cord = $('.abpa-cord', box), cp = $$('.abpa-cord path', cord), stops = $$('.abpa stop', box);
     var card = box.closest('.ab_bento-card') || box;
     // state: offset from home (px), velocity, rotation; the tether rises from below the frame's bottom edge (its end is never seen)
-    var S = { x: 0, y: 0, vx: 0, vy: 0, r: 0, vr: 0, t: 0, drag: false, px: 0, py: 0, ox: 0, oy: 0 };
+    var S = { x: 0, y: 0, vx: 0, vy: 0, r: 0, vr: 0, t: 0, drag: false, px: 0, py: 0, ox: 0, oy: 0 }, FP = { y: 0, v: 0 };
     var HX = 565 / 701, HY = 300 / 833; // tether clip on his backpack, as a fraction of the drawing
     function geo(){ var b = box.getBoundingClientRect(), f = fig.getBoundingClientRect(); return { W: b.width, H: b.height, fw: fig.offsetWidth, fh: fig.offsetHeight, fl: fig.offsetLeft, ft: fig.offsetTop }; }
     function draw(){
@@ -565,6 +566,9 @@ window.Webflow.push(function(){
         var sp = Math.sqrt(S.vx * S.vx + S.vy * S.vy), MAX = 900; if (sp > MAX){ S.vx *= MAX / sp; S.vy *= MAX / sp; }
         S.x += S.vx * dt; S.y += S.vy * dt; S.r += S.vr * dt;
       }
+      // the far planet bounces on scroll too: less push, a looser spring, so it wobbles a beat after the astronaut
+      FP.v += -Math.max(-2400, Math.min(2400, v)) * .012 - FP.y * 170 * dt; FP.v *= Math.pow(.25, dt); FP.y += FP.v * dt;
+      far.style.transform = 'translate(' + (Math.sin(S.t * .15) * 8).toFixed(1) + 'px,' + (FP.y + Math.sin(S.t * .4) * 3).toFixed(1) + 'px)';
       if (S.free) S.rec = Math.max(0, S.rec - dt * 3.2);
       if (!S.gone) draw(); else if (S.rec > 0 || cord.style.display !== 'none') draw();
       if (on && !reduce) requestAnimationFrame(frame); else run = false;

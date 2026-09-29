@@ -11,7 +11,9 @@
     function dist(km){ return km >= 1e9 ? (km / 1e9).toFixed(2) + 'B km' : km >= 1e6 ? (km / 1e6).toFixed(1) + 'M km' : nf.format(Math.round(km)) + ' km'; }
     ScrollTrigger.create({ start: 0, end: 'max', onUpdate: function(self){
       var p = self.progress; altFill.style.height = (p * 100) + '%'; altLab.style.top = (p * 100) + '%';
-      altLab.textContent = p > .995 ? 'Event horizon · Gargantua' : 'Gargantua · ' + dist((1 - p) * (1 - p) * FAR) + (p > .46 && p < .54 ? " · Miller's planet" : '');
+      // the waypoint stacks under the distance so the label never grows wide into the page
+      var html = p > .995 ? 'Event horizon<span class="ab_alt-sub">Gargantua</span>' : 'Gargantua · ' + dist((1 - p) * (1 - p) * FAR) + (p > .46 && p < .54 ? '<span class="ab_alt-sub">Miller’s planet</span>' : '');
+      if (html !== altLab.__h){ altLab.__h = html; altLab.innerHTML = html; }
     } });
   })();
 

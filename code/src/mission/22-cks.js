@@ -252,7 +252,7 @@
           '<span class="cx-tally"><b>12</b> pages · <b>26</b> links</span><button type="button" class="cx-growb" aria-pressed="false">+ Grow the map</button></div>' +
         '<form class="cx-grow" novalidate><label>New insight<input type="text" maxlength="60" autocomplete="off" placeholder="What’s the idea, in your words?"></label><fieldset><legend>Tag it with</legend>' +
           TOP.map(function(t){ return '<button type="button" class="cx-tc" data-t="' + t + '" aria-pressed="false" style="--c:' + GT[t][1] + '">' + esc(GT[t][0]) + '</button>'; }).join('') +
-          '</fieldset><div class="cx-gogo"><button type="submit" class="cx-add">Add to the map</button><span class="cx-note">Adds to this monitor only. Nothing is saved.</span></div></form>' +
+          '</fieldset><div class="cx-gogo"><button type="submit" class="cx-add">Add to the map</button><span class="cx-note" role="status" aria-live="polite">Adds to this monitor only. Nothing is saved.</span></div></form>' +
         '<div class="cx-gx" style="left:' + MA.x + 'px;top:' + MA.y + 'px;width:' + MA.w + 'px;height:' + MA.h + 'px"><div class="cx-gin"><svg class="cx-gthr" viewBox="0 0 ' + MA.w + ' ' + MA.h + '" aria-hidden="true"></svg>' +
           TOP.map(function(t){ return node(t, 'is-t', ' style="--c:' + GT[t][1] + '"><span class="k"></span>' + esc(GT[t][0])); }).join('') +
           Object.keys(GP).map(function(id){ return node(id, '', ' data-kind="' + GP[id][0] + '"><span class="k">' + GICO[GP[id][0]] + '</span>' + esc(GP[id][1])); }).join('') +
@@ -357,7 +357,14 @@
       function growMine(){
         var tags = chips.filter(function(c){ return c.getAttribute('aria-pressed') === 'true'; }).map(function(c){ return c.getAttribute('data-t'); });
         var tt = (title.value || '').trim().slice(0, 60);
-        if (!tt || !tags.length){ q(form, '.cx-note').textContent = !tt ? 'Give it a title first.' : 'Pick at least one topic.'; return; }
+        // missing bits: say which (both at once), flag the field, focus the first gap (the demo's own ink, not AB orange)
+        var note = q(form, '.cx-note'), fs = q(form, 'fieldset');
+        title.setAttribute('aria-invalid', tt ? 'false' : 'true'); fs.classList.toggle('is-err', !tags.length);
+        if (!tt || !tags.length){
+          note.textContent = !tt && !tags.length ? 'Give it a title and pick at least one topic.' : !tt ? 'Give it a title first.' : 'Pick at least one topic.';
+          note.classList.add('is-err'); (tt ? chips[0] : title).focus(); return;
+        }
+        note.classList.remove('is-err');
         var id = 'm' + (mine.length + 1), b = document.createElement('button');
         b.type = 'button'; b.className = 'cx-gn is-new is-mine'; b.setAttribute('data-id', id); b.setAttribute('data-kind', 'Insight');
         b.innerHTML = '<span class="k">' + GICO.Insight + '</span>' + esc(tt); gin.appendChild(b); N[id] = b; bind(id);
@@ -389,7 +396,8 @@
       inp.addEventListener('input', function(){ search(inp.value); });
       tap(growB, function(){ if (sc.hold) sc.hold(); openForm(!form.classList.contains('on')); if (form.classList.contains('on')) title.focus(); });
       title.addEventListener('focus', function(){ if (sc.hold) sc.hold(); });
-      chips.forEach(function(c){ tap(c, function(){ if (sc.hold) sc.hold(); c.setAttribute('aria-pressed', c.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); }); });
+      chips.forEach(function(c){ tap(c, function(){ if (sc.hold) sc.hold(); c.setAttribute('aria-pressed', c.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); q(form, 'fieldset').classList.remove('is-err'); }); });
+      title.addEventListener('input', function(){ if (title.value.trim()) title.setAttribute('aria-invalid', 'false'); });
       form.addEventListener('submit', function(e){ e.preventDefault(); if (sc.hold) sc.hold(); growMine(); });
       // drag to pan
       var pan = { x: 0, y: 0 }, drag = null;
@@ -402,6 +410,7 @@
         clearMine(); pan.x = pan.y = 0; gin.style.transform = '';
         setGrown(false); inp.value = ''; title.value = ''; found.textContent = ''; gx.classList.remove('is-search'); openForm(false);
         chips.forEach(function(c){ c.setAttribute('aria-pressed', 'false'); }); q(form, '.cx-note').textContent = 'Adds to this monitor only. Nothing is saved.';
+        q(form, '.cx-note').classList.remove('is-err'); q(form, 'fieldset').classList.remove('is-err'); title.setAttribute('aria-invalid', 'false');
         unfocus(); setTally(12, 26);
       });
       var tl = R.tl;

@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process v0.31.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process v0.32.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abProcessInit) return;
@@ -604,7 +604,15 @@ window.Webflow.push(function(){
     var panel = $('.ab_launch_form'), rk = document.createElement('div'); rk.className = 'abp-rocket'; rk.setAttribute('aria-hidden', 'true');
     rk.innerHTML = '<svg viewBox="0 0 40 80"><path d="M20 2 C30 14 32 34 30 52 H10 C8 34 10 14 20 2 Z" fill="#F2F0EA"/><circle cx="20" cy="26" r="5" fill="#4C8DFF"/><path d="M10 44 L2 60 L10 56 Z M30 44 L38 60 L30 56 Z" fill="#8A8FA3"/><path d="M13 54 L20 78 L27 54 Z" fill="#FF6A3D"/></svg>';
     panel.appendChild(rk);
-    form.addEventListener('submit', function(){
+    // missing data: core/43-validate (inline line per field + a summary above the button); an invalid submit stops here,
+    // before Webflow's handler (delegated on document) ever sees it
+    var fq = function(n){ return form.querySelector('[name="' + n + '"]'); }, pBtn = $('[type="submit"]', form);
+    var chk = AB.formCheck && AB.formCheck(form, { btn: pBtn, at: pBtn, rules: [
+      { el: fq('Name'), name: 'name', need: 'Add your name so I know who’s calling.' },
+      { el: fq('Email'), name: 'email', need: 'I need an email to radio back.', bad: 'That email looks off. Mind checking it?' }
+    ] });
+    form.addEventListener('submit', function(e){
+      if (chk && !chk.ok()){ e.preventDefault(); e.stopPropagation(); return; }
       // let Webflow post it; the rocket is decoration
       var rocket = $('.abp-rocket'); if (!rocket || reduce || !hasGsap) return;
       gsap.timeline().set(rocket, { opacity: 1, y: 0 }).to(rocket, { y: -form.offsetHeight - 160, duration: 1.1, ease: 'power2.in' }).set(rocket, { opacity: 0 });

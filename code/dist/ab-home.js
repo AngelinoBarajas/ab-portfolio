@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.31.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.32.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -1077,7 +1077,9 @@ window.Webflow.push(function(){
     function dist(km){ return km >= 1e9 ? (km / 1e9).toFixed(2) + 'B km' : km >= 1e6 ? (km / 1e6).toFixed(1) + 'M km' : nf.format(Math.round(km)) + ' km'; }
     ScrollTrigger.create({ start: 0, end: 'max', onUpdate: function(self){
       var p = self.progress; altFill.style.height = (p * 100) + '%'; altLab.style.top = (p * 100) + '%';
-      altLab.textContent = p > .995 ? 'Event horizon · Gargantua' : 'Gargantua · ' + dist((1 - p) * (1 - p) * FAR) + (p > .46 && p < .54 ? " · Miller's planet" : '');
+      // the waypoint stacks under the distance so the label never grows wide into the page
+      var html = p > .995 ? 'Event horizon<span class="ab_alt-sub">Gargantua</span>' : 'Gargantua · ' + dist((1 - p) * (1 - p) * FAR) + (p > .46 && p < .54 ? '<span class="ab_alt-sub">Miller’s planet</span>' : '');
+      if (html !== altLab.__h){ altLab.__h = html; altLab.innerHTML = html; }
     } });
   })();
 
@@ -1296,15 +1298,20 @@ window.Webflow.push(function(){
     var copyBtn = $('#plCopy');
     if (copyBtn) copyBtn.addEventListener('click', function(){ AB.copyText(brief(), 'Flight plan copied ✓', function(){ toast('Copy failed, select the text instead.'); }); });
 
-    // submit: validate, fly the rocket, then hand the real submit to Webflow Forms
+    // submit: validate (core/43-validate: inline messages + summary), fly the rocket, then hand the real submit to Webflow Forms
+    if (typesRow){ typesRow.setAttribute('role', 'group'); var lg = $('.ab_planner_legend', typesRow.closest('fieldset') || form); if (lg){ lg.id = lg.id || 'plTypesL'; typesRow.setAttribute('aria-labelledby', lg.id); } }
+    var fchk = AB.formCheck && AB.formCheck(form, { btn: launchBtn, rules: [
+      { el: typesRow, box: typesRow, name: 'mission type', need: 'Pick at least one mission type.', test: function(){ return state().types.length ? '' : 'need'; } },
+      { el: $('#plName'), name: 'name', need: 'Add your name so I know who’s calling.' },
+      { el: $('#plEmail'), name: 'email', need: 'I need an email to radio back.', bad: 'That email looks off. Mind checking it?' }
+    ] });
     var cleared = false;
     form.addEventListener('submit', function(e){
       if (cleared){ cleared = false; fillHidden(); return; } // second pass: Webflow's handler takes it from here
       e.preventDefault(); e.stopPropagation();
       if (form.classList.contains('is-flying')) return;
+      if (fchk && !fchk.ok()) return;
       var st = state();
-      if (!st.types.length){ var cc = $('#plTypes'); cc.classList.remove('is-shake'); void cc.offsetWidth; cc.classList.add('is-shake'); toast('Pick at least one mission type.'); chips[0].focus(); return; }
-      var em = $('#plEmail'); if (em.value && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em.value)){ em.focus(); toast('That email address looks off.'); return; }
       fillHidden();
       var sent = $('#plSentTxt'); if (sent) sent.textContent = 'Flight plan: ' + st.types.join(' + ') + ', ' + WIN[st.w].toLowerCase() + ', ' + (st.unsure ? 'budget to be scouted together' : st.bl) + (st.add.length ? ', plus ' + st.add.join(' + ').toLowerCase() : '') + '. I’ll reply within one business day with next steps.';
       function release(){
@@ -1315,7 +1322,7 @@ window.Webflow.push(function(){
         else if (window.jQuery) window.jQuery(form).trigger('submit');
         else { cleared = false; form.submit(); }
       }
-      if (reduce || !hasGsap){ release(); return; }
+      if (reduce || !hasGsap){ setTimeout(release, 0); return; } // a requestSubmit() inside this submit event is ignored
       form.classList.add('is-flying'); done.style.opacity = 1;
       var L = path.getTotalLength(), o = { t: 0 }, fl = $('.ab_planner_flame', launchBtn);
       gsap.timeline()
@@ -1334,7 +1341,7 @@ window.Webflow.push(function(){
     // "Plot another mission" brings the form back
     var resetBtn = $('#plReset');
     if (resetBtn) resetBtn.addEventListener('click', function(){
-      form.reset(); chips.concat(addons).forEach(function(c){ c.setAttribute('aria-pressed', 'false'); }); ensureWindow(); bud.value = 1;
+      form.reset(); if (fchk) fchk.reset(); chips.concat(addons).forEach(function(c){ c.setAttribute('aria-pressed', 'false'); }); ensureWindow(); bud.value = 1;
       if (doneEl) doneEl.style.display = 'none';
       form.style.display = '';
       var id = $('#plId'); if (id) id.textContent = 'MSN-07 · unassigned';

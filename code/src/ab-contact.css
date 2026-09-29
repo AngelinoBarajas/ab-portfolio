@@ -13,8 +13,6 @@
 /* the dish on its cliff */
 /* Webflow's reset svg:not(:root){overflow:hidden} (0,1,1) clipped the beam at the SVG box: two classes beat it */
 .ab_ct-dish .abc-dish{display:block;width:100%;height:auto;overflow:visible}
-/* the dish's light field ends at the SVG's bottom edge; fade it out so it doesn't stop in a hard line above the signal strip */
-.ab_ct-dish .abc-dish{-webkit-mask-image:linear-gradient(#000 62%,transparent 96%);mask-image:linear-gradient(#000 62%,transparent 96%)}
 .abc-feed{fill:var(--ch);transition:fill .4s}
 .abc-rings{stroke:var(--ch)}
 .abc-rings path{opacity:0}
