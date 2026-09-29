@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.32.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.32.1 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -611,6 +611,11 @@ window.Webflow.push(function(){
       })(lt);
       if (AB.quest) AB.quest('untethered');
       start();
+      // with him gone, the far planet drifts over and grows into the empty lower right of the window (the sky clips it),
+      // then rebuilds at its new size so the texture stays sharp
+      var W0 = box.clientWidth, H0 = box.clientHeight, big = Math.round(Math.min(W0 * .62, H0 * .66));
+      gsap.to(far, { left: (W0 * .74 - big / 2) + 'px', bottom: (H0 * .2 - big / 2) + 'px', width: big + 'px', duration: 2.4, delay: .5, ease: 'power2.inOut',
+        onComplete: function(){ var pl = $('.ab_planet', far); if (pl && AB.buildPlanet){ pl.innerHTML = ''; pl.__built = false; pl.__body = null; AB.buildPlanet(pl); } } });
     }
     function drop(){ if (!S.drag) return; S.drag = false; S.lx = S.ly = null; S.vx = S.vy = 0; S.vr = 0; fig.classList.remove('is-held'); if (AB.quest && S.moved) AB.quest('spin'); if (reduce){ S.x = S.y = S.r = 0; draw(); } }
     fig.addEventListener('pointerup', drop); fig.addEventListener('pointercancel', drop);

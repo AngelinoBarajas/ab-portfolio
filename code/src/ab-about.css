@@ -180,7 +180,8 @@
 .abpa.is-held{cursor:grabbing}
 .abpa svg{display:block;width:100%;height:100%;overflow:visible}
 .abpa-cordw{position:absolute;inset:0;z-index:3;pointer-events:none}
-.abpa-cord{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+/* two classes: Webflow's reset svg:not(:root){overflow:hidden} (0,1,1) would clip the tether at the frame */
+.abpa-cordw .abpa-cord{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .abpa-cord path{fill:none;stroke-linecap:butt;stroke-linejoin:round}
 /* the tether in the astronaut's own flat style: ink outline around a grey core, like the hose on his chest */
 .abpa-cord .c0,.abpa-cord .c2,.abpa-cord .c3{display:none}
