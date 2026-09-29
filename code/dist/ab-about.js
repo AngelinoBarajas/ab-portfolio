@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.32.1 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.32.2 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -615,11 +615,25 @@ window.Webflow.push(function(){
       // then rebuilds at its new size so the texture stays sharp
       var W0 = box.clientWidth, H0 = box.clientHeight, big = Math.round(Math.min(W0 * .62, H0 * .66));
       gsap.to(far, { left: (W0 * .74 - big / 2) + 'px', bottom: (H0 * .2 - big / 2) + 'px', width: big + 'px', duration: 2.4, delay: .5, ease: 'power2.inOut',
-        onComplete: function(){ var pl = $('.ab_planet', far); if (pl && AB.buildPlanet){ pl.innerHTML = ''; pl.__built = false; pl.__body = null; AB.buildPlanet(pl); } } });
+        onComplete: function(){ var pl = $('.ab_planet', far); if (pl && AB.buildPlanet){ pl.innerHTML = ''; pl.__built = false; pl.__body = null; AB.buildPlanet(pl); } probe(); } });
     }
     function drop(){ if (!S.drag) return; S.drag = false; S.lx = S.ly = null; S.vx = S.vy = 0; S.vr = 0; fig.classList.remove('is-held'); if (AB.quest && S.moved) AB.quest('spin'); if (reduce){ S.x = S.y = S.r = 0; draw(); } }
     fig.addEventListener('pointerup', drop); fig.addEventListener('pointercancel', drop);
     fig.addEventListener('click', function(e){ if (S.moved) e.stopPropagation(); }, true);
+    // epilogue: a probe drifts into the window, beams a short (funny) readout about the lost pilot, and leaves
+    var LOST = ['Pilot adrift. Gargantua has him now.', 'Crew of three is a crew of two. Gargantua says thanks.', 'Signal lost. Last seen waving at Gargantua.', 'Tether snapped. Filing it under "why before how".'];
+    function probe(){
+      var sky = $('.abpa-sky', box); if (!sky) return;
+      var W1 = box.clientWidth, H1 = box.clientHeight;
+      sky.insertAdjacentHTML('beforeend', '<div class="abpa-probe"><svg class="sat-ico" viewBox="0 0 24 12"><path class="sp" d="M1 3.5h6v5H1zM17 3.5h6v5h-6z"/><path class="sa" d="M7 6h3M14 6h3"/><rect class="sb" x="10" y="2.5" width="4" height="7"/></svg><i></i>' +
+        '<span class="abpa-rx"><span><b>RX</b> · probe AB-02</span><em>' + esc(LOST[Math.floor(Math.random() * LOST.length)]) + '</em></span></div>');
+      var pr = sky.lastChild, rx = $('.abpa-rx', pr), sm = H1 < 260, y0 = sm ? H1 * .5 : H1 * .46;
+      gsap.timeline({ onComplete: function(){ pr.parentNode && pr.parentNode.removeChild(pr); } })
+        .fromTo(pr, { x: -60, y: y0 + 30, rotation: 8 }, { x: W1 * (sm ? .06 : .16), y: y0, rotation: 0, duration: 1.8, ease: 'power2.out' })
+        .fromTo(rx, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: .4, ease: 'power2.out' }, '-=.2')
+        .to(rx, { opacity: 0, duration: .35 }, '+=3.4')
+        .to(pr, { x: W1 + 60, y: y0 - 40, rotation: -6, duration: 2, ease: 'power2.in' }, '-=.1');
+    }
     function think(k){
       var v = VIS[k % VIS.length];
       if (reduce || !hasGsap){ stops.forEach(function(s, i){ s.setAttribute('stop-color', v[i]); }); return; }

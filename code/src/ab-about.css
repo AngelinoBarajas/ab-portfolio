@@ -173,6 +173,15 @@
 .abpa-sky{border-radius:inherit}
 .abpa-far{position:absolute;left:9%;bottom:14%;width:clamp(48px,20%,80px);aspect-ratio:1;opacity:.92;will-change:transform}
 .abpa-far .ab_planet{position:absolute;inset:0;width:100%}
+/* the epilogue probe after the tether snaps: flies in, beams a readout, flies off (inside the sky, so the frame clips it) */
+.abpa-probe{position:absolute;left:0;top:0;z-index:3;--sat:#ece8ff;filter:drop-shadow(0 0 6px rgba(165,151,255,.55))}
+.abpa-probe .sat-ico{width:34px;height:17px}
+.abpa-probe > i{position:absolute;left:50%;top:-5px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:#FF6A3D;box-shadow:0 0 6px #FF6A3D;animation:abpa-blink 1.1s steps(2,end) infinite}
+@keyframes abpa-blink{50%{opacity:.15}}
+.abpa-rx{position:absolute;left:0;top:26px;display:flex;flex-direction:column;gap:3px;width:max-content;max-width:210px;padding:7px 10px;border:1px solid rgba(165,151,255,.35);background:rgba(7,8,13,.82);font-family:var(--mono);font-size:10px;letter-spacing:.08em;line-height:1.35;color:var(--dust);text-transform:uppercase;opacity:0;filter:none}
+.abpa-rx b{color:#FF6A3D;font-weight:500}
+.abpa-rx em{font-style:normal;text-transform:none;letter-spacing:.02em;color:#F2F0EA;font-size:11px}
+@media (max-width:479px){.abpa-probe .sat-ico{width:26px;height:13px}.abpa-rx{top:20px;max-width:150px;padding:5px 8px;font-size:8.5px}.abpa-rx em{font-size:9.5px}}
 .is-ph.is-astro .ab_ph_mark{display:none}
 .is-ph.is-astro .ab_ph_no,.is-ph.is-astro .ab_ph_q{position:relative;z-index:2;pointer-events:none}
 .is-ph.is-astro .ab_ph_q{max-width:56%}
