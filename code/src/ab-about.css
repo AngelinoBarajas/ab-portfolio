@@ -166,7 +166,9 @@
 /* philosophy: Angelino's astronaut on a tether; the viz lets him drift a little past its frame */
 .ab_bento-card_viz.is-ph.is-astro{justify-content:flex-start;padding-top:28px;overflow:visible}
 /* the card window becomes deep space: the badge's sky, a far ringed planet, light question text */
-.ab_bento-card_viz.is-ph.is-astro{background:#0B0C14}
+.ab_bento-card_viz.is-ph.is-astro{background:#0B0C14;position:relative;z-index:5}
+/* when he drifts past the frame he passes over the card's own copy and the neighboring cards */
+.ab_bento-card:has(> .is-astro){z-index:3}
 .is-ph.is-astro .ab_ph_q{color:#F2F0EA}
 .abpa-sky{border-radius:inherit}
 .abpa-far{position:absolute;left:12%;bottom:18%;width:34px;height:34px;opacity:.85;animation:abpa-far 40s ease-in-out infinite alternate}
