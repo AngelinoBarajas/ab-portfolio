@@ -12,10 +12,10 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 4. **Tablet / phone pass** of v0.29 + v0.30 work: Home bento (tokens + CMS cards use container queries under ~360/330px), Process crew/COMMS/gauge at 390, launch pass (desktop-only lift), Observatory drones at ~1024 (the readout can briefly overlap the title), transmission satellite hidden under 1200px.
 5. **Still waiting from before:** `docs/designer-steps.md` › H1–H6, G5/G6/G8, Nav `ture` tidy-up; optional "Flight programs" collection (2b); Mission Types Sort not renumbered (the only collection with a Sort field left at 1–12).
 
-**Before touching code:** `git pull`; tags are shared with parallel sessions: `git fetch --tags && git tag --sort=-v:refname | head -1` (**v0.32.2** at the end of this session). **v0.28.7 is a stray tag**: never reuse it. After tagging, poll jsDelivr for the tag before purging and hashing (`backups/cdncheck.sh` does it: edit its tag + file list).
+**Before touching code:** `git pull`; tags are shared with parallel sessions: `git fetch --tags && git tag --sort=-v:refname | head -1` (**v0.32.3** at the end of this session). **v0.28.7 is a stray tag**: never reuse it. After tagging, poll jsDelivr for the tag before purging and hashing (`backups/cdncheck.sh` does it: edit its tag + file list).
 
-## Latest (2026-09-29, v0.32.1 → v0.32.2) · verified on staging 2026-09-29
-Live: ab-about JS + CSS **v0.32.2**. Tether SVG overflow needs two classes (`.abpa-cordw .abpa-cord`, Webflow's `svg:not(:root){overflow:hidden}` reset). After a snap the far planet grows into the lower right (rebuilt at the new size), then probe AB-02 flies through the sky with a random readout (`LOST` lines), then leaves.
+## Latest (2026-09-29, v0.32.1 → v0.32.3) · verified on staging 2026-09-29
+Live: ab-about JS + CSS **v0.32.3** (v0.32.3: no planet rebuild after it grows, at his ask; the zoomed texture reads fine). Tether SVG overflow needs two classes (`.abpa-cordw .abpa-cord`, Webflow's `svg:not(:root){overflow:hidden}` reset). After a snap the far planet grows into the lower right (rebuilt at the new size), then probe AB-02 flies through the sky with a random readout (`LOST` lines), then leaves.
 
 ## Latest (2026-09-29, v0.31.4 → v0.32.0) · verified on staging 2026-09-29
 Live: ab-core JS + CSS **v0.32.0**, ab-home **v0.32.0**, ab-about JS + CSS **v0.32.0**, ab-contact JS + CSS **v0.32.0**, ab-process JS + CSS **v0.32.0**. Not shipped: ab-mission (CKS demo message; its template head has a Designer-bound robots meta, and ab-mission.css carries unreviewed changes since 0.26.5).
