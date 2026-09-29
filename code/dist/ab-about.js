@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.31.2 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.31.3 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -44,8 +44,15 @@ window.Webflow.push(function(){
   $$('[data-tl-icon]').forEach(function(s){ var d = ICON[s.getAttribute('data-tl-icon')]; if (d) s.innerHTML = '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">' + d + '</svg>'; });
   $$('[data-tl-ship]').forEach(function(s){ s.innerHTML = '<svg viewBox="-12 -12 24 24"><rect x="-6" y="-6" width="12" height="12" fill="#FF6A3D" transform="rotate(45)"/><rect x="-2.5" y="-2.5" width="5" height="5" fill="#07080D" transform="rotate(45)"/></svg>'; });
   $$('[data-gm-hearts]').forEach(function(s){ s.innerHTML = HEART + HEART + HEART; });
-  // a headshot dropped into the photo frame in the Designer replaces the placeholder
-  $$('[data-badge-photo]').forEach(function(p){ if ($('img', p)) p.classList.add('has-photo'); });
+  // a headshot dropped into the photo frame in the Designer replaces the placeholder; until then the script places the
+  // astronaut portrait (Webflow asset, transparent background) over a small moving sky: two star layers drifting at
+  // different speeds, a nebula glow, the odd shooting star (Designer step: drop the asset into the frame, the sky stays)
+  var BADGE_IMG = 'https://cdn.prod.website-files.com/6ab5fe4a5ee75f9c981dc0be/6abb34929dc4c32cda9248fa_angelino-astronaut-badge.webp';
+  $$('[data-badge-photo]').forEach(function(p){
+    if (!$('img', p)) p.insertAdjacentHTML('afterbegin', '<img src="' + BADGE_IMG + '" alt="Angelino Barajas in an orange and white space suit" width="720" height="899" loading="lazy" decoding="async">');
+    p.classList.add('has-photo');
+    p.insertAdjacentHTML('afterbegin', '<div class="ab_badge_sky" aria-hidden="true"><i class="neb"></i><i class="st is-a"></i><i class="st is-b"></i><i class="shoot"></i></div>');
+  });
 
   /* ---------- the pilot planet: an orange giant with a stack of rings and two moons (wife + son) ---------- */
   (function(){

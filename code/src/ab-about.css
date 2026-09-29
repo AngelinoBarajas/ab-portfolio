@@ -44,7 +44,20 @@
 .ab_badge_logo .lg-planet{fill:var(--signal)}
 .ab_badge_photo{background:radial-gradient(70% 60% at 50% 38%,rgba(255,106,61,.12),transparent 70%),repeating-linear-gradient(45deg,rgba(255,255,255,.025) 0 8px,transparent 8px 16px)}
 .ab_badge_photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
-.ab_badge_photo.has-photo .ab_badge_sil,.ab_badge_photo.has-photo .ab_badge_ph-t{display:none}
+.ab_badge_photo.has-photo .ab_badge_sil,.ab_badge_photo.has-photo .ab_badge_ph-t,.ab_badge_photo.has-photo .ab_badge_ph-s{display:none}
+.ab_badge_photo.has-photo img{object-fit:cover;object-position:50% 12%}
+/* the portrait's sky: deep space behind a transparent PNG/WebP; star strips slide by transform (never background-position) */
+.ab_badge_sky{position:absolute;inset:0;z-index:0;overflow:hidden;background:radial-gradient(120% 90% at 50% 110%,#1b1640,#0B0C14 62%)}
+.ab_badge_sky i{position:absolute;display:block;pointer-events:none}
+.ab_badge_sky .neb{inset:-30%;background:radial-gradient(38% 30% at 28% 34%,rgba(124,92,255,.45),transparent 70%),radial-gradient(34% 28% at 76% 62%,rgba(255,106,61,.32),transparent 70%),radial-gradient(26% 22% at 60% 20%,rgba(76,141,255,.3),transparent 70%);filter:blur(6px);animation:ab-badge-neb 26s ease-in-out infinite alternate}
+.ab_badge_sky .st{top:0;left:0;width:200%;height:100%;will-change:transform}
+.ab_badge_sky .st.is-a{background-image:radial-gradient(1px 1px at 12px 18px,#fff,transparent),radial-gradient(1px 1px at 64px 72px,rgba(255,255,255,.8),transparent),radial-gradient(1.4px 1.4px at 118px 40px,#fff,transparent),radial-gradient(1px 1px at 170px 110px,rgba(255,255,255,.7),transparent),radial-gradient(1px 1px at 30px 130px,rgba(255,255,255,.75),transparent),radial-gradient(1.2px 1.2px at 96px 160px,#ffd9cc,transparent);background-size:190px 190px;animation:ab-badge-drift 60s linear infinite}
+.ab_badge_sky .st.is-b{opacity:.55;background-image:radial-gradient(1px 1px at 40px 30px,#fff,transparent),radial-gradient(.8px .8px at 110px 90px,#fff,transparent),radial-gradient(.8px .8px at 20px 100px,#cfe0ff,transparent),radial-gradient(1px 1px at 80px 140px,#fff,transparent);background-size:130px 130px;animation:ab-badge-drift 120s linear infinite}
+.ab_badge_sky .shoot{top:18%;left:-30%;width:90px;height:1px;background:linear-gradient(90deg,transparent,#fff);opacity:0;transform:rotate(-18deg);animation:ab-badge-shoot 9s ease-in 3s infinite}
+@keyframes ab-badge-drift{to{transform:translateX(-50%)}}
+@keyframes ab-badge-neb{to{transform:translate(4%,-3%) scale(1.08)}}
+@keyframes ab-badge-shoot{0%,86%{opacity:0;transform:translate(0,0) rotate(-18deg)}88%{opacity:1}96%{opacity:0;transform:translate(520px,-150px) rotate(-18deg)}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.ab_badge_sky i{animation:none}}
 .ab_badge_sil svg{display:block;width:100%;height:auto}
 .ab_badge_scan{animation:ab-about-scan 3.6s linear infinite;z-index:2}
 @keyframes ab-about-scan{to{top:100%}}
