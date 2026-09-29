@@ -772,3 +772,20 @@ Root causes and non-obvious fixes:
 - **CMS:** 6 book quotes (Quotes collection, `name` = quote); WB-09 body AOL Hometown dates; every Sort field ×10 (backup `backups/2026-09-28-sort-before.json`; Mission Types not done).
 
 Testing: the browser pane was hidden (rAF + IO frozen) and plain `chrome --headless --screenshot` returned black frames after a scroll; Playwright with the installed Chrome (`channel='chrome'`) worked for everything (`scratchpad/t/pwh.py` pattern: load, scroll via Lenis `immediate`, wait, evaluate, screenshot). [[lesson_headless-screenshot-use-playwright]]
+
+## Mobile + About session (2026-09-28 → 29): v0.30.9 → v0.32.3, verified on staging
+
+Rapid phone-screenshot bug reports, each shipped as a patch tag to webflow.io; two agents ran in parallel for v0.31.0 (About: crew + bookshelf; core: next-card + probe) and one for the forms layer (v0.32.0), main thread built/tagged/deployed. Full per-release list: `docs/handoff.md` › Latest v0.30.9 … v0.32.3. Root causes worth keeping:
+- **Next-card bottom-right corner filled the card (v0.30.9):** class-name collision, the card's `.nx-c.br` corner vs the Branding program's bare `.br{width:100%;height:100%}` in ab-services.css. Scoped to `.fc-stage .br`. Short class names in page CSS need a parent scope.
+- **Flight computer foot grew with each note:** content-height footer; now reserves the tallest note (`sizeNote()`); phones stack Run under the note.
+- **Doubled top padding on light sections (v0.30.10, v0.30.12):** the section's own curve padding + the inner `ab_ks-pad` / `padding-section-medium`. Only the curved variants get the inner padding zeroed (`[data-ks-row="service"]`, `.section_about-off`); Home/mission ks-rows have no curve padding and keep theirs.
+- **Field-notes stars in three columns:** `(k * 97) % 290` steps +1px every 3rd star (97·3 = 291). R2 low-discrepancy sequence now.
+- **Observatory drone beam off target:** gsap rotates around the element centre by default, so the zero-height beam wrapper swung off the drone; `transformOrigin: '0% 50%'`, parking spot stored as an offset from the planet, everything re-placed each tick.
+- **Contact dish/beam cut off (v0.31.0 → fixed v0.32.0):** a CSS `mask-image` on the `<svg>` clips everything painted outside its box ([[lesson_css-mask-clips-overflow]]); SVG `<mask>` on the cone polygon only.
+- **Transmit hover orange on orange:** it's `<input type=submit>`, which can't host the `::before` fill; real background fill for `input.button.is-primary`.
+- **"The button just doesn't submit":** Webflow's Cloudflare Turnstile keeps every form submit `disabled` until its token arrives (loaded on `requestIdleCallback`); a disabled button fires no click. `core/43-validate.js` listens on pointerup/Enter anyway and shows inline "◆ MISSING / SIGNAL CHECK", a "◆ HOLD LAUNCH" summary, or a pre-flight note ([[lesson_webflow-turnstile-disabled-submit]]). Also fixed: under reduced motion, `requestSubmit()` inside the submit handler was ignored, so the form never posted.
+- **Bookshelf hover jitter:** `:hover` lift moved the book out from under the pointer (loop). Hover is now chosen by pointer x against each book's `offsetLeft` slot.
+- **Astronaut tether clipped / detached:** Webflow's `svg:not(:root){overflow:hidden}` reset beat the one-class `overflow:visible` (two classes now); the cord starts on the frame's bottom edge (flat cap) and is never clipped. Rounding the astronaut SVG path numbers to 1 decimal merged adjacent numbers (`.05.02` → `.1` + `0` = `.10`): keep source precision when compacting path data.
+- **Grey seams on the recolored astronaut:** the dark base silhouette shows through anti-aliased edges between shading and suit shapes; shading paths get a same-color 2-unit stroke.
+- **Local-dist test harness:** stripping `integrity` from the HTML wasn't enough; Webflow's `Link` preload header still carried the SRI ([[lesson_webflow-link-header-sri-local-test]]).
+- **Designer publish after API writes:** Angelino published from the Designer after a reload; verified every head/script stayed on today's versions ([[lesson_webflow-designer-save-overwrites-api-code]]).
