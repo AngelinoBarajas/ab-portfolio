@@ -12,7 +12,10 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 4. **Tablet / phone pass** of v0.29 + v0.30 work: Home bento (tokens + CMS cards use container queries under ~360/330px), Process crew/COMMS/gauge at 390, launch pass (desktop-only lift), Observatory drones at ~1024 (the readout can briefly overlap the title), transmission satellite hidden under 1200px.
 5. **Still waiting from before:** `docs/designer-steps.md` › H1–H6, G5/G6/G8, Nav `ture` tidy-up; optional "Flight programs" collection (2b); Mission Types Sort not renumbered (the only collection with a Sort field left at 1–12).
 
-**Before touching code:** `git pull`; tags are shared with parallel sessions: `git fetch --tags && git tag --sort=-v:refname | head -1` (**v0.30.9** at the end of this session). **v0.28.7 is a stray tag**: never reuse it. After tagging, poll jsDelivr for the tag before purging and hashing (`backups/cdncheck.sh` does it: edit its tag + file list).
+**Before touching code:** `git pull`; tags are shared with parallel sessions: `git fetch --tags && git tag --sort=-v:refname | head -1` (**v0.30.10** at the end of this session). **v0.28.7 is a stray tag**: never reuse it. After tagging, poll jsDelivr for the tag before purging and hashing (`backups/cdncheck.sh` does it: edit its tag + file list).
+
+## Latest (2026-09-28, v0.30.10) · verified on staging 2026-09-28
+Live: ab-services CSS **v0.30.10** (JS 0.30.9). Service Further reading (`[data-ks-row="service"]`, theme-light curve) no longer doubles its top padding: `.ab_ks-pad{padding-top:0}` scoped to the service row only (Home + mission rows have no curve padding and keep theirs). First content 180→110px on a phone, 310→180px on desktop.
 
 ## Latest (2026-09-28, v0.30.9 · mobile pass 1) · verified on staging 2026-09-28
 Live: ab-core JS + CSS **v0.30.9**, ab-services JS + CSS **v0.30.9** (Services template), ab-process JS + CSS **v0.30.9**. Backup: `backups/2026-09-28-v0.30.9-before.txt`.
