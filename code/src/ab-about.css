@@ -165,13 +165,23 @@
 .ab_bento-card:hover .ab_ph_mark{transform:rotate(12deg) scale(1.06)}
 /* philosophy: Angelino's astronaut on a tether; the viz lets him drift a little past its frame */
 .ab_bento-card_viz.is-ph.is-astro{justify-content:flex-start;padding-top:28px;overflow:visible}
+/* the card window becomes deep space: the badge's sky, a far ringed planet, light question text */
+.ab_bento-card_viz.is-ph.is-astro{background:#0B0C14}
+.is-ph.is-astro .ab_ph_q{color:#F2F0EA}
+.abpa-sky{border-radius:inherit}
+.abpa-far{position:absolute;left:12%;bottom:18%;width:34px;height:34px;opacity:.85;animation:abpa-far 40s ease-in-out infinite alternate}
+.abpa-far::before{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 34% 32%,#c9b8ff,#7c5cff 48%,#2a1d6b 100%);box-shadow:0 0 18px rgba(124,92,255,.35)}
+.abpa-far b{position:absolute;left:-40%;right:-40%;top:42%;height:16%;border-radius:50%;border:1.5px solid rgba(255,179,107,.75);transform:rotate(-16deg);-webkit-mask-image:linear-gradient(180deg,#000 45%,transparent 45%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,transparent 50%,#000 50%)}
+.abpa-far::after{content:"";position:absolute;left:-40%;right:-40%;top:42%;height:16%;border-radius:50%;border:1.5px solid rgba(255,179,107,.35);transform:rotate(-16deg);z-index:-1}
+@keyframes abpa-far{to{transform:translate(10px,-6px)}}
+@media (prefers-reduced-motion:reduce){.abpa-far{animation:none}}
 .is-ph.is-astro .ab_ph_mark{display:none}
 .is-ph.is-astro .ab_ph_no,.is-ph.is-astro .ab_ph_q{position:relative;z-index:2;pointer-events:none}
 .is-ph.is-astro .ab_ph_q{max-width:56%}
 .abpa{position:absolute;right:9%;top:30%;height:58%;aspect-ratio:701/833;z-index:4;cursor:grab;will-change:transform;filter:drop-shadow(0 14px 18px rgba(11,12,20,.18))}
 .abpa.is-held{cursor:grabbing}
 .abpa svg{display:block;width:100%;height:100%;overflow:visible}
-.abpa-cordw{position:absolute;inset:0;overflow:hidden;z-index:3;pointer-events:none}
+.abpa-cordw{position:absolute;inset:0;z-index:3;pointer-events:none;clip-path:inset(-100vh -100vw 0 -100vw)}
 .abpa-cord{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .abpa-cord path{fill:none;stroke-linecap:round;stroke-linejoin:round}
 /* the tether in the astronaut's own flat style: ink outline around a grey core, like the hose on his chest */

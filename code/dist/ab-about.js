@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.31.5 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.31.6 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -512,9 +512,13 @@ window.Webflow.push(function(){
     var paths = ASTRO.map(function(p, i){
       // the chest's second button goes signal green (the 404 suit's panel lights); everything else keeps its role
       var f = i === 46 ? '#3BE38A' : FILL[p[0]];
-      return '<path fill="' + f + '" d="' + p[1] + '"/>' + (i === 0 ? VISOR : '');
+      // light-grey shading shapes get a hairline of their own color: without it the dark base shape shows through the
+      // anti-aliased seam where they meet the white suit
+      return '<path fill="' + f + '"' + (p[0] === 'l' || p[0] === 'g' ? ' stroke="' + f + '" stroke-width="2" stroke-linejoin="round"' : '') + ' d="' + p[1] + '"/>' + (i === 0 ? VISOR : '');
     }).join('');
     box.classList.add('is-astro');
+    // deep space behind him (the badge's sky: nebula + two drifting star layers + the odd shooting star) and a far planet
+    box.insertAdjacentHTML('afterbegin', '<div class="ab_badge_sky abpa-sky" aria-hidden="true"><i class="neb"></i><i class="st is-a"></i><i class="st is-b"></i><i class="shoot"></i><span class="abpa-far"><b></b></span></div>');
     box.insertAdjacentHTML('beforeend',
       '<div class="abpa-cordw" aria-hidden="true"><svg class="abpa-cord"><path class="c0"/><path class="c1"/><path class="c4"/><path class="c2"/><path class="c3"/></svg></div>' +
       '<div class="abpa" aria-hidden="true"><svg viewBox="0 0 701 833">' +
