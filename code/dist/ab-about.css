@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about.css v0.30.11 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about.css v0.30.12 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · About page (/about). Loaded with a page-head <link>. Layout, type and color live on the
    Webflow classes; this holds what the Designer can't: keyframes, 3D, pseudos, descendant rules and
    the state classes ab-about.js toggles. */
@@ -325,3 +325,7 @@
 .theme-light .abx-qx_feed li em,.theme-light .abx-qx_feed li.is-hint{color:#6b6f80}
 .theme-light .abx-qx_feed li.is-hint i{color:rgba(15,143,88,.6)}
 .theme-light .abx-qx_feed li.is-new span{color:#0B0C14;font-weight:500}
+
+/* between launches: the section already pads for its light curve (theme-light), so the inner padding-section-medium top
+   doubled it (300px of cream above the heading on desktop, 174px on a phone). Same fix as the service Further reading. */
+.section_about-off .padding-section-medium{padding-top:0}
