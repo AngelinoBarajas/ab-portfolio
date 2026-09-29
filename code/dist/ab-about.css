@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about.css v0.31.3 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about.css v0.31.4 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · About page (/about). Loaded with a page-head <link>. Layout, type and color live on the
    Webflow classes; this holds what the Designer can't: keyframes, 3D, pseudos, descendant rules and
    the state classes ab-about.js toggles. */
@@ -164,17 +164,25 @@
 .ab_bento-card_viz.is-ph{background:var(--_color---neutral--void)}
 .ab_ph_mark{-webkit-text-stroke:1px var(--_color---neutral--hair-strong);transition:transform .5s cubic-bezier(.2,.9,.2,1.4)}
 .ab_bento-card:hover .ab_ph_mark{transform:rotate(12deg) scale(1.06)}
-/* philosophy: the thinking helmet (404 astronaut style) takes the lower right; the question moves up to the top left */
-.ab_bento-card_viz.is-ph.is-helm{justify-content:flex-start;padding-top:28px}
-.is-ph.is-helm .ab_ph_mark{display:none}
-.is-ph.is-helm .ab_ph_no,.is-ph.is-helm .ab_ph_q{position:relative;z-index:2}
-.is-ph.is-helm .ab_ph_q{max-width:56%}
-.abph-h{position:absolute;right:6%;bottom:0;height:64%;max-width:88%;aspect-ratio:160/128;z-index:1;pointer-events:none}
-.abph-h svg{display:block;width:100%;height:100%;overflow:hidden}
+/* philosophy: Angelino's astronaut on a tether; the viz lets him drift a little past its frame */
+.ab_bento-card_viz.is-ph.is-astro{justify-content:flex-start;padding-top:28px;overflow:visible}
+.is-ph.is-astro .ab_ph_mark{display:none}
+.is-ph.is-astro .ab_ph_no,.is-ph.is-astro .ab_ph_q{position:relative;z-index:2;pointer-events:none}
+.is-ph.is-astro .ab_ph_q{max-width:56%}
+.abpa{position:absolute;right:9%;top:30%;height:58%;aspect-ratio:701/833;z-index:4;cursor:grab;will-change:transform;filter:drop-shadow(0 14px 18px rgba(11,12,20,.18))}
+.abpa.is-held{cursor:grabbing}
+.abpa svg{display:block;width:100%;height:100%;overflow:visible}
+.abpa-cordw{position:absolute;inset:0;overflow:hidden;z-index:3;pointer-events:none}
+.abpa-cord{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.abpa-cord path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+/* the tether in the astronaut's own flat style: ink outline around a grey core, like the hose on his chest */
+.abpa-cord .c0,.abpa-cord .c2,.abpa-cord .c3{display:none}
+.abpa-cord .c1{stroke:#0B0C14;stroke-width:8}
+.abpa-cord .c4{stroke:#8A8FA3;stroke-width:4.5}
 @media (max-width:479px){
-  .ab_bento-card_viz.is-ph.is-helm{padding-top:16px}
-  .is-ph.is-helm .ab_ph_q{max-width:50%;font-size:17px}
-  .abph-h{height:80%;right:3%}
+  .ab_bento-card_viz.is-ph.is-astro{padding-top:16px}
+  .is-ph.is-astro .ab_ph_q{max-width:52%;font-size:17px}
+  .abpa{height:84%;top:10%;right:6%}
 }
 .ab_bento-card_viz.is-gm{-webkit-user-select:none;user-select:none;image-rendering:pixelated}
 .ab_bento-card_viz.is-gm::before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(180deg,rgba(255,255,255,.035) 0 1px,transparent 1px 3px)}
