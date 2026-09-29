@@ -1,0 +1,5 @@
+Before v0.30.9 (2026-09-28)
+site scripts: abcore 0.30.0 (footer, last)
+site head core css: @v0.30.5 ab-core.prod.css sha384-GtGvO7C+KVkK/Nq6sfVGbh68lWON7bNnGBSYtQ3baf6oPivwNWyY7hrDhvyl2t/u
+process page 6ab701e2df00b2e38832af5b: head ab-process.prod.css @v0.30.8 sha384-pflm0T6kDEnWXXb0BE7MQGfvC8Hh48aZalNf4j0rRqAso7k7C/8VMav6JIUVBeBC ; scripts abprocess 0.30.7
+services template 6ab602e4e41add8af5e28b6c: head ab-services.prod.css @v0.29.0 sha384-i6Ngt+2wLAgJONci3UBbDyc2U3bx8eHM1c4AiOLx3enF2Fj6dUghbsOfdz8VYiOU + knowledge 0.25.5 ; scripts abservices 0.29.0, abknowledge 0.25.5 (in that order)
