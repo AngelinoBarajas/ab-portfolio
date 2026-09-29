@@ -484,8 +484,8 @@
   })();
 
   /* ---------- philosophy: another question (Designer list [data-about-questions]) ----------
-     A thinking helmet in the 404 astronaut's flat style (cream shell, grey rim, gradient visor, antenna, a glove under
-     the chin as the Thinker nod). Each new question: the visor's reflection shifts color, a glint sweeps it, a thought pops. */
+     A thinking helmet in the 404 astronaut's flat style (cream shell, grey rim, gradient visor, antenna), sitting on
+     its collar ring at the card's bottom edge. Each new question: the visor's reflection shifts color, a glint sweeps it, a thought pops. */
   (function(){
     var box = $('[data-ph]'), qT = $('[data-ph-q]'), qN = $('[data-ph-no]');
     var QS = $$('[data-about-questions] p').map(function(p){ return p.textContent.trim(); }).filter(Boolean);
@@ -493,13 +493,11 @@
     // visor palettes per question: the 404 visor is blue → navy → orange; these stay in that family
     var VIS = [['#4c8dff', '#1d2350', '#ff6a3d'], ['#7c5cff', '#1d2350', '#ff9e80'], ['#5eead4', '#15304a', '#4c8dff'], ['#ffd166', '#2a1d50', '#ff6a3d'], ['#ff6a3d', '#1d2350', '#7c5cff'], ['#4c8dff', '#0f2a3a', '#5eead4'], ['#ff9e80', '#231d50', '#ffd166']];
     box.classList.add('is-helm');
-    box.insertAdjacentHTML('beforeend', '<div class="abph-h" aria-hidden="true"><svg viewBox="0 0 160 176">' +
+    box.insertAdjacentHTML('beforeend', '<div class="abph-h" aria-hidden="true"><svg viewBox="0 0 160 128" preserveAspectRatio="xMidYMax meet">' +
       '<defs><linearGradient id="abph-v" x1="0" y1="0" x2="1" y2="1"><stop class="s0" offset="0" stop-color="#4c8dff"/><stop class="s1" offset=".55" stop-color="#1d2350"/><stop class="s2" offset="1" stop-color="#ff6a3d"/></linearGradient>' +
       '<clipPath id="abph-c"><ellipse cx="80" cy="74" rx="34" ry="28"/></clipPath>' +
       '</defs>' +
       '<g>' +
-        // shoulders run off the card's bottom edge (the box sits flush on it), so he reads as a bust, not a cut-off figure
-        '<path d="M14 186 C 16 108, 144 108, 146 186 Z" fill="#E4E1D8" stroke="#C9C7C0" stroke-width="2"/>' +
         '<ellipse cx="80" cy="124" rx="34" ry="9" fill="#C9C7C0"/><ellipse cx="80" cy="122" rx="30" ry="6" fill="#DAD7CF"/>' +
         '<g class="h-bob"><g class="h-head">' +
           '<rect x="96" y="14" width="3" height="14" fill="#C9C7C0" transform="rotate(18 97 28)"/><circle class="h-ant" cx="101" cy="13" r="4" fill="#FF6A3D"/>' +
@@ -511,8 +509,6 @@
             '<g class="h-refl" fill="#fff"><circle cx="66" cy="84" r="1.2" opacity=".7"/><circle cx="92" cy="66" r="1" opacity=".6"/><circle cx="98" cy="88" r="1.4" opacity=".5"/><circle cx="74" cy="62" r=".9" opacity=".6"/></g></g>' +
           '<path d="M58 62 Q 66 52 80 52" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".75"/><circle cx="100" cy="86" r="3" fill="#fff" opacity=".55"/>' +
         '</g></g>' +
-        '<g><rect x="30" y="126" width="38" height="17" rx="8.5" fill="#F7F6F1" stroke="#C9C7C0" stroke-width="2" transform="rotate(-58 49 134)"/>' +
-          '<rect x="52" y="112" width="15" height="7" rx="3" fill="#DAD7CF" transform="rotate(-58 59 115)"/><circle cx="64" cy="108" r="10.5" fill="#C9C7C0"/><rect x="58" y="96" width="13" height="7" rx="3.5" fill="#B5B2AA" transform="rotate(-10 64 99)"/></g>' +
       '</g>' +
       '<g class="h-tb"><circle cx="126" cy="40" r="3" fill="#0B0C14"/><circle cx="134" cy="30" r="4.5" fill="#0B0C14"/>' +
         '<rect x="128" y="0" width="30" height="22" rx="4" fill="#0B0C14"/><text x="143" y="15.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#FF6A3D">?</text></g>' +
