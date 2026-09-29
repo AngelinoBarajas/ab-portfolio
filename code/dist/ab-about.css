@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about.css v0.31.7 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about.css v0.31.8 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · About page (/about). Loaded with a page-head <link>. Layout, type and color live on the
    Webflow classes; this holds what the Designer can't: keyframes, 3D, pseudos, descendant rules and
    the state classes ab-about.js toggles. */
@@ -184,9 +184,9 @@
 .abpa{position:absolute;right:9%;top:30%;height:58%;aspect-ratio:701/833;z-index:4;cursor:grab;will-change:transform;filter:drop-shadow(0 14px 18px rgba(11,12,20,.18))}
 .abpa.is-held{cursor:grabbing}
 .abpa svg{display:block;width:100%;height:100%;overflow:visible}
-.abpa-cordw{position:absolute;inset:0;z-index:3;pointer-events:none;clip-path:inset(-100vh -100vw 0 -100vw)}
+.abpa-cordw{position:absolute;inset:0;z-index:3;pointer-events:none}
 .abpa-cord{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.abpa-cord path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.abpa-cord path{fill:none;stroke-linecap:butt;stroke-linejoin:round}
 /* the tether in the astronaut's own flat style: ink outline around a grey core, like the hose on his chest */
 .abpa-cord .c0,.abpa-cord .c2,.abpa-cord .c3{display:none}
 .abpa-cord .c1{stroke:#0B0C14;stroke-width:8}

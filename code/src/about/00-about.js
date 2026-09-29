@@ -532,10 +532,12 @@
       fig.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) rotate(' + r.toFixed(2) + 'deg)';
       // attach point: rotate the backpack clip around the figure's centre
       var cx = g.fl + g.fw / 2, cy = g.ft + g.fh / 2, ax = g.fl + g.fw * HX - cx, ay = g.ft + g.fh * HY - cy, rr = r * Math.PI / 180;
-      var P = [cx + x + ax * Math.cos(rr) - ay * Math.sin(rr), cy + y + ax * Math.sin(rr) + ay * Math.cos(rr)], A = [g.W * .86, g.H + 40];
-      // a lazy S up from under the frame to the backpack; it tightens as he pulls away
-      var L = Math.sqrt(Math.pow(P[0] - A[0], 2) + Math.pow(P[1] - A[1], 2)) || 1, slack = Math.max(0, 1 - L / (g.H * 1.2)) * 40;
-      var d = 'M' + A[0].toFixed(1) + ' ' + A[1].toFixed(1) + ' C ' + (A[0] + 6 + slack).toFixed(1) + ' ' + (A[1] - g.H * .32).toFixed(1) + ', ' + (P[0] + 44 + slack * .5).toFixed(1) + ' ' + (P[1] + 70).toFixed(1) + ', ' + P[0].toFixed(1) + ' ' + P[1].toFixed(1);
+      var P = [cx + x + ax * Math.cos(rr) - ay * Math.sin(rr), cy + y + ax * Math.sin(rr) + ay * Math.cos(rr)], A = [g.W * .86, g.H];
+      // the tether comes out of the frame's bottom edge (a flat end on the edge line, as if it runs on behind it) and
+      // curves to the backpack; it is never clipped, so it stays attached when he drifts past the frame
+      var up = P[1] < A[1] - 20, L = Math.sqrt(Math.pow(P[0] - A[0], 2) + Math.pow(P[1] - A[1], 2)) || 1, slack = Math.max(0, 1 - L / (g.H * 1.2)) * 40;
+      var c1y = up ? A[1] - Math.min(g.H * .32, L * .5) : A[1] + Math.min(60, L * .5), c2y = up ? P[1] + 70 : P[1] - 40;
+      var d = 'M' + A[0].toFixed(1) + ' ' + A[1].toFixed(1) + ' C ' + (A[0] + 6 + slack).toFixed(1) + ' ' + c1y.toFixed(1) + ', ' + (P[0] + 44 + slack * .5).toFixed(1) + ' ' + c2y.toFixed(1) + ', ' + P[0].toFixed(1) + ' ' + P[1].toFixed(1);
       cp.forEach(function(p){ p.setAttribute('d', d); });
     }
     var last = performance.now(), sy = window.scrollY, on = true, run = false;
