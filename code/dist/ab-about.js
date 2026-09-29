@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.31.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.31.1 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -489,17 +489,63 @@ window.Webflow.push(function(){
     });
   })();
 
-  /* ---------- philosophy: another question (Designer list [data-about-questions]) ---------- */
+  /* ---------- philosophy: another question (Designer list [data-about-questions]) ----------
+     A thinking helmet in the 404 astronaut's flat style (cream shell, grey rim, gradient visor, antenna, a glove under
+     the chin as the Thinker nod). Each new question: the visor's reflection shifts color, a glint sweeps it, a thought pops. */
   (function(){
-    var box = $('[data-ph]'), qT = $('[data-ph-q]'), qN = $('[data-ph-no]'), mark = $('.ab_ph_mark');
+    var box = $('[data-ph]'), qT = $('[data-ph-q]'), qN = $('[data-ph-no]');
     var QS = $$('[data-about-questions] p').map(function(p){ return p.textContent.trim(); }).filter(Boolean);
     if (!box || !qT || !QS.length) return;
+    // visor palettes per question: the 404 visor is blue → navy → orange; these stay in that family
+    var VIS = [['#4c8dff', '#1d2350', '#ff6a3d'], ['#7c5cff', '#1d2350', '#ff9e80'], ['#5eead4', '#15304a', '#4c8dff'], ['#ffd166', '#2a1d50', '#ff6a3d'], ['#ff6a3d', '#1d2350', '#7c5cff'], ['#4c8dff', '#0f2a3a', '#5eead4'], ['#ff9e80', '#231d50', '#ffd166']];
+    box.classList.add('is-helm');
+    box.insertAdjacentHTML('beforeend', '<div class="abph-h" aria-hidden="true"><svg viewBox="0 0 160 176">' +
+      '<defs><linearGradient id="abph-v" x1="0" y1="0" x2="1" y2="1"><stop class="s0" offset="0" stop-color="#4c8dff"/><stop class="s1" offset=".55" stop-color="#1d2350"/><stop class="s2" offset="1" stop-color="#ff6a3d"/></linearGradient>' +
+      '<clipPath id="abph-c"><ellipse cx="80" cy="74" rx="34" ry="28"/></clipPath>' +
+      '</defs>' +
+      '<g>' +
+        // shoulders run off the card's bottom edge (the box sits flush on it), so he reads as a bust, not a cut-off figure
+        '<path d="M14 186 C 16 108, 144 108, 146 186 Z" fill="#E4E1D8" stroke="#C9C7C0" stroke-width="2"/>' +
+        '<ellipse cx="80" cy="124" rx="34" ry="9" fill="#C9C7C0"/><ellipse cx="80" cy="122" rx="30" ry="6" fill="#DAD7CF"/>' +
+        '<g class="h-bob"><g class="h-head">' +
+          '<rect x="96" y="14" width="3" height="14" fill="#C9C7C0" transform="rotate(18 97 28)"/><circle class="h-ant" cx="101" cy="13" r="4" fill="#FF6A3D"/>' +
+          '<circle cx="80" cy="72" r="50" fill="#F7F6F1"/><circle cx="80" cy="72" r="50" fill="none" stroke="#C9C7C0" stroke-width="4"/>' +
+          '<path d="M44 44 A 50 50 0 0 1 116 44" fill="none" stroke="#fff" stroke-width="3" opacity=".8" stroke-linecap="round"/>' +
+          '<rect x="122" y="66" width="10" height="14" rx="2" fill="#C9C7C0"/><rect x="124" y="69" width="6" height="6" fill="#FF6A3D"/>' +
+          '<ellipse cx="80" cy="74" rx="34" ry="28" fill="url(#abph-v)"/>' +
+          '<g clip-path="url(#abph-c)"><rect class="h-sweep" x="30" y="40" width="10" height="70" fill="#fff" opacity="0" transform="rotate(20 80 74)"/>' +
+            '<g class="h-refl" fill="#fff"><circle cx="66" cy="84" r="1.2" opacity=".7"/><circle cx="92" cy="66" r="1" opacity=".6"/><circle cx="98" cy="88" r="1.4" opacity=".5"/><circle cx="74" cy="62" r=".9" opacity=".6"/></g></g>' +
+          '<path d="M58 62 Q 66 52 80 52" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".75"/><circle cx="100" cy="86" r="3" fill="#fff" opacity=".55"/>' +
+        '</g></g>' +
+        '<g><rect x="30" y="126" width="38" height="17" rx="8.5" fill="#F7F6F1" stroke="#C9C7C0" stroke-width="2" transform="rotate(-58 49 134)"/>' +
+          '<rect x="52" y="112" width="15" height="7" rx="3" fill="#DAD7CF" transform="rotate(-58 59 115)"/><circle cx="64" cy="108" r="10.5" fill="#C9C7C0"/><rect x="58" y="96" width="13" height="7" rx="3.5" fill="#B5B2AA" transform="rotate(-10 64 99)"/></g>' +
+      '</g>' +
+      '<g class="h-tb"><circle cx="126" cy="40" r="3" fill="#0B0C14"/><circle cx="134" cy="30" r="4.5" fill="#0B0C14"/>' +
+        '<rect x="128" y="0" width="30" height="22" rx="4" fill="#0B0C14"/><text x="143" y="15.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#FF6A3D">?</text></g>' +
+      '</svg></div>');
+    var H = function(s){ return $(s, box); }, stops = [H('.s0'), H('.s1'), H('.s2')];
+    function think(k){
+      var v = VIS[k % VIS.length];
+      if (reduce || !hasGsap){ stops.forEach(function(s, i){ s.setAttribute('stop-color', v[i]); }); return; }
+      stops.forEach(function(s, i){ gsap.to(s, { attr: { 'stop-color': v[i] }, duration: .8, ease: 'power2.inOut' }); });
+      gsap.fromTo(H('.h-sweep'), { attr: { x: 30 }, opacity: .55 }, { attr: { x: 124 }, opacity: 0, duration: .8, ease: 'power2.inOut' });
+      gsap.fromTo(H('.h-tb'), { opacity: 0, y: 6, scale: .7, transformOrigin: '0% 100%' }, { opacity: 1, y: 0, scale: 1, duration: .45, ease: 'back.out(2.2)' });
+      gsap.fromTo(H('.h-refl'), { x: -6, opacity: .2 }, { x: 0, opacity: 1, duration: .8, ease: 'power2.out' });
+      gsap.fromTo(H('.h-head'), { rotation: 0, svgOrigin: '80 120' }, { rotation: -6, duration: .45, yoyo: true, repeat: 1, ease: 'sine.inOut' });
+    }
+    if (hasGsap && !reduce){
+      // idle: float, a slow thinking tilt, the antenna blinks; paused off screen
+      var idle = [gsap.to(H('.h-bob'), { y: -3, duration: 2.6, yoyo: true, repeat: -1, ease: 'sine.inOut' }),
+        gsap.to(H('.h-head'), { rotation: 3, svgOrigin: '80 120', duration: 4.2, yoyo: true, repeat: -1, ease: 'sine.inOut', delay: 1 }),
+        gsap.to(H('.h-ant'), { opacity: .3, duration: .8, repeat: -1, yoyo: true, ease: 'steps(1)' })];
+      if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ var on = es[0].isIntersecting; idle.forEach(function(t){ t.paused(!on); }); }).observe(box);
+    }
     var qi = 0;
     function next(){
       qi = (qi + 1) % QS.length; if (qi === 0) if (AB.quest) AB.quest('questions');  if (qN) qN.textContent = 'Question ' + pad2(qi + 1);
+      think(qi);
       if (reduce || !hasGsap || !window.ScrambleTextPlugin){ qT.textContent = QS[qi]; return; }
       gsap.to(qT, { duration: .8, scrambleText: { text: QS[qi], chars: '?!/_<>', speed: .6 } });
-      if (mark) gsap.fromTo(mark, { rotation: -20 }, { rotation: 0, duration: .8, ease: 'elastic.out(1,.4)' });
     }
     // tapping anywhere on the card asks the next question (links inside it still work)
     var phCard = box.closest('.ab_bento-card') || box;

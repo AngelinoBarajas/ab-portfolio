@@ -29,6 +29,9 @@ h3{font-weight:900;font-stretch:118%;text-transform:uppercase;margin:0;font-size
 .th2{position:absolute;right:1%;bottom:2%;height:86%;aspect-ratio:1;z-index:2}
 .card.sm .th2{height:100%;bottom:0;right:0}
 .th2 svg{width:100%;height:100%;display:block;overflow:visible}
+.h3{position:absolute;right:6%;bottom:4%;height:74%;aspect-ratio:160/170;z-index:2}
+.card.sm .h3{height:92%;right:3%;bottom:2%}
+.h3 svg{width:100%;height:100%;display:block;overflow:visible}
 </style></head><body>
 
 <div class="card"><div class="viz" data-crew></div><div class="lbl">Home base</div><h3>Crew of three</h3></div>
@@ -264,11 +267,69 @@ function thinker2(box, MESH){
   }
 }
 </script>
+<script>/* ============ the thinking helmet (404 astronaut style) ============
+   a big helmet, flat shapes like the 404 astronaut: cream shell + grey rim, gradient visor with a glint, antenna,
+   a gloved hand under the chin. Each new question: the visor's reflection shifts hue, a glint sweeps it, a thought pops. */
+function helmet3(box){
+  var G = window.gsap, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // visor palettes per question (the 404 visor is blue → navy → orange; these keep that family)
+  var VIS = [['#4c8dff', '#1d2350', '#ff6a3d'], ['#7c5cff', '#1d2350', '#ff9e80'], ['#5eead4', '#15304a', '#4c8dff'], ['#ffd166', '#2a1d50', '#ff6a3d'], ['#ff6a3d', '#1d2350', '#7c5cff'], ['#4c8dff', '#0f2a3a', '#5eead4'], ['#ff9e80', '#231d50', '#ffd166']];
+  box.insertAdjacentHTML('beforeend', '<div class="h3" aria-hidden="true"><svg viewBox="0 0 160 170">' +
+    '<defs><linearGradient id="h3v" x1="0" y1="0" x2="1" y2="1"><stop class="s0" offset="0" stop-color="#4c8dff"/><stop class="s1" offset=".55" stop-color="#1d2350"/><stop class="s2" offset="1" stop-color="#ff6a3d"/></linearGradient>' +
+    '<clipPath id="h3c"><ellipse cx="80" cy="74" rx="34" ry="28"/></clipPath>' +
+    '<radialGradient id="h3sh" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#0B0C14" stop-opacity=".18"/><stop offset="1" stop-color="#0B0C14" stop-opacity="0"/></radialGradient></defs>' +
+    '<ellipse cx="80" cy="160" rx="46" ry="7" fill="url(#h3sh)"/>' +
+    '<g class="h3-bob">' +
+      // collar ring + a bit of suit
+      '<path d="M40 150 C 44 126, 116 126, 120 150 Z" fill="#E4E1D8" stroke="#C9C7C0" stroke-width="2"/>' +
+      '<ellipse cx="80" cy="124" rx="34" ry="9" fill="#C9C7C0"/><ellipse cx="80" cy="122" rx="30" ry="6" fill="#DAD7CF"/>' +
+      '<g class="h3-head">' +
+        // antenna
+        '<rect x="96" y="14" width="3" height="14" fill="#C9C7C0" transform="rotate(18 97 28)"/><circle class="h3-ant" cx="101" cy="13" r="4" fill="#FF6A3D"/>' +
+        // shell + rim
+        '<circle cx="80" cy="72" r="50" fill="#F7F6F1"/><circle cx="80" cy="72" r="50" fill="none" stroke="#C9C7C0" stroke-width="4"/>' +
+        '<path d="M44 44 A 50 50 0 0 1 116 44" fill="none" stroke="#fff" stroke-width="3" opacity=".8" stroke-linecap="round"/>' +
+        // side light + bolt, like the 404 suit's orange patch
+        '<rect x="122" y="66" width="10" height="14" rx="2" fill="#C9C7C0"/><rect x="124" y="69" width="6" height="6" fill="#FF6A3D"/>' +
+        // visor
+        '<ellipse cx="80" cy="74" rx="34" ry="28" fill="url(#h3v)"/>' +
+        '<g clip-path="url(#h3c)"><rect class="h3-sweep" x="30" y="40" width="10" height="70" fill="#fff" opacity="0" transform="rotate(20 80 74)"/>' +
+          '<g class="h3-refl" fill="#fff"><circle cx="66" cy="84" r="1.2" opacity=".7"/><circle cx="92" cy="66" r="1" opacity=".6"/><circle cx="98" cy="88" r="1.4" opacity=".5"/><circle cx="74" cy="62" r=".9" opacity=".6"/></g></g>' +
+        '<path d="M58 62 Q 66 52 80 52" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".75"/><circle cx="100" cy="86" r="3" fill="#fff" opacity=".55"/>' +
+      '</g>' +
+      // gloved hand under the chin (the Thinker nod): cuff + glove
+      '<g class="h3-hand"><rect x="30" y="126" width="38" height="17" rx="8.5" fill="#F7F6F1" stroke="#C9C7C0" stroke-width="2" transform="rotate(-58 49 134)"/>' +
+        '<rect x="52" y="112" width="15" height="7" rx="3" fill="#DAD7CF" transform="rotate(-58 59 115)"/><circle cx="64" cy="108" r="10.5" fill="#C9C7C0"/><rect x="58" y="96" width="13" height="7" rx="3.5" fill="#B5B2AA" transform="rotate(-10 64 99)"/></g>' +
+    '</g>' +
+    // thought bubble in the 404 bubble style
+    '<g class="h3-tb"><circle cx="126" cy="40" r="3" fill="#0B0C14"/><circle cx="134" cy="30" r="4.5" fill="#0B0C14"/>' +
+      '<rect x="128" y="0" width="30" height="22" rx="4" fill="#0B0C14"/><text x="143" y="15.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#FF6A3D">?</text></g>' +
+    '</svg></div>');
+  var q = function(s){ return box.querySelector(s); };
+  var stops = [q('.s0'), q('.s1'), q('.s2')];
+  function think(k){
+    var v = VIS[k % VIS.length];
+    if (!G || reduce){ stops.forEach(function(s, i){ s.setAttribute('stop-color', v[i]); }); return; }
+    stops.forEach(function(s, i){ G.to(s, { attr: { 'stop-color': v[i] }, duration: .8, ease: 'power2.inOut' }); });
+    G.fromTo(q('.h3-sweep'), { attr: { x: 30 }, opacity: .55 }, { attr: { x: 124 }, opacity: 0, duration: .8, ease: 'power2.inOut' });
+    G.fromTo(q('.h3-tb'), { opacity: 0, y: 6, scale: .7, transformOrigin: '0% 100%' }, { opacity: 1, y: 0, scale: 1, duration: .45, ease: 'back.out(2.2)' });
+    G.fromTo(q('.h3-refl'), { x: -6, opacity: .2 }, { x: 0, opacity: 1, duration: .8, ease: 'power2.out' });
+    G.fromTo(q('.h3-head'), { rotation: 0, svgOrigin: '80 120' }, { rotation: -6, duration: .45, yoyo: true, repeat: 1, ease: 'sine.inOut' });
+  }
+  box.__think = think;
+  think(0);
+  if (G && !reduce){
+    G.to(q('.h3-bob'), { y: -4, duration: 2.6, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+    G.to(q('.h3-head'), { rotation: 3, svgOrigin: '80 120', duration: 4.2, yoyo: true, repeat: -1, ease: 'sine.inOut', delay: 1 });
+    G.to(q('.h3-ant'), { opacity: .3, duration: .8, repeat: -1, yoyo: true, ease: 'steps(1)' });
+  }
+}
+</script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
 <script>
 document.querySelectorAll('[data-crew]').forEach(function(b){ crew3d(b); });
 document.querySelectorAll('[data-think]').forEach(function(b){
-  thinker2(b, THINKER_MESH);
+  helmet3(b);
   var Q = ['Why does this page exist?', 'Who is it really for?', 'What should they feel when they leave?', 'What happens if we take it away?'], qi = 0;
   b.addEventListener('click', function(){ qi = (qi + 1) % Q.length; b.querySelector('.ph-q').textContent = Q[qi]; b.querySelector('.ph-no').textContent = 'Question 0' + (qi + 1); b.__think(qi); });
 });
