@@ -301,6 +301,8 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 .v-term .tabs{display:flex;gap:2px;margin-left:10px;min-width:0;overflow:hidden}
 .v-term .tabs span{padding:2px 8px;font-size:10.5px;letter-spacing:.04em;color:var(--_color---text--tertiary);border-bottom:1px solid transparent;white-space:nowrap;transition:color .2s,border-color .2s}
 .v-term .tabs span.on{color:var(--_color---text--primary);border-bottom-color:var(--_color---brand--signal)}
+/* phones: the four tabs need ~250px; drop the window dots and tighten the tabs so "terminal" isn't cut off */
+@media (max-width:479px){.v-term .bar i{display:none}.v-term .tabs{margin-left:0;gap:0}.v-term .tabs span{padding:2px 5px;letter-spacing:0}}
 .v-term .out{flex:1;min-height:0}
 .v-term .ln{white-space:nowrap;overflow:hidden;text-overflow:clip}
 .v-term .k{color:#8fb1ff}.v-term .a{color:#c4b5ff}.v-term .s{color:#FFD166}.v-term .c{color:var(--_color---text--tertiary)}
@@ -741,6 +743,13 @@ section:hover > .ab_frame-label{color:var(--_color---ui--select)}
 .nx-ship{opacity:0}
 .nx-ship .fl{fill:#ffb36b;transform-box:fill-box;transform-origin:right center;animation:ab-flame .12s steps(2) infinite alternate}
 @media (max-width:767px){.nx-hud{display:none}}
+/* phones: the title takes the card's full width, the planet sits in the bottom-right corner beside the button */
+@media (max-width:479px){
+  .ab_next-card{grid-template-columns:minmax(0,1fr)}
+  .ab_next-card .ab_planet{position:absolute;right:22px;bottom:22px}
+}
+/* touch keeps :hover after a tap: don't leave the title shifted 14px */
+@media (hover:none){.ab_next-card:hover .ab_next-card_title{transform:none}}
 
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion:reduce){

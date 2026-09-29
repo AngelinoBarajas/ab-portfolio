@@ -159,7 +159,7 @@
   .ab_eta_note,.abp-tickl{display:none}
   .abp-con-top{grid-column:1 / -1;margin:0;padding:0 2px 8px}
 }
-@media screen and (max-width:479px){.ab_chart{--ps:.72}}
+@media screen and (max-width:479px){.ab_chart{--ps:.66}}
 @media (prefers-reduced-motion:reduce){.abp-dock-moons i,.abp-dock-ks i{animation:none}.abp-dock.is-landed .abp-dock-sys::after{animation:none}.abp-dock-h,.abp-dock-pl{transition:none}}
 
 /* crew */

@@ -58,7 +58,8 @@ window.Webflow.push(function(){
   }
 
   /* ---------- star chart ---------- */
-  var chart = $('[data-chart]'), ORB = [0.36, 0.52, 0.68, 0.84], dests = [], chartSat = null;
+  // phone-size charts: the planets spread outward, clear of the sun and its label
+  var chart = $('[data-chart]'), ORB = chart && chart.clientWidth < 520 ? [0.5, 0.64, 0.78, 0.92] : [0.36, 0.52, 0.68, 0.84], dests = [], chartSat = null;
   if (chart && DEST.length){
     ORB.forEach(function(r){ var o = document.createElement('span'); o.className = 'abp-orbit'; o.style.width = o.style.height = (r * 100) + '%'; chart.appendChild(o); });
     var spin = document.createElement('div'); spin.className = 'abp-spin'; chart.appendChild(spin);
@@ -83,7 +84,7 @@ window.Webflow.push(function(){
     });
     // the Knowledge System add-on as a satellite on the outer orbit (upper right, in the open sky): not a stop,
     // clicking it toggles the add-on, same state as the form chip; the small satellite then circles the main planet
-    var kr = ORB[3] / 2 * 100, ka = -32 * Math.PI / 180;
+    var kr = ORB[3] / 2 * 100, ka = (chart.clientWidth < 520 ? -55 : -32) * Math.PI / 180;
     chartSat = document.createElement('button'); chartSat.type = 'button'; chartSat.className = 'abp-kssat'; chartSat.setAttribute('aria-pressed', 'false');
     chartSat.setAttribute('aria-label', 'KNS, Knowledge system add-on');
     chartSat.style.left = (50 + Math.cos(ka) * kr).toFixed(2) + '%'; chartSat.style.top = (50 + Math.sin(ka) * kr).toFixed(2) + '%';

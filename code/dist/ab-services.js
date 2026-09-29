@@ -796,6 +796,7 @@ window.Webflow.push(function(){
 
   var mon = $('.fc-mon', inner), body = $('.fc-body', inner), codeEl = $('.fc-pre code', inner), stage = $('.fc-stage', inner), osd = $('.osd', inner);
   var noteB = $('.fc-note b', inner), noteS = $('.fc-note span', inner), tools = $('.fc-tools', inner), runBtn = $('.fc-run', inner), stateEl = $('.fc-state', inner), tcEl = $('.fc-tc', inner);
+  var box0 = $('.fc-foot', inner);
   var cur = null, inst = null, parsed = null, tl = null, t0 = 0, vals = {}, flags = {}, idx = 0, booted = false;
 
   var fc = {
@@ -824,6 +825,18 @@ window.Webflow.push(function(){
     }).join('');
     $('.cb-l', inner).textContent = lg.toUpperCase(); $('.cb-n', inner).textContent = cur.cap;
   }
+  // the foot reserves the height of the program's longest note, so the bar (and the Run button) don't grow and shrink as notes change
+  var READY = 'Press Run, or hover a marked line.';
+  function sizeNote(){
+    var box = noteS.parentNode, b0 = noteB.textContent, s0 = noteS.textContent, h = 0;
+    if (!parsed) return;
+    box.style.minHeight = '';
+    Object.keys(parsed.notes).map(function(k){ return parsed.notes[k].text; }).concat(READY).forEach(function(t){ noteB.textContent = 'Line 00'; noteS.textContent = t; h = Math.max(h, box.offsetHeight); });
+    noteB.textContent = b0; noteS.textContent = s0;
+    if (h) box.style.minHeight = h + 'px';
+  }
+  var noteW = 0;
+  addEventListener('resize', function(){ var w = box0.clientWidth; if (w !== noteW){ noteW = w; sizeNote(); } });
   // hover / focus a marked line: its note (and the line) light up
   function peek(e){
     var l = e.target.closest && e.target.closest('.fc-ln.has-note'); if (!l || mon.getAttribute('data-state') === 'run') return;
@@ -856,7 +869,7 @@ window.Webflow.push(function(){
       else if (!t.act) flags[t.k] = !!t.on;
       b.addEventListener('click', function(){
         if (t.act){ if (inst.act) inst.act(t.k, b); return; }
-        if (t.v != null){ $$('.fc-tool', tools).forEach(function(x){ if (x.__k === t.k) x.setAttribute('aria-pressed', 'false'); }); b.setAttribute('aria-pressed', 'true'); vals[t.k] = t.v; render(); if (inst.redraw) inst.redraw(); }
+        if (t.v != null){ $$('.fc-tool', tools).forEach(function(x){ if (x.__k === t.k) x.setAttribute('aria-pressed', 'false'); }); b.setAttribute('aria-pressed', 'true'); vals[t.k] = t.v; render(); sizeNote(); if (inst.redraw) inst.redraw(); }
         else { flags[t.k] = !flags[t.k]; b.setAttribute('aria-pressed', String(flags[t.k])); }
         run();
       });
@@ -872,7 +885,7 @@ window.Webflow.push(function(){
     stage.classList.toggle('is-flow', !!cur.flow);
     inst = cur.build(stage, fc);
     setState('idle'); tcEl.textContent = 'T+00:00.0';
-    var first1 = parsed.notes[Object.keys(parsed.notes)[0]]; noteB.textContent = 'Ready'; noteS.textContent = 'Press Run, or hover a marked line.';
+    var first1 = parsed.notes[Object.keys(parsed.notes)[0]]; noteB.textContent = 'Ready'; noteS.textContent = READY; sizeNote();
     if (!first){ body.classList.remove('is-switch'); void body.offsetWidth; body.classList.add('is-switch'); var d = typeIn(); setTimeout(run, d * 1000); }
     return first1;
   }
@@ -899,6 +912,7 @@ window.Webflow.push(function(){
   });
 
   load(0, true);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(sizeNote);
   // boot when the console scrolls into view: type the code in, then run once
   function boot(){ if (booted) return; booted = true; var d = typeIn(); setTimeout(run, d * 1000 + 300); }
   if ('IntersectionObserver' in window){ var io = new IntersectionObserver(function(es){ if (es[0].isIntersecting){ boot(); io.disconnect(); } }, { threshold: .35 }); io.observe(mon); }

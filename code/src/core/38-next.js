@@ -13,6 +13,7 @@
         tt.innerHTML = esc(w.slice(0, cut).join(' ')) + '<br>' + esc(w.slice(cut).join(' '));
       }
     }
+    fitWide(tt, 26); // one long word (INTERACTIVE, INTEGRATIONS) must fit the card on a phone
     var NS = 'http://www.w3.org/2000/svg', planet = $('.ab_planet', card), go = $('.ab_next-card_go', card);
     card.insertAdjacentHTML('afterbegin', '<span class="nx-grid" aria-hidden="true"></span><span class="nx-c tl" aria-hidden="true"></span><span class="nx-c tr" aria-hidden="true"></span><span class="nx-c bl" aria-hidden="true"></span><span class="nx-c br" aria-hidden="true"></span>' +
       '<span class="nx-hud" aria-hidden="true"><span>RA <b>' + (4 + ci * 3) + 'h ' + (21 + ci * 7) + 'm</b></span><span>DEC <b>+' + (12 + ci * 5) + '°</b></span><span>ETA <b class="nx-eta">T−00:10</b></span></span>' +
@@ -65,4 +66,5 @@
     });
   }
   $$('.ab_next-card').forEach(nextCard);
+  $$('.ab_dbh_title').forEach(function(t){ fitWide(t, 30); }); // hero titles (Launch / CONTROL) stay inside the screen
   AB.nextCard = nextCard; // page bundles call this for cards they build (Mission next-mission)

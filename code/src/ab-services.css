@@ -194,6 +194,9 @@
   .fc-stage{inset:40px 12px 12px}
   .fc-run{padding:0 16px}
   .fc-note{font-size:14px;padding:10px 14px;flex-direction:column;align-items:flex-start;gap:4px}
+  /* phones: the note gets the full width, the Run button its own fixed row under it (it no longer stretches with the note) */
+  .fc-note{order:-1;flex-basis:100%}
+  .fc-run{flex:1 1 100%;justify-content:center;min-height:50px}
 }
 
 /* ============ programs ============ */
@@ -392,12 +395,12 @@
 .lz.is-busy .lz-cpu b{background:var(--signal)}
 
 /* branding · the AB mark + two applications */
-.br{--acc:#FF6A3D;width:100%;height:100%;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:18px;align-items:center}
+.fc-stage .br{--acc:#FF6A3D;width:100%;height:100%;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:18px;align-items:center}
 .br-mark{position:relative;padding:10px}
 .br-svg{display:block;width:100%;height:auto;overflow:visible}
 .br-mark .lg-g{stroke:rgba(242,240,234,.3);stroke-width:1.2}
-.br .lg-m path{fill:#F2F0EA;transition:fill .5s}
-.br.is-acc .lg-planet{fill:var(--acc)}
+.fc-stage .br .lg-m path{fill:#F2F0EA;transition:fill .5s}
+.fc-stage .br.is-acc .lg-planet{fill:var(--acc)}
 .br-sp{position:absolute;inset:0;border:1.5px dashed var(--acc);pointer-events:none}
 .br-sp::after{content:"0.5em";position:absolute;right:4px;top:-18px;font-family:var(--mono);font-size:10px;color:var(--acc)}
 .br-apps{display:flex;flex-direction:column;gap:12px;min-width:0}
@@ -412,10 +415,10 @@
 .br-bar i{display:block;width:28px;height:4px;background:currentColor;opacity:.35}
 .br-btn{margin-left:auto;padding:4px 8px;background:var(--acc);color:#0B0C14;font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase}
 .br-apps .lg-m path{fill:#0B0C14}
-.br.is-acc .br-apps .lg-planet{fill:var(--acc)}
-.br.is-ink .br-card,.br.is-ink .br-bar{background:#0B0C14;color:#F2F0EA;border-color:rgba(242,240,234,.2)}
-.br.is-ink .br-apps .lg-m path:not(.lg-planet){fill:#F2F0EA}
-.br.is-type .br-card b{font-family:var(--display);font-weight:900;font-stretch:118%;text-transform:uppercase;letter-spacing:.01em}
+.fc-stage .br.is-acc .br-apps .lg-planet{fill:var(--acc)}
+.fc-stage .br.is-ink .br-card,.fc-stage .br.is-ink .br-bar{background:#0B0C14;color:#F2F0EA;border-color:rgba(242,240,234,.2)}
+.fc-stage .br.is-ink .br-apps .lg-m path:not(.lg-planet){fill:#F2F0EA}
+.fc-stage .br.is-type .br-card b{font-family:var(--display);font-weight:900;font-stretch:118%;text-transform:uppercase;letter-spacing:.01em}
 
 @media (max-width:767px){
   .wf{grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr}
@@ -428,7 +431,7 @@
   .lz-frame{min-height:220px}
   .lz-read{flex-direction:row;flex-wrap:wrap;gap:8px 16px}
   .lz-cpu{flex-basis:100%}
-  .br{grid-template-columns:minmax(0,1fr)}
+  .fc-stage .br{grid-template-columns:minmax(0,1fr)}
   .br-apps{flex-direction:row}
   .br-card{flex:1;aspect-ratio:auto;min-height:110px}
   .br-bar{flex:1;flex-wrap:wrap}

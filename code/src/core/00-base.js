@@ -12,6 +12,21 @@
   // computed "rgb(r, g, b)" → "#rrggbb" (CMS Color fields reach the page as inline styles on hidden nodes)
   function rgbToHex(s){ var m = String(s || '').match(/\d+(\.\d+)?/g); if (!m || m.length < 3 || (m.length > 3 && +m[3] === 0)) return ''; return '#' + m.slice(0, 3).map(function(v){ var h = (+v | 0).toString(16); return h.length < 2 ? '0' + h : h; }).join(''); }
   function onView(el, fn, opts){ var io = new IntersectionObserver(function(es){ fn(es[0].isIntersecting); }, opts); io.observe(el); return io; }
+  // big display titles: if the widest line/word can't fit the box (long words on a phone), shrink the font until it does (never under min)
+  function fitWide(el, min){
+    if (!el || el.__fit) return; el.__fit = true;
+    function go(){
+      el.style.fontSize = '';
+      var cw = el.clientWidth, kids = el.children, w = 0, i;
+      for (i = 0; i < kids.length; i++) if (kids[i].tagName !== 'BR') w = Math.max(w, kids[i].offsetWidth);
+      w = Math.max(w, el.scrollWidth);
+      if (cw && w > cw + 1) el.style.fontSize = Math.max(min || 24, Math.floor(parseFloat(getComputedStyle(el).fontSize) * cw / w * .98)) + 'px';
+    }
+    go(); var lw = innerWidth;
+    addEventListener('resize', function(){ if (innerWidth !== lw){ lw = innerWidth; go(); } });
+    if (document.fonts) document.fonts.ready.then(go);
+  }
+  AB.fitWide = fitWide;
   if (hasGsap){
     var plugins = [window.ScrollTrigger, window.Draggable, window.InertiaPlugin, window.SplitText, window.ScrambleTextPlugin, window.Flip].filter(Boolean);
     gsap.registerPlugin.apply(gsap, plugins);

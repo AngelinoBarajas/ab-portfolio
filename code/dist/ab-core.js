@@ -18,6 +18,21 @@ window.Webflow.push(function(){
   // computed "rgb(r, g, b)" → "#rrggbb" (CMS Color fields reach the page as inline styles on hidden nodes)
   function rgbToHex(s){ var m = String(s || '').match(/\d+(\.\d+)?/g); if (!m || m.length < 3 || (m.length > 3 && +m[3] === 0)) return ''; return '#' + m.slice(0, 3).map(function(v){ var h = (+v | 0).toString(16); return h.length < 2 ? '0' + h : h; }).join(''); }
   function onView(el, fn, opts){ var io = new IntersectionObserver(function(es){ fn(es[0].isIntersecting); }, opts); io.observe(el); return io; }
+  // big display titles: if the widest line/word can't fit the box (long words on a phone), shrink the font until it does (never under min)
+  function fitWide(el, min){
+    if (!el || el.__fit) return; el.__fit = true;
+    function go(){
+      el.style.fontSize = '';
+      var cw = el.clientWidth, kids = el.children, w = 0, i;
+      for (i = 0; i < kids.length; i++) if (kids[i].tagName !== 'BR') w = Math.max(w, kids[i].offsetWidth);
+      w = Math.max(w, el.scrollWidth);
+      if (cw && w > cw + 1) el.style.fontSize = Math.max(min || 24, Math.floor(parseFloat(getComputedStyle(el).fontSize) * cw / w * .98)) + 'px';
+    }
+    go(); var lw = innerWidth;
+    addEventListener('resize', function(){ if (innerWidth !== lw){ lw = innerWidth; go(); } });
+    if (document.fonts) document.fonts.ready.then(go);
+  }
+  AB.fitWide = fitWide;
   if (hasGsap){
     var plugins = [window.ScrollTrigger, window.Draggable, window.InertiaPlugin, window.SplitText, window.ScrambleTextPlugin, window.Flip].filter(Boolean);
     gsap.registerPlugin.apply(gsap, plugins);
@@ -1257,6 +1272,7 @@ window.Webflow.push(function(){
         tt.innerHTML = esc(w.slice(0, cut).join(' ')) + '<br>' + esc(w.slice(cut).join(' '));
       }
     }
+    fitWide(tt, 26); // one long word (INTERACTIVE, INTEGRATIONS) must fit the card on a phone
     var NS = 'http://www.w3.org/2000/svg', planet = $('.ab_planet', card), go = $('.ab_next-card_go', card);
     card.insertAdjacentHTML('afterbegin', '<span class="nx-grid" aria-hidden="true"></span><span class="nx-c tl" aria-hidden="true"></span><span class="nx-c tr" aria-hidden="true"></span><span class="nx-c bl" aria-hidden="true"></span><span class="nx-c br" aria-hidden="true"></span>' +
       '<span class="nx-hud" aria-hidden="true"><span>RA <b>' + (4 + ci * 3) + 'h ' + (21 + ci * 7) + 'm</b></span><span>DEC <b>+' + (12 + ci * 5) + '°</b></span><span>ETA <b class="nx-eta">T−00:10</b></span></span>' +
@@ -1309,6 +1325,7 @@ window.Webflow.push(function(){
     });
   }
   $$('.ab_next-card').forEach(nextCard);
+  $$('.ab_dbh_title').forEach(function(t){ fitWide(t, 30); }); // hero titles (Launch / CONTROL) stay inside the screen
   AB.nextCard = nextCard; // page bundles call this for cards they build (Mission next-mission)
 
   /* ===== core/39-herodrag.js ===== */
