@@ -437,3 +437,7 @@
   .br-bar{flex:1;flex-wrap:wrap}
 }
 @media (max-width:767px){.fc-stage.is-flow{position:relative;inset:auto;padding:44px 12px 14px}}
+
+/* further reading: the section already pads for its light curve (theme-light), so the inner .ab_ks-pad top padding doubled it
+   (180px of empty cream on a phone, 310px on desktop). Same fix as /observatory › browse. */
+[data-ks-row="service"] .ab_ks-pad{padding-top:0}
