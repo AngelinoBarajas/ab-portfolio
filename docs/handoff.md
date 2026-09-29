@@ -12,10 +12,10 @@ Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/we
 4. **Tablet / phone pass** of v0.29 + v0.30 work: Home bento (tokens + CMS cards use container queries under ~360/330px), Process crew/COMMS/gauge at 390, launch pass (desktop-only lift), Observatory drones at ~1024 (the readout can briefly overlap the title), transmission satellite hidden under 1200px.
 5. **Still waiting from before:** `docs/designer-steps.md` › H1–H6, G5/G6/G8, Nav `ture` tidy-up; optional "Flight programs" collection (2b); Mission Types Sort not renumbered (the only collection with a Sort field left at 1–12).
 
-**Before touching code:** `git pull`; tags are shared with parallel sessions: `git fetch --tags && git tag --sort=-v:refname | head -1` (**v0.31.1** at the end of this session). **v0.28.7 is a stray tag**: never reuse it. After tagging, poll jsDelivr for the tag before purging and hashing (`backups/cdncheck.sh` does it: edit its tag + file list).
+**Before touching code:** `git pull`; tags are shared with parallel sessions: `git fetch --tags && git tag --sort=-v:refname | head -1` (**v0.31.2** at the end of this session). **v0.28.7 is a stray tag**: never reuse it. After tagging, poll jsDelivr for the tag before purging and hashing (`backups/cdncheck.sh` does it: edit its tag + file list).
 
-## Latest (2026-09-28, v0.31.1) · verified on staging 2026-09-28
-Live: ab-about JS + CSS **v0.31.1**. Philosophy card: the thinking helmet in the 404 astronaut's flat style (`about/00-about.js` › philosophy; `.is-ph.is-helm`, `.abph-h`): a bust flush to the viz bottom, visor gradient shifts per question (7 palettes), glint sweep, thought bubble, nod; idle float/tilt paused off screen; the old `.ab_ph_mark` is hidden. Thinker v1/v2 prototypes rejected.
+## Latest (2026-09-28, v0.31.1 → v0.31.2) · verified on staging 2026-09-28
+Live: ab-about JS + CSS **v0.31.2** (v0.31.2: arm + shoulders removed at his ask; the helmet sits on its collar ring at the viz bottom, viewBox 160×128, xMidYMax, max-width 88%). Philosophy card: the thinking helmet in the 404 astronaut's flat style (`about/00-about.js` › philosophy; `.is-ph.is-helm`, `.abph-h`): a bust flush to the viz bottom, visor gradient shifts per question (7 palettes), glint sweep, thought bubble, nod; idle float/tilt paused off screen; the old `.ab_ph_mark` is hidden. Thinker v1/v2 prototypes rejected.
 
 ## Latest (2026-09-28, v0.31.0) · verified on staging 2026-09-28
 Live: ab-core JS + CSS **v0.31.0**, ab-home JS **v0.31.0** (+ knowledge 0.25.5), ab-about JS + CSS **v0.31.0**, ab-knowledge JS + CSS **v0.31.0** on /observatory only (/topics + templates unchanged), ab-contact CSS **v0.31.0**. Backup: `backups/2026-09-28-v0.31.0-before.txt`.
