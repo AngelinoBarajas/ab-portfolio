@@ -903,6 +903,8 @@ section:hover > .ab_frame-label{color:var(--select)}
 .mini-bubble i:nth-child(2){animation-delay:.15s}.mini-bubble i:nth-child(3){animation-delay:.3s}
 @keyframes mini-type{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-4px);opacity:1}}
 @media (prefers-reduced-motion:reduce){.mini-dot,.mini-m.is-now,.mini-bubble i{animation:none}}
+/* phones: the minis stack, so let each grow to its content (flex:1 1 0 squeezed them and the centered content ran into the edges) */
+@media (max-width:767px){.ab_bento-card.is-mini{flex:0 0 auto;padding:22px}}
 /* Home planner: Earth moved in from the corner so the route sits centered (50-planner.js draws from 110,138) */
 .ab_planner_viz .ab_planet.is-planner-earth{left:16.07%;top:62.1%}
 /* Reply time mini: a slow-turning signal gradient (a rotated conic layer, compositor only) + twinkling four-point sparks */
