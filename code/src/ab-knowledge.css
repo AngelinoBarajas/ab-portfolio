@@ -386,3 +386,5 @@ a.ab_ks-tstat:hover b{color:var(--signal)}
 .ab_ks-drone_l b{color:#FF6A3D;font-weight:500}
 .ab_ks-drone_l span+span{color:var(--star);letter-spacing:.02em}
 @media (prefers-reduced-motion:reduce){.ab_ks-drones{display:none}}
+/* phones: the drones still fly and beam, but the RX readout would sit over the title; drop it */
+@media (max-width:767px){.ab_ks-drone_l{display:none}}

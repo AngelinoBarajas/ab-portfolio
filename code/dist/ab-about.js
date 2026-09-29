@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.30.11 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.31.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -390,17 +390,83 @@ window.Webflow.push(function(){
   /* ---------- Between launches cards: spotlight + tilt from core (AB.cardFx), bookshelf included (Angelino, 2026-09-26) ---------- */
   if (AB.cardFx) $$('.section_about-off .ab_bento-card').forEach(AB.cardFx);
 
-  /* ---------- crew of three: hover speeds the orbits up smoothly (playbackRate, so nobody jumps to a new spot;
-     changing animation-duration on hover re-computes the progress and the planets snap) ---------- */
+  /* ---------- crew of three, in 3D (prototypes/about-cards.html › crew3d, approved 2026-09-28):
+     a tilted orbital plane; rings split into back/front halves around the sun, planets scale + layer by depth and are
+     lit on the side facing the sun. Hover speeds the orbits up (eased rate, so nobody jumps), a mouse tilts the plane,
+     off screen it stops, reduced motion gets one still frame. The Designer's CSS orbits are hidden (.is-3d). ---------- */
   (function(){
-    var sys = $('.ab_crew_sys'); if (!sys || reduce) return;
-    var card = sys.closest('.ab_bento-card'), els = $$('.ab_crew_orbit, .ab_crew_moon', sys);
-    if (!card || !els.length || !els[0].getAnimations) return;
-    var sp = { r: 1 };
-    function apply(){ els.forEach(function(el){ el.getAnimations().forEach(function(a){ a.playbackRate = sp.r; }); }); }
-    function to(r){ if (hasGsap) gsap.to(sp, { r: r, duration: .8, ease: 'power2.out', overwrite: true, onUpdate: apply }); else { sp.r = r; apply(); } }
-    card.addEventListener('pointerenter', function(){ to(2.2); });
-    card.addEventListener('pointerleave', function(){ to(1); });
+    var sys = $('.ab_crew_sys'); if (!sys) return;
+    var box = sys.parentNode, card = sys.closest('.ab_bento-card') || box, NS = 'http://www.w3.org/2000/svg';
+    var P = [
+      { k: 'me', c: ['#bcd6ff', '#4a7fd6', '#1c2f5c'], r: .5, s: 20, T: 7, a0: .6 },
+      { k: 'spouse', c: ['#e2d6ff', '#8b5cff', '#3a2381'], r: .86, s: 28, T: 12, a0: 3.6 },
+      { k: 'kid', c: ['#d8ffe9', '#3fe08e', '#137a48'], moon: 1, r: 26, s: 11, T: 3, a0: 0 }
+    ];
+    var c3 = document.createElement('div'); c3.className = 'ab_crew3d'; c3.setAttribute('aria-hidden', 'true');
+    c3.innerHTML = '<svg class="ab_c3_svg"><g></g><g></g></svg><div class="ab_c3_sun"></div><svg class="ab_c3_svg is-front"><g></g></svg>';
+    sys.appendChild(c3); sys.classList.add('is-3d');
+    var gs = c3.querySelectorAll('g'), floor = gs[0], back = gs[1], front = gs[2], sun = $('.ab_c3_sun', c3);
+    P.forEach(function(p){ p.el = document.createElement('div'); p.el.className = 'ab_c3_pl is-' + p.k; p.el.style.width = p.el.style.height = p.s + 'px'; c3.appendChild(p.el); });
+    function el(tag, a, parent){ var n = document.createElementNS(NS, tag); for (var k in a) n.setAttribute(k, a[k]); parent.appendChild(n); return n; }
+    var ringB = [], ringF = [], grid = [], spokes = [], W, H, cx, cy, R, tilt = .42, tiltT = .42, yaw = 0, yawT = 0, i;
+    for (i = 0; i < 2; i++){ ringB.push(el('path', { fill: 'none', stroke: 'rgba(11,12,20,.28)', 'stroke-dasharray': '3 4' }, back)); ringF.push(el('path', { fill: 'none', stroke: 'rgba(11,12,20,.5)', 'stroke-width': 1.3, 'stroke-dasharray': '3 4' }, front)); }
+    for (i = 0; i < 4; i++) grid.push(el('ellipse', { fill: 'none', stroke: 'rgba(11,12,20,.06)' }, floor));
+    for (i = 0; i < 8; i++) spokes.push(el('line', { stroke: 'rgba(11,12,20,.05)' }, floor));
+    var glow = el('ellipse', { fill: 'rgba(255,106,61,.10)' }, floor);
+    // short boxes (phone, ~230px) sit the system a little higher so the spouse's front arc + moon clear the legend
+    function size(){
+      W = box.clientWidth; H = box.clientHeight; cx = W / 2; cy = H * (H < 300 ? .46 : .5);
+      R = Math.min(W * .46, H * .95);
+      var ss = Math.max(28, Math.min(46, R * .24)); sun.style.width = sun.style.height = ss + 'px'; sun.style.left = (cx - ss / 2) + 'px'; sun.style.top = (cy - ss / 2) + 'px';
+    }
+    // elliptical half-ring: 0 = back (top half), 1 = front (bottom half)
+    function half(r, f){ var ry = r * tilt; return 'M' + (cx - r) + ' ' + cy + ' A' + r + ' ' + ry + ' 0 0 ' + (f ? 0 : 1) + ' ' + (cx + r) + ' ' + cy; }
+    function drawRings(){
+      for (var j = 0; j < 2; j++){ var r = P[j].r * R; ringB[j].setAttribute('d', half(r, 0)); ringF[j].setAttribute('d', half(r, 1)); }
+      grid.forEach(function(g, j){ var r = R * (.28 + j * .24); g.setAttribute('cx', cx); g.setAttribute('cy', cy); g.setAttribute('rx', r); g.setAttribute('ry', r * tilt); });
+      spokes.forEach(function(s, j){ var a = j * Math.PI / 4 + yaw, r = R * 1.02; s.setAttribute('x1', cx); s.setAttribute('y1', cy); s.setAttribute('x2', cx + Math.cos(a) * r); s.setAttribute('y2', cy + Math.sin(a) * r * tilt); });
+      glow.setAttribute('cx', cx); glow.setAttribute('cy', cy + 2); glow.setAttribute('rx', R * .3); glow.setAttribute('ry', R * .3 * tilt);
+    }
+    function place(p, x, y, d){
+      var k = 1 + d * .3, dx = cx - x, dy = cy - y, L = Math.sqrt(dx * dx + dy * dy) || 1;   // lit on the side facing the sun
+      p.el.style.background = 'radial-gradient(circle at ' + (50 + dx / L * 26).toFixed(0) + '% ' + (50 + dy / L * 26).toFixed(0) + '%,' + p.c[0] + ',' + p.c[1] + ' 48%,' + p.c[2] + ')';
+      p.el.style.transform = 'translate(' + (x - p.s / 2).toFixed(1) + 'px,' + (y - p.s / 2).toFixed(1) + 'px) scale(' + k.toFixed(3) + ')';
+      p.el.style.zIndex = d > 0 ? 8 : 3;   // in front of the sun (5) and the front ring (6), or behind both
+      p.el.style.boxShadow = '0 0 ' + (d > 0 ? 10 : 4) + 'px ' + (p.k === 'kid' ? 'rgba(63,224,142,.55)' : 'rgba(11,12,20,.12)');
+      p.el.style.filter = d < 0 ? 'saturate(' + (1 + d * .35).toFixed(2) + ') brightness(' + (1 + d * .12).toFixed(2) + ')' : '';
+    }
+    var t = 0, rate = 1, rateT = 1, last = 0, vis = true, run = false;
+    function draw(){
+      drawRings();
+      var sp = null;
+      P.forEach(function(p){
+        var a = p.a0 + t / p.T * Math.PI * 2 + (p.moon ? 0 : yaw), x, y;
+        if (p.moon){
+          var mr = p.r * sp.k; x = sp.x + Math.cos(a) * mr; y = sp.y + Math.sin(a) * mr * tilt;
+          place(p, x, y, sp.d + Math.sin(a) * .18); p.el.style.zIndex = Math.sin(a) > 0 ? sp.z + 1 : sp.z - 1;
+        } else {
+          var r = p.r * R, d = Math.sin(a); x = cx + Math.cos(a) * r; y = cy + Math.sin(a) * r * tilt;
+          place(p, x, y, d); sp = { x: x, y: y, d: d, k: 1 + d * .3, z: d > 0 ? 8 : 3 };
+        }
+      });
+    }
+    function frame(now){
+      if (!vis){ run = false; return; }
+      var dt = Math.min(.05, (now - last) / 1000); last = now;
+      rate += (rateT - rate) * .06; tilt += (tiltT - tilt) * .08; yaw += (yawT - yaw) * .08;
+      t += dt * rate; draw();
+      requestAnimationFrame(frame);
+    }
+    function start(){ if (run || reduce) return; run = true; last = performance.now(); requestAnimationFrame(frame); }
+    size(); draw();
+    var rs = function(){ size(); draw(); };
+    if (window.ResizeObserver) new ResizeObserver(rs).observe(box); else window.addEventListener('resize', rs);
+    if (reduce) return;
+    card.addEventListener('pointerenter', function(){ rateT = 2.2; });
+    card.addEventListener('pointerleave', function(){ rateT = 1; tiltT = .42; yawT = 0; });
+    card.addEventListener('pointermove', function(e){ if (e.pointerType !== 'mouse') return; var r = box.getBoundingClientRect(); tiltT = .28 + Math.max(0, Math.min(1, (e.clientY - r.top) / r.height)) * .3; yawT = ((e.clientX - r.left) / r.width - .5) * .5; });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ vis = es[0].isIntersecting; if (vis) start(); }).observe(box);
+    else start();
   })();
 
   /* ---------- space facts (Designer list [data-about-facts]) + drag-to-spin planet ---------- */
@@ -531,13 +597,22 @@ window.Webflow.push(function(){
       b.setAttribute('data-g', t[0]); b.setAttribute('data-note', t[1]); b.setAttribute('data-h', String(Math.max(+b.getAttribute('data-h') || 0, t[2])));
       b.classList.add('is-title'); var lb = $('.ab_book_label', b); if (lb) lb.textContent = t[0];
     });
+    // the current read sits pulled out with an orange bookmark; moved to the middle of the row because a phone only
+    // shows the middle ~11 spines (the row is centered and clipped)
+    var CURRENT = 'The Alchemist', all = $$('[data-book]', shelf), cur = all.filter(function(b){ return b.getAttribute('data-g') === CURRENT; })[0];
+    if (cur){
+      var mid = all[Math.floor(all.length / 2)];
+      if (mid && mid !== cur) shelf.insertBefore(cur, mid);
+      cur.classList.add('is-current'); cur.__cur = true;
+      var rib = document.createElement('i'); rib.className = 'ab_book_ribbon'; rib.setAttribute('aria-hidden', 'true'); cur.appendChild(rib);
+    }
     $$('[data-book]', shelf).forEach(function(b){
       var c = b.getAttribute('data-c'), h = b.getAttribute('data-h'), fg = b.getAttribute('data-fg');
       if (c) b.style.backgroundColor = c; if (h) b.style.height = h + 'px'; if (fg) b.style.color = fg;
-      b.setAttribute('aria-label', (b.getAttribute('data-g') || 'Book') + '. Knock it off the shelf.');
+      b.setAttribute('aria-label', (b.getAttribute('data-g') || 'Book') + (b.__cur ? ', reading it now' : '') + '. Knock it off the shelf.');
       function knock(){
         if (AB.quest) AB.quest('book'); 
-        if (note){ note.innerHTML = '<b>' + esc(b.getAttribute('data-g') || '') + '</b>' + esc(b.getAttribute('data-note') || 'Always one on the nightstand.'); note.classList.add('show'); clearTimeout(nt); nt = setTimeout(function(){ note.classList.remove('show'); }, 2600); }
+        if (note){ note.innerHTML = '<b>' + esc(b.getAttribute('data-g') || '') + (b.__cur ? ' · reading now' : '') + '</b>' + esc(b.getAttribute('data-note') || 'Always one on the nightstand.'); note.classList.add('show'); clearTimeout(nt); nt = setTimeout(function(){ note.classList.remove('show'); }, 2600); }
         if (reduce || !hasGsap || b.__busy) return;
         b.__busy = true; b.classList.add('is-out');
         gsap.timeline({ onComplete: function(){ b.__busy = false; b.classList.remove('is-out'); gsap.set(b, { clearProps: 'transform' }); } })

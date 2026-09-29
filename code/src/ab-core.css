@@ -103,6 +103,10 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 .button.is-ghost:active{translate:2px 2px}
 .theme-light .button.is-primary:hover{color:#F2F0EA}
 .theme-light .button.is-primary:hover::before{background:#0B0C14}
+/* a submit <input> can't hold the ::before fill (Contact Transmit): without this its hover was orange on an orange offset */
+input.button.is-primary{transition:background-color .35s,box-shadow .35s}
+input.button.is-primary:hover{background-color:var(--star)}
+.theme-light input.button.is-primary:hover{background-color:#0B0C14}
 .theme-light .button.is-ghost:hover,.theme-light .button.is-ghost:focus-visible{background-color:#0B0C14;border-color:#0B0C14;color:#F2F0EA}
 .theme-light .button.is-ghost::before{display:none}
 .button.is-nav,.button.is-nav:hover,.button.is-nav:active{box-shadow:none;translate:none;overflow:visible}
@@ -573,7 +577,11 @@ html.is-quake .ab_footer_component{animation:ab-quake .5s cubic-bezier(.36,.07,.
 .ab_alt{position:fixed;right:18px;top:50%;height:36vh;transform:translateY(-50%);width:2px;background:var(--hair);z-index:40;pointer-events:none}
 .ab_alt-fill{position:absolute;left:0;bottom:0;width:2px;height:0;background:var(--signal)}
 .ab_alt{background:rgba(138,143,163,.35);box-shadow:0 0 0 1px rgba(7,8,13,.25)}
-.ab_alt-lab{position:absolute;right:10px;bottom:0;padding:3px 7px;background:rgba(7,8,13,.82);border:1px solid rgba(255,255,255,.12);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);font-family:var(--mono);font-size:11px;color:#F2F0EA;white-space:nowrap;transform:translateY(50%)}
+.ab_alt-lab{position:absolute;right:10px;top:0;padding:3px 7px;background:rgba(7,8,13,.82);border:1px solid rgba(255,255,255,.12);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);font-family:var(--mono);font-size:11px;color:#F2F0EA;white-space:nowrap;transform:translateY(50%)}
+/* Home distance meter: falls toward Gargantua (the footer's black hole) at the foot of the track, so it fills from the top */
+.ab_alt-fill{top:0;bottom:auto;background:linear-gradient(var(--signal),#ffb36b)}
+.ab_alt-lab{transform:translateY(-50%)}
+.ab_alt-bh{position:absolute;left:50%;bottom:-7px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#07080D;box-shadow:0 0 0 1.5px rgba(255,179,107,.9),0 0 10px 2px rgba(255,106,61,.55)}
 @media (max-width:900px){.ab_alt{display:none}}
 /* same nesting as the page: gutters on the full width (padding-global), then the max width inside them (container-large).
    The max width used to include the gutters, so the columns sat ~33px inside the content on each side at 1440.
@@ -747,8 +755,37 @@ section:hover > .ab_frame-label{color:var(--select)}
   .ab_next-card{grid-template-columns:minmax(0,1fr)}
   .ab_next-card .ab_planet{position:absolute;right:22px;bottom:22px}
 }
+/* desktop: the planet grows (--nx-sz, set by core/38-next from the card height) and rises from the bottom-right
+   corner, centre just past it, so only the sphere's upper-left shows; copy and HUD stay above it */
+@media (min-width:992px){
+  .ab_next-card .ab_planet[data-planet]{position:absolute;left:auto;top:auto;width:var(--nx-sz,620px);height:var(--nx-sz,620px);right:calc(var(--nx-sz,620px) * -.54 - var(--nx-dx,0px));bottom:calc(var(--nx-sz,620px) * -.56)}
+  .ab_next-card_content{position:relative;z-index:4}
+  .ab_next-card_title{text-shadow:0 2px 18px rgba(7,8,13,.55)}
+  .ab_next-card .nx-hud{z-index:4}
+}
 /* touch keeps :hover after a tap: don't leave the title shifted 14px */
 @media (hover:none){.ab_next-card:hover .ab_next-card_title{transform:none}}
+
+/* ---------- back to top probe (.ab_top, core/42-top): nav-style panel, satellite icon, thruster on launch ---------- */
+.ab_top{position:fixed;right:max(16px,calc(var(--gutter) / 2));bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:46;display:flex;align-items:center;gap:10px;height:40px;margin:0;padding:0 14px 0 12px;background:rgba(7,8,13,.8);border:1px solid var(--hair);border-radius:0;color:var(--star);font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;line-height:1;cursor:pointer;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;visibility:hidden;transform:translateY(16px);transition:opacity .3s,transform .45s cubic-bezier(.2,.9,.2,1.2),visibility 0s .45s,border-color .3s,color .3s}
+.ab_top.on{opacity:1;visibility:visible;transform:none;transition:opacity .3s,transform .45s cubic-bezier(.2,.9,.2,1.2),visibility 0s,border-color .3s,color .3s}
+.ab_top:focus-visible{outline:2px solid var(--select);outline-offset:3px}
+.ab_top-craft{position:relative;display:block}
+.ab_top-ico{width:22px;height:16.5px}
+.ab_top-fl{position:absolute;left:50%;top:14px;width:4px;height:0;margin-left:-2px;border-radius:0 0 2px 2px;background:linear-gradient(#ffd29a,#ff6a3d 55%,rgba(255,106,61,0));transform-origin:top center;transition:height .2s}
+@media (hover:hover){
+  .ab_top:hover{border-color:var(--signal);color:var(--signal)}
+  .ab_top:hover .ab_top-fl{height:6px;animation:ab-topfl .12s steps(2) infinite alternate}
+}
+.ab_top.is-launch{animation:ab-toplaunch .8s cubic-bezier(.55,0,.8,.3) forwards}
+.ab_top.is-launch .ab_top-fl{height:18px;animation:ab-topfl .08s steps(2) infinite alternate}
+@keyframes ab-topfl{from{transform:scaleX(.7)}to{transform:scaleX(1.3)}}
+@keyframes ab-toplaunch{0%{transform:none;opacity:1}20%{transform:translateY(3px);opacity:1}100%{transform:translateY(-180px);opacity:0}}
+/* phones: a 44px round button above the browser's bottom bar, icon only */
+@media (max-width:767px){
+  .ab_top{right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:44px;height:44px;padding:0;justify-content:center;border-radius:50%}
+  .ab_top-lab{display:none}
+}
 
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion:reduce){
@@ -756,8 +793,9 @@ section:hover > .ab_frame-label{color:var(--select)}
   .button.is-nav,.button.is-nav .ab_button-shine::after{animation:none}
   .t-outline,.t-stars,.orb b,.ab_nebula,.ab_nav_status-dot,.ab_transmission_live::before,.ab_planner_led,.v-pipe .line i,.v-term .cur{animation:none}
   .button.is-primary::before{transition:none}
-  .ab_dbh_eyebrow::before,.ab_meta_live::before,.ab_status_dot,.nx-streaks i,.nx-ship .fl{animation:none}
+  .ab_dbh_eyebrow::before,.ab_meta_live::before,.ab_status_dot,.nx-streaks i,.nx-ship .fl,.ab_top,.ab_top .ab_top-fl{animation:none}
   .ab_mission-card_cv,.cb-bag,.ca-ph,.cs-img,.ab_planet.is-card,.ab_mark path{transition:none}
+  .ab_top{transition:none}
 }
 
 /* ---------- code blocks (AB.codeBlock: Mission systems/problems, Services under the hood) ---------- */

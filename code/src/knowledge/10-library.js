@@ -143,44 +143,61 @@
     function fly(){
       if (live.length >= 2) return;
       var G = geo(); if (G.R < 30) return;
-      // parking spot: on an arc left of the planet (the side facing the page), clear of the ring; two drones never share it
+      // parking spot: on an arc left of the planet (the side facing the page), clear of the ring; two drones never share it.
+      // It's stored as an offset from the planet's centre, so the drone, its beam and the landing ring follow the planet
+      // every frame (it floats, and visitors can drag it).
       var deg; do { deg = 175 + Math.random() * 55; } while (live.length && Math.abs(deg - lastAng) < 25); lastAng = deg;
-      var ang = deg * Math.PI / 180, rr = G.R * (1.6 + Math.random() * .3), P = [G.x + Math.cos(ang) * rr, G.y + Math.sin(ang) * rr];
+      var ang = deg * Math.PI / 180, rk = 1.6 + Math.random() * .3, off = [Math.cos(ang) * rk, Math.sin(ang) * rk];
+      function park(g){ return [g.x + off[0] * g.R, g.y + off[1] * g.R]; }
+      var P = park(G);
       // in from the top or the right edge, out the other way, on gentle curves
       var top = Math.random() < .5, rnd = Math.random();
       var A = top ? [G.x - G.R * (.6 + rnd * 1.4), -60] : [G.W + 60, G.y + G.R * (.6 + rnd)];
       var B = top ? [G.W + 60, G.y - G.R * (.4 + rnd * .6)] : [G.x - G.R * (1 + rnd * 1.2), -60];
-      var C1 = [(A[0] + P[0]) / 2 - G.R * .5, (A[1] + P[1]) / 2 + G.R * .35], C2 = [(P[0] + B[0]) / 2 - G.R * .3, (P[1] + B[1]) / 2 - G.R * .4];
       var o = pick(), nm = o.name.length > 40 ? o.name.slice(0, 38).replace(/\s+\S*$/, '') + '…' : o.name;
       var d = el('ab_ks-drone', '<span class="ab_ks-drone_b">' + SAT + '<i></i></span>');
       var lb = el('ab_ks-drone_l', '<span><b>RX</b> · ' + esc(o.code || 'WB') + ' · field note received</span><span>' + esc(nm) + '</span>');
-      // beam: a wrapper rotated toward the planet holds the dashed line + three packets
-      var dx = G.x - P[0], dy = G.y - P[1], full = Math.sqrt(dx * dx + dy * dy), dist = full - G.R * .9, bdeg = Math.atan2(dy, dx) * 180 / Math.PI;
+      // beam: a wrapper rotated (from its drone end) toward the planet holds the dashed line + three packets
       var bm = el('ab_ks-bm', '<span class="ab_ks-bm_l"></span><span class="ab_ks-pk"></span><span class="ab_ks-pk"></span><span class="ab_ks-pk"></span>');
-      var hit = el('ab_ks-hit'), line = bm.firstChild, pks = $$('.ab_ks-pk', bm), H = [P[0] + dx / full * dist, P[1] + dy / full * dist];
-      gsap.set(bm, { x: P[0], y: P[1], rotation: bdeg, width: dist, opacity: 0 }); gsap.set(line, { scaleX: 0, transformOrigin: '0% 50%' });
-      gsap.set(hit, { x: H[0], y: H[1], scale: .3, opacity: 0 }); gsap.set(lb, { x: P[0] - 16, y: P[1] - 50, xPercent: -100, yPercent: -100, opacity: 0 }); // readout sits up-left of the drone, off the title
-      var pr = { t: 0 }, prev = A;
-      function move(a, c, b){ return function(){ var q = bez(a, c, b, pr.t); gsap.set(d, { x: q[0], y: q[1], rotation: Math.max(-22, Math.min(22, (q[0] - prev[0]) * 1.4)) }); prev = q; }; }
-      gsap.set(d, { x: A[0], y: A[1], opacity: 0 });
-      var tl = gsap.timeline({ paused: !running(), onComplete: function(){ [d, lb, bm, hit].forEach(function(x){ layer.removeChild(x); }); live.splice(live.indexOf(tl), 1); } });
+      var hit = el('ab_ks-hit'), line = bm.firstChild, pks = $$('.ab_ks-pk', bm);
+      gsap.set(bm, { transformOrigin: '0% 50%', opacity: 0 }); gsap.set(line, { scaleX: 0, transformOrigin: '0% 50%' });
+      gsap.set(hit, { scale: .3, opacity: 0 }); gsap.set(lb, { xPercent: -100, yPercent: -100, opacity: 0 });
+      gsap.set(pks, { left: '0%' });
+      // s.t = flight progress; s.leg: 0 flying in, 1 parked, 2 flying out; s.ly = readout lift (up-left of the drone, off the title)
+      var s = { t: 0, leg: 0, ly: -50 }, prev = A;
+      function frame(){
+        var g = geo(), Pn = park(g), q;
+        if (s.leg === 0) q = bez(A, [(A[0] + Pn[0]) / 2 - g.R * .5, (A[1] + Pn[1]) / 2 + g.R * .35], Pn, s.t);
+        else if (s.leg === 1) q = Pn;
+        else q = bez(Pn, [(Pn[0] + B[0]) / 2 - g.R * .3, (Pn[1] + B[1]) / 2 - g.R * .4], B, s.t);
+        var tilt = s.leg === 1 ? 0 : Math.max(-22, Math.min(22, (q[0] - prev[0]) * 1.4)); prev = q;
+        gsap.set(d, { x: q[0], y: q[1], rotation: s.leg === 1 ? '+=0' : tilt });
+        var dx = g.x - Pn[0], dy = g.y - Pn[1], full = Math.sqrt(dx * dx + dy * dy) || 1, dist = Math.max(0, full - g.R * .9);
+        gsap.set(bm, { x: Pn[0], y: Pn[1], rotation: Math.atan2(dy, dx) * 180 / Math.PI, width: dist });
+        gsap.set(hit, { x: Pn[0] + dx / full * dist, y: Pn[1] + dy / full * dist });
+        gsap.set(lb, { x: Pn[0] - 16, y: Pn[1] + s.ly });
+      }
+      gsap.set(d, { opacity: 0 }); frame();
+      gsap.ticker.add(frame);
+      var tl = gsap.timeline({ paused: !running(), onComplete: function(){ gsap.ticker.remove(frame); [d, lb, bm, hit].forEach(function(x){ layer.removeChild(x); }); live.splice(live.indexOf(tl), 1); } });
       tl.to(d, { opacity: 1, duration: .4 }, 0)
-        .to(pr, { t: 1, duration: 3, ease: 'power2.out', onUpdate: move(A, C1, P) }, 0)
+        .to(s, { t: 1, duration: 3, ease: 'power2.out' }, 0)
+        .add(function(){ s.leg = 1; }, 3)
         .to(d, { rotation: 0, duration: .5, ease: 'power2.out' }, 3)
         .add('tx', 3.1)
         .to(bm, { opacity: 1, duration: .2 }, 'tx').to(line, { scaleX: 1, duration: .45, ease: 'power2.out' }, 'tx')
-        .to(lb, { opacity: 1, y: P[1] - 14, duration: .4, ease: 'power2.out' }, 'tx+=.3');
-      // three rounds of packets, each lighting a ring where it lands
+        .to(lb, { opacity: 1, duration: .4, ease: 'power2.out' }, 'tx+=.3').to(s, { ly: -14, duration: .4, ease: 'power2.out' }, 'tx+=.3');
+      // three rounds of packets (they travel the beam as a % of its length, so they stay on it while the planet moves), each lighting a ring where it lands
       for (var k = 0; k < 3; k++){
-        tl.fromTo(pks, { x: 0, opacity: 0 }, { x: dist, opacity: 1, duration: .7, ease: 'none', stagger: .16, immediateRender: false }, 'tx+=' + (.35 + k * .95))
+        tl.fromTo(pks, { left: '0%', opacity: 0 }, { left: '100%', opacity: 1, duration: .7, ease: 'none', stagger: .16, immediateRender: false }, 'tx+=' + (.35 + k * .95))
           .to(pks, { opacity: 0, duration: .12, stagger: .16 }, 'tx+=' + (.95 + k * .95))
           .fromTo(hit, { scale: .3, opacity: .9 }, { scale: 1.7, opacity: 0, duration: .8, ease: 'power2.out', immediateRender: false }, 'tx+=' + (1 + k * .95));
       }
       tl.add('out', 'tx+=3.5')
         .set(line, { transformOrigin: '100% 50%' }, 'out').to(line, { scaleX: 0, duration: .35, ease: 'power2.in' }, 'out').to(bm, { opacity: 0, duration: .2 }, 'out+=.3')
-        .to(lb, { opacity: 0, y: P[1] - 20, duration: .4 }, 'out+=.4')
-        .add(function(){ prev = P; }, 'out+=.44')
-        .fromTo(pr, { t: 0 }, { t: 1, duration: 3.2, ease: 'power2.in', onUpdate: move(P, C2, B), immediateRender: false }, 'out+=.45')
+        .to(lb, { opacity: 0, duration: .4 }, 'out+=.4').to(s, { ly: -20, duration: .4 }, 'out+=.4')
+        .add(function(){ s.t = 0; s.leg = 2; }, 'out+=.45')
+        .fromTo(s, { t: 0 }, { t: 1, duration: 3.2, ease: 'power2.in', immediateRender: false }, 'out+=.45')
         .to(d, { opacity: 0, duration: .6 }, 'out+=3.05');
       live.push(tl);
     }

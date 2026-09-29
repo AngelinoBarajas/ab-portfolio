@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>About cards · 3D crew + Thinker</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--void:#F2F0EA;--ink:#0B0C14;--dust:rgba(11,12,20,.55);--mono:'JetBrains Mono',monospace;--signal:#FF6A3D}
+body{margin:0;background:#E9E7E0;font-family:Archivo,sans-serif;color:var(--ink);padding:32px;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.card{background:#F7F6F1;border:1px solid rgba(11,12,20,.12);padding:22px;width:440px;box-sizing:border-box}
+.card.sm{width:356px}
+.viz{position:relative;height:400px;background:var(--void);border:1px solid rgba(11,12,20,.12);overflow:hidden}
+.card.sm .viz{height:230px}.card.sm .viz.is-ph{height:190px}
+.lbl{font-family:var(--mono);font-size:13px;color:var(--dust);margin:18px 0 6px}
+h3{font-weight:900;font-stretch:118%;text-transform:uppercase;margin:0;font-size:26px}
+/* ---- crew 3D ---- */
+.c3{position:absolute;inset:0}
+.c3 svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.c3-sun{position:absolute;border-radius:50%;background:radial-gradient(circle at 36% 34%,#ffe6cf,#ff6a3d 55%,#b83a1c);box-shadow:0 0 28px rgba(255,106,61,.65),0 0 70px rgba(255,106,61,.25)}
+.c3-pl{position:absolute;left:0;top:0;border-radius:50%;will-change:transform}
+.c3-legend{position:absolute;left:12px;bottom:10px;display:flex;gap:12px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dust);z-index:20}
+.c3-legend i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:0}
+/* ---- thinker ---- */
+.ph-copy{position:absolute;left:24px;top:26px;right:44%;z-index:3}
+.ph-no{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--signal)}
+.ph-q{font-weight:900;font-stretch:118%;text-transform:uppercase;font-size:24px;line-height:1.05;margin-top:8px}
+.card.sm .ph-q{font-size:17px}.card.sm .ph-copy{left:16px;top:16px;right:46%}
+.th{position:absolute;right:3%;bottom:0;height:70%;aspect-ratio:200/220;z-index:2}
+.card.sm .th{height:84%;right:2%}
+.th svg{width:100%;height:100%;display:block;overflow:visible}
+.th2{position:absolute;right:1%;bottom:2%;height:86%;aspect-ratio:1;z-index:2}
+.card.sm .th2{height:100%;bottom:0;right:0}
+.th2 svg{width:100%;height:100%;display:block;overflow:visible}
+</style></head><body>
+
+<div class="card"><div class="viz" data-crew></div><div class="lbl">Home base</div><h3>Crew of three</h3></div>
+<div class="card"><div class="viz is-ph" data-think><div class="ph-copy"><div class="ph-no">Question 01</div><div class="ph-q">Why does this page exist?</div></div></div><div class="lbl">Philosophy degree</div><h3>Why before how</h3></div>
+<div class="card sm"><div class="viz" data-crew></div><div class="lbl">Home base (phone)</div></div>
+<div class="card sm"><div class="viz is-ph" data-think><div class="ph-copy"><div class="ph-no">Question 01</div><div class="ph-q">Why does this page exist?</div></div></div><div class="lbl">Philosophy (phone)</div></div>
+
+<script>
+/* ============ crew of three, in 3D ============
+   a tilted orbital plane: rings split into back/front halves around the sun, planets scale and layer by depth,
+   each lit on the side facing the sun; the pointer tilts the plane a little */
+function crew3d(box, opt){
+  opt = opt || {};
+  var NS = 'http://www.w3.org/2000/svg', reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var P = [
+    { k: 'me', c: ['#bcd6ff', '#4a7fd6', '#1c2f5c'], r: .5, s: 20, T: 7, a0: .6 },
+    { k: 'spouse', c: ['#e2d6ff', '#8b5cff', '#3a2381'], r: .86, s: 28, T: 12, a0: 3.6 },
+    { k: 'kid', c: ['#d8ffe9', '#3fe08e', '#137a48'], moon: 1, r: 26, s: 11, T: 3, a0: 0 }
+  ];
+  box.innerHTML = '<div class="c3"><svg aria-hidden="true"><g class="floor"></g><g class="back"></g></svg><div class="c3-sun"></div><svg aria-hidden="true" style="z-index:6"><g class="front"></g></svg></div>' +
+    '<div class="c3-legend"><span><i style="background:#FF6A3D"></i>Home</span><span><i style="background:#8b5cff"></i>Spouse</span><span><i style="background:#3fe08e"></i>Kid</span><span><i style="background:#4a7fd6"></i>Me</span></div>';
+  var c3 = box.firstChild, sun = box.querySelector('.c3-sun'), floor = box.querySelector('.floor'), back = box.querySelector('.back'), front = box.querySelector('.front');
+  P.forEach(function(p){ p.el = document.createElement('div'); p.el.className = 'c3-pl'; p.el.style.width = p.el.style.height = p.s + 'px'; c3.appendChild(p.el); });
+  function el(tag, a, parent){ var n = document.createElementNS(NS, tag); for (var k in a) n.setAttribute(k, a[k]); parent.appendChild(n); return n; }
+  // ring halves + floor grid (redrawn on resize / tilt change)
+  var ringB = [], ringF = [], W, H, cx, cy, R, tilt = .42, tiltT = .42, yaw = 0, yawT = 0;
+  for (var i = 0; i < 2; i++){ ringB.push(el('path', { fill: 'none', stroke: 'rgba(11,12,20,.28)', 'stroke-dasharray': '3 4' }, back)); ringF.push(el('path', { fill: 'none', stroke: 'rgba(11,12,20,.5)', 'stroke-width': 1.3, 'stroke-dasharray': '3 4' }, front)); }
+  var grid = []; for (i = 0; i < 4; i++) grid.push(el('ellipse', { fill: 'none', stroke: 'rgba(11,12,20,.06)' }, floor));
+  var spokes = []; for (i = 0; i < 8; i++) spokes.push(el('line', { stroke: 'rgba(11,12,20,.05)' }, floor));
+  var glow = el('ellipse', { fill: 'rgba(255,106,61,.10)' }, floor);
+  function size(){
+    W = box.clientWidth; H = box.clientHeight; cx = W / 2; cy = H * (H < 300 ? .46 : .5);
+    R = Math.min(W * .46, H * .95);
+    var ss = Math.max(28, Math.min(46, R * .24)); sun.style.width = sun.style.height = ss + 'px'; sun.style.left = (cx - ss / 2) + 'px'; sun.style.top = (cy - ss / 2) + 'px';
+    sun.__s = ss;
+  }
+  function half(r, from){ // elliptical half-ring: from=0 back (top), from=1 front (bottom)
+    var rx = r, ry = r * tilt, y1 = cy, x1 = cx - rx, x2 = cx + rx;
+    return from ? 'M' + x1 + ' ' + y1 + ' A' + rx + ' ' + ry + ' 0 0 0 ' + x2 + ' ' + y1 : 'M' + x1 + ' ' + y1 + ' A' + rx + ' ' + ry + ' 0 0 1 ' + x2 + ' ' + y1;
+  }
+  function drawRings(){
+    [P[0], P[1]].forEach(function(p, i){ var r = p.r * R; ringB[i].setAttribute('d', half(r, 0)); ringF[i].setAttribute('d', half(r, 1)); });
+    grid.forEach(function(g, i){ var r = R * (.28 + i * .24); g.setAttribute('cx', cx); g.setAttribute('cy', cy); g.setAttribute('rx', r); g.setAttribute('ry', r * tilt); });
+    spokes.forEach(function(s, i){ var a = i * Math.PI / 4 + yaw, r = R * 1.02; s.setAttribute('x1', cx); s.setAttribute('y1', cy); s.setAttribute('x2', cx + Math.cos(a) * r); s.setAttribute('y2', cy + Math.sin(a) * r * tilt); });
+    glow.setAttribute('cx', cx); glow.setAttribute('cy', cy + 2); glow.setAttribute('rx', R * .3); glow.setAttribute('ry', R * .3 * tilt);
+  }
+  function place(p, x, y, depth){
+    var k = 1 + depth * .3, s = p.s * k;
+    // light from the sun: highlight on the side facing it
+    var dx = cx - x, dy = cy - y, L = Math.sqrt(dx * dx + dy * dy) || 1;
+    var hx = 50 + dx / L * 26, hy = 50 + dy / L * 26;
+    p.el.style.background = 'radial-gradient(circle at ' + hx.toFixed(0) + '% ' + hy.toFixed(0) + '%,' + p.c[0] + ',' + p.c[1] + ' 48%,' + p.c[2] + ')';
+    p.el.style.transform = 'translate(' + (x - p.s / 2).toFixed(1) + 'px,' + (y - p.s / 2).toFixed(1) + 'px) scale(' + k.toFixed(3) + ')';
+    p.el.style.zIndex = depth > 0 ? 8 : 3;          // in front of the sun (z 5) and the front ring (z 6), or behind both
+    p.el.style.boxShadow = '0 0 ' + (depth > 0 ? 10 : 4) + 'px ' + (p.k === 'kid' ? 'rgba(63,224,142,.55)' : 'rgba(11,12,20,.12)');
+    p.el.style.filter = depth < 0 ? 'saturate(' + (1 + depth * .35).toFixed(2) + ') brightness(' + (1 + depth * .12).toFixed(2) + ')' : '';
+  }
+  sun.style.zIndex = 5;
+  var t = 0, rate = 1, rateT = 1, last = performance.now(), vis = true;
+  function frame(now){
+    var dt = Math.min(.05, (now - last) / 1000); last = now;
+    rate += (rateT - rate) * .06; tilt += (tiltT - tilt) * .08; yaw += (yawT - yaw) * .08;
+    t += dt * rate;
+    drawRings();
+    var sp = null;
+    P.forEach(function(p){
+      var a = p.a0 + t / p.T * Math.PI * 2 + (p.moon ? 0 : yaw);
+      if (p.moon){
+        var mr = p.r * (sp.k), x = sp.x + Math.cos(a) * mr, y = sp.y + Math.sin(a) * mr * tilt, d = sp.d + Math.sin(a) * .18;
+        place(p, x, y, d); p.el.style.zIndex = Math.sin(a) > 0 ? +sp.z + 1 : +sp.z - 1;
+      } else {
+        var r = p.r * R, x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r * tilt, d = Math.sin(a);
+        place(p, x, y, d); sp = { x: x, y: y, d: d, k: 1 + d * .3, z: p.el.style.zIndex };
+      }
+    });
+    if (vis && !reduce) requestAnimationFrame(frame);
+  }
+  size(); addEventListener('resize', size);
+  var card = box.closest('.card') || box;
+  card.addEventListener('pointerenter', function(){ rateT = 2.2; });
+  card.addEventListener('pointerleave', function(){ rateT = 1; tiltT = .42; yawT = 0; });
+  card.addEventListener('pointermove', function(e){ if (e.pointerType !== 'mouse') return; var r = box.getBoundingClientRect(); tiltT = .28 + Math.max(0, Math.min(1, (e.clientY - r.top) / r.height)) * .3; yawT = ((e.clientX - r.left) / r.width - .5) * .5; });
+  if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ var was = vis; vis = es[0].isIntersecting; if (vis && !was){ last = performance.now(); requestAnimationFrame(frame); } }).observe(box);
+  requestAnimationFrame(frame);
+}
+
+/* ============ the Thinker, in a space helmet ============
+   outline-only figure: each body part is a thick round stroke; drawing every part twice (ink wide, background narrow)
+   leaves just the silhouette's outline, and the near side is drawn over the far side so the pose keeps its depth */
+function thinker(box){
+  var NS = 'http://www.w3.org/2000/svg';
+  var bg = getComputedStyle(box).backgroundColor, ink = '#0B0C14';
+  // [path, width] centerlines in a 200 x 220 box; the figure faces left, right elbow on the left knee, fist under the chin
+  var FAR = [
+    ['M140 156 C 122 157, 104 158, 88 156', 20],            // far thigh
+    ['M88 156 C 90 172, 94 186, 98 200', 13],               // far shin
+    ['M98 200 L 84 205', 9],                                // far foot
+    ['M116 100 C 112 118, 104 136, 94 150', 12],            // far upper arm
+    ['M94 150 C 88 152, 82 152, 78 150', 9]                 // far hand draped over the knee
+  ];
+  var NEAR = [
+    ['M134 152 C 128 130, 120 108, 106 94', 30],            // torso, leaning in
+    ['M136 154 C 116 152, 92 148, 68 144', 22],             // near thigh
+    ['M68 144 C 70 162, 72 180, 75 198', 15],               // near shin
+    ['M75 198 C 70 203, 62 205, 52 205', 10],               // near foot
+    ['M106 98 C 96 112, 84 126, 72 138', 15],               // near upper arm, elbow down to the knee
+    ['M72 138 C 70 124, 70 108, 72 96', 12],                // forearm up
+    ['M72 94 L 73 93', 17]                                  // fist
+  ];
+  function pass(list, w, col){ return list.map(function(s){ return '<path d="' + s[0] + '" stroke="' + col + '" stroke-width="' + (s[1] + w) + '" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'; }).join(''); }
+  var stars = [[22, 30], [40, 118], [16, 176], [182, 40], [160, 20], [192, 118]].map(function(q, i){ return '<circle cx="' + q[0] + '" cy="' + q[1] + '" r="' + (i % 2 ? 1.1 : 1.6) + '" fill="' + ink + '" opacity=".35"/>'; }).join('');
+  box.insertAdjacentHTML('beforeend', '<div class="th" aria-hidden="true"><svg viewBox="0 0 200 220">' +
+    stars +
+    // the moon rock he sits on
+    '<path d="M100 164 C 108 150, 158 147, 176 158 C 188 172, 186 198, 178 212 L 96 213 C 92 196, 94 176, 100 164 Z" fill="' + bg + '" stroke="' + ink + '" stroke-width="1.4"/>' +
+    '<ellipse cx="150" cy="182" rx="9" ry="4" fill="none" stroke="' + ink + '" stroke-width="1" opacity=".5"/><ellipse cx="126" cy="198" rx="5" ry="2.4" fill="none" stroke="' + ink + '" stroke-width="1" opacity=".5"/><ellipse cx="166" cy="200" rx="4" ry="2" fill="none" stroke="' + ink + '" stroke-width="1" opacity=".45"/>' +
+    '<g class="th-far">' + pass(FAR, 3, ink) + pass(FAR, 0, bg) + '</g>' +
+    '<g class="th-near">' + pass(NEAR, 3, ink) + pass(NEAR, 0, bg) + '</g>' +
+    // helmet: bubble, dark visor with a glint, collar ring, antenna
+    '<g class="th-helm">' +
+      '<path d="M104 82 L 112 60" stroke="' + ink + '" stroke-width="1.4"/><circle cx="113" cy="57" r="2.4" fill="#FF6A3D"/>' +
+      '<circle cx="86" cy="66" r="26" fill="' + bg + '" stroke="' + ink + '" stroke-width="1.6"/>' +
+      '<path d="M63 60 C 64 46, 84 40, 98 48 C 102 60, 98 76, 82 82 C 68 82, 61 72, 63 60 Z" fill="' + ink + '"/>' +
+      '<path d="M70 54 C 74 48, 82 46, 88 47" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" opacity=".85"/>' +
+      '<circle cx="80" cy="64" r=".9" fill="#fff" opacity=".7"/><circle cx="90" cy="70" r=".7" fill="#fff" opacity=".6"/><circle cx="74" cy="72" r=".6" fill="#fff" opacity=".5"/>' +
+      '<ellipse cx="96" cy="92" rx="15" ry="5" transform="rotate(-24 96 92)" fill="' + bg + '" stroke="' + ink + '" stroke-width="1.4"/>' +
+    '</g>' +
+    // thoughts: three bubbles and a question mark, replayed on every new question
+    '<g class="th-tb" fill="none" stroke="' + ink + '" stroke-width="1.3"><circle cx="116" cy="36" r="3"/><circle cx="128" cy="24" r="4.5"/><circle cx="146" cy="8" r="9"/></g>' +
+    '<text class="th-tq" x="146" y="12.5" text-anchor="middle" font-family="Archivo" font-weight="900" font-size="11" fill="#FF6A3D">?</text>' +
+    '</svg></div>');
+  var tb = box.querySelectorAll('.th-tb circle'), tq = box.querySelector('.th-tq'), helm = box.querySelector('.th-helm');
+  function think(){
+    if (!window.gsap) return;
+    gsap.fromTo(tb, { scale: 0, opacity: 0, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, duration: .35, stagger: .14, ease: 'back.out(3)' });
+    gsap.fromTo(tq, { opacity: 0, y: 4 }, { opacity: 1, y: 0, duration: .4, delay: .45 });
+    gsap.fromTo(helm, { rotation: 0, svgOrigin: '96 92' }, { rotation: -4, duration: .5, yoyo: true, repeat: 1, ease: 'sine.inOut' });
+  }
+  box.__think = think;
+  if (window.gsap) gsap.to(box.querySelector('.th svg'), { y: -2, duration: 2.6, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+  think();
+  var Q = ['Why does this page exist?', 'Who is it really for?', 'What should they feel when they leave?', 'What happens if we take it away?'], qi = 0;
+  box.addEventListener('click', function(){ qi = (qi + 1) % Q.length; box.querySelector('.ph-q').textContent = Q[qi]; box.querySelector('.ph-no').textContent = 'Question 0' + (qi + 1); think(); });
+}
+</script>
+<script>var THINKER_MESH={"far": [[101, 151.5, 113.5, 159, 114, 146.5, 0.47], [107, 140, 93, 140, 101, 151.5, 0.58], [107, 140, 97, 132.5, 93, 140, 0.46], [111, 132, 97, 132.5, 107, 140, 0.46], [97, 166.5, 105.5, 167, 101, 151.5, 0.62], [101, 151.5, 105.5, 167, 113.5, 159, 0.49], [86, 146, 90.5, 158.5, 101, 151.5, 0.37], [127, 156.5, 114, 146.5, 113.5, 159, 0.61], [90.5, 158.5, 97, 166.5, 101, 151.5, 0.41], [122, 166.5, 127, 156.5, 113.5, 159, 0.67], [111, 132, 101, 125, 97, 132.5, 0.54], [111, 132, 114.5, 124, 101, 125, 0.53], [105.5, 167, 122, 166.5, 113.5, 159, 0.51], [84.5, 176.5, 98, 175, 97, 166.5, 0.52], [86, 146, 78.5, 160.5, 90.5, 158.5, 0.35], [90.5, 158.5, 83, 168, 97, 166.5, 0.5], [114.5, 124, 104, 117, 101, 125, 0.51], [127, 156.5, 138, 145.5, 128, 146, 0.66], [145.5, 164, 138, 145.5, 127, 156.5, 0.62], [122, 166.5, 133, 166, 127, 156.5, 0.79], [114.5, 124, 117.5, 115.5, 104, 117, 0.42], [83, 168, 84.5, 176.5, 97, 166.5, 0.48], [87, 185, 100, 183.5, 98, 175, 0.51], [145.5, 164, 146.5, 148, 138, 145.5, 0.65], [133, 166, 145.5, 164, 127, 156.5, 0.74], [117.5, 115.5, 120.5, 107, 107, 108.5, 0.45], [84.5, 176.5, 87, 185, 98, 175, 0.48], [145.5, 164, 150, 156, 146.5, 148, 0.71], [89, 193.5, 102.5, 192, 100, 183.5, 0.51], [120.5, 107, 109.5, 100, 107, 108.5, 0.4], [87, 185, 89, 193.5, 100, 183.5, 0.48], [120.5, 107, 122, 98.5, 109.5, 100, 0.53], [93.5, 206, 104.5, 200.5, 102.5, 192, 0.53], [122, 98.5, 115, 93.5, 109.5, 100, 0.44], [89, 193.5, 93.5, 206, 102.5, 192, 0.49], [83, 200, 80.5, 208.5, 93.5, 206, 0.58]], "near": [[101.5, 149.5, 94.5, 159.5, 103, 160.5, 0.55], [101.5, 149.5, 86, 158, 94.5, 159.5, 0.44], [103, 160.5, 111.5, 162, 101.5, 149.5, 0.6], [101.5, 149.5, 94, 137, 86, 158, 0.46], [102.5, 138, 94, 137, 101.5, 149.5, 0.42], [74, 139.5, 77.5, 156.5, 86, 158, 0.42], [124, 147, 114, 138, 101.5, 149.5, 0.66], [124, 147, 101.5, 149.5, 111.5, 162, 0.64], [120, 163, 124, 147, 111.5, 162, 0.73], [124, 124, 111, 130, 114, 138, 0.55], [65, 131.5, 74, 139.5, 76.5, 120, 0.28], [85.5, 134.5, 74, 139.5, 86, 158, 0.49], [77.5, 156.5, 62, 162, 78, 165, 0.39], [78, 165, 63, 170.5, 79, 173.5, 0.45], [120, 163, 136.5, 154.5, 124, 147, 0.79], [64.5, 179, 80, 182, 79, 173.5, 0.31], [124, 124, 107, 122.5, 111, 130, 0.56], [76.5, 120, 74, 139.5, 85.5, 134.5, 0.31], [124, 147, 131.5, 133.5, 114, 138, 0.59], [61, 153.5, 62, 162, 77.5, 156.5, 0.28], [74, 139.5, 61, 153.5, 77.5, 156.5, 0.38], [136.5, 154.5, 131.5, 133.5, 124, 147, 0.76], [62, 162, 63, 170.5, 78, 165, 0.31], [65.5, 187.5, 81.5, 190.5, 80, 182, 0.38], [131.5, 133.5, 124, 124, 114, 138, 0.52], [76.5, 120, 85.5, 134.5, 91.5, 128, 0.27], [76.5, 120, 91.5, 128, 97, 121.5, 0.32], [74, 139.5, 57, 146, 61, 153.5, 0.22], [63, 170.5, 64.5, 179, 79, 173.5, 0.27], [58.5, 137.5, 57, 146, 74, 139.5, 0.27], [128, 166, 142.5, 164, 136.5, 154.5, 0.62], [136.5, 154.5, 146, 139.5, 131.5, 133.5, 0.63], [65, 131.5, 58.5, 137.5, 74, 139.5, 0.31], [64.5, 179, 65.5, 187.5, 80, 182, 0.52], [66.5, 196, 82.5, 199, 81.5, 190.5, 0.59], [76.5, 120, 64.5, 123, 65, 131.5, 0.32], [142.5, 164, 148, 156.5, 136.5, 154.5, 0.66], [137, 115, 121, 110, 124, 124, 0.7], [148.5, 148, 146, 139.5, 136.5, 154.5, 0.71], [76.5, 120, 64, 114.5, 64.5, 123, 0.25], [148, 156.5, 148.5, 148, 136.5, 154.5, 0.83], [102.5, 115, 89.5, 106.5, 97, 121.5, 0.42], [107.5, 98, 89.5, 106.5, 102.5, 115, 0.51], [140.5, 123, 124, 124, 131.5, 133.5, 0.6], [124, 124, 121, 110, 107, 122.5, 0.6], [146, 139.5, 143.5, 131, 131.5, 133.5, 0.6], [65.5, 187.5, 66.5, 196, 81.5, 190.5, 0.49], [143.5, 131, 140.5, 123, 131.5, 133.5, 0.71], [64.5, 106, 64, 114.5, 76.5, 111.5, 0.36], [76.5, 111.5, 64, 114.5, 76.5, 120, 0.36], [140.5, 123, 137, 115, 124, 124, 0.64], [66.5, 196, 72.5, 205.5, 82.5, 199, 0.54], [124.5, 92, 107.5, 98, 121, 110, 0.51], [121, 110, 107.5, 98, 102.5, 115, 0.37], [137, 115, 133.5, 107, 121, 110, 0.55], [77, 103, 64.5, 106, 76.5, 111.5, 0.22], [133.5, 107, 129, 99.5, 121, 110, 0.68], [107.5, 98, 91.5, 89.5, 91, 98, 0.45], [66.5, 196, 64, 208.5, 72.5, 205.5, 0.5], [96, 82, 91.5, 89.5, 107.5, 98, 0.29], [64.5, 89, 64, 97.5, 81, 95.5, 0.16], [81, 95.5, 64, 97.5, 77, 103, 0.28], [129, 99.5, 124.5, 92, 121, 110, 0.48], [51, 199.5, 55.5, 209.5, 64, 208.5, 0.3], [124.5, 92, 119, 85.5, 107.5, 98, 0.38], [104, 78.5, 96, 82, 107.5, 98, 0.47], [51, 199.5, 47, 207, 55.5, 209.5, 0.31], [71.5, 84, 64.5, 89, 81, 95.5, 0.21], [71.5, 84, 81, 95.5, 79.5, 87, 0.31], [119, 85.5, 112.5, 80, 107.5, 98, 0.49], [112.5, 80, 104, 78.5, 107.5, 98, 0.46]], "helm": [[86, 66, 80.5, 73.5, 90, 74.5, 0.58], [86, 66, 76.5, 65, 80.5, 73.5, 0.47], [90, 74.5, 95.5, 67, 86, 66, 0.61], [75, 79.5, 83, 83.5, 80.5, 73.5, 0.64], [80.5, 73.5, 83, 83.5, 90, 74.5, 0.67], [83, 83.5, 92.5, 82.5, 90, 74.5, 0.77], [90, 74.5, 99.5, 77, 95.5, 67, 0.73], [69.5, 72.5, 75, 79.5, 80.5, 73.5, 0.52], [91.5, 58.5, 82, 57.5, 86, 66, 0.42], [86, 66, 82, 57.5, 76.5, 65, 0.39], [95.5, 67, 91.5, 58.5, 86, 66, 0.53], [92.5, 82.5, 99.5, 77, 90, 74.5, 0.81], [76.5, 65, 69.5, 72.5, 80.5, 73.5, 0.44], [68.5, 63, 69.5, 72.5, 76.5, 65, 0.33], [99.5, 77, 103.5, 69, 95.5, 67, 0.76], [95.5, 67, 102.5, 59.5, 91.5, 58.5, 0.56], [72.5, 55, 68.5, 63, 76.5, 65, 0.24], [73, 88.5, 81.5, 91.5, 83, 83.5, 0.78], [83, 83.5, 90.5, 91.5, 92.5, 82.5, 0.87], [92.5, 82.5, 99, 88.5, 99.5, 77, 0.92], [73, 88.5, 83, 83.5, 75, 79.5, 0.69], [103.5, 69, 102.5, 59.5, 95.5, 67, 0.67], [81.5, 91.5, 90.5, 91.5, 83, 83.5, 0.88], [82, 57.5, 72.5, 55, 76.5, 65, 0.27], [79.5, 49.5, 72.5, 55, 82, 57.5, 0.19], [79.5, 49.5, 82, 57.5, 89, 48.5, 0.23], [66, 82.5, 73, 88.5, 75, 79.5, 0.61], [90.5, 91.5, 99, 88.5, 92.5, 82.5, 0.97], [99.5, 77, 110.5, 75, 103.5, 69, 0.86], [102.5, 59.5, 97, 52.5, 91.5, 58.5, 0.48], [61.5, 75, 66, 82.5, 69.5, 72.5, 0.42], [69.5, 72.5, 66, 82.5, 75, 79.5, 0.51], [89, 48.5, 82, 57.5, 91.5, 58.5, 0.33], [97, 52.5, 89, 48.5, 91.5, 58.5, 0.36], [99, 88.5, 106, 82.5, 99.5, 77, 0.98], [103.5, 69, 112, 66, 102.5, 59.5, 0.73], [60, 66, 61.5, 75, 69.5, 72.5, 0.3], [60, 66, 69.5, 72.5, 68.5, 63, 0.27], [106, 82.5, 110.5, 75, 99.5, 77, 0.95], [61.5, 57, 60, 66, 68.5, 63, 0.15], [110.5, 75, 112, 66, 103.5, 69, 0.85], [102.5, 59.5, 106, 49.5, 97, 52.5, 0.49], [66, 49.5, 61.5, 57, 72.5, 55, 0.05], [72.5, 55, 61.5, 57, 68.5, 63, 0.14], [112, 66, 110.5, 57, 102.5, 59.5, 0.7], [97, 52.5, 99, 43.5, 89, 48.5, 0.31], [73, 43.5, 66, 49.5, 72.5, 55, 0.02], [73, 43.5, 72.5, 55, 79.5, 49.5, 0.08], [110.5, 57, 106, 49.5, 102.5, 59.5, 0.58], [81.5, 40.5, 79.5, 49.5, 89, 48.5, 0.13], [81.5, 40.5, 73, 43.5, 79.5, 49.5, 0.03], [106, 49.5, 99, 43.5, 97, 52.5, 0.39], [90.5, 40.5, 81.5, 40.5, 89, 48.5, 0.12], [99, 43.5, 90.5, 40.5, 89, 48.5, 0.22]]};
+/* ============ the Thinker v2: a low-poly wireframe in an orange faceted helmet, inside a small HUD ============
+   mesh = { far, near, helm }: triangles [x1,y1,x2,y2,x3,y3,shade] in a 200 x 220 box (generated once with d3-delaunay) */
+function thinker2(box, MESH){
+  var ink = '#0B0C14', bg = getComputedStyle(box).backgroundColor;
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches, G = window.gsap;
+  function tri(t){ return t[0] + ',' + t[1] + ' ' + t[2] + ',' + t[3] + ' ' + t[4] + ',' + t[5]; }
+  function body(list, op){
+    return list.map(function(t){ return '<polygon points="' + tri(t) + '" fill="' + (t[6] > .6 ? 'url(#th-hatch)' : bg) + '" stroke="' + ink + '" stroke-width=".55" stroke-linejoin="round" opacity="' + op + '"/>'; }).join('');
+  }
+  var VIS = [[64, 61], [67, 52], [76, 46], [88, 47], [93, 56], [90, 68], [80, 74], [69, 72]];
+  var bars = ''; for (var i = 0; i < 18; i++) bars += '<rect x="' + (64 + i * 4.4) + '" y="222" width="2.2" height="4"/>';
+  box.insertAdjacentHTML('beforeend', '<div class="th2" aria-hidden="true"><svg viewBox="-30 -24 250 250">' +
+    '<defs><pattern id="th-hatch" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(40)"><rect width="3" height="3" fill="' + bg + '"/><path d="M0 0V3" stroke="' + ink + '" stroke-width=".7" opacity=".55"/></pattern>' +
+    '<clipPath id="th-vis"><polygon points="' + VIS.join(' ') + '"/></clipPath></defs>' +
+    // HUD: ring + crosshair ticks, a callout from the helmet to the readout, signal bars under him
+    '<g class="th-hud" fill="none" stroke="' + ink + '">' +
+      '<circle cx="100" cy="118" r="104" stroke-width=".5" stroke-dasharray="1.5 3" opacity=".45"/>' +
+      '<circle class="th-ring" cx="100" cy="118" r="92" stroke-width=".5" stroke-dasharray="26 8 3 8" opacity=".35"/>' +
+      '<path d="M100 10v8M100 218v8M-8 118h8M200 118h8" stroke-width=".7" opacity=".5"/>' +
+      '<path d="M104 46 L 128 8 H 150" stroke-width=".6" opacity=".7"/>' +
+    '</g><circle cx="104" cy="46" r="1.8" fill="' + ink + '"/>' +
+    '<g class="th-read" font-family="JetBrains Mono, monospace" font-size="6.2" letter-spacing=".6" fill="' + ink + '" opacity=".75">' +
+      '<text class="r0" x="152" y="4">Q.01 · WHY</text><text class="r1" x="152" y="12">DEPTH 0.483</text><text class="r2" x="152" y="20">DOUBT 0.869</text><text class="r3" x="152" y="28">SIGNAL 0.201</text></g>' +
+    '<g class="th-bars" fill="' + ink + '" opacity=".7">' + bars + '</g><rect x="60" y="226" width="84" height=".7" fill="' + ink + '" opacity=".7"/>' +
+    // moon rock + the figure (far side, then the near side over it)
+    '<path d="M100 164 L 122 150 L 160 149 L 178 160 L 184 186 L 178 212 L 96 213 L 93 190 Z" fill="' + bg + '" stroke="' + ink + '" stroke-width=".6" opacity=".55"/>' +
+    '<path d="M122 150 L 132 178 L 178 160 M132 178 L 96 213 M132 178 L 150 212 M132 178 L 184 186" fill="none" stroke="' + ink + '" stroke-width=".45" opacity=".3"/>' +
+    '<g class="th-far">' + body(MESH.far, .6) + '</g><g class="th-near">' + body(MESH.near, 1) + '</g>' +
+    // helmet: faceted orange sphere, dark visor, antenna
+    '<path d="M106 44 L 116 26" stroke="' + ink + '" stroke-width=".8"/><circle class="th-ant" cx="117" cy="24" r="2.2" fill="#FF6A3D"/>' +
+    '<g class="th-helm">' + MESH.helm.map(function(t){
+      var cx = (t[0] + t[2] + t[4]) / 3, cy = (t[1] + t[3] + t[5]) / 3, l = Math.round(70 - t[6] * 26);
+      return '<polygon data-cx="' + cx.toFixed(1) + '" data-cy="' + cy.toFixed(1) + '" data-l="' + l + '" points="' + tri(t) + '" fill="hsl(16,100%,' + l + '%)" stroke="#FFD2BF" stroke-width=".45" stroke-linejoin="round"/>';
+    }).join('') + '</g>' +
+    '<polygon points="' + VIS.join(' ') + '" fill="' + ink + '"/>' +
+    '<g clip-path="url(#th-vis)"><g class="th-refl" fill="#fff"></g><rect class="th-scan" x="56" y="40" width="4" height="44" fill="#FF6A3D" opacity="0"/></g>' +
+    '<path d="M70 55 L 76 50 L 84 49" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round" opacity=".85"/>' +
+    '<ellipse cx="96" cy="92" rx="15" ry="5" transform="rotate(-24 96 92)" fill="' + bg + '" stroke="' + ink + '" stroke-width=".9"/>' +
+    '<circle class="th-pulse" cx="86" cy="66" r="26" fill="none" stroke="#FF6A3D" stroke-width="1.2" opacity="0"/>' +
+    '</svg></div>');
+  var facets = [].slice.call(box.querySelectorAll('.th-helm polygon')), refl = box.querySelector('.th-refl');
+  var reads = ['.r0', '.r1', '.r2', '.r3'].map(function(s){ return box.querySelector(s); });
+  var barEls = [].slice.call(box.querySelectorAll('.th-bars rect'));
+  var TAG = ['WHY', 'WHO', 'FEEL', 'LOSS', 'TRUE', 'RETURN', 'MOTION'];
+  // each question leaves its own pattern in the visor: a small constellation in signal orange
+  function reflect(k){
+    var r = k * 9301 + 49297, pts = [], s;
+    function R(){ r = (r * 16807) % 2147483647; return r / 2147483647; }
+    for (var i = 0; i < 5; i++) pts.push([68 + R() * 22, 51 + R() * 19]);
+    s = '<path d="M' + pts.map(function(p){ return p[0].toFixed(1) + ' ' + p[1].toFixed(1); }).join('L') + '" stroke="#FF6A3D" stroke-width=".6" fill="none" opacity=".85"/>';
+    pts.forEach(function(p){ s += '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r=".9"/>'; });
+    refl.innerHTML = s;
+  }
+  function think(k){
+    reflect(k);
+    reads[0].textContent = 'Q.' + (k < 9 ? '0' : '') + (k + 1) + ' · ' + TAG[k % TAG.length];
+    if (!G || reduce) return;
+    // a light wave rolls across the helmet facets from a random side
+    var a = Math.random() * Math.PI * 2, ox = 86 + Math.cos(a) * 40, oy = 66 + Math.sin(a) * 40;
+    facets.forEach(function(f){
+      var d = Math.sqrt(Math.pow(+f.getAttribute('data-cx') - ox, 2) + Math.pow(+f.getAttribute('data-cy') - oy, 2)), l = +f.getAttribute('data-l');
+      G.fromTo(f, { attr: { fill: 'hsl(16,100%,' + l + '%)' } }, { attr: { fill: 'hsl(36,100%,' + Math.min(92, l + 26) + '%)' }, duration: .18, delay: d * .012, yoyo: true, repeat: 1, ease: 'sine.inOut' });
+    });
+    G.fromTo(box.querySelector('.th-scan'), { attr: { x: 60 }, opacity: .85 }, { attr: { x: 96 }, opacity: 0, duration: .7, ease: 'power2.in' });
+    G.fromTo(box.querySelector('.th-pulse'), { attr: { r: 26 }, opacity: .8 }, { attr: { r: 46 }, opacity: 0, duration: .9, ease: 'power2.out' });
+    G.fromTo(refl, { opacity: 0 }, { opacity: 1, duration: .5, delay: .35 });
+    // readout values tick to new numbers, the bars jump
+    [1, 2, 3].forEach(function(i){
+      var o = { v: 0 }, lab = reads[i].textContent.split(' ')[0];
+      G.to(o, { v: Math.random(), duration: .8, ease: 'power2.out', onUpdate: function(){ reads[i].textContent = lab + ' ' + o.v.toFixed(3); } });
+    });
+    barEls.forEach(function(b, i){ var h = 2 + Math.random() * 14; G.to(b, { attr: { y: 226 - h, height: h }, duration: .5, delay: i * .015, ease: 'back.out(2)' }); });
+    G.fromTo(box.querySelector('.th-helm'), { rotation: 0, svgOrigin: '96 92' }, { rotation: -4, duration: .5, yoyo: true, repeat: 1, ease: 'sine.inOut' });
+  }
+  box.__think = think;
+  barEls.forEach(function(b){ var h = 2 + Math.random() * 12; b.setAttribute('y', 226 - h); b.setAttribute('height', h); });
+  think(0);
+  if (G && !reduce){
+    G.to(box.querySelector('.th-ring'), { rotation: 360, svgOrigin: '100 118', duration: 60, repeat: -1, ease: 'none' });
+    G.to(box.querySelector('.th-ant'), { opacity: .25, duration: .9, repeat: -1, yoyo: true, ease: 'steps(1)' });
+    // idle: a facet catches the light now and then
+    (function tw(){
+      var f = facets[Math.floor(Math.random() * facets.length)], l = +f.getAttribute('data-l');
+      G.fromTo(f, { attr: { fill: 'hsl(16,100%,' + l + '%)' } }, { attr: { fill: 'hsl(30,100%,' + Math.min(90, l + 18) + '%)' }, duration: .4, yoyo: true, repeat: 1 });
+      G.delayedCall(.35 + Math.random() * .6, tw);
+    })();
+  }
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script>
+document.querySelectorAll('[data-crew]').forEach(function(b){ crew3d(b); });
+document.querySelectorAll('[data-think]').forEach(function(b){
+  thinker2(b, THINKER_MESH);
+  var Q = ['Why does this page exist?', 'Who is it really for?', 'What should they feel when they leave?', 'What happens if we take it away?'], qi = 0;
+  b.addEventListener('click', function(){ qi = (qi + 1) % Q.length; b.querySelector('.ph-q').textContent = Q[qi]; b.querySelector('.ph-no').textContent = 'Question 0' + (qi + 1); b.__think(qi); });
+});
+</script>
+</body></html>

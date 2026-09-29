@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.30.11 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.31.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -856,7 +856,8 @@ window.Webflow.push(function(){
         { c: '#ffffff', p: [[176, 44], [196, 26], [218, 38], [236, 22]] }, { c: '#8fb1ff', p: [[40, 104], [62, 90], [84, 110], [70, 128]] },
         { c: '#FF9E80', p: [[128, 96], [150, 116], [172, 100]] }, { c: '#c4b5ff', p: [[206, 90], [228, 110], [250, 94], [268, 116]] }
       ];
-      var bg = ''; for (var k = 0; k < 26; k++) bg += '<circle class="bg" cx="' + ((k * 97) % 290 + 5) + '" cy="' + ((k * 53) % 140 + 6) + '" r="' + (k % 4 ? .7 : 1.1) + '"/>';
+      // background stars scattered evenly (R2 sequence); (k * 97) % 290 stepped 1px every third star and drew three vertical lines
+      var bg = ''; for (var k = 1; k <= 26; k++) bg += '<circle class="bg" cx="' + (5 + (k * .7548776 % 1) * 280).toFixed(1) + '" cy="' + (6 + (k * .5698403 % 1) * 138).toFixed(1) + '" r="' + (k % 4 ? .7 : 1.1) + '"/>';
       v.innerHTML = '<div class="v-obs" style="position:relative;width:100%;height:100%;min-height:150px;display:flex;flex-direction:column;justify-content:center;gap:10px;padding:14px">' +
         '<svg viewBox="0 0 290 150" style="width:100%;height:auto;display:block;overflow:visible" aria-hidden="true"><g fill="rgba(255,255,255,.5)">' + bg + '</g>' +
         C.map(function(g, i){ return '<g class="cst" data-i="' + i + '"><path d="M' + g.p.map(function(q){ return q.join(' '); }).join('L') + '" fill="none" stroke="' + g.c + '" stroke-width="1.4" stroke-linecap="round" opacity=".9"/>' +
@@ -1067,14 +1068,16 @@ window.Webflow.push(function(){
   /* ---------- orbit (Tools Collection List → chips on two rings), shared system in ab-core ---------- */
   AB.orbit($('#orbit'), $('#toolReadout'));
 
-  /* ---------- altitude meter (page scroll → Earth-to-Moon) ---------- */
+  /* ---------- distance meter (page scroll → falling toward Gargantua, the footer's black hole): the marker slides down the
+     track to the black hole at its foot and the readout counts the distance down; halfway it passes Miller's planet ---------- */
   (function(){
     if (!hasGsap) return;
-    AB.inject('<div class="ab_alt" aria-hidden="true"><div class="ab_alt-fill" id="altFill"></div><div class="ab_alt-lab" id="altLab">ALT 0 km</div></div>');
-    var altFill = $('#altFill'), altLab = $('#altLab'), nf = new Intl.NumberFormat('en-US');
+    AB.inject('<div class="ab_alt" aria-hidden="true"><div class="ab_alt-fill" id="altFill"></div><div class="ab_alt-bh"></div><div class="ab_alt-lab" id="altLab">Gargantua · 1.50B km</div></div>');
+    var altFill = $('#altFill'), altLab = $('#altLab'), nf = new Intl.NumberFormat('en-US'), FAR = 1.5e9;
+    function dist(km){ return km >= 1e9 ? (km / 1e9).toFixed(2) + 'B km' : km >= 1e6 ? (km / 1e6).toFixed(1) + 'M km' : nf.format(Math.round(km)) + ' km'; }
     ScrollTrigger.create({ start: 0, end: 'max', onUpdate: function(self){
-      var p = self.progress; altFill.style.height = (p * 100) + '%'; altLab.style.bottom = (p * 100) + '%';
-      altLab.textContent = p > .995 ? 'ALT 384,400 km · Moon reached' : 'ALT ' + nf.format(Math.round(p * 384400)) + ' km';
+      var p = self.progress; altFill.style.height = (p * 100) + '%'; altLab.style.top = (p * 100) + '%';
+      altLab.textContent = p > .995 ? 'Event horizon · Gargantua' : 'Gargantua · ' + dist((1 - p) * (1 - p) * FAR) + (p > .46 && p < .54 ? " · Miller's planet" : '');
     } });
   })();
 

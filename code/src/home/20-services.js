@@ -376,7 +376,8 @@
         { c: '#ffffff', p: [[176, 44], [196, 26], [218, 38], [236, 22]] }, { c: '#8fb1ff', p: [[40, 104], [62, 90], [84, 110], [70, 128]] },
         { c: '#FF9E80', p: [[128, 96], [150, 116], [172, 100]] }, { c: '#c4b5ff', p: [[206, 90], [228, 110], [250, 94], [268, 116]] }
       ];
-      var bg = ''; for (var k = 0; k < 26; k++) bg += '<circle class="bg" cx="' + ((k * 97) % 290 + 5) + '" cy="' + ((k * 53) % 140 + 6) + '" r="' + (k % 4 ? .7 : 1.1) + '"/>';
+      // background stars scattered evenly (R2 sequence); (k * 97) % 290 stepped 1px every third star and drew three vertical lines
+      var bg = ''; for (var k = 1; k <= 26; k++) bg += '<circle class="bg" cx="' + (5 + (k * .7548776 % 1) * 280).toFixed(1) + '" cy="' + (6 + (k * .5698403 % 1) * 138).toFixed(1) + '" r="' + (k % 4 ? .7 : 1.1) + '"/>';
       v.innerHTML = '<div class="v-obs" style="position:relative;width:100%;height:100%;min-height:150px;display:flex;flex-direction:column;justify-content:center;gap:10px;padding:14px">' +
         '<svg viewBox="0 0 290 150" style="width:100%;height:auto;display:block;overflow:visible" aria-hidden="true"><g fill="rgba(255,255,255,.5)">' + bg + '</g>' +
         C.map(function(g, i){ return '<g class="cst" data-i="' + i + '"><path d="M' + g.p.map(function(q){ return q.join(' '); }).join('L') + '" fill="none" stroke="' + g.c + '" stroke-width="1.4" stroke-linecap="round" opacity=".9"/>' +

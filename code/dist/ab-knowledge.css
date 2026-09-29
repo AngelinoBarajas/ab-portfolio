@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-knowledge.css v0.30.11 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-knowledge.css v0.31.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* =========================================================
    KNOWLEDGE SYSTEM · the Observatory (/observatory, /observatory/*, /topics, /topics/*) + rows on Mission,
    Service and Home. Webflow gives each ab_ks-* class a stub rule; the look lives here (approved prototype:
@@ -387,3 +387,5 @@ a.ab_ks-tstat:hover b{color:var(--_color---brand--signal)}
 .ab_ks-drone_l b{color:#FF6A3D;font-weight:500}
 .ab_ks-drone_l span+span{color:var(--_color---text--primary);letter-spacing:.02em}
 @media (prefers-reduced-motion:reduce){.ab_ks-drones{display:none}}
+/* phones: the drones still fly and beam, but the RX readout would sit over the title; drop it */
+@media (max-width:767px){.ab_ks-drone_l{display:none}}

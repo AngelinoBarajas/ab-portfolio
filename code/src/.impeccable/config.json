@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "prototypes/about-cards.html"
+        ],
+        "createdAt": "2026-09-29T02:56:24.617Z",
+        "reason": "Claude: the glow is the sun in an orbit diagram (literal light source), matching the live site's crew card"
+      }
+    ]
+  }
+}

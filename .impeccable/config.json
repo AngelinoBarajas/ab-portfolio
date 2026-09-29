@@ -29,6 +29,15 @@
         ],
         "createdAt": "2026-09-28T06:53:44.492Z",
         "reason": "user confirmed 2026-09-28: keep the site's springy overshoot (selection frames, chips, dots) as brand motion"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "prototypes/about-cards.html"
+        ],
+        "createdAt": "2026-09-29T03:03:09.922Z",
+        "reason": "Claude: #F2F0EA/#F7F6F1 are the live AB Portfolio light-theme tokens the prototype must match"
       }
     ]
   }
