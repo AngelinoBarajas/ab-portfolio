@@ -1,5 +1,5 @@
 ---
-status: draft
+status: approved
 title: Why designers are the hardest audience for a loud website
 slug: designers-hardest-audience-maximalist-website
 theme: Why before how
@@ -13,7 +13,7 @@ meta_description: Show designers a maximalist site and the alarms go off first. 
 
 ## The alarm goes off fast
 
-Since building this site loud on purpose (the reasons are in *Less is a bore*), I've noticed a pattern. When I share it with people who don't design, the reactions are about the thing itself: the planets, the black hole, "wait, how did you do that?" When I share it with designers, the first reaction is often about the category: "it's a lot."
+Since building this site loud on purpose (the reasons are in [Less is a bore](/observatory/less-is-a-bore-maximalist-web-design)), I've noticed a pattern. When I share it with people who don't design, the reactions are about the thing itself: the planets, the black hole, "wait, how did you do that?" When I share it with designers, the first reaction is often about the category: "it's a lot."
 
 Both are honest. They're just measuring different things. One group is asking "is this interesting?" The other is asking "is this correct?" And for about fifteen years, "correct" on the web has looked like a white page, a big headline, three feature cards and a lot of breathing room.
 
@@ -68,5 +68,5 @@ The alarm going off isn't proof the site is wrong. Sometimes it just means the s
 - Zajonc's mere-exposure research (1968) and processing fluency are standard psychology, paraphrased, no numbers. Kuhn (1962) paraphrased. The 1887 "Protest against the Tower of Monsieur Eiffel" (published in *Le Temps*) is documented; the Maupassant lunch story is flagged in the text as probably a legend. Loewy's MAYA principle is widely attributed, paraphrased.
 - "Fifteen years" of the minimal default matches note 16's 2010–2013 timeline.
 - The designer-vs-non-designer pattern is Angelino's own observation (2026-09-29). No specific people or quotes.
-- Links to note 16 (*Less is a bore*, /observatory/less-is-a-bore-maximalist-web-design) by title; add the real link on import.
+- Links to note 16 (*Less is a bore*, /observatory/less-is-a-bore-maximalist-web-design) linked in the body (added on import 2026-09-30).
 - The Engines switch (Calm mode) shipped 2026-09-29 (v0.33.0–0.33.3: nav status line, footer bar, mobile menu, Shift+M; same effect as the device's reduced-motion setting); the motion line names it.
