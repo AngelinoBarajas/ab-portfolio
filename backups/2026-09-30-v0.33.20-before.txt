@@ -1,0 +1,7 @@
+Before v0.33.20 (bookshelf tesseract + Murph's watch + quest 19), 2026-09-30
+Site scripts: gsap 3.13.0 ... lenis 1.3.26, abwarpin 0.5.0 (header), abcore 0.33.19 (footer, last)
+About page 6ab6d8aa86c563fd3f8b64a4 scripts: ababout 0.33.10 (footer)
+About head:
+<!-- AB Portfolio · ab-about.css (source: code/src/ab-about.css) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.33.10/code/dist/ab-about.prod.css" integrity="sha384-z+p+UPoJKC12CxsQY3Q9RPrrKFLmCkcpYrb/YJKonFA1k+5n5KKNLzZWlZS4LUzI" crossorigin="anonymous">
+About footer: (empty)

@@ -1,6 +1,14 @@
-# Session handoff (2026-09-30, boss fight + logo v2 + wormhole session closed: v0.33.19 on staging; next: bookshelf card tweaks + About badge tweaks)
+# Session handoff (2026-09-30, bookshelf tesseract session: v0.33.20 on staging; next: About crew badge tweaks)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
+
+## Bookshelf tesseract + Murph's watch (2026-09-30, v0.33.20) · verified on staging 2026-09-30
+
+Live: ab-core JS **v0.33.20** (quest list only; core CSS stays 0.33.19), ab-about JS + CSS **v0.33.20**. Backup `backups/2026-09-30-v0.33.20-before.txt`. At Angelino's ask (`about/00-about.js` › end of the bookshelf block, `ab-about.css` › after `.ab_shelf_note b`):
+- **Tesseract side (rest):** `.ab_tess` canvas over `.ab_shelf` (z 5; note raised to z 6). The books are measured (offsetLeft/Width/Height, so lifts/leans read at rest), mirrored, drawn as backlit fore-edges with cover-color edges and room light in the gaps; near shelf at z 1.14 inside a lattice of shelf copies (9 depth layers, fog pass per layer), strands to the vanishing point, then the film's slit-scan look: 16-pass zoom blur toward the VP, 1px slices stretched into full-width/height lines, 60 pale/blue-white highlight lines, a vertical smear on the near books. Drawn once per size (ResizeObserver); each frame adds mote streaks + the watch's strand, only while on screen and not in the room. CSS drift `abt-drift` on the canvas.
+- **Room side:** card `pointerenter` (mouse) / tap on `.ab_tess` (touch) / `focusin` → `.ab_shelf.is-room`: the tesseract zooms (scale 1.5 from the watch's spot) and fades. Touch returns to the tesseract when the card leaves the viewport. Hint text swaps: "Hover/Tap to step through the shelf" ↔ the Designer's "Knock a book off the shelf". Book hover picking only runs in the room.
+- **Murph's watch** (`.ab_watch`, SVG, inserted after the current read): real time, second hand in `--signal` orange; every 11 s the visible side sends STAY in Morse (watch hand twitches +6° / tesseract strand shakes); click = note + Morse + side quest **#19 `murph`** "Read Murph’s watch" (19 total). Reduced motion/Engines off: still tesseract, instant swap, no Morse.
+- Engines chat: told about tag v0.33.20 (core JS bumped for the quest list only).
 
 ## Planets, wormhole, drifters (2026-09-30, v0.33.9 → v0.33.11) · verified on staging 2026-09-30
 
@@ -38,7 +46,7 @@ Live: ab-about JS + CSS **v0.33.7** (backup `backups/2026-09-29-v0.33.7-about-be
 
 ## Next session
 
-**Angelino's queue for the next chat:** **bookshelf card tweaks** and **About crew badge tweaks** (About page; code in `src/about/00-about.js` › bookshelf + badge, styles in `src/ab-about.css`; About is on v0.33.10). He sends phone screenshots one after another: ship each as a patch tag.
+**Angelino's queue for the next chat:** **About crew badge tweaks** (bookshelf done in v0.33.20) (About page; code in `src/about/00-about.js` › bookshelf + badge, styles in `src/ab-about.css`; About is on v0.33.10). He sends phone screenshots one after another: ship each as a patch tag.
 
 **Live on webflow.io (verified 2026-09-30 ~03:40 ET: HTML pins on 10 pages + a real 404, then 11 pages × 1440/390 headless: 0 page errors, 0 horizontal overflow):** ab-core JS + CSS **v0.33.19** (site-wide; head script `abwarpin` 0.5.0), ab-home JS **v0.33.10** (+ knowledge 0.25.5), ab-about JS + CSS **v0.33.10**, ab-mission JS **v0.33.8** + CSS **v0.33.16** (Angelino pasted the Designer link, step L3 done), ab-services JS 0.30.9 + CSS 0.30.10 (+ knowledge 0.25.5 on the template), ab-hub JS 0.30.3 + CSS 0.30.8, ab-process JS + CSS 0.32.0, ab-contact JS + CSS 0.32.0, ab-knowledge JS + CSS 0.31.0 on /observatory (/topics 0.30.0), ab-work JS 0.26.1, ab-404 JS 0.14.0 + CSS 0.7.1 (loads on real 404s). Home statement planet is `data-planet="wormhole"` (Designer attribute, changed by API; old values in `backups/2026-09-30-v0.33.10-before.txt`).
 
@@ -49,7 +57,7 @@ Open, most blocking first:
 4. **Small code items (carried):** the Return to orbit thruster `.ab_top-fl` animates `height` (switch to `transform: scaleY`); planner Name required by script (`home/50-planner.js`), undo if he wants it optional; Turnstile loads on idle, watch submit on a real phone.
 5. **Still waiting from before:** optional "Flight programs" collection (2b); Mission Types Sort not renumbered.
 
-**Before touching code:** `git pull`; tags are shared with the Engines/Calm-mode chat (it announces its tags and asked us to announce ours): `git fetch --tags && git tag --sort=-v:refname | head -1` (**v0.33.19** at the end of this session; **v0.33.5 was never used**; v0.28.7 is a stray tag, never reuse). `npm run build` rebuilds every bundle: commit only the bundles you release (`git checkout` the other dist files) and patch only their keys in `dist/sri.json`. After tagging, poll jsDelivr, purge, and hash-check against `sri.json`. Local-dist test harness: strip `integrity` from the HTML and drop the response `Link` header ([[lesson_webflow-link-header-sri-local-test]]); to test a Designer attribute change before making it, rewrite the attribute in the intercepted HTML (published attribute order differs from the build files).
+**Before touching code:** `git pull`; tags are shared with the Engines/Calm-mode chat (it announces its tags and asked us to announce ours): `git fetch --tags && git tag --sort=-v:refname | head -1` (**v0.33.20** at the end of the bookshelf session; **v0.33.5 was never used**; v0.28.7 is a stray tag, never reuse). `npm run build` rebuilds every bundle: commit only the bundles you release (`git checkout` the other dist files) and patch only their keys in `dist/sri.json`. After tagging, poll jsDelivr, purge, and hash-check against `sri.json`. Local-dist test harness: strip `integrity` from the HTML and drop the response `Link` header ([[lesson_webflow-link-header-sri-local-test]]); to test a Designer attribute change before making it, rewrite the attribute in the intercepted HTML (published attribute order differs from the build files).
 
 ## Boss fight → logo v2 → wormhole session (2026-09-29 → 30, v0.33.7 → v0.33.19) · verified on staging 2026-09-30
 
