@@ -62,6 +62,8 @@
     "17": ["discovery", "prototyping", "scope-creep"],
     "18": ["philosophy-at-work", "better-questions", "brand-identity"],
     "19": ["philosophy-at-work", "brand-identity", "better-questions"],
-    "20": ["philosophy-at-work", "handoff", "science-of-time"]
+    "20": ["philosophy-at-work", "handoff", "science-of-time"],
+    "21": ["micro-interaction", "brand-identity", "philosophy-at-work"],
+    "22": ["custom-code", "motion-scroll", "reduced-motion", "scope-creep"]
   }
 }

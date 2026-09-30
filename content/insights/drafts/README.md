@@ -26,6 +26,8 @@ Voice: first person, plain, US spelling, a little playful. No invented clients, 
 | 18 | Why designers are the hardest audience for a loud website | Why before how | Branding, Motion |
 | 19 | The Alchemist and the treasure under the sycamore: why I stopped chasing design trends | Why before how | Branding, Design systems |
 | 20 | STAY: Interstellar, love and designing a message for someone you'll never meet | Why before how | Webflow development, CMS integrations |
+| 21 | The first easter egg: Warren Robinett's secret room and why hidden things make people love a site | Why before how | Branding, Motion |
+| 22 | How I hid a boss fight in a website (Webflow, GSAP and a little Web Audio) | Build notes | Motion, Webflow development |
 
 Proposed library themes: **Build notes** (Webflow tutorials from real builds) and **Why before how** (philosophy meets science). Topic tags are suggestions for the shared vocabulary; the integration chat maps them to the real Topics collection.
 
