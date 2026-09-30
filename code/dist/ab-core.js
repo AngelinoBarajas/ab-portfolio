@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.33.13 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.33.14 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -348,25 +348,41 @@ window.Webflow.push(function(){
     // the view zooms into it and turns; the bright rim widens past the edges and the starfield streaks toward the hole.
     // Then AB.go's warp flash takes over (it sits above the tunnel) and the next page loads.
     function tunnel(url){
-      var ball = $('.wh-ball', body), r = ball.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2, R = r.width / 2;
-      var D = Math.sqrt(Math.pow(Math.max(x, innerWidth - x), 2) + Math.pow(Math.max(y, innerHeight - y), 2)) + 60;
-      var t = document.createElement('div'); t.className = 'wh-tunnel'; t.setAttribute('aria-hidden', 'true');
-      var ring = document.createElement('div'); ring.className = 'wh-tunnel-ring'; ring.setAttribute('aria-hidden', 'true');
-      hi(); var tex = hiCv; t.appendChild(tex);
-      tex.style.cssText = 'left:' + (x - R) + 'px;top:' + (y - R) + 'px;width:' + 2 * R + 'px;height:' + 2 * R + 'px';
-      document.body.appendChild(t); document.body.appendChild(ring);
-      var st = { r: R * .96 };
-      function paintR(){ t.style.clipPath = 'circle(' + st.r.toFixed(1) + 'px at ' + x.toFixed(1) + 'px ' + y.toFixed(1) + 'px)'; gsap.set(ring, { left: x - st.r, top: y - st.r, width: st.r * 2, height: st.r * 2 }); }
-      paintR();
-      if (sf && sf.state){ sf.state.cx = x; sf.state.cy = y; }
-      // the zoom stops short of the texture's resolution, and AB.go's flash starts before the window finishes so it never looks soft
-      gsap.timeline()
-        .to(ball, { scale: .9, duration: .18, ease: 'power2.out' })
-        .to(st, { r: D, duration: 1, ease: 'power3.in', onUpdate: paintR })
-        .fromTo(tex, { scale: 1, rotation: 0 }, { scale: Math.min(D / R * 1.15, 5), rotation: 40, duration: 1, ease: 'power2.in' }, '<')
-        .add(function(){ AB.go(url); }, '<.72')
-        .to(ring, { opacity: 0, duration: .25 }, '-=.25')
-        .to(sf && sf.state ? sf.state : {}, { warp: .7, duration: 1, ease: 'power2.in' }, '<-.75');
+      var ball = $('.wh-ball', body), farA = $('.wh-far .is-a', body);
+      hi();
+      // the ball dips first; the tunnel takes over only after, starting as an exact copy of what the ball shows
+      gsap.to(ball, { scale: .9, duration: .18, ease: 'power2.out', onComplete: open });
+      function open(){
+        var r = ball.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2, R = Math.min(r.width, r.height) / 2;
+        var D = Math.sqrt(Math.pow(Math.max(x, innerWidth - x), 2) + Math.pow(Math.max(y, innerHeight - y), 2)) + 60;
+        // the ball's galaxy layer: 112% of the ball (inset -6%), turning with scale 1.18 (wh-turn); read its live angle + scale
+        var ang = 0, k = 1.18, m = farA ? getComputedStyle(farA).transform : 'none';
+        if (m && m !== 'none'){ var v = m.match(/-?[\d.]+(e-?\d+)?/g).map(Number); ang = Math.atan2(v[1], v[0]) * 180 / Math.PI; k = Math.sqrt(v[0] * v[0] + v[1] * v[1]); }
+        var size = (farA ? farA.offsetWidth : ball.offsetWidth * 1.12) * k * (R * 2 / (ball.offsetWidth || R * 2));
+        var t = document.createElement('div'); t.className = 'wh-tunnel'; t.setAttribute('aria-hidden', 'true');
+        var ring = document.createElement('div'); ring.className = 'wh-tunnel-ring'; ring.setAttribute('aria-hidden', 'true');
+        var lens = document.createElement('div'); lens.className = 'wh-tunnel-lens';
+        var tex = hiCv; t.appendChild(tex); t.appendChild(lens);
+        tex.style.cssText = 'left:' + (x - size / 2) + 'px;top:' + (y - size / 2) + 'px;width:' + size + 'px;height:' + size + 'px;border-radius:0';
+        gsap.set(tex, { rotation: ang, scale: 1, transformOrigin: '50% 50%' });
+        var st = { r: R };
+        function paintR(){
+          t.style.clipPath = 'circle(' + st.r.toFixed(1) + 'px at ' + x.toFixed(1) + 'px ' + y.toFixed(1) + 'px)';
+          gsap.set([ring, lens], { left: x - st.r, top: y - st.r, width: st.r * 2, height: st.r * 2 });
+        }
+        paintR();
+        document.body.appendChild(t); document.body.appendChild(ring);
+        gsap.set(ball, { opacity: 0 });
+        if (sf && sf.state){ sf.state.cx = x; sf.state.cy = y; }
+        // the zoom stops short of the texture's resolution, and AB.go's flash starts before the window finishes so it never looks soft
+        gsap.timeline()
+          .to(st, { r: D, duration: 1, ease: 'power3.in', onUpdate: paintR })
+          .to(tex, { scale: Math.min(D / (size / 2) * 1.3, 5), rotation: ang + 40, duration: 1, ease: 'power2.in' }, '<')
+          .to(lens, { opacity: 0, duration: .45, ease: 'power1.in' }, '<')
+          .add(function(){ AB.go(url); }, '<.72')
+          .to(ring, { opacity: 0, duration: .25 }, '-=.25')
+          .to(sf && sf.state ? sf.state : {}, { warp: .7, duration: 1, ease: 'power2.in' }, '<-.75');
+      }
     }
     el.addEventListener('pointerenter', function(e){ if (e.pointerType !== 'touch') hot(true); });
     el.addEventListener('pointerleave', function(e){ if (e.pointerType !== 'touch') hot(false); });
