@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.33.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.33.1 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -798,8 +798,9 @@ window.Webflow.push(function(){
      PLAYER ONE · secret: reach LV 20 (or enter the cheat) and the card opens a boss fight. Letterbox + a VS title card,
      then you fly it: arrows or WASD to move, Space to fire (phones: drag to fly, hold to fire). THE SCOPE CREEP drifts,
      fires aimed shots, telegraphs a beam you have to dodge, and enrages at half health (spread shots). Three shields;
-     lose them and you retry. The last hit plays an anime-style finisher (cut-in, move name, mega beam, impact frames),
-     then "You won" and a credits crawl. Optional sound: all of it synthesized live (Web Audio), off until the visitor
+     lose them and you retry. It all plays over a hyperspeed starfield (canvas). The last hit: the stars slow, the ship
+     charges, mega beam, impact frames; then "You won", a short credits crawl, and the name finale (the two halves streak
+     in from the sides and meet in the middle; the only place the name appears). Optional sound: all of it synthesized live (Web Audio), off until the visitor
      turns it on (remembered). Esc, the × button, or a tap at the end closes it.
      ========================================================= */
   (function(){
@@ -835,18 +836,15 @@ window.Webflow.push(function(){
       rows.forEach(function(row, y){ for (var x = 0; x < w; x++){ var c = row.charAt(x); if (col[c]) r += '<rect x="' + x + '" y="' + y + '" width="1.02" height="1.02" fill="' + col[c] + '"/>'; } });
       return '<svg class="' + cls + '" viewBox="0 0 ' + w + ' ' + h + '" shape-rendering="crispEdges" aria-hidden="true">' + r + '</svg>';
     }
+    // the crawl never names anyone: the name appears once, in the finale (ROLES above it)
     var CREDITS = [
-      ['A game by', 'Angelino Barajas'],
-      ['Pilot · designer · developer', 'Angelino Barajas'],
-      ['Crew', 'Two moons: wife + son'],
-      ['Fuel', 'Coffee. A lot of coffee.'],
-      ['Currently reading', 'Thus Spoke Zarathustra'],
-      ['Favorite film', 'Interstellar'],
+      ['Starring', 'You, Player One'],
       ['Final boss', 'The Scope Creep'],
+      ['Soundtrack', 'Synthesized live in your browser'],
       ['Built with', 'Figma · Webflow · GSAP · Lenis'],
-      ['Special thanks', 'You, Player One'],
       ['', 'No scope was harmed in the making of this website.']
     ];
+    var ROLES = 'Game idea · Story · Pixel art · Code · Sound', NAME = ['Angelino', 'Barajas'];
 
     /* ---------- sound: a tiny synth (original chiptune loop + effects), silent until switched on ---------- */
     var SFX = (function(){
@@ -913,31 +911,39 @@ window.Webflow.push(function(){
       };
     })();
 
-    // anime cut-in art: the pilot's helmet up close, one sharp eye behind the visor, the AB mark on the shell
-    function pilotArt(){
-      var mark = AB.markSVG ? AB.markSVG({ cls: 'ab_boss_pilot-mark' }).replace('<svg ', '<svg x="160" y="262" width="80" height="40" ') : '';
-      return '<svg class="ab_boss_pilot" viewBox="0 0 420 320" aria-hidden="true">' +
-        '<defs><linearGradient id="abxVisor" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a2f55"/><stop offset=".55" stop-color="#0b0c14"/><stop offset="1" stop-color="#1d2350"/></linearGradient></defs>' +
-        // shell + ink outline, hard cel shadow on the right
-        '<circle cx="200" cy="176" r="150" fill="#F2F0EA" stroke="#07080d" stroke-width="9"/>' +
-        '<path d="M318 86a150 150 0 0 1-40 226a172 172 0 0 0 40-226z" fill="#c9c7c0"/>' +
-        '<path d="M60 124c40-70 150-92 238-44" fill="none" stroke="#FF6A3D" stroke-width="16" stroke-linecap="round"/>' +
-        // visor
-        '<path d="M70 150c10-44 60-66 138-66s132 22 142 62c8 34-10 78-54 92c-40 13-130 14-176 0c-40-12-58-50-50-88z" fill="url(#abxVisor)" stroke="#07080d" stroke-width="8"/>' +
-        // the eye: angled brow, heavy upper lid, orange iris, two highlights
-        '<path d="M150 132l84 18" stroke="#F2F0EA" stroke-width="7" stroke-linecap="round"/>' +
-        '<path d="M146 170c22-20 64-24 94-4" fill="none" stroke="#F2F0EA" stroke-width="7" stroke-linecap="round"/>' +
-        '<path d="M156 170c10 22 58 26 76 2" fill="#07080d"/>' +
-        '<circle cx="196" cy="176" r="17" fill="#FF6A3D"/><circle cx="196" cy="178" r="8" fill="#07080d"/>' +
-        '<circle cx="190" cy="170" r="5" fill="#fff"/><circle cx="203" cy="184" r="2.4" fill="#fff"/>' +
-        // visor reflections: two glass streaks and a ringed planet
-        '<path d="M98 132l40-34M112 150l52-46" stroke="rgba(255,255,255,.35)" stroke-width="7" stroke-linecap="round"/>' +
-        '<circle cx="296" cy="200" r="15" fill="#FF6A3D" opacity=".85"/><ellipse cx="296" cy="200" rx="30" ry="7" fill="none" stroke="#ffd166" stroke-width="3" opacity=".8" transform="rotate(-18 296 200)"/>' +
-        // speed hatching on the shadow side
-        '<path d="M330 120l40-12M338 150l48-8M340 182l52 0M336 214l46 10" stroke="#07080d" stroke-width="5" stroke-linecap="round"/>' +
-        mark +
-        '<g class="ab_boss_glint"><path d="M190 146l4 20 20 4-20 4-4 20-4-20-20-4 20-4z" fill="#fff"/></g>' +
-        '</svg>';
+    // hyperspeed backdrop: stars rush out of a vanishing point behind the boss and streak longer the faster we go.
+    // speed(v, dur) eases between cruise (~.5), full warp (3+) and a near stop (.1); one canvas on gsap's ticker.
+    function warpField(o){
+      var cv = document.createElement('canvas'), g = cv.getContext && cv.getContext('2d');
+      if (!g) return { speed: function(){}, kill: function(){} };
+      cv.className = 'ab_boss_warp'; cv.setAttribute('aria-hidden', 'true'); o.insertBefore(cv, o.firstChild); o.classList.add('is-warp');
+      var TINT = ['242,240,234', '242,240,234', '242,240,234', '255,106,61', '155,125,255', '76,141,255'];
+      var st = { v: .5 }, dpr = Math.min(2, window.devicePixelRatio || 1), w = 0, h = 0, f = 0, stars = [];
+      function seed(s, far){ s.x = Math.random() * 2 - 1; s.y = Math.random() * 2 - 1; s.z = far ? 1 : .05 + Math.random() * .95; s.c = TINT[Math.random() * TINT.length | 0]; return s; }
+      function size(){
+        w = o.clientWidth; h = o.clientHeight; f = Math.max(w, h) * .5; cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+        var n = Math.round(Math.min(460, Math.max(160, w * h / 3200)));
+        while (stars.length < n) stars.push(seed({}, false));
+        stars.length = n;
+      }
+      function tick(t, dms){
+        var dt = Math.min(.05, (dms || 16) / 1000), vx = w * .5, vy = h * .34, trail = .012 + st.v * .05;
+        g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h); g.lineCap = 'round';
+        for (var i = 0; i < stars.length; i++){
+          var s = stars[i]; s.z -= st.v * dt;
+          if (s.z <= .02){ seed(s, true); continue; }
+          var x1 = vx + s.x / s.z * f, y1 = vy + s.y / s.z * f;
+          if (x1 < -30 || x1 > w + 30 || y1 < -30 || y1 > h + 30){ seed(s, true); continue; }
+          var z0 = Math.min(1, s.z + trail), k = 1 - s.z;
+          g.strokeStyle = 'rgba(' + s.c + ',' + (k * .9 + .1).toFixed(2) + ')'; g.lineWidth = .4 + k * 2.2;
+          g.beginPath(); g.moveTo(vx + s.x / z0 * f, vy + s.y / z0 * f); g.lineTo(x1, y1); g.stroke();
+        }
+      }
+      size(); addEventListener('resize', size); gsap.ticker.add(tick);
+      return {
+        speed: function(v, dur){ gsap.to(st, { v: v, duration: dur == null ? .8 : dur, ease: 'power2.inOut', overwrite: true }); },
+        kill: function(){ gsap.ticker.remove(tick); removeEventListener('resize', size); gsap.killTweensOf(st); }
+      };
     }
 
     var open = false;
@@ -956,19 +962,19 @@ window.Webflow.push(function(){
         '<div class="ab_boss_warn">Warning · boss approaching</div>' +
         '<div class="ab_boss_help" aria-live="polite">' + HELP + '</div>' +
         '<div class="ab_boss_over"><b>Mission failed</b><p>The Scope Creep got through your shields.</p><span>' + (coarse ? 'Tap' : 'Press Enter or tap') + ' to try again</span></div>' +
-        '<div class="ab_boss_cut" aria-hidden="true"><div class="ab_boss_lines"></div>' +
-          '<div class="ab_boss_panel"><div class="ab_boss_panel-in">' + pilotArt() + '<div class="ab_boss_panel-tx"><small>パイロット</small><b>Angelino</b></div></div></div>' +
-          '<div class="ab_boss_move"><small>必殺技</small><b>Final deploy</b></div></div>' +
         '<div class="ab_boss_win"><b>You won</b><p>LV ' + LV.BOSS + ' · The Scope Creep is defeated. The project shipped on time, on budget, and nobody asked for “just one more thing.”</p></div>' +
         '<div class="ab_boss_crawl" aria-hidden="true"><div class="ab_boss_tilt"><div class="ab_boss_crawl-in">' +
           CREDITS.map(function(c){ return '<div class="ab_boss_cr">' + (c[0] ? '<small>' + esc(c[0]) + '</small>' : '') + '<span>' + esc(c[1]) + '</span></div>'; }).join('') +
-          '<div class="ab_boss_cr is-end"><span>The end</span><small>Tap anywhere to return</small></div></div></div></div>' +
+          '</div></div></div>' +
+        '<div class="ab_boss_fin" aria-hidden="true"><small>' + ROLES + '</small>' +
+          '<div class="ab_boss_fin-name"><span class="is-l"><i></i><i></i><i></i>' + NAME[0] + '</span><span class="is-r"><i></i><i></i><i></i>' + NAME[1] + '</span></div>' +
+          '<small class="ab_boss_fin-tap">Thanks for playing · tap anywhere to return</small></div>' +
         '<div class="ab_boss_bar is-t" aria-hidden="true"></div><div class="ab_boss_bar is-b" aria-hidden="true"></div>' +
         '<div class="ab_boss_flash" aria-hidden="true"></div>' +
-        '<ul class="ab_sr">' + CREDITS.map(function(c){ return '<li>' + esc((c[0] ? c[0] + ': ' : '') + c[1]) + '</li>'; }).join('') + '</ul>';
+        '<ul class="ab_sr">' + CREDITS.map(function(c){ return '<li>' + esc((c[0] ? c[0] + ': ' : '') + c[1]) + '</li>'; }).join('') + '<li>' + esc(ROLES + ': ' + NAME.join(' ')) + '</li></ul>';
       document.body.appendChild(o);
       if (lenis) lenis.stop(); root.style.overflow = 'hidden';
-      var closeBtn = $('.ab_boss_x', o), sndBtn = $('.ab_boss_snd', o), prevFocus = document.activeElement, tl = null, ended = false;
+      var closeBtn = $('.ab_boss_x', o), sndBtn = $('.ab_boss_snd', o), prevFocus = document.activeElement, tl = null, ended = false, warp = null;
       function paintSnd(){ var on = SFX.isOn(); sndBtn.setAttribute('aria-pressed', on ? 'true' : 'false'); sndBtn.innerHTML = (on ? '♪ Sound on' : '♪ Sound off'); sndBtn.setAttribute('aria-label', on ? 'Turn the sound off' : 'Turn the sound on'); }
       paintSnd();
       sndBtn.addEventListener('click', function(e){ e.stopPropagation(); SFX.set(!SFX.isOn()); paintSnd(); if (SFX.isOn() && tl && tl.__loop) SFX.loopStart(); o.focus({ preventScroll: true }); });
@@ -1088,14 +1094,14 @@ window.Webflow.push(function(){
       }
       function stopGame(){ running = false; gsap.ticker.remove(tick); touch = null; keys = {}; }
       function gameOver(){
-        stopGame(); isOver = true; clearBullets(); if (beamSt) hideBeam(); SFX.loopStop(); SFX.boom();
+        stopGame(); isOver = true; clearBullets(); if (beamSt) hideBeam(); SFX.loopStop(); SFX.boom(); warp.speed(.12, 1.2);
         gsap.to(ship, { opacity: 0, scale: 1.8, duration: .5, ease: 'power2.out' });
         gsap.set(over, { visibility: 'visible' }); gsap.fromTo(over, { opacity: 0 }, { opacity: 1, duration: .4, delay: .5 });
       }
       function retry(){
         if (!isOver) return; isOver = false;
         gsap.to(over, { opacity: 0, duration: .25, onComplete: function(){ gsap.set(over, { visibility: 'hidden' }); } });
-        SFX.loopStart(); startGame();
+        SFX.loopStart(); warp.speed(.55, 1); startGame();
       }
 
       /* ---------- input: arrows / WASD + Space, or drag (touch and mouse) ---------- */
@@ -1129,7 +1135,7 @@ window.Webflow.push(function(){
 
       function close(){
         if (!open) return; open = false; LV.beaten = true;
-        stopGame(); clearBullets();
+        stopGame(); clearBullets(); if (warp) warp.kill();
         if (tl) tl.kill(); document.removeEventListener('keydown', onKey); document.removeEventListener('keyup', onKeyUp);
         removeEventListener('blur', onBlur); removeEventListener('resize', onResize);
         SFX.close(); if (hasGsap) gsap.globalTimeline.timeScale(1);
@@ -1145,8 +1151,10 @@ window.Webflow.push(function(){
 
       if (reduce || !hasGsap){
         // no fight: straight to the result, credits as a still list
-        o.classList.add('is-still'); win.style.opacity = 1; crawl.style.opacity = 1; hp.style.width = '0%'; ended = true; if (AB.quest) AB.quest('boss'); return;
+        o.classList.add('is-still'); crawlIn.appendChild($('.ab_boss_fin', o)); win.style.opacity = 1; crawl.style.opacity = 1; hp.style.width = '0%'; ended = true; if (AB.quest) AB.quest('boss'); return;
       }
+      // we arrive at hyperspeed and drop to cruise when the boss shows up
+      warp = warpField(o); warp.speed(3.4, 0);
       function shake(n){ gsap.fromTo(arena, { x: (Math.random() - .5) * n, y: (Math.random() - .5) * n }, { x: 0, y: 0, duration: .45, ease: 'elastic.out(1,.25)' }); }
       function hit(pc, big){
         SFX.hit();
@@ -1174,37 +1182,24 @@ window.Webflow.push(function(){
         }
       }
 
-      /* ---------- the finisher: an anime cut-in, the move name, a mega beam and impact frames ---------- */
+      /* ---------- the finisher: the stars slow, the ship charges and drags the boss into line, a mega beam, impact frames ---------- */
       function finish(){
         stopGame(); clearBullets(); if (beamSt) hideBeam(); hp.style.width = '2%'; hideHelp();
         SFX.loopStop(); SFX.hit();
-        var cut = $('.ab_boss_cut', o), lines = $('.ab_boss_lines', o), panel = $('.ab_boss_panel', o), move = $('.ab_boss_move', o);
         var c = shipC(), shipTop = SB.y + sy;
         gsap.set(ship, { rotation: 0 });
         tl = gsap.timeline();
-        tl.add(function(){ o.classList.add('is-freeze'); })
-          .fromTo(flash, { opacity: .85 }, { opacity: 0, duration: .25 })
-          .set(cut, { visibility: 'visible' })
-          .fromTo(lines, { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: .25, ease: 'power2.out' }, '<')
-          .add(function(){ SFX.shing(); }, '<')
-          .fromTo(panel, { xPercent: -115 }, { xPercent: 0, duration: .38, ease: 'power4.out' }, '<')
-          .fromTo($('.ab_boss_panel-tx', o), { scale: 2.2, opacity: 0 }, { scale: 1, opacity: 1, duration: .3, ease: 'back.out(2.5)' }, '-=.08')
-          .fromTo($('.ab_boss_glint', o), { scale: 0, opacity: 0, rotation: -60, transformOrigin: '190px 166px' }, { scale: 1.4, opacity: 1, rotation: 30, duration: .22, yoyo: true, repeat: 1, ease: 'power2.out' }, '+=.15')
-          .to(panel, { xPercent: 115, duration: .26, ease: 'power4.in' }, '+=.5')
-          .to(lines, { opacity: 0, duration: .2 }, '<')
-          .add(function(){ o.classList.remove('is-freeze'); SFX.charge(); gsap.set(arena, { transformOrigin: c.x + 'px ' + c.y + 'px' }); gather(c); })
+        tl.fromTo(flash, { opacity: .85 }, { opacity: 0, duration: .25 })
+          .add(function(){ warp.speed(.08, .6); SFX.charge(); gsap.set(arena, { transformOrigin: c.x + 'px ' + c.y + 'px' }); gather(c); })
           .to(arena, { scale: 1.55, duration: 1.1, ease: 'power2.inOut' })
           .to(ship, { filter: 'brightness(2.2) drop-shadow(0 0 22px #FF6A3D)', duration: 1.1 }, '<')
           // the ship's lock drags the boss into its line of fire
           .to(mon, { x: c.x - MB.x - MB.w / 2, duration: 1.1, ease: 'power2.inOut' }, '<')
-          .fromTo(move, { opacity: 0, scale: 2.4 }, { opacity: 1, scale: 1, duration: .32, ease: 'back.out(2)' }, '-=.35')
-          .add(function(){ SFX.blip(); shake(8); }, '<')
-          .to(move, { opacity: 0, scale: .92, duration: .2 }, '+=.8')
-          .to(arena, { scale: 1, duration: .16, ease: 'power3.in' }, '<')
+          .to(arena, { scale: 1, duration: .16, ease: 'power3.in' }, '+=.25')
           // fire: the beam runs from the ship to the top of the screen, straight through the boss
           .add(function(){
             mega.style.left = c.x + 'px'; mega.style.height = Math.max(0, shipTop + 6) + 'px';
-            SFX.mega(); shake(34);
+            SFX.mega(); shake(34); warp.speed(3.6, .15);
           })
           .fromTo(mega, { opacity: 1, scaleX: 0 }, { scaleX: 1, duration: .1, ease: 'power2.out' })
           // impact frames: silhouette, invert, silhouette
@@ -1214,6 +1209,7 @@ window.Webflow.push(function(){
           .add(function(){ o.classList.remove('is-impact'); hp.style.width = '0%'; }, '+=.09')
           .to(mega, { scaleX: .7, duration: .06, yoyo: true, repeat: 5, ease: 'steps(1)' })
           .add(explode, '+=.05')
+          .add(function(){ warp.speed(.5, 1.6); }, '<')
           .to(mega, { scaleX: 0, opacity: 0, duration: .5, ease: 'power2.in' }, '<.2')
           .to(ship, { filter: 'brightness(1) drop-shadow(0 0 10px rgba(255,106,61,.6))', duration: .6 }, '<');
         outro(tl);
@@ -1227,7 +1223,19 @@ window.Webflow.push(function(){
           .to(bars, { scaleY: 0, duration: .6, ease: 'power2.in' }, '<')
           .to(ship, { y: -innerHeight, duration: 1.4, ease: 'power2.in' }, '<')
           .to(crawl, { opacity: 1, duration: .5 }, '<')
-          .fromTo(crawlIn, { yPercent: 0, y: function(){ return crawl.offsetHeight; } }, { yPercent: -100, y: function(){ return crawl.offsetHeight * .35; }, duration: 22, ease: 'none', onComplete: function(){ ended = true; } });
+          .fromTo(crawlIn, { yPercent: 0, y: function(){ return crawl.offsetHeight; } }, { yPercent: -100, y: function(){ return crawl.offsetHeight * .3; }, duration: 13, ease: 'none' })
+          .to(crawl, { opacity: 0, duration: .6 }, '-=1.2');
+        // finale: back to hyperspeed, the two halves of the name streak in from the sides and meet in the middle
+        var fin = $('.ab_boss_fin', o), L = $('.is-l', fin), R = $('.is-r', fin), trails = $$('.ab_boss_fin-name i', fin), fsm = $$('small', fin);
+        t.add(function(){ warp.speed(3.4, .7); SFX.whoosh(); })
+          .set(fin, { visibility: 'visible' })
+          .fromTo(fsm[0], { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: .5 }, '+=.3')
+          .fromTo(L, { x: function(){ return -innerWidth; }, skewX: -28 }, { x: 0, skewX: 0, duration: .6, ease: 'power4.in' }, '+=.15')
+          .fromTo(R, { x: function(){ return innerWidth; }, skewX: 28 }, { x: 0, skewX: 0, duration: .6, ease: 'power4.in' }, '<')
+          .add(function(){ SFX.boom(); SFX.fanfare(); gsap.fromTo(flash, { opacity: .7 }, { opacity: 0, duration: .9, ease: 'power2.out' }); warp.speed(.3, 2); })
+          .to(trails, { scaleX: 0, opacity: 0, duration: .5, ease: 'power3.out' })
+          .fromTo([L, R], { scaleX: 1.14, scaleY: .88 }, { scaleX: 1, scaleY: 1, duration: .7, ease: 'elastic.out(1,.35)' }, '<')
+          .fromTo(fsm[1], { opacity: 0 }, { opacity: 1, duration: .6 }, '+=.4');
       }
 
       tl = gsap.timeline();
@@ -1240,7 +1248,8 @@ window.Webflow.push(function(){
         .fromTo($('b', vs), { scale: 3, opacity: 0 }, { scale: 1, opacity: 1, duration: .45, ease: 'back.out(2)' }, '<.25')
         .to(vs, { opacity: 0, scale: 1.08, duration: .35 }, '+=1.1')
         // entrance: warning, the ship rises, the boss drops in as the camera pulls back
-        .fromTo(warn, { opacity: 0 }, { opacity: 1, duration: .12, repeat: 5, yoyo: true, ease: 'steps(1)' })
+        .add(function(){ warp.speed(.55, 1.8); })
+        .fromTo(warn, { opacity: 0 }, { opacity: 1, duration: .12, repeat: 5, yoyo: true, ease: 'steps(1)' }, '<')
         .to(warn, { opacity: 0, duration: .2 })
         .fromTo(arena, { scale: 1.25 }, { scale: 1, duration: 1.3, ease: 'power2.out' }, '<')
         .from(ship, { y: 160, opacity: 0, duration: .7, ease: 'power3.out' }, '<')

@@ -566,11 +566,20 @@ input.button.is-primary:hover{background-color:var(--star)}
 .ab_footer_grid-toggle[aria-pressed="true"]{color:#ff6b6b}
 .ab_footer_grid-toggle:focus-visible{outline:2px solid var(--select)}
 @media (pointer:coarse){.ab_footer_grid-toggle{display:none}}
-/* Calm mode toggle (core/20-ui.js) borrows the grid toggle's look, but shows on touch too */
-.ab_footer_grid-toggle.is-calm{cursor:var(--hand,pointer)}
-.ab_footer_grid-toggle.is-calm[aria-pressed="true"]{color:var(--signal)}
-.ab_footer_grid-toggle.is-calm[aria-disabled="true"]{cursor:default;opacity:.7}
+/* Engines switch (Calm mode, core/20-ui.js): nav status line, footer bar (grid toggle's look, shown on touch too), mobile menu */
+.ab_nav_engines,.ab_footer_grid-toggle.is-calm{-webkit-appearance:none;appearance:none;background:none;border:0;border-radius:0;margin:0;padding:0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:var(--hand,pointer)}
+.ab_nav_engines{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;transition:color .2s}
+.ab_nav_engines:hover,.ab_footer_grid-toggle.is-calm:hover{color:var(--signal)}
+.ab_nav_engines.is-off,.ab_footer_grid-toggle.is-calm.is-off{color:var(--signal)}
+.ab_nav_engines:focus-visible,.ab_footer_grid-toggle.is-calm:focus-visible,.ab_menu_engines:focus-visible{outline:2px solid var(--select);outline-offset:3px}
+.ab_nav_engines[aria-disabled="true"],.ab_footer_grid-toggle.is-calm[aria-disabled="true"],.ab_menu_engines[aria-disabled="true"]{cursor:default}
+.ab_eng-ico{width:10px;height:10px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
+.ab_nav_eng-sep{opacity:.6}
 @media (pointer:coarse){.ab_footer_grid-toggle.is-calm{display:inline}}
+.ab_menu_engines{cursor:var(--hand,pointer);background:none;margin:0 0 16px;font:inherit;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.ab_menu_engines .ab_eng-ico{width:14px;height:14px}
+.ab_menu_engines.is-off{border-color:var(--signal)}
+.ab_menu_engines.is-off b{color:var(--signal)}
 
 /* ---------- global ui (injected) ---------- */
 .ab_toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,calc(100% + 60px));visibility:hidden;z-index:80;background:var(--panel);border:1px solid var(--signal);padding:12px 18px;font-family:var(--mono);font-size:13px;color:var(--star);transition:transform .45s cubic-bezier(.2,.9,.2,1.2);max-width:calc(100vw - 32px)}

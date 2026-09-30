@@ -66,29 +66,40 @@
   }
   document.addEventListener('keydown', function(e){ if (e.shiftKey && (e.key === 'G' || e.key === 'g') && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){ e.preventDefault(); toggleGrid(); } });
 
-  /* ---------- Calm mode (footer bar toggle, Shift+M): the visitor's own reduced-motion switch ----------
-     Stored in localStorage ab:calm and applied on reload (00-base reads it into AB.reduce, abwarpin sets html.ab-calm
-     before first paint), so every animation takes the same path as the system setting. A device that already asks
-     for less motion shows it as on and locked. */
+  /* ---------- Engines (Calm mode): the visitor's own reduced-motion switch ----------
+     "Engines on / off" in the nav status line, the footer bar and the mobile menu, plus Shift+M. Stored in
+     localStorage ab:calm and applied on reload (00-base reads it into AB.reduce, abwarpin sets html.ab-calm before
+     first paint), so every animation takes the same path as the system setting. A device that already asks for
+     less motion shows "Engines off (device)", locked. */
   (function(){
-    var bar = $('.ab_footer_bar'), btn = document.createElement('span');
-    function label(){ return 'Calm mode · ' + (reduce ? 'On' : 'Off') + (AB.sysReduce ? ' (device setting)' : ''); }
+    var off = reduce, dev = AB.sysReduce;
+    var state = 'Engines ' + (off ? 'off' : 'on'), hint = dev ? 'your device asks for reduced motion' : 'press to turn the site’s motion ' + (off ? 'back on' : 'off');
     function flip(){
-      if (AB.sysReduce){ toast('Your device asks for reduced motion, so Calm mode stays on.'); return; }
+      if (dev){ toast('Your device asks for reduced motion, so the engines stay off.'); return; }
       try { if (AB.calm) localStorage.removeItem('ab:calm'); else localStorage.setItem('ab:calm', '1'); }
-      catch (er){ toast('Calm mode needs site storage, which this browser is blocking.'); return; }
-      toast(AB.calm ? 'Calm mode off · motion back on' : 'Calm mode on · motion off');
+      catch (er){ toast('The engine switch needs site storage, which this browser is blocking.'); return; }
+      toast(AB.calm ? 'Engines on · motion back online' : 'Engines off · everything holds still');
       setTimeout(function(){ location.reload(); }, 450);
     }
-    btn.className = 'ab_footer_grid-toggle is-calm'; btn.id = 'calmToggle';
-    btn.setAttribute('role', 'button'); btn.tabIndex = 0;
-    btn.setAttribute('aria-pressed', reduce ? 'true' : 'false');
-    if (AB.sysReduce) btn.setAttribute('aria-disabled', 'true');
-    btn.title = 'Turn the site’s motion ' + (reduce ? 'back on' : 'off') + ' (Shift+M)';
-    btn.textContent = label();
-    btn.addEventListener('click', flip);
-    btn.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); flip(); } });
-    if (bar){ if (gbtn && gbtn.parentNode === bar) bar.insertBefore(btn, gbtn); else bar.appendChild(btn); }
+    // every switch is a real <button>: its name starts with the visible text (label-in-name), aria-pressed = motion off
+    function make(cls, text){
+      var b = document.createElement('button'); b.type = 'button'; b.className = cls + (off ? ' is-off' : '');
+      b.setAttribute('data-engines', ''); b.setAttribute('aria-pressed', off ? 'true' : 'false');
+      b.setAttribute('aria-label', state + (dev ? ' (device setting)' : '') + ': ' + hint);
+      b.title = state + ' · ' + hint + (dev ? '' : ' (Shift+M)');
+      if (dev) b.setAttribute('aria-disabled', 'true');
+      b.innerHTML = text; b.addEventListener('click', flip); return b;
+    }
+    var ico = '<svg class="ab_eng-ico" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1v4.2M3.2 2.8a4 4 0 1 0 5.6 0"/></svg>';
+    var status = $('.ab_nav_status');
+    if (status){
+      var sep = document.createElement('span'); sep.className = 'ab_nav_eng-sep'; sep.setAttribute('aria-hidden', 'true'); sep.textContent = '·';
+      status.appendChild(sep); status.appendChild(make('ab_nav_engines', ico + '<span>' + state + '</span>'));
+    }
+    var bar = $('.ab_footer_bar');
+    if (bar){ var fb = make('ab_footer_grid-toggle is-calm', state + (dev ? ' (device)' : '')); fb.id = 'calmToggle'; if (gbtn && gbtn.parentNode === bar) bar.insertBefore(fb, gbtn); else bar.appendChild(fb); }
+    var mfoot = $('#mmenu .ab_menu_foot');
+    if (mfoot) mfoot.parentNode.insertBefore(make('ab_menu_hq ab_menu_engines', ico + '<b>' + state + '</b><span>' + (off ? 'Motion held' : 'Tap to still') + '</span>'), mfoot);
     document.addEventListener('keydown', function(e){ if (e.shiftKey && (e.key === 'M' || e.key === 'm') && !e.ctrlKey && !e.metaKey && !e.altKey && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && !document.activeElement.isContentEditable){ e.preventDefault(); flip(); } });
   })();
 
