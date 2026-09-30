@@ -73,7 +73,7 @@ html.ab-warp-in body::after{content:"";position:fixed;inset:0;z-index:70;pointer
 .ab_planet.is-wormhole .pring{display:none}
 /* phones: the wormhole sits behind the statement text; the text lets taps through to it (links + the selectable word keep theirs) */
 @media (max-width:767px){
-  .section_statement .ab_planet.is-wormhole{z-index:1}
+  .section_statement .ab_planet.is-wormhole{z-index:1;right:36px}
   .section_statement .padding-global{position:relative;z-index:2;pointer-events:none}
   .section_statement .padding-global a,.section_statement .padding-global button,.section_statement .padding-global [data-selectable],.section_statement .padding-global [data-drag]{pointer-events:auto}
 }
