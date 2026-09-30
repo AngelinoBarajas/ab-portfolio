@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-hub.css v0.32.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-hub.css v0.33.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · ab-hub.css · Services hub (/services) only. States, pseudo-elements, glass and script-built parts the Designer can't hold.
    Webflow classes: ab_hub-* (+ ab_mc/ab_mon/ab_screen/ab_console .is-hub, ab_chip). Script-built parts use hb-* classes. */
 /* the planner panel grows a lot when a main is picked; native scroll anchoring then jumps the page (and fights Lenis) */
@@ -206,6 +206,8 @@ html:has(.section_hub-hero),.main-wrapper:has(.section_hub-hero){overflow-anchor
 .hb-ks-orb i{position:absolute;inset:0;animation:hb-spin 7s linear infinite}
 .hb-ks-orb .hb-ks-ico{--sat:#8a5a1c;position:absolute;left:50%;top:0;width:22px;height:11px;margin:-5px 0 0 -11px}
 @media (prefers-reduced-motion:reduce){.hb-ks-orb i,.hbf-ks i{animation:none}}
+:where(html.ab-calm) .hb-ks-orb i,:where(html.ab-calm) .hbf-ks i{animation:none}
+
 .hb-pl-pick button[disabled]{opacity:.35;pointer-events:none}
 .hb-pl-main{display:flex;align-items:center;gap:14px}
 .hb-pl-main b{font-family:var(--_typography---font--display);font-stretch:125%;font-weight:900;font-size:clamp(34px,3.2vw,50px);line-height:.9}
@@ -412,6 +414,9 @@ html:has(.section_hub-hero),.main-wrapper:has(.section_hub-hero){overflow-anchor
   .ab_hub-prompt::after,.ab_hub-call_row .hb-caret,.ab_hub-planner.is-ping,.hb-pl-tag,.hb-arc.is-lit,.ab_hub-row.is-now .hb-c-status .hb-fl,.hb-key.is-now i,.hb-port.is-rec::before,.ab_hub-pass_ok::before,.section_hub-hero .ab_rec_dot.is-live,.ab_hub-sym_dot,.hbf-flame,.hbf-moon,.hbf-moon em,.section_hub-flight.is-landed .hbf-shock,.hb-map-hint::before{animation:none}
   .ab_planet.hb-peek{transition:none}
 }
+:where(html.ab-calm) .ab_hub-prompt::after,:where(html.ab-calm) .ab_hub-call_row .hb-caret,:where(html.ab-calm) .ab_hub-planner.is-ping,:where(html.ab-calm) .hb-pl-tag,:where(html.ab-calm) .hb-arc.is-lit,:where(html.ab-calm) .ab_hub-row.is-now .hb-c-status .hb-fl,:where(html.ab-calm) .hb-key.is-now i,:where(html.ab-calm) .hb-port.is-rec::before,:where(html.ab-calm) .ab_hub-pass_ok::before,:where(html.ab-calm) .section_hub-hero .ab_rec_dot.is-live,:where(html.ab-calm) .ab_hub-sym_dot,:where(html.ab-calm) .hbf-flame,:where(html.ab-calm) .hbf-moon,:where(html.ab-calm) .hbf-moon em,:where(html.ab-calm) .section_hub-flight.is-landed .hbf-shock,:where(html.ab-calm) .hb-map-hint::before{animation:none}
+:where(html.ab-calm) .ab_planet.hb-peek{transition:none}
+
 @media (max-width:767px){.ab_hub-go{min-width:24px;min-height:24px}}
 /* flight plan cards: KNS flag while the add-on rides along */
 .hb-ks-flag{display:inline-flex;align-items:center;gap:5px;margin-left:auto;margin-right:10px;font-family:var(--_typography---font--mono);font-size:9.5px;letter-spacing:.12em;color:#FFD29A}

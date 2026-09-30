@@ -72,6 +72,49 @@ async function bundle(dir, out, guard, opts = {}) {
   console.log(`${out}.js ${(code.length / 1024).toFixed(1)} KB → .prod.js ${(min.code.length / 1024).toFixed(1)} KB`);
 }
 
+// Calm mode (the visitor's own reduced-motion switch, html.ab-calm): every @media (prefers-reduced-motion:reduce) block
+// is followed by a copy of its rules scoped to :where(html.ab-calm), and a (prefers-reduced-motion:no-preference) block
+// gets :where(html:not(.ab-calm)) on its selectors. :where() adds no specificity, so the cascade matches the media query.
+function scopeSelectors(sel, scope) {
+  const out = [];
+  let depth = 0, cur = '';
+  for (const ch of sel) {
+    if (ch === '(') depth++; else if (ch === ')') depth--;
+    if (ch === ',' && !depth) { out.push(cur); cur = ''; } else cur += ch;
+  }
+  out.push(cur);
+  return out.map((x) => {
+    x = x.trim();
+    const m = x.match(/^(html|:root)(?![\w-])/);
+    return m ? m[1] + ':where(' + scope + ')' + x.slice(m[1].length) : ':where(html' + scope + ') ' + x;
+  }).join(',');
+}
+function scopeRules(body, scope, name) {
+  body = body.replace(/\/\*[\s\S]*?\*\//g, '');
+  if (body.includes('@')) throw new Error(name + '.css: nested @-rule inside a reduced-motion block (calm mirror)');
+  return body.split('}').map((r) => r.trim()).filter(Boolean).map((r) => {
+    const i = r.indexOf('{');
+    if (i < 0) throw new Error(name + '.css: bad rule in a reduced-motion block: ' + r);
+    return scopeSelectors(r.slice(0, i), scope) + '{' + r.slice(i + 1).trim() + '}';
+  }).join('\n');
+}
+function calmMirror(s, name) {
+  const re = /@media[^{;]*prefers-reduced-motion\s*:\s*(reduce|no-preference)[^{]*\{/g;
+  let out = '', last = 0, m, n = 0;
+  while ((m = re.exec(s))) {
+    let depth = 1, j = re.lastIndex;
+    while (depth && j < s.length) { if (s[j] === '{') depth++; else if (s[j] === '}') depth--; j++; }
+    const body = s.slice(re.lastIndex, j - 1);
+    if (m[1] === 'reduce') {
+      out += s.slice(last, j) + '\n' + scopeRules(body, '.ab-calm', name) + '\n';
+    } else {
+      out += s.slice(last, m.index) + m[0] + '\n' + scopeRules(body, ':not(.ab-calm)', name) + '\n}';
+    }
+    last = j; re.lastIndex = j; n++;
+  }
+  return { css: out + s.slice(last), n };
+}
+
 function css(name) {
   let s = readFileSync(join(SRC, name + '.css'), 'utf8');
   // an unclosed block swallows every rule after it without any browser error: fail the build instead
@@ -81,13 +124,15 @@ function css(name) {
     if (depth < 0) throw new Error(name + '.css: unbalanced "}"');
   }
   if (depth) throw new Error(`${name}.css: ${depth} unclosed "{"`);
+  const calm = calmMirror(s, name);
+  s = calm.css;
   s = s.replace(/var\(--([\w-]+)\)/g, (m, k) => (ALIAS[k] ? `var(${ALIAS[k]})` : m));
   const full = banner(name + '.css') + s;
   write(name + '.css', full);
   const min = s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ')
     .replace(/\s*([{};])\s*/g, '$1').replace(/;}/g, '}').trim();
   write(name + '.prod.css', banner(name + '.css') + min + '\n');
-  console.log(`${name}.css ${(full.length / 1024).toFixed(1)} KB → .prod.css ${(min.length / 1024).toFixed(1)} KB`);
+  console.log(`${name}.css ${(full.length / 1024).toFixed(1)} KB → .prod.css ${(min.length / 1024).toFixed(1)} KB · calm ${calm.n}`);
 }
 
 await bundle('core', 'ab-core', '__abCoreInit');

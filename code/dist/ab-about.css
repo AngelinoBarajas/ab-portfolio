@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about.css v0.32.3 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about.css v0.33.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · About page (/about). Loaded with a page-head <link>. Layout, type and color live on the
    Webflow classes; this holds what the Designer can't: keyframes, 3D, pseudos, descendant rules and
    the state classes ab-about.js toggles. */
@@ -59,6 +59,8 @@
 @keyframes ab-badge-neb{to{transform:translate(4%,-3%) scale(1.08)}}
 @keyframes ab-badge-shoot{0%,86%{opacity:0;transform:translate(0,0) rotate(-18deg)}88%{opacity:1}96%{opacity:0;transform:translate(520px,-150px) rotate(-18deg)}100%{opacity:0}}
 @media (prefers-reduced-motion:reduce){.ab_badge_sky i{animation:none}}
+:where(html.ab-calm) .ab_badge_sky i{animation:none}
+
 .ab_badge_sil svg{display:block;width:100%;height:auto}
 .ab_badge_scan{animation:ab-about-scan 3.6s linear infinite;z-index:2}
 @keyframes ab-about-scan{to{top:100%}}
@@ -232,13 +234,15 @@
 .ab_shelf .ab_book.is-current:focus-visible{--lift:-12px}
 /* desktop hover: the spine under the pointer lifts + tips, its neighbors lean away to make room (no touch, no reduced motion) */
 @media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
-  .ab_shelf .ab_book.is-hot{--lift:-13px;--tilt:-2.5deg;box-shadow:0 16px 18px -10px rgba(11,12,20,.45),0 2px 3px -1px rgba(11,12,20,.3)}
-  .ab_shelf .ab_book.is-current.is-hot{--lift:-12px}
-  .ab_shelf .ab_book.is-hot-r{--tilt:2deg;--lift:-2px}
-  .ab_shelf .ab_book.is-hot-l{--tilt:-2deg;--lift:-2px}
+:where(html:not(.ab-calm)) .ab_shelf .ab_book.is-hot{--lift:-13px;--tilt:-2.5deg;box-shadow:0 16px 18px -10px rgba(11,12,20,.45),0 2px 3px -1px rgba(11,12,20,.3)}
+:where(html:not(.ab-calm)) .ab_shelf .ab_book.is-current.is-hot{--lift:-12px}
+:where(html:not(.ab-calm)) .ab_shelf .ab_book.is-hot-r{--tilt:2deg;--lift:-2px}
+:where(html:not(.ab-calm)) .ab_shelf .ab_book.is-hot-l{--tilt:-2deg;--lift:-2px}
 }
 .ab_shelf .ab_book.is-out{z-index:3;transition:none}
 @media (prefers-reduced-motion:reduce){.ab_shelf .ab_book{transition:none}}
+:where(html.ab-calm) .ab_shelf .ab_book{transition:none}
+
 .ab_shelf_note{transform:translateY(-6px);transition:opacity .3s,transform .3s}
 .ab_shelf_note.show{opacity:1;transform:none}
 .ab_shelf_note b{display:block;margin-bottom:3px;color:var(--_color---brand--signal);font-weight:500;text-transform:uppercase;letter-spacing:.1em}
@@ -346,6 +350,9 @@
   .ab_badge_swing,.ab_badge_scan,.ab_rec_dot,.ab_ms_heart.on,.ab_crew_orbit,.ab_crew_moon,.ab_gm_press,.ab_td_orbit,.ab_td_ship .sp,.ab_boss_stars{animation:none}
   .ab_badge_inner,.ab_tl_card{transition:none}
 }
+:where(html.ab-calm) .ab_badge_swing,:where(html.ab-calm) .ab_badge_scan,:where(html.ab-calm) .ab_rec_dot,:where(html.ab-calm) .ab_ms_heart.on,:where(html.ab-calm) .ab_crew_orbit,:where(html.ab-calm) .ab_crew_moon,:where(html.ab-calm) .ab_gm_press,:where(html.ab-calm) .ab_td_orbit,:where(html.ab-calm) .ab_td_ship .sp,:where(html.ab-calm) .ab_boss_stars{animation:none}
+:where(html.ab-calm) .ab_badge_inner,:where(html.ab-calm) .ab_tl_card{transition:none}
+
 
 /* side quests: the log on the Player one card + its panel; a gold crew badge once every quest is found */
 .abx-qx{margin-top:14px;display:grid;gap:8px;font-family:var(--_typography---font--mono)}
@@ -364,6 +371,8 @@
 .abx-qx_feed li.is-hint{color:var(--_color---text--tertiary)}.abx-qx_feed li.is-hint i{color:rgba(76,242,160,.5)}
 .abx-qx_feed li.is-new span{color:var(--_color---text--primary)}
 @media (prefers-reduced-motion:reduce){.abx-qx_bar i.is-new{animation:none}}
+:where(html.ab-calm) .abx-qx_bar i.is-new{animation:none}
+
 .abx-qlog{all:unset;display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:6px 10px;border:1px dashed rgba(76,242,160,.45);font-family:var(--_typography---font--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#4cf2a0;cursor:var(--hand,pointer);transition:border-color .2s,background-color .2s}
 .abx-qlog:hover,.abx-qlog:focus-visible{border-style:solid;background:rgba(76,242,160,.08);outline:none}
 .abx-qlog b{font-weight:500;color:var(--_color---text--primary)}
@@ -394,6 +403,8 @@
 .ab_badge.is-gold .ab_badge_face{box-shadow:0 40px 80px -40px rgba(0,0,0,.8),0 0 0 2px #f5c542,0 0 34px rgba(245,197,66,.45)}
 .ab_badge.is-gold .ab_badge_logo .lg-planet{fill:#f5c542}
 @media (prefers-reduced-motion:reduce){.abx-qp,.abx-qp_box,.abx-qp_bar i{transition:none}}
+:where(html.ab-calm) .abx-qp,:where(html.ab-calm) .abx-qp_box,:where(html.ab-calm) .abx-qp_bar i{transition:none}
+
 /* quest bar + feed on the light "Between launches" section */
 .theme-light .abx-qx_top{color:#0f8f58}
 .theme-light .abx-qx_top b{color:#0B0C14}

@@ -566,6 +566,11 @@ input.button.is-primary:hover{background-color:var(--star)}
 .ab_footer_grid-toggle[aria-pressed="true"]{color:#ff6b6b}
 .ab_footer_grid-toggle:focus-visible{outline:2px solid var(--select)}
 @media (pointer:coarse){.ab_footer_grid-toggle{display:none}}
+/* Calm mode toggle (core/20-ui.js) borrows the grid toggle's look, but shows on touch too */
+.ab_footer_grid-toggle.is-calm{cursor:var(--hand,pointer)}
+.ab_footer_grid-toggle.is-calm[aria-pressed="true"]{color:var(--signal)}
+.ab_footer_grid-toggle.is-calm[aria-disabled="true"]{cursor:default;opacity:.7}
+@media (pointer:coarse){.ab_footer_grid-toggle.is-calm{display:inline}}
 
 /* ---------- global ui (injected) ---------- */
 .ab_toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,calc(100% + 60px));visibility:hidden;z-index:80;background:var(--panel);border:1px solid var(--signal);padding:12px 18px;font-family:var(--mono);font-size:13px;color:var(--star);transition:transform .45s cubic-bezier(.2,.9,.2,1.2);max-width:calc(100vw - 32px)}

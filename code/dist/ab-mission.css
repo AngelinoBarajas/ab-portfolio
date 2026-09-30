@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission.css v0.32.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission.css v0.33.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · ab-mission.css · Mission template (/work/[slug]) only. Script-built parts + states the Designer cannot express. */
 /* ---------- monitor internals (views are built by ab-mission; the monitor frame/decor lives in ab-core.css) ---------- */
 .ab_screen canvas{max-width:100%}
@@ -441,6 +441,8 @@ body.dock-on .toast{bottom:calc(86px + env(safe-area-inset-bottom,0px))}
 body.eng .crew-dock .dot{background:#7cc4ff;box-shadow:0 0 10px #7cc4ff}
 @media (max-width:620px){.crew-dock{bottom:calc(12px + env(safe-area-inset-bottom,0px));padding-left:10px}.crew-dock .mono{display:none}}
 @media (prefers-reduced-motion:reduce){.crew-dock{transition:opacity .2s,visibility .2s}}
+:where(html.ab-calm) .crew-dock{transition:opacity .2s,visibility .2s}
+
 
 
 /* ---------- hero: mission switcher (Missions list) + meta chips ---------- */
@@ -538,6 +540,10 @@ body.eng .crew-dock .dot{background:#7cc4ff;box-shadow:0 0 10px #7cc4ff}
 .ab_swatch:focus-visible{outline:2px solid var(--_color---ui--select);outline-offset:4px}
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion:reduce){.ab_mf_db li::after,.mf-radar .sweep,.mf-radar .blip,.ab_mf_dot,.roll,.ab_mon_rec::before{animation:none}.ab_mf_db li,.ab_mf_chk li{opacity:1;transform:none}.ab_mf_chk li::before{transform:none}}
+:where(html.ab-calm) .ab_mf_db li::after,:where(html.ab-calm) .mf-radar .sweep,:where(html.ab-calm) .mf-radar .blip,:where(html.ab-calm) .ab_mf_dot,:where(html.ab-calm) .roll,:where(html.ab-calm) .ab_mon_rec::before{animation:none}
+:where(html.ab-calm) .ab_mf_db li,:where(html.ab-calm) .ab_mf_chk li{opacity:1;transform:none}
+:where(html.ab-calm) .ab_mf_chk li::before{transform:none}
+
 
 /* ---------- production map CSS (Daniel Aguirre Law, scoped to .case-map) + 510 globe preview card ---------- */
 /* ---------- production map CSS (Daniel Aguirre Law, scoped to .case-map) ---------- */
@@ -635,6 +641,8 @@ body.eng .crew-dock .dot{background:#7cc4ff;box-shadow:0 0 10px #7cc4ff}
 @media (prefers-reduced-motion: reduce) {
   .section_hero .hero_filters > * { opacity: 1 !important; animation: none !important; transform: none !important; }
 }
+:where(html.ab-calm) .section_hero .hero_filters > *{opacity: 1 !important; animation: none !important; transform: none !important;}
+
 @media (max-width: 991px) {
   .case-map.is-fill { min-height: 0; width: 100%; margin-left: 0; }
   .case-map.is-fill .case-map_canvas-wrap { flex: none; aspect-ratio: 1.3 / 1; }
@@ -1586,3 +1594,5 @@ body.eng .crew-dock .dot{background:#7cc4ff;box-shadow:0 0 10px #7cc4ff}
 @keyframes ab-mfsig{0%{transform:scale(.8);opacity:.9}100%{transform:scale(4.4);opacity:0}}
 .ab_tel_u{font-size:.36em;letter-spacing:0;margin-left:.14em;font-weight:600;opacity:.75;vertical-align:.12em}
 @media (prefers-reduced-motion:reduce){.mf-orbit .mfo-sig{animation:none;opacity:.5}}
+:where(html.ab-calm) .mf-orbit .mfo-sig{animation:none;opacity:.5}
+

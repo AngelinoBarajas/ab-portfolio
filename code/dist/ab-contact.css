@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-contact.css v0.32.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-contact.css v0.33.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* =========================================================
    CONTACT (/contact) · open a channel. Page <head> <link>.
    Designer classes: section_contact-hero, ab_ct-*; script-built parts: abc-*.
@@ -90,6 +90,8 @@ textarea.abc-in{min-height:128px;resize:vertical}
   .ab_ct-route_btns .button{width:100%}
 }
 @media (prefers-reduced-motion:reduce){.abc-beacon{animation:none}}
+:where(html.ab-calm) .abc-beacon{animation:none}
+
 
 /* Other channels › Email: the uppercase display address overflowed its quarter-width cell and clipped "Copy".
    The address reads in mono lowercase on its own full-width row, Copy tag pinned right */

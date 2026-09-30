@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process.css v0.32.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process.css v0.33.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* Process (/process) · the flight planner. Loaded from the page <head>.
    Only what the Designer can't hold: font-stretch, outline text, script-built pieces (abp-*: chart planets + orbits,
    route path / ship / pad, gauge, chips, form fields), state classes (.is-on, aria-pressed), pseudos and reduced motion.
@@ -162,6 +162,10 @@
 }
 @media screen and (max-width:479px){.ab_chart{--ps:.66}}
 @media (prefers-reduced-motion:reduce){.abp-dock-moons i,.abp-dock-ks i{animation:none}.abp-dock.is-landed .abp-dock-sys::after{animation:none}.abp-dock-h,.abp-dock-pl{transition:none}}
+:where(html.ab-calm) .abp-dock-moons i,:where(html.ab-calm) .abp-dock-ks i{animation:none}
+:where(html.ab-calm) .abp-dock.is-landed .abp-dock-sys::after{animation:none}
+:where(html.ab-calm) .abp-dock-h,:where(html.ab-calm) .abp-dock-pl{transition:none}
+
 
 /* crew */
 .ab_crew_title{font-stretch:118%}
@@ -333,6 +337,9 @@ select.abp-in{appearance:none;-webkit-appearance:none;background-image:linear-gr
   .abp-dest.is-on .abp-tag{display:block}
 }
 @media (prefers-reduced-motion:reduce){.ab_crew_grid.has-sat .ab_crew_col,.abp-you::before,.abp-comms-dot,.abp-con-deco::before,.abp-con-led,.abp-ks-orb,.abp-spin,.abp-counter,.abp-flame,.ab_rec_dot.is-live,.ab_chart.is-adding .abp-dest .abp-pl{animation:none}.abp-arc-on,.ab_crew_tick svg{transition:none}}
+:where(html.ab-calm) .ab_crew_grid.has-sat .ab_crew_col,:where(html.ab-calm) .abp-you::before,:where(html.ab-calm) .abp-comms-dot,:where(html.ab-calm) .abp-con-deco::before,:where(html.ab-calm) .abp-con-led,:where(html.ab-calm) .abp-ks-orb,:where(html.ab-calm) .abp-spin,:where(html.ab-calm) .abp-counter,:where(html.ab-calm) .abp-flame,:where(html.ab-calm) .ab_rec_dot.is-live,:where(html.ab-calm) .ab_chart.is-adding .abp-dest .abp-pl{animation:none}
+:where(html.ab-calm) .abp-arc-on,:where(html.ab-calm) .ab_crew_tick svg{transition:none}
+
 /* the COMMS scope lives in a small instrument module: a light plate with corner screws, the dark screen set into it behind a bezel */
 .abp-comms-l{position:relative;padding:12px 16px 16px;border:1px solid var(--_color---neutral--hair-strong);
   background:radial-gradient(circle at 7px 7px,#b8b3a6 1.5px,transparent 2.3px),radial-gradient(circle at calc(100% - 7px) 7px,#b8b3a6 1.5px,transparent 2.3px),radial-gradient(circle at 7px calc(100% - 7px),#b8b3a6 1.5px,transparent 2.3px),radial-gradient(circle at calc(100% - 7px) calc(100% - 7px),#b8b3a6 1.5px,transparent 2.3px),linear-gradient(180deg,#fdfcf8,#eeebe2);

@@ -1,7 +1,12 @@
   /* ---------- base: helpers shared with the page bundles through window.AB ---------- */
   var AB = window.AB = window.AB || {};
   var hasGsap = !!window.gsap;
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // reduced motion = the system setting OR Calm mode (the visitor's own switch: footer bar / Shift+M, localStorage ab:calm).
+  // Every bundle reads AB.reduce; html.ab-calm (set in the head by abwarpin, again here) mirrors the CSS reduced-motion rules (build.mjs)
+  var sysReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches, calm = false;
+  try { calm = localStorage.getItem('ab:calm') === '1'; } catch (e){}
+  if (calm) document.documentElement.classList.add('ab-calm');
+  var reduce = sysReduce || calm;
   var coarse = window.matchMedia('(pointer: coarse)').matches;
   var $ = function(s, r){ return (r || document).querySelector(s); };
   var $$ = function(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
@@ -83,4 +88,4 @@
     })['catch'](function(){});
   }
 
-  Object.assign(AB, { hasGsap: hasGsap, reduce: reduce, coarse: coarse, $: $, $$: $$, num: num, esc: esc, pad2: pad2, hex: hex, rgbToHex: rgbToHex, onView: onView, settings: S0, quotes: QUOTES, gloss: GLOSS });
+  Object.assign(AB, { hasGsap: hasGsap, reduce: reduce, sysReduce: sysReduce, calm: calm, coarse: coarse, $: $, $$: $$, num: num, esc: esc, pad2: pad2, hex: hex, rgbToHex: rgbToHex, onView: onView, settings: S0, quotes: QUOTES, gloss: GLOSS });

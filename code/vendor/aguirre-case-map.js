@@ -334,7 +334,7 @@
     // Per-element timing is keyed off `elapsed` (ms since first frame). All windows
     // clamp to their final state, so after ~1.7s it's a normal static render forever.
     // Honors prefers-reduced-motion → everything snaps to final, no motion.
-    var REDUCE_MOTION = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var REDUCE_MOTION = !!((window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) || (window.AB && window.AB.reduce));
     var EN = {
       MAP_DUR:   700,                          // whole-group push-in (escale) settle
       OUT_START: 100, OUT_DUR: 520,            // state outlines fade (the structural first beat)

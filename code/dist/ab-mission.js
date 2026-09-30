@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission v0.32.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission v0.33.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abMissionInit) return;
@@ -394,7 +394,7 @@ window.Webflow.push(function(){
      Both are drawn on a fixed stage (1200×750, or 640×800 on phones) and scaled to fit.
      ========================================================= */
   var SCENE = (function(){
-    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var reduce = AB.reduce;
     var scenes = {}, active = null, EXT = {};
     function mk(tag, cls, html){ var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
     function q(r, s){ return r.querySelector(s); }

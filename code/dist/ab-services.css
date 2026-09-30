@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-services.css v0.32.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-services.css v0.33.0 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · Services template (/services/[slug]) · loaded in the template <head>.
    Webflow classes carry the layout; this file holds states, pseudo-elements and descendant rules Webflow can't. */
 
@@ -64,6 +64,8 @@
 @media (prefers-reduced-motion:reduce){
   .ab_sv_s,.ab_sv_s_p,.ab_sv_s_p span,.ab_sv_s_fx::before,.ab_sv_s_h,.ab_sv_s_a,.ab_sv_dl_ck,.ab_sv_dl_ck svg,.ab_sv_dl_ic,.ab_sv_plan_item,.ab_sv_plan_item::before,.ab_sv_rail_dot{transition:none}
 }
+:where(html.ab-calm) .ab_sv_s,:where(html.ab-calm) .ab_sv_s_p,:where(html.ab-calm) .ab_sv_s_p span,:where(html.ab-calm) .ab_sv_s_fx::before,:where(html.ab-calm) .ab_sv_s_h,:where(html.ab-calm) .ab_sv_s_a,:where(html.ab-calm) .ab_sv_dl_ck,:where(html.ab-calm) .ab_sv_dl_ck svg,:where(html.ab-calm) .ab_sv_dl_ic,:where(html.ab-calm) .ab_sv_plan_item,:where(html.ab-calm) .ab_sv_plan_item::before,:where(html.ab-calm) .ab_sv_rail_dot{transition:none}
+
 
 /* rail: fading edges + arrow when it scrolls sideways (script wraps it in .sv-rail-wrap) */
 .sv-rail-wrap{position:relative}
@@ -91,6 +93,8 @@
 .ab_bento-card.is-sv.sv-planet .ab_bento-card_text,.ab_bento-card.is-sv.sv-ink .ab_bento-card_text{color:rgba(242,240,234,.8)}
 .ab_bento-card.is-sv.sv-planet .ab_sv_dl_ic,.ab_bento-card.is-sv.sv-ink .ab_sv_dl_ic{color:#F2F0EA;border-color:rgba(242,240,234,.3)}
 @media (prefers-reduced-motion:reduce){.sv-rail-wrap .sv-rail-more span{animation:none!important}}
+:where(html.ab-calm) .sv-rail-wrap .sv-rail-more span{animation:none!important}
+
 .ab_bento-card.is-sv.sv-planet::before,.ab_bento-card.is-sv.sv-ink::before{border-color:rgba(242,240,234,.45)}
 
 /* Flight computer (Services template, replaces "Under the hood") · staging review 2026-09-28 (code/src/services/30-flight.js)
@@ -308,6 +312,10 @@
   .fc-body.is-switch{animation:none}
   .fc-ln,.fc-ln > b,.gb-row,.gb-row span,.ds-read span{transition:none}
 }
+:where(html.ab-calm) .fc-bar .rec::before,:where(html.ab-calm) .fc-mon[data-state="run"] .fc-state::before{animation:none}
+:where(html.ab-calm) .fc-body.is-switch{animation:none}
+:where(html.ab-calm) .fc-ln,:where(html.ab-calm) .fc-ln > b,:where(html.ab-calm) .gb-row,:where(html.ab-calm) .gb-row span,:where(html.ab-calm) .ds-read span{transition:none}
+
 
 /* webflow development · Navigator + nested boxes */
 .wf{width:100%;height:100%;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:16px;align-items:stretch}

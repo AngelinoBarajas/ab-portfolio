@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.32.0 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.33.0 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -7,7 +7,12 @@ window.Webflow.push(function(){
   /* ---------- base: helpers shared with the page bundles through window.AB ---------- */
   var AB = window.AB = window.AB || {};
   var hasGsap = !!window.gsap;
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // reduced motion = the system setting OR Calm mode (the visitor's own switch: footer bar / Shift+M, localStorage ab:calm).
+  // Every bundle reads AB.reduce; html.ab-calm (set in the head by abwarpin, again here) mirrors the CSS reduced-motion rules (build.mjs)
+  var sysReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches, calm = false;
+  try { calm = localStorage.getItem('ab:calm') === '1'; } catch (e){}
+  if (calm) document.documentElement.classList.add('ab-calm');
+  var reduce = sysReduce || calm;
   var coarse = window.matchMedia('(pointer: coarse)').matches;
   var $ = function(s, r){ return (r || document).querySelector(s); };
   var $$ = function(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
@@ -89,7 +94,7 @@ window.Webflow.push(function(){
     })['catch'](function(){});
   }
 
-  Object.assign(AB, { hasGsap: hasGsap, reduce: reduce, coarse: coarse, $: $, $$: $$, num: num, esc: esc, pad2: pad2, hex: hex, rgbToHex: rgbToHex, onView: onView, settings: S0, quotes: QUOTES, gloss: GLOSS });
+  Object.assign(AB, { hasGsap: hasGsap, reduce: reduce, sysReduce: sysReduce, calm: calm, coarse: coarse, $: $, $$: $$, num: num, esc: esc, pad2: pad2, hex: hex, rgbToHex: rgbToHex, onView: onView, settings: S0, quotes: QUOTES, gloss: GLOSS });
 
   /* ===== core/10-space.js ===== */
 
@@ -483,6 +488,32 @@ window.Webflow.push(function(){
     gbtn.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleGrid(); } });
   }
   document.addEventListener('keydown', function(e){ if (e.shiftKey && (e.key === 'G' || e.key === 'g') && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){ e.preventDefault(); toggleGrid(); } });
+
+  /* ---------- Calm mode (footer bar toggle, Shift+M): the visitor's own reduced-motion switch ----------
+     Stored in localStorage ab:calm and applied on reload (00-base reads it into AB.reduce, abwarpin sets html.ab-calm
+     before first paint), so every animation takes the same path as the system setting. A device that already asks
+     for less motion shows it as on and locked. */
+  (function(){
+    var bar = $('.ab_footer_bar'), btn = document.createElement('span');
+    function label(){ return 'Calm mode · ' + (reduce ? 'On' : 'Off') + (AB.sysReduce ? ' (device setting)' : ''); }
+    function flip(){
+      if (AB.sysReduce){ toast('Your device asks for reduced motion, so Calm mode stays on.'); return; }
+      try { if (AB.calm) localStorage.removeItem('ab:calm'); else localStorage.setItem('ab:calm', '1'); }
+      catch (er){ toast('Calm mode needs site storage, which this browser is blocking.'); return; }
+      toast(AB.calm ? 'Calm mode off · motion back on' : 'Calm mode on · motion off');
+      setTimeout(function(){ location.reload(); }, 450);
+    }
+    btn.className = 'ab_footer_grid-toggle is-calm'; btn.id = 'calmToggle';
+    btn.setAttribute('role', 'button'); btn.tabIndex = 0;
+    btn.setAttribute('aria-pressed', reduce ? 'true' : 'false');
+    if (AB.sysReduce) btn.setAttribute('aria-disabled', 'true');
+    btn.title = 'Turn the site’s motion ' + (reduce ? 'back on' : 'off') + ' (Shift+M)';
+    btn.textContent = label();
+    btn.addEventListener('click', flip);
+    btn.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); flip(); } });
+    if (bar){ if (gbtn && gbtn.parentNode === bar) bar.insertBefore(btn, gbtn); else bar.appendChild(btn); }
+    document.addEventListener('keydown', function(e){ if (e.shiftKey && (e.key === 'M' || e.key === 'm') && !e.ctrlKey && !e.metaKey && !e.altKey && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && !document.activeElement.isContentEditable){ e.preventDefault(); flip(); } });
+  })();
 
   /* ---------- copy the email ([data-copy-email]) ---------- */
   $$('[data-copy-email]').forEach(function(b){

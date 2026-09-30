@@ -66,6 +66,32 @@
   }
   document.addEventListener('keydown', function(e){ if (e.shiftKey && (e.key === 'G' || e.key === 'g') && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){ e.preventDefault(); toggleGrid(); } });
 
+  /* ---------- Calm mode (footer bar toggle, Shift+M): the visitor's own reduced-motion switch ----------
+     Stored in localStorage ab:calm and applied on reload (00-base reads it into AB.reduce, abwarpin sets html.ab-calm
+     before first paint), so every animation takes the same path as the system setting. A device that already asks
+     for less motion shows it as on and locked. */
+  (function(){
+    var bar = $('.ab_footer_bar'), btn = document.createElement('span');
+    function label(){ return 'Calm mode · ' + (reduce ? 'On' : 'Off') + (AB.sysReduce ? ' (device setting)' : ''); }
+    function flip(){
+      if (AB.sysReduce){ toast('Your device asks for reduced motion, so Calm mode stays on.'); return; }
+      try { if (AB.calm) localStorage.removeItem('ab:calm'); else localStorage.setItem('ab:calm', '1'); }
+      catch (er){ toast('Calm mode needs site storage, which this browser is blocking.'); return; }
+      toast(AB.calm ? 'Calm mode off · motion back on' : 'Calm mode on · motion off');
+      setTimeout(function(){ location.reload(); }, 450);
+    }
+    btn.className = 'ab_footer_grid-toggle is-calm'; btn.id = 'calmToggle';
+    btn.setAttribute('role', 'button'); btn.tabIndex = 0;
+    btn.setAttribute('aria-pressed', reduce ? 'true' : 'false');
+    if (AB.sysReduce) btn.setAttribute('aria-disabled', 'true');
+    btn.title = 'Turn the site’s motion ' + (reduce ? 'back on' : 'off') + ' (Shift+M)';
+    btn.textContent = label();
+    btn.addEventListener('click', flip);
+    btn.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); flip(); } });
+    if (bar){ if (gbtn && gbtn.parentNode === bar) bar.insertBefore(btn, gbtn); else bar.appendChild(btn); }
+    document.addEventListener('keydown', function(e){ if (e.shiftKey && (e.key === 'M' || e.key === 'm') && !e.ctrlKey && !e.metaKey && !e.altKey && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && !document.activeElement.isContentEditable){ e.preventDefault(); flip(); } });
+  })();
+
   /* ---------- copy the email ([data-copy-email]) ---------- */
   $$('[data-copy-email]').forEach(function(b){
     b.addEventListener('click', function(e){
