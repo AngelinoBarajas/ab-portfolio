@@ -107,3 +107,5 @@ Placeholders in `docs/placeholders.md` (email, socials, 4 pin images, testimonia
 ## Logo v2 (2026-09-30)
 - [ ] **L1. Fallback logo image:** Nav component and Footer component › `.ab_nav_logo` › the Image (`.ab_logo-img`) › Settings › Replace image › asset `ab-logo-v2.svg`. Keep height 24px. (Only visitors without JavaScript see it; the script draws the live logo.)
 - [ ] **L2. Favicon + webclip:** Site settings › General › upload `logo/favicon-32.png` (favicon) and `logo/webclip-512.png` (webclip; 256 also available).
+- [ ] **L3. Mission stylesheet v0.33.16:** Missions template › Page settings › Custom code › Inside <head> tag: replace ONLY the ab-mission.css `<link>` line (leave the robots meta with its binding untouched) with:
+  `<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.33.16/code/dist/ab-mission.prod.css" integrity="sha384-Kj06O2G+agmjZk1RihQOzoyU+4QJ+41lh91SUSZhRiBxOVsaEa5aG+Fke9CqtMJF" crossorigin="anonymous">`
