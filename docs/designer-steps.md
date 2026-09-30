@@ -103,3 +103,7 @@ Back up the current field first (paste into `webflow/backup/`). Insert each `[Fi
 
 ## Not Designer (content Angelino supplies)
 Placeholders in `docs/placeholders.md` (email, socials, 4 pin images, testimonials, `[X–Y weeks]`), metrics numbers, pin coordinates (Lincoln Center / ON NYC), copy review (AB Identity, Aguirre site-plan board, Services WebGL title).
+
+## Logo v2 (2026-09-30)
+- [ ] **L1. Fallback logo image:** Nav component and Footer component › `.ab_nav_logo` › the Image (`.ab_logo-img`) › Settings › Replace image › asset `ab-logo-v2.svg`. Keep height 24px. (Only visitors without JavaScript see it; the script draws the live logo.)
+- [ ] **L2. Favicon + webclip:** Site settings › General › upload `logo/favicon-32.png` (favicon) and `logo/webclip-512.png` (webclip; 256 also available).

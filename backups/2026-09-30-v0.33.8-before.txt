@@ -1,0 +1,5 @@
+Before v0.33.8 (logo v2), 2026-09-30
+Site scripts: gsap..flip 3.13.0, lenis 1.3.26 (footer), abwarpin 0.5.0 (header), abcore 0.33.6 (footer, last)
+Site head: ab-core.css link @v0.33.6 integrity sha384-uIGm0uZOk2yF9NogPDYqVwBVl9rPwg0Z3RQGZnsRwWUuSGLpbU2cCrQj2vJ/hBNG (plus preconnect + Archivo preload, unchanged)
+About page 6ab6d8aa86c563fd3f8b64a4: ababout 0.33.7 footer; head ab-about.css @v0.33.7 sha384-M2Leduxi7jChwvO1rt3qv5AsLYruQBKUGBhxBt9N7MEoWp5kSzCwE/u9K7peZtFM
+Missions template 6ab602e48e2fa6779570a308: abmission 0.28.6 footer, abknowledge 0.25.5 footer (in that order)

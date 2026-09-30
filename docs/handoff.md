@@ -2,6 +2,14 @@
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
+## Logo v2 (2026-09-30, v0.33.8) · verified on staging 2026-09-30
+
+Live: ab-core JS + CSS **v0.33.8** (site-wide), ab-about JS + CSS **v0.33.8**, ab-mission JS **v0.33.8** (Missions template; CSS still 0.26.5, its head needs a Designer edit). Backup `backups/2026-09-30-v0.33.8-before.txt`.
+- **Source:** `logo/AB Logo v2.svg` (Angelino's). A and B are unchanged; the planet + ring is now its own path (orange `#f36c42`) and the A's right leg under it is a separate white path. `AB.MARK` = a, leg, b, planet; `markPaths()` draws lg-a, lg-leg, lg-b, lg-planet (planet last). Planet color `var(--mark-planet,#f36c42)`; Home nav letters stay orange with a white planet (`.ab_nav_logo.is-home{--mark-planet:var(--star)}`), his call pending. Contexts that recolor all paths need `:not(.lg-planet)` (Work card cover fixed); the Services Branding demo keeps its own planet-color story.
+- **Intro:** `core/22-logo.js` › `sphere()`: a solid sphere under `.lg-planet` with 8 front-side meridians (half-ellipse arcs on the 21.5° ring axis, rAF, 540° ease-out over 2.3 s), latitude rings, shading; a mask circle opens the 68-unit core at 1.6 s (CSS), CSS fades the layer by 2.6 s, JS removes it at 2.9 s. The whole-mark warp no longer rotates. Continuous spin tried and rejected (invisible at 24 px, busy at large sizes): `prototypes/logo-spin.html`.
+- **Identity debrief:** Sketch winner + Illustrator scene trace four paths (layers A stroke, A leg, B, Planet + ring); planet-specific logic keyed by name. The Illustrator color step's orange planet rule is in ab-mission.css (unreleased).
+- **Favicon/webclip:** `logo/favicon-32.png`, `webclip-256.png`, `webclip-512.png` regenerated (Designer upload). Fallback image asset **`6abc73b3d5dccb4f1a7f29ad`** (`ab-logo-v2.svg`) uploaded; swap it into the Nav + Footer `.ab_logo-img` (Designer).
+
 ## Hidden boss fight (2026-09-29, v0.33.7) · verified on staging 2026-09-30
 
 Live: ab-about JS + CSS **v0.33.7** (backup `backups/2026-09-29-v0.33.7-about-before.txt`). At Angelino's ask (`about/10-boss.js`):
