@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.33.15 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.33.16 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -355,6 +355,18 @@ window.Webflow.push(function(){
         .to(sf && sf.state ? sf.state : {}, { warp: .6, duration: .6, ease: 'power2.in' }, '<-.1')
         .add(function(){ AB.go(url); }, '-=.15');
     }
+    // magnetic: while hovered the whole wormhole leans toward the cursor (18% of the offset, capped at 8% of its size),
+    // springs home on leave; mouse only, off under reduced motion and during the fall
+    if (hasGsap && !reduce && !coarse){
+      var mgx = gsap.quickTo(body, 'x', { duration: .7, ease: 'power3.out' }), mgy = gsap.quickTo(body, 'y', { duration: .7, ease: 'power3.out' });
+      el.addEventListener('pointermove', function(e){
+        if (e.pointerType === 'touch' || el.classList.contains('is-go')) return;
+        var q = el.getBoundingClientRect(), lim = q.width * .08;
+        mgx(Math.max(-lim, Math.min(lim, (e.clientX - q.left - q.width / 2) * .18)));
+        mgy(Math.max(-lim, Math.min(lim, (e.clientY - q.top - q.height / 2) * .18)));
+      });
+      el.addEventListener('pointerleave', function(e){ if (e.pointerType !== 'touch') gsap.to(body, { x: 0, y: 0, duration: 1.1, ease: 'elastic.out(1,.4)', overwrite: true }); });
+    }
     el.addEventListener('pointerenter', function(e){ if (e.pointerType !== 'touch') hot(true); });
     el.addEventListener('pointerleave', function(e){ if (e.pointerType !== 'touch') hot(false); });
     el.addEventListener('focus', function(){ hot(true); }); el.addEventListener('blur', function(){ hot(false); });
@@ -511,7 +523,7 @@ window.Webflow.push(function(){
       LENSES.forEach(function(o){
         o.b += (o.to - o.b) * (dt ? Math.min(1, dt * 4) : 1);
         var r = o.el.getBoundingClientRect(); if (!r.width || r.bottom < -200 || r.top > h + 200) return;
-        var R = r.width / 2, th = R * (1.06 + o.b * .22 + (o.b > .05 ? Math.sin(time * .011) * .05 * Math.min(1, o.b) : 0));
+        var R = r.width / 2, th = R * (1.06 + o.b * .34 + (o.b > .05 ? Math.sin(time * .0035) * .1 * Math.min(1, o.b) : 0));
         LS.push({ x: r.left + R, y: r.top + R, t: th, a: th * 3, z: th * 7 });
       });
       for (var i = 0; i < stars.length; i++){
@@ -1009,6 +1021,7 @@ window.Webflow.push(function(){
     ['konami', 'Enter the cheat code', 'Some codes never die. Up, up… (on a phone, swipe it on the Player one screen, then tap twice).'],
     ['badge', 'Flip the crew badge', 'Every ID has a back side.'],
     ['lanyard', 'Swing the lanyard', 'That badge is on a string for a reason.'],
+    ['untethered', 'Cut the pilot loose', 'The astronaut on the About page is on a tether. Tethers have limits.'],
     ['book', 'Knock a book off the shelf', 'The bookshelf is a little crowded.'],
     ['endurance', 'Fly the Endurance close', 'Get close to something very heavy.'],
     ['escape', 'Break the Endurance free', 'Near the horizon? Hit the thrusters: tap the black hole, fast.'],

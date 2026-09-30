@@ -6,6 +6,7 @@
     ['konami', 'Enter the cheat code', 'Some codes never die. Up, up… (on a phone, swipe it on the Player one screen, then tap twice).'],
     ['badge', 'Flip the crew badge', 'Every ID has a back side.'],
     ['lanyard', 'Swing the lanyard', 'That badge is on a string for a reason.'],
+    ['untethered', 'Cut the pilot loose', 'The astronaut on the About page is on a tether. Tethers have limits.'],
     ['book', 'Knock a book off the shelf', 'The bookshelf is a little crowded.'],
     ['endurance', 'Fly the Endurance close', 'Get close to something very heavy.'],
     ['escape', 'Break the Endurance free', 'Near the horizon? Hit the thrusters: tap the black hole, fast.'],
