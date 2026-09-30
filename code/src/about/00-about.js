@@ -68,13 +68,16 @@
     });
     // moons: kept in the planet's body so they follow a drag; they pass behind the planet on the far side
     var MOONS = [
-      { cls: 'is-wife', tag: 'Moon · wife', rx: 1.55, ry: .5, rot: 30, size: .22, period: 14, phase: .2 },
-      { cls: 'is-son', tag: 'Moon · son', rx: 1.12, ry: .36, rot: -8, size: .15, period: 8.5, phase: 2.4 }
+      // textured by the site's planet generator like every other planet (green = her favorite, purple = his)
+      { cls: 'is-wife', tag: 'Moon · wife', rx: 1.55, ry: .5, rot: 30, size: .22, period: 14, phase: .2, type: 'ocean', seed: 42, colors: '#0b3326,#15694a,#3fe08e,#c8f7df,#0e4a34' },
+      { cls: 'is-son', tag: 'Moon · son', rx: 1.12, ry: .36, rot: -8, size: .15, period: 8.5, phase: 2.4, type: 'crystal', seed: 27, colors: '#1f1650,#4a33b8,#9b7dff,#e6ddff,#2e2378' }
     ].map(function(m){
       var el = document.createElement('div'); el.className = 'ab_moon ' + m.cls; el.setAttribute('aria-hidden', 'true');
-      el.innerHTML = '<span class="ab_moon_body"></span><span class="ab_moon_tag">' + m.tag + '</span>';
+      el.innerHTML = '<span class="ab_moon_body"><span class="ab_planet" data-planet="' + m.type + '" data-seed="' + m.seed + '" data-colors="' + m.colors + '" data-spin="50" aria-hidden="true"></span></span><span class="ab_moon_tag">' + m.tag + '</span>';
       el.style.width = el.style.height = (m.size * 100) + '%';
-      body.appendChild(el); m.el = el; return m;
+      body.appendChild(el); m.el = el;
+      if (AB.buildPlanet) AB.buildPlanet($('.ab_planet', el));
+      return m;
     });
     var t0 = Date.now();
     function place(t){
@@ -227,7 +230,26 @@
       '<path d="M20 18.5c5.2 0 7.6 4.4 7.6 11.4v10" fill="none" stroke="url(#abcl-r)" stroke-width="2.6" stroke-linecap="round"/>' +
       '<rect x="25.4" y="30" width="4.4" height="7" rx="1" fill="#c9ccd4" stroke="#5b5f6b" stroke-width=".5"/>' +
       '<path d="M12.4 44.5v5.5" stroke="#2a2c33" stroke-width="2.6" stroke-linecap="round" opacity=".9"/></svg>';
-    var clasp = document.createElement('div'); clasp.className = 'ab_badge_clasp'; clasp.innerHTML = CLASP; badge.appendChild(clasp);
+    // it hangs from the swing wrapper, not the badge: the badge's 3D hover tilt and its flip used to carry the clasp away
+    // from the strap (which never tilts); now it swings with the card but stays flat while the card turns on it
+    var clasp = document.createElement('div'); clasp.className = 'ab_badge_clasp'; clasp.innerHTML = CLASP;
+    var swingEl = badge.parentNode; swingEl.insertBefore(clasp, badge);
+
+    // barcode: hover (tap on touch) runs a laser across it and the clearance line answers; a tap here scans instead of flipping
+    var bc = $('.ab_badge_barcode', front), clr = $('.ab_badge_clear', front);
+    if (bc){
+      var laser = document.createElement('i'); laser.className = 'ab_bc_laser'; laser.setAttribute('aria-hidden', 'true'); bc.appendChild(laser);
+      var clr0 = clr ? clr.innerHTML : '', bt, bt2;
+      var scan = function(){
+        if (bc.classList.contains('is-scan')) return;
+        bc.classList.add('is-scan');
+        bt2 = setTimeout(function(){ if (clr){ clr.innerHTML = 'Scan OK · AB-001<br>Access granted'; clr.classList.add('is-ok'); } }, reduce ? 0 : 750);
+        clearTimeout(bt); bt = setTimeout(function(){ bc.classList.remove('is-scan'); if (clr){ clr.innerHTML = clr0; clr.classList.remove('is-ok'); } }, 2800);
+      };
+      bc.addEventListener('pointerenter', function(e){ if (e.pointerType === 'mouse') scan(); });
+      bc.addEventListener('pointerdown', function(e){ e.stopPropagation(); scan(); });
+      bc.addEventListener('click', function(e){ e.stopPropagation(); });
+    }
     wrap.classList.add('has-clasp');
     var SHORT = 44;
     var render0 = render;

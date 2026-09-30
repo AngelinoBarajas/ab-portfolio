@@ -18,7 +18,8 @@
 .ab_moon_body{position:absolute;inset:0;border-radius:50%}
 .ab_moon.is-wife .ab_moon_body{background:radial-gradient(circle at 34% 30%,#e3fff1,#4cf2a0 45%,#11643e 85%);box-shadow:0 0 14px rgba(76,242,160,.55)}
 .ab_moon.is-son .ab_moon_body{background:radial-gradient(circle at 34% 30%,#f3e9ff,#9b7dff 45%,#3a2a78 80%);box-shadow:0 0 12px rgba(155,125,255,.55)}
-.ab_moon_body::after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:inset -3px -2px 5px rgba(0,0,0,.6)}
+.ab_moon_body::after{content:"";position:absolute;inset:0;border-radius:50%;z-index:2;box-shadow:inset -3px -2px 5px rgba(0,0,0,.6)}
+.ab_moon_body > .ab_planet{position:absolute;inset:0;width:100%;height:100%;margin:0}
 .ab_moon_tag{position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;color:var(--star);background:rgba(7,8,13,.8);border:1px solid var(--hair);padding:2px 6px;opacity:0;transition:opacity .3s}
 .ab_planet.is-pilot:hover .ab_moon_tag,.ab_planet.is-pilot:focus-visible .ab_moon_tag{opacity:1}
 
@@ -65,7 +66,17 @@
 .ab_badge_barcode i.w{width:4px}
 .ab_badge_barcode i.g{background:transparent}
 /* badge upgrades (2026-09-30): clasp through the slot, worn laminate, mission patches on the back */
-.ab_badge_clasp{position:absolute;left:50%;top:-26px;width:40px;height:62px;margin-left:-20px;z-index:4;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.55))}
+.ab_badge_swing{position:relative}
+/* the hover tilt pivots on the slot, so the card turns under the clasp instead of sliding away from it */
+.ab_badge{transform-origin:50% 23px}
+.ab_badge_barcode{position:relative;cursor:crosshair}
+.ab_bc_laser{position:absolute;top:-4px;bottom:-4px;left:0;width:2px;background:#ff4a3d;box-shadow:0 0 6px 1px rgba(255,74,61,.8);opacity:0;pointer-events:none}
+.ab_badge_barcode.is-scan .ab_bc_laser{animation:ab-bc-scan .75s ease-in-out 1}
+@keyframes ab-bc-scan{0%{left:0;opacity:0}10%{opacity:1}50%{left:calc(100% - 2px)}90%{opacity:1}100%{left:0;opacity:0}}
+.ab_badge_clear{transition:color .3s}
+.ab_badge_clear.is-ok{color:#3fe08e}
+@media (prefers-reduced-motion:reduce){.ab_badge_barcode.is-scan .ab_bc_laser{animation:none}}
+.ab_badge_clasp{position:absolute;left:50%;top:-26px;width:40px;height:62px;margin-left:-20px;z-index:4;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.55));transform:translateZ(0);will-change:transform}
 .ab_badge_clasp svg{display:block;width:100%;height:100%}
 .ab_badge_wear{position:absolute;inset:0;z-index:3;pointer-events:none;mix-blend-mode:screen}
 .ab_badge_wear svg{display:block;width:100%;height:100%}
