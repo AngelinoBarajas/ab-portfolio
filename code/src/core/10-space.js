@@ -227,9 +227,7 @@
     var paint = function(){ farTx = farSide(sz > 240 ? 512 : 320); $$('.wh-far i', body).forEach(function(i){ i.style.backgroundImage = 'url(' + farTx + ')'; }); body.classList.add('on'); };
     if ('requestIdleCallback' in window) requestIdleCallback(paint, { timeout: 800 }); else setTimeout(paint, 30);
     var lens = { el: $('.wh-ball', body), b: 0, to: 0 }; LENSES.push(lens);
-    var hiCv = null;
-    function hi(){ if (!hiCv) hiCv = farCanvas(coarse ? 1536 : 2048); }
-    function hot(on){ el.classList.toggle('is-hot', on); if (!el.classList.contains('is-go')) lens.to = on ? 1 : 0; if (on && !hiCv) setTimeout(hi, 0); }
+    function hot(on){ el.classList.toggle('is-hot', on); if (!el.classList.contains('is-go')) lens.to = on ? 1 : 0; }
     function fall(){
       if (el.classList.contains('is-go')) return;
       var list = wormLinks(), url = list[Math.random() * list.length | 0];
@@ -239,45 +237,18 @@
       if (reduce || !hasGsap || !AB.go){ location.href = url; return; }
       tunnel(url);
     }
-    // falling in: the far galaxy opens out of the wormhole's own spot (a circular window growing to fill the screen) while
-    // the view zooms into it and turns; the bright rim widens past the edges and the starfield streaks toward the hole.
-    // Then AB.go's warp flash takes over (it sits above the tunnel) and the next page loads.
+    // falling in: the wormhole pulls in and flares out while the starfield goes to hyperspeed around it (warp centered on the
+    // hole), then AB.go fades the page to black and loads the next one. No image hand-off and no CSS filter on the ball
+    // (a filter re-rasterizes its layers and flashed it black for a frame or two), so nothing can redraw.
     function tunnel(url){
-      var ball = $('.wh-ball', body), farA = $('.wh-far .is-a', body);
-      hi();
-      // the ball dips first; the tunnel takes over only after, starting as an exact copy of what the ball shows
-      gsap.to(ball, { scale: .9, duration: .18, ease: 'power2.out', onComplete: open });
-      function open(){
-        var r = ball.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2, R = Math.min(r.width, r.height) / 2;
-        var D = Math.sqrt(Math.pow(Math.max(x, innerWidth - x), 2) + Math.pow(Math.max(y, innerHeight - y), 2)) + 60;
-        // the ball's galaxy layer: 112% of the ball (inset -6%), turning with scale 1.18 (wh-turn); read its live angle + scale
-        var ang = 0, k = 1.18, m = farA ? getComputedStyle(farA).transform : 'none';
-        if (m && m !== 'none'){ var v = m.match(/-?[\d.]+(e-?\d+)?/g).map(Number); ang = Math.atan2(v[1], v[0]) * 180 / Math.PI; k = Math.sqrt(v[0] * v[0] + v[1] * v[1]); }
-        var size = (farA ? farA.offsetWidth : ball.offsetWidth * 1.12) * k * (R * 2 / (ball.offsetWidth || R * 2));
-        var t = document.createElement('div'); t.className = 'wh-tunnel'; t.setAttribute('aria-hidden', 'true');
-        var ring = document.createElement('div'); ring.className = 'wh-tunnel-ring'; ring.setAttribute('aria-hidden', 'true');
-        var lens = document.createElement('div'); lens.className = 'wh-tunnel-lens';
-        var tex = hiCv; t.appendChild(tex); t.appendChild(lens);
-        tex.style.cssText = 'left:' + (x - size / 2) + 'px;top:' + (y - size / 2) + 'px;width:' + size + 'px;height:' + size + 'px;border-radius:0';
-        gsap.set(tex, { rotation: ang, scale: 1, transformOrigin: '50% 50%' });
-        var st = { r: R };
-        function paintR(){
-          t.style.clipPath = 'circle(' + st.r.toFixed(1) + 'px at ' + x.toFixed(1) + 'px ' + y.toFixed(1) + 'px)';
-          gsap.set([ring, lens], { left: x - st.r, top: y - st.r, width: st.r * 2, height: st.r * 2 });
-        }
-        paintR();
-        document.body.appendChild(t); document.body.appendChild(ring);
-        gsap.set(ball, { opacity: 0 });
-        if (sf && sf.state){ sf.state.cx = x; sf.state.cy = y; }
-        // the zoom stops short of the texture's resolution, and AB.go's flash starts before the window finishes so it never looks soft
-        gsap.timeline()
-          .to(st, { r: D, duration: 1, ease: 'power3.in', onUpdate: paintR })
-          .to(tex, { scale: Math.min(D / (size / 2) * 1.3, 5), rotation: ang + 40, duration: 1, ease: 'power2.in' }, '<')
-          .to(lens, { opacity: 0, duration: .45, ease: 'power1.in' }, '<')
-          .add(function(){ AB.go(url); }, '<.72')
-          .to(ring, { opacity: 0, duration: .25 }, '-=.25')
-          .to(sf && sf.state ? sf.state : {}, { warp: .7, duration: 1, ease: 'power2.in' }, '<-.75');
-      }
+      var ball = $('.wh-ball', body), r = ball.getBoundingClientRect();
+      if (sf && sf.state){ sf.state.cx = r.left + r.width / 2; sf.state.cy = r.top + r.height / 2; }
+      gsap.timeline()
+        .to(ball, { scale: .86, duration: .16, ease: 'power2.out' })
+        .to(ball, { scale: 1.12, opacity: 0, duration: .45, ease: 'power2.in' })
+        .to(el.querySelector('.wh-halo'), { scale: 2.2, opacity: 0, duration: .45, ease: 'power2.in' }, '<')
+        .to(sf && sf.state ? sf.state : {}, { warp: .6, duration: .6, ease: 'power2.in' }, '<-.1')
+        .add(function(){ AB.go(url); }, '-=.15');
     }
     el.addEventListener('pointerenter', function(e){ if (e.pointerType !== 'touch') hot(true); });
     el.addEventListener('pointerleave', function(e){ if (e.pointerType !== 'touch') hot(false); });

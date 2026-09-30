@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.33.14 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.33.15 · github.com/AngelinoBarajas/ab-portfolio */
 /* click cursor: a spacesuit glove (hotspot on the fingertip); every clickable uses var(--hand) */
 :root{--hand:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 32 32%22%3E%3Cg stroke=%22%230B0C14%22 stroke-width=%221.3%22 stroke-linejoin=%22round%22%3E%3Crect x=%222.6%22 y=%2213.6%22 width=%225.8%22 height=%2210.5%22 rx=%222.9%22 transform=%22rotate%28-42 5.5 18.8%29%22 fill=%22%23E4E1D8%22/%3E%3Crect x=%229.5%22 y=%221.2%22 width=%226.4%22 height=%2217%22 rx=%223.2%22 fill=%22%23F7F5EF%22/%3E%3Crect x=%2215.6%22 y=%2210.2%22 width=%225.4%22 height=%229.5%22 rx=%222.7%22 fill=%22%23F7F5EF%22/%3E%3Crect x=%2220.6%22 y=%2211.4%22 width=%225.2%22 height=%228.8%22 rx=%222.6%22 fill=%22%23F7F5EF%22/%3E%3Crect x=%2225.2%22 y=%2213%22 width=%224.6%22 height=%227.8%22 rx=%222.3%22 fill=%22%23F7F5EF%22/%3E%3Cpath d=%22M8.4 16.5H29.6V21.5C29.6 25 27.2 27 24 27H14C10.6 27 8.4 24.6 8.4 21.5Z%22 fill=%22%23F7F5EF%22/%3E%3Crect x=%229.2%22 y=%2225.4%22 width=%2220.6%22 height=%225.6%22 rx=%221.4%22 fill=%22%23FF6A3D%22/%3E%3C/g%3E%3Cg stroke=%22%238A8FA3%22 stroke-width=%22.8%22 fill=%22none%22 stroke-linecap=%22round%22%3E%3Cpath d=%22M10.6 7.2H14.8M10.6 11.8H14.8M12 21.2H26%22/%3E%3C/g%3E%3Cpath d=%22M9.2 28.2H29.8%22 stroke=%22%230B0C14%22 stroke-width=%22.8%22/%3E%3C/svg%3E") 12 1,pointer}
 a[href],button:not(:disabled),[role="button"],summary,label[for],select,input[type="submit"],input[type="checkbox"],input[type="radio"]{cursor:var(--hand)}
@@ -100,12 +100,6 @@ html.ab-warp-in body::after{content:"";position:fixed;inset:0;z-index:70;pointer
 .is-wormhole.is-hot .wh-halo{transform:scale(1.18)}
 .is-wormhole:focus-visible .wh-ball{box-shadow:0 0 0 2px var(--select,#4C8DFF),0 0 calc(var(--sz,200px) * .22) rgba(140,190,255,.3)}
 .is-wormhole.is-go .wh-ball{animation:none}
-/* the fall (buildWormhole › tunnel): a window onto the far galaxy grows from the hole to the whole screen, under the warp flash (z 70) */
-.wh-tunnel{position:fixed;inset:0;z-index:68;pointer-events:none;overflow:hidden;background:#03040a}
-.wh-tunnel canvas{position:absolute;border-radius:50%;will-change:transform}
-/* the ball's dark rim falloff + glass highlights, laid over the tunnel's first frames so the hand-off is seamless, then faded */
-.wh-tunnel-lens{position:fixed;border-radius:50%;pointer-events:none;background:radial-gradient(circle at 31% 25%,rgba(255,255,255,.5),rgba(255,255,255,.12) 11%,transparent 27%),radial-gradient(closest-side,transparent 56%,rgba(4,6,14,.3) 84%,rgba(120,170,255,.12) 100%);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.85),inset 0 0 18px rgba(200,230,255,.6)}
-.wh-tunnel-ring{position:fixed;z-index:69;border-radius:50%;pointer-events:none;box-shadow:0 0 0 2px rgba(235,246,255,.95),0 0 34px 8px rgba(150,200,255,.55),inset 0 0 50px rgba(150,200,255,.5)}
 .is-wormhole.is-go .wh-tip{opacity:0!important}
 .wh-tip{position:absolute;left:50%;bottom:calc(100% + 14px);z-index:6;display:grid;gap:3px;min-width:200px;padding:10px 12px;transform:translate(-50%,6px);opacity:0;pointer-events:none;
   background:rgba(11,12,20,.92);border:1px solid var(--hair2,rgba(255,255,255,.16));font-family:var(--_typography---font--mono);font-size:11px;line-height:1.4;letter-spacing:.06em;text-align:left;color:var(--dust,#9aa0b4);transition:opacity .25s,transform .35s cubic-bezier(.2,.9,.2,1.3)}
