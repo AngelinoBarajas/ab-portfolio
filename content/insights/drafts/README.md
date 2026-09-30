@@ -24,6 +24,8 @@ Voice: first person, plain, US spelling, a little playful. No invented clients, 
 | 16 | Less is a bore: when websites got boring, and why I built this one loud | Why before how | Motion, Interactive 3D + data, Design systems |
 | 17 | Mercury, Gemini, Apollo: how to start a big, slightly crazy website | Why before how | Webflow development, Design systems |
 | 18 | Why designers are the hardest audience for a loud website | Why before how | Branding, Motion |
+| 19 | The Alchemist and the treasure under the sycamore: why I stopped chasing design trends | Why before how | Branding, Design systems |
+| 20 | STAY: Interstellar, love and designing a message for someone you'll never meet | Why before how | Webflow development, CMS integrations |
 
 Proposed library themes: **Build notes** (Webflow tutorials from real builds) and **Why before how** (philosophy meets science). Topic tags are suggestions for the shared vocabulary; the integration chat maps them to the real Topics collection.
 

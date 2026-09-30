@@ -60,6 +60,8 @@
     "15": ["philosophy-at-work", "knowledge-system", "micro-interaction"],
     "16": ["philosophy-at-work", "motion-scroll", "design-systems"],
     "17": ["discovery", "prototyping", "scope-creep"],
-    "18": ["philosophy-at-work", "better-questions", "brand-identity"]
+    "18": ["philosophy-at-work", "better-questions", "brand-identity"],
+    "19": ["philosophy-at-work", "brand-identity", "better-questions"],
+    "20": ["philosophy-at-work", "handoff", "science-of-time"]
   }
 }
