@@ -227,6 +227,35 @@
     var paint = function(){ farTx = farSide(sz > 240 ? 512 : 320); $$('.wh-far i', body).forEach(function(i){ i.style.backgroundImage = 'url(' + farTx + ')'; }); body.classList.add('on'); };
     if ('requestIdleCallback' in window) requestIdleCallback(paint, { timeout: 800 }); else setTimeout(paint, 30);
     var lens = { el: $('.wh-ball', body), b: 0, to: 0 }; LENSES.push(lens);
+    // probes: now and then one drifts past, gets caught, spirals in (faster, stretching) and is gone: "signal lost".
+    // Only while the wormhole is on screen, never under reduced motion or during the fall.
+    if (hasGsap && !reduce){
+      var PROBE = '<svg viewBox="0 0 32 20" aria-hidden="true"><path d="M0 7h9v6H0zM23 7h9v6h-9z" fill="#4C8DFF"/><path d="M3 7v6M6 7v6M26 7v6M29 7v6" stroke="#07080d" stroke-width=".8"/>' +
+        '<rect x="9" y="5" width="14" height="10" rx="2" fill="#F2F0EA"/><circle cx="16" cy="10" r="2.4" fill="#FF6A3D"/><path d="M16 5V1" stroke="#F2F0EA" stroke-width="1.2"/></svg>';
+      var plog = document.createElement('span'), pvis = false, pn = 3 + (Math.random() * 5 | 0), ptimer = 0;
+      plog.className = 'wh-log'; plog.setAttribute('aria-hidden', 'true'); el.appendChild(plog);
+      onView(el, function(v){ pvis = v; if (v && !ptimer) pqueue(); });
+      var pqueue = function(){ ptimer = setTimeout(function(){ ptimer = 0; if (!pvis) return; if (!document.hidden && !el.classList.contains('is-go')) probe(); pqueue(); }, 6000 + Math.random() * 8000); };
+      var probe = function(){
+        var C = body.offsetWidth / 2, Rr = C, p = document.createElement('i'); p.className = 'wh-probe'; p.innerHTML = PROBE; body.appendChild(p);
+        var dir = Math.random() < .5 ? 1 : -1, s = { a: Math.random() * Math.PI * 2, r: Rr * (2.4 + Math.random() * .5), f: 0 }, a1 = s.a + dir * Math.PI * (2.6 + Math.random()), id = 'AB-' + pad2(pn++ % 100);
+        var put = function(){
+          var k = Math.max(0, Math.min(1, (s.r - Rr * .35) / (Rr * .8)));
+          gsap.set(p, { x: C + Math.cos(s.a) * s.r, y: C + Math.sin(s.a) * s.r * .62, rotation: s.a * 57.2958 + dir * 90, scaleX: 1 + (1 - k) * 1.4, scaleY: .3 + k * .7, opacity: Math.min(1, k * 1.5) * s.f });
+        };
+        put();
+        gsap.timeline({ onComplete: function(){ if (p.parentNode) p.parentNode.removeChild(p); gulp(id); } })
+          .to(s, { f: 1, duration: .6, ease: 'power1.out' }, 0)
+          .to(s, { a: a1, duration: 3.4, ease: 'power2.in', onUpdate: put }, 0)
+          .to(s, { r: Rr * .3, duration: 3.4, ease: 'power3.in' }, 0);
+      };
+      var gulp = function(id){
+        lens.b += .6;
+        var g = document.createElement('i'); g.className = 'wh-gulp'; body.appendChild(g); setTimeout(function(){ if (g.parentNode) g.parentNode.removeChild(g); }, 2100);
+        plog.innerHTML = 'Probe ' + id + ' &middot; <b>signal lost</b>'; plog.classList.add('show');
+        setTimeout(function(){ plog.classList.remove('show'); }, 2400);
+      };
+    }
     function hot(on){ el.classList.toggle('is-hot', on); if (!el.classList.contains('is-go')) lens.to = on ? 1 : 0; }
     function fall(){
       if (el.classList.contains('is-go')) return;
@@ -418,7 +447,7 @@
       LENSES.forEach(function(o){
         o.b += (o.to - o.b) * (dt ? Math.min(1, dt * 4) : 1);
         var r = o.el.getBoundingClientRect(); if (!r.width || r.bottom < -200 || r.top > h + 200) return;
-        var R = r.width / 2, th = R * (1.06 + o.b * .34 + (o.b > .05 ? Math.sin(time * .0035) * .1 * Math.min(1, o.b) : 0));
+        var R = r.width / 2, th = R * (1.06 + o.b * .34 + (o.b > .05 ? Math.sin(time * .0021) * .1 * Math.min(1, o.b) : 0));
         LS.push({ x: r.left + R, y: r.top + R, t: th, a: th * 3, z: th * 7 });
       });
       for (var i = 0; i < stars.length; i++){

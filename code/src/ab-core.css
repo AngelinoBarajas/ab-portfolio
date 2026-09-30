@@ -90,13 +90,13 @@ html.ab-warp-in body::after{content:"";position:fixed;inset:0;z-index:70;pointer
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.3),inset calc(var(--sz,200px) * -.04) calc(var(--sz,200px) * -.06) calc(var(--sz,200px) * .14) rgba(120,180,255,.22)}
 .wh-rip{position:absolute;inset:0;pointer-events:none}
 /* ripples: a wide band that blurs + brightens whatever is behind it (space bending), with its glowing crest kept inside the mask */
-.wh-rip i{position:absolute;inset:0;border-radius:50%;opacity:0;
+.wh-rip i,.wh-gulp{position:absolute;inset:0;border-radius:50%;opacity:0;
   box-shadow:inset 0 0 0 2px rgba(220,240,255,.9),inset 0 0 calc(var(--sz,200px) * .06) rgba(160,210,255,.65),inset 0 0 calc(var(--sz,200px) * .16) rgba(120,180,255,.3);
   -webkit-backdrop-filter:blur(3px) brightness(1.4) saturate(1.5) contrast(1.1);backdrop-filter:blur(3px) brightness(1.4) saturate(1.5) contrast(1.1);
   -webkit-mask-image:radial-gradient(closest-side,transparent 60%,#000 82%,#000 99%,transparent 100%);mask-image:radial-gradient(closest-side,transparent 60%,#000 82%,#000 99%,transparent 100%)}
-.is-wormhole.is-hot .wh-rip i{animation:wh-rip 1.8s cubic-bezier(.2,.6,.3,1) infinite}
-.is-wormhole.is-hot .wh-rip i:nth-child(2){animation-delay:.6s}
-.is-wormhole.is-hot .wh-rip i:nth-child(3){animation-delay:1.2s}
+.is-wormhole.is-hot .wh-rip i{animation:wh-rip 3s cubic-bezier(.25,.6,.35,1) infinite}
+.is-wormhole.is-hot .wh-rip i:nth-child(2){animation-delay:1s}
+.is-wormhole.is-hot .wh-rip i:nth-child(3){animation-delay:2s}
 .is-wormhole.is-hot .wh-ball{animation:wh-drop 3.2s ease-in-out infinite,wh-jelly 1.1s cubic-bezier(.3,1.4,.5,1) both}
 .is-wormhole.is-hot .wh-halo{transform:scale(1.18)}
 .is-wormhole:focus-visible .wh-ball{box-shadow:0 0 0 2px var(--select,#4C8DFF),0 0 calc(var(--sz,200px) * .22) rgba(140,190,255,.3)}
@@ -112,6 +112,13 @@ html.ab-warp-in body::after{content:"";position:fixed;inset:0;z-index:70;pointer
 /* a drop of water floating free: the outline sloshes (border-radius), squashes a little and turns; faster while hovered */
 @keyframes wh-drop{0%,100%{border-radius:50% 50% 50% 50%/50% 50% 50% 50%;transform:rotate(0) scale(1,1)}20%{border-radius:58% 42% 55% 45%/45% 57% 43% 55%;transform:rotate(5deg) scale(1.04,.96)}40%{border-radius:44% 56% 42% 58%/57% 44% 56% 43%;transform:rotate(-4deg) scale(.965,1.035)}60%{border-radius:55% 45% 59% 41%/46% 58% 42% 54%;transform:rotate(3deg) scale(1.03,.975)}80%{border-radius:43% 57% 47% 53%/56% 43% 57% 45%;transform:rotate(-3deg) scale(.975,1.025)}}
 @keyframes wh-jelly{0%{transform:scale(1,1)}22%{transform:scale(1.08,.92)}42%{transform:scale(.94,1.06)}60%{transform:scale(1.04,.97)}78%{transform:scale(.985,1.015)}100%{transform:scale(1,1)}}
+/* probes (buildWormhole › probe): caught, spiral in, gone; the gulp is one ripple; the log line sits under the wormhole */
+.wh-probe{position:absolute;left:0;top:0;width:30px;height:19px;margin:-9.5px 0 0 -15px;z-index:5;pointer-events:none;opacity:0;will-change:transform}
+.wh-probe svg{display:block;width:100%;height:100%}
+.wh-gulp{animation:wh-rip 2s cubic-bezier(.25,.6,.35,1) forwards;pointer-events:none}
+.wh-log{position:absolute;left:50%;top:calc(100% + 12px);z-index:6;transform:translateX(-50%);font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;color:var(--dust,#9aa0b4);opacity:0;transition:opacity .4s;pointer-events:none}
+.wh-log b{color:var(--signal,#FF6A3D);font-weight:500}
+.wh-log.show{opacity:1}
 @keyframes wh-rip{0%{transform:scale(1);opacity:0}8%{opacity:1}100%{transform:scale(3.2);opacity:0}}
 @media (prefers-reduced-motion:reduce){.wh-ball,.wh-far i,.is-wormhole.is-hot .wh-rip i,.is-wormhole.is-hot .wh-ball{animation:none}}
 
