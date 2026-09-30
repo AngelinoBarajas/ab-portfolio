@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.33.22 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.33.23 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -101,6 +101,11 @@ window.Webflow.push(function(){
     if (hasGsap) gsap.ticker.add(function(){ if (visible) place((Date.now() - t0) / 1000); });
     else (function loop(){ if (visible) place((Date.now() - t0) / 1000); requestAnimationFrame(loop); })();
   })();
+
+  /* ---------- badge + meta field: "Training · Self-taught" became "Flight hours · 10,000+" (Angelino, 2026-09-30). The
+     text lives in Div Blocks the API can't edit; this only acts while the old words are still there. ---------- */
+  $$('.ab_badge_dt, .ab_meta_label').forEach(function(e){ if (e.textContent.trim() === 'Training') e.textContent = 'Flight hours'; });
+  $$('.ab_badge_dd, .ab_meta_value').forEach(function(e){ if (e.textContent.trim() === 'Self-taught') e.textContent = '10,000+'; });
 
   /* ---------- crew badge: hangs on its lanyard; drag it and it swoops back to hanging; tap to flip ---------- */
   (function(){
@@ -214,6 +219,93 @@ window.Webflow.push(function(){
     addEventListener('resize', function(){ if (!S.running && !S.held){ measure(); rest(); } });
     // arrives swinging in from above
     if (!reduce && hasGsap) gsap.from(wrap, { y: -120, rotation: -6, opacity: 0, duration: 1.6, ease: 'elastic.out(1,.55)', delay: .4, clearProps: 'transform,opacity' });
+    /* ---------- badge upgrades (Angelino, 2026-09-30): the lanyard ends in a metal clasp that hooks through the slot,
+       both faces look worn (scratches, scuffed corners, a laminate crease, a torn slot), and the back carries mission
+       patches for what's launched or in orbit. ---------- */
+    // the strap ends inside the clasp's crimp, 44px above the slot (it used to run on behind the card, unattached)
+    var CLASP = '<svg viewBox="0 0 40 62" aria-hidden="true"><defs>' +
+      '<linearGradient id="abcl-m" x1="0" x2="1"><stop offset="0" stop-color="#6c707c"/><stop offset=".35" stop-color="#eef0f4"/><stop offset=".6" stop-color="#a6aab5"/><stop offset="1" stop-color="#4c505b"/></linearGradient>' +
+      '<linearGradient id="abcl-r" x1="0" x2="1"><stop offset="0" stop-color="#8b8f9a"/><stop offset=".5" stop-color="#f4f5f8"/><stop offset="1" stop-color="#5b5f6b"/></linearGradient></defs>' +
+      '<rect x="9" y="0" width="22" height="11" rx="2" fill="url(#abcl-m)"/><rect x="9" y="4.6" width="22" height="1.2" fill="rgba(0,0,0,.28)"/>' +
+      '<circle cx="14" cy="8" r="1.1" fill="#3d404a"/><circle cx="26" cy="8" r="1.1" fill="#3d404a"/>' +
+      '<rect x="16.5" y="10.5" width="7" height="8" rx="1.6" fill="url(#abcl-m)"/><rect x="16.5" y="13.6" width="7" height=".9" fill="rgba(0,0,0,.3)"/>' +
+      '<path d="M20 18.5c-5.2 0-7.6 4.4-7.6 11.4v14.6" fill="none" stroke="url(#abcl-r)" stroke-width="2.6" stroke-linecap="round"/>' +
+      '<path d="M20 18.5c5.2 0 7.6 4.4 7.6 11.4v10" fill="none" stroke="url(#abcl-r)" stroke-width="2.6" stroke-linecap="round"/>' +
+      '<rect x="25.4" y="30" width="4.4" height="7" rx="1" fill="#c9ccd4" stroke="#5b5f6b" stroke-width=".5"/>' +
+      '<path d="M12.4 44.5v5.5" stroke="#2a2c33" stroke-width="2.6" stroke-linecap="round" opacity=".9"/></svg>';
+    var clasp = document.createElement('div'); clasp.className = 'ab_badge_clasp'; clasp.innerHTML = CLASP; badge.appendChild(clasp);
+    wrap.classList.add('has-clasp');
+    var SHORT = 44;
+    var render0 = render;
+    render = function(){ render0(); strap.style.height = Math.max(0, S.r - SHORT).toFixed(2) + 'px'; };
+    var rest0 = rest;
+    rest = function(){ rest0(); strap.style.height = Math.max(0, L - SHORT) + 'px'; };
+    rest();
+
+    // wear: seeded, so every visit shows the same scuffs
+    function rng(seed){ return function(){ seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+    function wear(face, seed){
+      if (!face) return;
+      var r = rng(seed), W = 380, H = 578, s = '', i;
+      for (i = 0; i < 46; i++){       // fine scratches: short, mostly diagonal, a few long ones
+        var x = r() * W, y = r() * H, long = r() < .06, len = long ? 50 + r() * 90 : 6 + r() * 24, a = (r() < .7 ? -.7 : .5) + (r() - .5) * .5;
+        var x2 = x + Math.cos(a) * len, y2 = y + Math.sin(a) * len, bend = (r() - .5) * len * .12;
+        s += '<path d="M' + x.toFixed(1) + ' ' + y.toFixed(1) + 'Q' + ((x + x2) / 2 + bend).toFixed(1) + ' ' + ((y + y2) / 2 - bend).toFixed(1) + ' ' + x2.toFixed(1) + ' ' + y2.toFixed(1) + '" stroke="rgba(255,255,255,' + ((long ? .03 : .05) + r() * (long ? .05 : .11)).toFixed(3) + ')" stroke-width="' + (.4 + r() * .6).toFixed(2) + '" fill="none"/>';
+      }
+      for (i = 0; i < 14; i++){         // scuffs
+        s += '<ellipse cx="' + (r() * W).toFixed(1) + '" cy="' + (r() * H).toFixed(1) + '" rx="' + (6 + r() * 22).toFixed(1) + '" ry="' + (2 + r() * 7).toFixed(1) + '" transform="rotate(' + (r() * 180 - 90).toFixed(0) + ')" fill="url(#abw-scuff' + seed + ')"/>';
+      }
+      // corner wear (the laminate lifts and whitens at the corners) + nicks along the edges
+      s += '<path d="M0 22Q2 3 22 0L0 0Z" fill="rgba(255,255,255,.1)"/><path d="M' + W + ' 16Q' + (W - 1) + ' 1 ' + (W - 17) + ' 0H' + W + 'Z" fill="rgba(255,255,255,.08)"/>' +
+        '<path d="M0 ' + (H - 26) + 'Q2 ' + (H - 2) + ' 28 ' + H + 'H0Z" fill="rgba(255,255,255,.12)"/><path d="M' + W + ' ' + (H - 20) + 'Q' + (W - 3) + ' ' + (H - 2) + ' ' + (W - 22) + ' ' + H + 'H' + W + 'Z" fill="rgba(255,255,255,.09)"/>';
+      for (i = 0; i < 10; i++){ var e = r(), side = Math.floor(r() * 4), p = r() * (side % 2 ? H : W), n = 2 + r() * 5;
+        s += side === 0 ? '<rect x="' + p.toFixed(0) + '" y="0" width="' + n.toFixed(1) + '" height="1.4"' : side === 2 ? '<rect x="' + p.toFixed(0) + '" y="' + (H - 1.4) + '" width="' + n.toFixed(1) + '" height="1.4"' : side === 1 ? '<rect x="' + (W - 1.4) + '" y="' + p.toFixed(0) + '" width="1.4" height="' + n.toFixed(1) + '"' : '<rect x="0" y="' + p.toFixed(0) + '" width="1.4" height="' + n.toFixed(1) + '"';
+        s += ' fill="rgba(255,255,255,' + (.14 + e * .16).toFixed(2) + ')"/>'; }
+      // a crease where it got bent in a pocket once, and small tears at the slot's ends
+      s += '<path d="M-4 ' + (H * .74).toFixed(0) + 'L' + (W * .46).toFixed(0) + ' ' + H + '" stroke="rgba(255,255,255,.1)" stroke-width="1.1"/><path d="M-4 ' + (H * .74 + 2).toFixed(0) + 'L' + (W * .46 - 2).toFixed(0) + ' ' + (H + 2) + '" stroke="rgba(0,0,0,.35)" stroke-width="1"/>' +
+        '<path d="M' + (W / 2 - 27) + ' 26l-5 5M' + (W / 2 - 27) + ' 20l-4-3M' + (W / 2 + 27) + ' 27l4 6" stroke="rgba(255,255,255,.22)" stroke-width=".7"/>';
+      var el = document.createElement('i'); el.className = 'ab_badge_wear'; el.setAttribute('aria-hidden', 'true');
+      el.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none"><defs><radialGradient id="abw-scuff' + seed + '"><stop offset="0" stop-color="rgba(255,255,255,.07)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient></defs>' + s + '</svg>';
+      face.appendChild(el);
+    }
+    wear(front, 7); wear(back, 19);
+
+    // mission patches on the back: what's launched or in orbit (Work page statuses, 2026-09-30); planets are the site's own
+    var PATCHES = [
+      { n: '510 Visuals', s: 'Live', k: 'live', shape: 'circle', c: '#0f1a1d,#1c2227,#37535a,#5a8a94,#b8c9cc', bg: '#1c2a2e', x: 0, y: 20, w: 74, h: 74, r: -8 },
+      { n: 'CKS', s: 'In orbit', k: 'orbit', shape: 'rect', c: '#0B1B2B,#2F5BEA,#139E8A,#F2A93B,#EF5B3F', bg: '#10223a', x: 25, y: 0, w: 84, h: 60, r: 6, peel: 1 },
+      { n: 'kip', s: 'In orbit', k: 'orbit', shape: 'circle', c: '#14204F,#FF7A45,#FFC94A,#FFF4E6,#5FD3A8', bg: '#14204F', x: 51, y: 34, w: 66, h: 66, r: -5 },
+      { n: 'Knowledge System', s: 'In orbit', k: 'orbit', shape: 'shield', c: '#1d2350,#3f4fa8,#7c5cff,#c9bcff,#2a1d6b', bg: '#241d56', x: 74, y: 4, w: 70, h: 78, r: 9 },
+      { n: 'AB Identity', s: 'Shipped', k: 'shipped', shape: 'mark', x: 60, y: 116, w: 86, h: 58, r: -7 }
+    ];
+    if (back){
+      var box = document.createElement('div'); box.className = 'ab_badge_stk';
+      box.setAttribute('role', 'img');
+      box.setAttribute('aria-label', 'Mission patches: ' + PATCHES.map(function(p){ return p.n + ', ' + p.s.toLowerCase(); }).join('; '));
+      var html = '<div class="abst-h">Mission patches · 1 live · 1 shipped · 3 in orbit</div>';
+      PATCHES.forEach(function(p, i){
+        var st = 'left:' + p.x + '%;top:' + p.y + 'px;width:' + p.w + 'px;height:' + p.h + 'px;--r:' + p.r + 'deg';
+        if (p.shape === 'mark'){
+          html += '<div class="abst is-mark is-' + p.k + '" style="' + st + '" title="' + p.n + ' · ' + p.s + '"><span class="abst-logo">' + (AB.markSVG ? AB.markSVG({ cls: 'abst-mk' }) : '') + '</span><em>' + p.s + '</em></div>';
+          return;
+        }
+        html += '<div class="abst is-' + p.shape + ' is-' + p.k + (p.peel ? ' is-peel' : '') + '" style="' + st + ';--bg:' + p.bg + '" title="' + p.n + ' · ' + p.s + '">' +
+          '<span class="abst-pl"><span class="ab_planet" data-planet="gas" data-seed="' + (31 + i * 7) + '" data-colors="' + p.c + '" data-spin="80" aria-hidden="true"></span></span>' +
+          '<b>' + p.n + '</b><em>' + p.s + '</em></div>';
+      });
+      box.innerHTML = html;
+      var bk = $('.ab_badge_back', back) || back; bk.appendChild(box);
+      if (AB.buildPlanet) $$('.ab_planet', box).forEach(function(pl){ AB.buildPlanet(pl); });
+      // the cluster is drawn at 336 x 218 and sits right under the list; on a narrow badge the back's title wraps and the
+      // list runs longer, so it scales down to the room that's left (it may tuck behind the signature's right side)
+      var list = $('.ab_badge_list', back);
+      var fit = function(){
+        var top = list ? list.offsetTop + list.offsetHeight + 6 : 330, room = back.clientHeight - top - 8;
+        var sc = Math.max(.5, Math.min(1, (back.clientWidth - 36) / 336, room / 218));
+        box.style.top = top + 'px'; box.style.transform = 'scale(' + sc.toFixed(3) + ')';
+      };
+      fit(); addEventListener('resize', fit); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    }
   })();
 
   /* ---------- signatures: the name writes itself, then a shooting star arcs under it and leaves the underline ---------- */

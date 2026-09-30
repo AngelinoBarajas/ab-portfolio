@@ -64,6 +64,37 @@
 .ab_badge_barcode i{display:block;width:2px;background:var(--star);opacity:.8}
 .ab_badge_barcode i.w{width:4px}
 .ab_badge_barcode i.g{background:transparent}
+/* badge upgrades (2026-09-30): clasp through the slot, worn laminate, mission patches on the back */
+.ab_badge_clasp{position:absolute;left:50%;top:-26px;width:40px;height:62px;margin-left:-20px;z-index:4;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.55))}
+.ab_badge_clasp svg{display:block;width:100%;height:100%}
+.ab_badge_wear{position:absolute;inset:0;z-index:3;pointer-events:none;mix-blend-mode:screen}
+.ab_badge_wear svg{display:block;width:100%;height:100%}
+.ab_badge_face.is-front .ab_badge_photo img{filter:saturate(.9) contrast(.97)}
+.ab_badge_stk{position:absolute;left:18px;top:330px;width:336px;height:218px;z-index:2;pointer-events:none;transform-origin:0 0}
+.abst-h{position:absolute;left:0;top:-4px;white-space:nowrap;font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,240,234,.45)}
+.abst{position:absolute;margin-top:14px;transform:rotate(var(--r));pointer-events:auto;transition:transform .3s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-sizing:border-box;border:3px solid #efe9dc;background:radial-gradient(90% 80% at 30% 20%,rgba(255,255,255,.14),transparent 60%),var(--bg,#1d2350);box-shadow:0 2px 3px rgba(0,0,0,.55);color:#f2f0ea;font-family:var(--mono);text-align:center;overflow:hidden}
+.abst::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(115deg,rgba(255,255,255,.06) 0 1px,transparent 1px 9px),radial-gradient(40% 30% at 70% 80%,rgba(255,255,255,.12),transparent 70%);mix-blend-mode:screen}
+.abst:hover{transform:rotate(var(--r)) scale(1.08) translateY(-2px);z-index:3}
+.abst.is-circle{border-radius:50%}
+.abst.is-rect{border-radius:9px}
+.abst.is-shield{border-radius:10px 10px 50% 50% / 10px 10px 42% 42%}
+.abst b{font-weight:500;font-size:7.5px;line-height:1.05;letter-spacing:.08em;text-transform:uppercase;max-width:88%}
+.abst em{font-style:normal;font-size:6.5px;letter-spacing:.14em;text-transform:uppercase;padding:1px 4px;border-radius:2px;background:#8b5cff;color:#fff}
+.abst.is-live em{background:#3fe08e;color:#07080d}
+.abst.is-shipped em{background:#FF6A3D;color:#07080d}
+.abst-pl{position:relative;width:24px;height:24px;flex:none}
+.abst-pl .ab_planet{position:absolute;inset:0;width:100%;height:100%}
+/* the CKS patch is peeling: its corner is cut away and curled back (the sticker's pale underside) */
+.abst.is-peel{clip-path:polygon(0 0,74% 0,100% 34%,100% 100%,0 100%)}
+.abst.is-peel::before{content:"";position:absolute;right:0;top:0;width:28%;height:36%;z-index:2;background:linear-gradient(225deg,transparent 49%,#d9d2c2 50%,#f6f1e6 72%,#cfc7b5);box-shadow:-2px 2px 3px rgba(0,0,0,.4);border-bottom-left-radius:4px}
+.abst.is-mark{border:none;background:none;box-shadow:none;overflow:visible}
+.abst.is-mark::after{display:none}
+.abst-logo{display:block;width:100%;height:auto;padding:5px 7px;box-sizing:border-box;background:#f6f1e6;border-radius:10px;box-shadow:0 2px 3px rgba(0,0,0,.55)}
+.abst-logo svg{display:block;width:100%;height:auto}
+.abst-logo .lg-a,.abst-logo .lg-leg,.abst-logo .lg-b{fill:#0b0c14}
+.abst-logo .lg-planet{fill:var(--signal)}
+.abst.is-mark em{margin-top:-6px;position:relative;z-index:1}
+@media (prefers-reduced-motion:reduce){.abst{transition:none}}
 
 /* signature */
 .ab_sig{display:block;width:100%;height:auto;overflow:visible}
