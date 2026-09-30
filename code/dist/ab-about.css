@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about.css v0.33.2 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about.css v0.33.3 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · About page (/about). Loaded with a page-head <link>. Layout, type and color live on the
    Webflow classes; this holds what the Designer can't: keyframes, 3D, pseudos, descendant rules and
    the state classes ab-about.js toggles. */
@@ -259,7 +259,7 @@
 /* credits finale: the roles, then the name streaks in from both sides and meets in the middle */
 .ab_boss_fin{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(14px,2.4vw,26px);padding:16px;text-align:center;visibility:hidden;pointer-events:none;overflow:hidden}
 .ab_boss_fin small{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--_color---brand--signal)}
-.ab_boss_fin-name{display:flex;justify-content:center;gap:.32em;font-family:var(--_typography---font--display);font-weight:900;font-stretch:125%;font-size:clamp(30px,6.6vw,112px);line-height:.95;text-transform:uppercase;color:#F2F0EA}
+.ab_boss_fin-name{display:flex;justify-content:center;align-items:center;gap:.32em;font-family:var(--_typography---font--display);font-weight:900;font-stretch:125%;font-size:clamp(30px,5.6vw,96px);line-height:.95;text-transform:uppercase;color:#F2F0EA}
 .ab_boss_fin-name span{position:relative;display:inline-block;white-space:nowrap}
 .ab_boss_fin-name .is-l{text-shadow:5px 5px 0 #FF6A3D}
 .ab_boss_fin-name .is-r{text-shadow:5px 5px 0 #9b7dff}
