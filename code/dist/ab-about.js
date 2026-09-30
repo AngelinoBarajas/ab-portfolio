@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.33.20 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.33.21 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -983,7 +983,7 @@ window.Webflow.push(function(){
       m.z = any ? 1.2 + Math.random() * (ZF - 1.2) : ZF; m.sp = .35 + Math.random() * .5;
       return m;
     }
-    var last = 0;
+    var last = 0, swing = 0;
     function draw(t){
       if (!W) return;
       var c = ctx, dt = last && t ? Math.min(50, t - last) / 1000 : 0; last = t;
@@ -1006,14 +1006,20 @@ window.Webflow.push(function(){
       c.beginPath(); c.moveTo(WX, B6);
       for (var y = B6 + 6; y <= WY - WR; y += 6) c.lineTo(WX + Math.sin(y * .09 + ts * 7) * amp * Math.sin(Math.PI * (y - B6) / (WY - WR - B6)), y);
       c.lineTo(WX, WY - WR); c.stroke();
-      c.lineWidth = .8; c.beginPath(); c.moveTo(WX, WY); c.lineTo(VX + (WX - VX) * .2, VY + (WY - VY) * .2); c.stroke();
+      // the slanted strand is the second hand seen from behind: it pivots on the watch, ticks back and forth each second
+      // and swings hard on every Morse dot/dash (Cooper pushing it from this side), easing toward its target
+      var tx = VX + (WX - VX) * .2 - WX, ty = VY + (WY - VY) * .2 - WY, len = Math.sqrt(tx * tx + ty * ty), base = Math.atan2(ty, tx);
+      var ms = Date.now() % 1000, tick = ms < 120 ? -.07 * (1 - ms / 120) : 0, goal = signal ? -.42 : tick;
+      swing += (goal - swing) * Math.min(1, dt * (signal ? 28 : 14)); var an = base + swing;
+      c.lineWidth = .9 + signal * .6; c.beginPath(); c.moveTo(WX, WY); c.lineTo(WX + Math.cos(an) * len, WY + Math.sin(an) * len); c.stroke();
       c.shadowBlur = 0; c.globalCompositeOperation = 'source-over';
     }
 
     var room = false, over = false, vis = false, raf = 0;
     var card = shelf.closest('.ab_bento-card') || shelf, hint = $('.ab_off_hint.is-shelf', card), hint0 = hint ? hint.textContent : '';
-    function frame(t){ raf = 0; draw(t); loop(); }
-    function loop(){ if (!raf && vis && !room && !reduce) { last = 0; raf = requestAnimationFrame(frame); } }
+    // the clock (last) resets only when the loop starts again, not every frame, or dt would always be 0
+    function frame(t){ raf = 0; draw(t); loop(true); }
+    function loop(cont){ if (!raf && vis && !room && !reduce) { if (!cont) last = 0; raf = requestAnimationFrame(frame); } }
     function setRoom(on){
       if (on === room) return; room = on; shelf.classList.toggle('is-room', on);
       if (hint) hint.textContent = on ? hint0 : (coarse ? 'Tap to step through the shelf' : 'Hover to step through the shelf');
