@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.33.11 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.33.12 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -323,7 +323,8 @@ window.Webflow.push(function(){
     tip.innerHTML = '<b>Looks like a wormhole.</b><span>They put it there.</span><em>' + (coarse ? 'Tap again to fall through' : 'Click to fall through') + ' &rarr;</em>';
     el.appendChild(tip);
     el.removeAttribute('aria-hidden'); el.setAttribute('role', 'link'); el.tabIndex = 0; el.setAttribute('aria-label', 'Wormhole: fall through to a random page of this site');
-    var paint = function(){ var tx = farSide(sz > 240 ? 512 : 320); $$('.wh-far i', body).forEach(function(i){ i.style.backgroundImage = 'url(' + tx + ')'; }); body.classList.add('on'); };
+    var farTx = '';
+    var paint = function(){ farTx = farSide(sz > 240 ? 512 : 320); $$('.wh-far i', body).forEach(function(i){ i.style.backgroundImage = 'url(' + farTx + ')'; }); body.classList.add('on'); };
     if ('requestIdleCallback' in window) requestIdleCallback(paint, { timeout: 800 }); else setTimeout(paint, 30);
     var lens = { el: $('.wh-ball', body), b: 0, to: 0 }; LENSES.push(lens);
     function hot(on){ el.classList.toggle('is-hot', on); if (!el.classList.contains('is-go')) lens.to = on ? 1 : 0; }
@@ -333,8 +334,31 @@ window.Webflow.push(function(){
       el.classList.add('is-go'); lens.to = 3;
       var fresh = AB.quest ? AB.quest('wormhole') : false;
       try { sessionStorage.setItem('ab:wormhole', fresh ? 'new' : '1'); } catch (e){}
-      if (reduce || !AB.go){ location.href = url; return; }
-      setTimeout(function(){ AB.go(url); }, 650);
+      if (reduce || !hasGsap || !AB.go){ location.href = url; return; }
+      tunnel(url);
+    }
+    // falling in: the far galaxy opens out of the wormhole's own spot (a circular window growing to fill the screen) while
+    // the view zooms into it and turns; the bright rim widens past the edges and the starfield streaks toward the hole.
+    // Then AB.go's warp flash takes over (it sits above the tunnel) and the next page loads.
+    function tunnel(url){
+      var ball = $('.wh-ball', body), r = ball.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2, R = r.width / 2;
+      var D = Math.sqrt(Math.pow(Math.max(x, innerWidth - x), 2) + Math.pow(Math.max(y, innerHeight - y), 2)) + 60;
+      var t = document.createElement('div'); t.className = 'wh-tunnel'; t.setAttribute('aria-hidden', 'true'); t.innerHTML = '<i></i>';
+      var ring = document.createElement('div'); ring.className = 'wh-tunnel-ring'; ring.setAttribute('aria-hidden', 'true');
+      var tex = t.firstChild; tex.style.cssText = 'left:' + (x - R) + 'px;top:' + (y - R) + 'px;width:' + 2 * R + 'px;height:' + 2 * R + 'px' + (farTx ? ';background-image:url(' + farTx + ')' : '');
+      document.body.appendChild(t); document.body.appendChild(ring);
+      var st = { r: R * .96 };
+      function paintR(){ t.style.clipPath = 'circle(' + st.r.toFixed(1) + 'px at ' + x.toFixed(1) + 'px ' + y.toFixed(1) + 'px)'; gsap.set(ring, { left: x - st.r, top: y - st.r, width: st.r * 2, height: st.r * 2 }); }
+      paintR();
+      if (sf && sf.state){ sf.state.cx = x; sf.state.cy = y; }
+      // the zoom stops short of the texture's resolution, and AB.go's flash starts before the window finishes so it never looks soft
+      gsap.timeline()
+        .to(ball, { scale: .9, duration: .18, ease: 'power2.out' })
+        .to(st, { r: D, duration: 1, ease: 'power3.in', onUpdate: paintR })
+        .fromTo(tex, { scale: 1, rotation: 0 }, { scale: Math.min(D / R * 1.15, 5), rotation: 40, duration: 1, ease: 'power2.in' }, '<')
+        .add(function(){ AB.go(url); }, '<.72')
+        .to(ring, { opacity: 0, duration: .25 }, '-=.25')
+        .to(sf && sf.state ? sf.state : {}, { warp: .7, duration: 1, ease: 'power2.in' }, '<-.75');
     }
     el.addEventListener('pointerenter', function(e){ if (e.pointerType !== 'touch') hot(true); });
     el.addEventListener('pointerleave', function(e){ if (e.pointerType !== 'touch') hot(false); });
@@ -487,7 +511,7 @@ window.Webflow.push(function(){
     function draw(time, dt){
       ctx.clearRect(0, 0, w, h);
       mx += (tmx - mx) * 0.05; my += (tmy - my) * 0.05;
-      var sy = window.scrollY, cx = w / 2, cy = h / 2, wp = state.warp, LS = [];
+      var sy = window.scrollY, cx = state.cx != null ? state.cx : w / 2, cy = state.cy != null ? state.cy : h / 2, wp = state.warp, LS = [];
       // wormholes on screen: point-lens each star (r' = (r + sqrt(r^2 + 4 th^2)) / 2) with a smooth falloff; hover swells th and makes it ring
       LENSES.forEach(function(o){
         o.b += (o.to - o.b) * (dt ? Math.min(1, dt * 4) : 1);
