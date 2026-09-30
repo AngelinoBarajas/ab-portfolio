@@ -71,6 +71,12 @@ html.ab-warp-in body::after{content:"";position:fixed;inset:0;z-index:70;pointer
 /* ---------- wormhole (data-planet="wormhole", core/10-space.js buildWormhole): a glass lens onto another galaxy ---------- */
 .ab_planet.is-wormhole{pointer-events:auto;cursor:var(--hand,pointer);z-index:4;outline:none;-webkit-tap-highlight-color:transparent}
 .ab_planet.is-wormhole .pring{display:none}
+/* phones: the wormhole sits behind the statement text; the text lets taps through to it (links + the selectable word keep theirs) */
+@media (max-width:767px){
+  .section_statement .ab_planet.is-wormhole{z-index:1}
+  .section_statement .padding-global{position:relative;z-index:2;pointer-events:none}
+  .section_statement .padding-global a,.section_statement .padding-global button,.section_statement .padding-global [data-selectable],.section_statement .padding-global [data-drag]{pointer-events:auto}
+}
 .is-wormhole .pbody{overflow:visible}
 .wh-halo{position:absolute;inset:-22%;border-radius:50%;pointer-events:none;background:radial-gradient(closest-side,rgba(150,200,255,.2),rgba(150,200,255,.07) 58%,transparent 74%);transition:transform .8s cubic-bezier(.2,.9,.2,1),opacity .8s}
 .wh-ball{position:absolute;inset:0;border-radius:50%;overflow:hidden;isolation:isolate;animation:wh-drop 9s ease-in-out infinite;

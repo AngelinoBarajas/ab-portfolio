@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.33.17 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.33.18 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -361,6 +361,17 @@ window.Webflow.push(function(){
         setTimeout(function(){ plog.classList.remove('show'); }, 2400);
       };
     }
+    // pop-in: the wormhole waits tiny and invisible until a third of it is in view, then springs in with one ripple.
+    // It scales .pbody (the ball's own water-drop CSS animation owns the ball's transform, a script scale there is ignored).
+    function pop(delay){
+      if (!hasGsap || reduce) return;
+      gsap.fromTo(body, { scale: .2, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.2, ease: 'elastic.out(1,.45)', delay: delay || 0 });
+      setTimeout(function(){ lens.b += .8; var g = document.createElement('i'); g.className = 'wh-gulp'; body.appendChild(g); setTimeout(function(){ if (g.parentNode) g.parentNode.removeChild(g); }, 2100); }, ((delay || 0) + .15) * 1000);
+    }
+    if (hasGsap && !reduce){
+      gsap.set(body, { scale: .2, opacity: 0 });
+      var popIO = onView(el, function(v){ if (!v) return; popIO.disconnect(); pop(.05); }, { threshold: .35 });
+    }
     function hot(on){ el.classList.toggle('is-hot', on); if (!el.classList.contains('is-go')) lens.to = on ? 1 : 0; }
     function fall(){
       if (el.classList.contains('is-go')) return;
@@ -406,6 +417,18 @@ window.Webflow.push(function(){
       fall();
     });
     el.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); fall(); } });
+    // back button: the browser restores this page as it was mid-fall (ball faded out, warp aimed at the hole), so reset it
+    // and let the wormhole pop back in
+    addEventListener('pageshow', function(e){
+      if (!e.persisted || !el.classList.contains('is-go')) return;
+      el.classList.remove('is-go', 'is-hot'); lens.to = 0; lens.b = 0; armed = 0;
+      if (sf && sf.state){ sf.state.cx = null; sf.state.cy = null; sf.state.warp = 0; }
+      var ball = $('.wh-ball', body), halo = $('.wh-halo', body);
+      if (!hasGsap){ ball.style.opacity = ''; ball.style.transform = ''; return; }
+      gsap.set(body, { x: 0, y: 0 }); if (halo) gsap.set(halo, { clearProps: 'transform,opacity' });
+      if (reduce){ gsap.set(ball, { clearProps: 'transform,opacity' }); return; }
+      gsap.set(ball, { clearProps: 'transform,opacity' }); pop(.15);
+    });
   }
 
   function buildPlanet(el){
