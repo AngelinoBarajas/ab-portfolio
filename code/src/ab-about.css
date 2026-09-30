@@ -76,7 +76,7 @@
 .ab_badge_clear{transition:color .3s}
 .ab_badge_clear.is-ok{color:#3fe08e}
 @media (prefers-reduced-motion:reduce){.ab_badge_barcode.is-scan .ab_bc_laser{animation:none}}
-.ab_badge_clasp{position:absolute;left:50%;top:-26px;width:40px;height:62px;margin-left:-20px;z-index:4;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.55));transform:translateZ(0);will-change:transform}
+.ab_badge_clasp{position:absolute;left:0;top:0;width:40px;height:62px;z-index:4;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.55));transform-origin:20px 44px}
 .ab_badge_clasp svg{display:block;width:100%;height:100%}
 .ab_badge_wear{position:absolute;inset:0;z-index:3;pointer-events:none;mix-blend-mode:screen}
 .ab_badge_wear svg{display:block;width:100%;height:100%}

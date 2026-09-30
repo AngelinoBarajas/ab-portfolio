@@ -230,10 +230,9 @@
       '<path d="M20 18.5c5.2 0 7.6 4.4 7.6 11.4v10" fill="none" stroke="url(#abcl-r)" stroke-width="2.6" stroke-linecap="round"/>' +
       '<rect x="25.4" y="30" width="4.4" height="7" rx="1" fill="#c9ccd4" stroke="#5b5f6b" stroke-width=".5"/>' +
       '<path d="M12.4 44.5v5.5" stroke="#2a2c33" stroke-width="2.6" stroke-linecap="round" opacity=".9"/></svg>';
-    // it hangs from the swing wrapper, not the badge: the badge's 3D hover tilt and its flip used to carry the clasp away
-    // from the strap (which never tilts); now it swings with the card but stays flat while the card turns on it
-    var clasp = document.createElement('div'); clasp.className = 'ab_badge_clasp'; clasp.innerHTML = CLASP;
-    var swingEl = badge.parentNode; swingEl.insertBefore(clasp, badge);
+    // it lives in the wrap, above the whole rig, and is placed every frame on the strap's end at the strap's angle:
+    // inside the badge, the 3D hover tilt and the flip carried it off the strap, and Chrome painted the tilted card over it
+    var clasp = document.createElement('div'); clasp.className = 'ab_badge_clasp'; clasp.innerHTML = CLASP; wrap.appendChild(clasp);
 
     // barcode: hover (tap on touch) runs a laser across it and the clearance line answers; a tap here scans instead of flipping
     var bc = $('.ab_badge_barcode', front), clr = $('.ab_badge_clear', front);
@@ -253,9 +252,14 @@
     wrap.classList.add('has-clasp');
     var SHORT = 44;
     var render0 = render;
-    render = function(){ render0(); strap.style.height = Math.max(0, S.r - SHORT).toFixed(2) + 'px'; };
+    // clasp pivot (20, 44) in its own box = the clip point, where the strap ends at full length (the slot)
+    function claspAt(x, y, phi){ clasp.style.left = (x - 20).toFixed(2) + 'px'; clasp.style.top = (y - 44).toFixed(2) + 'px'; clasp.style.transform = 'rotate(' + (-phi * 180 / Math.PI).toFixed(3) + 'deg)'; }
+    render = function(){
+      render0(); strap.style.height = Math.max(0, S.r - SHORT).toFixed(2) + 'px';
+      claspAt(A.x + S.r * Math.sin(S.phi), A.y + S.r * Math.cos(S.phi), S.phi);
+    };
     var rest0 = rest;
-    rest = function(){ rest0(); strap.style.height = Math.max(0, L - SHORT) + 'px'; };
+    rest = function(){ rest0(); strap.style.height = Math.max(0, L - SHORT) + 'px'; claspAt(CX, TOP + CLIP, 0); };
     rest();
 
     // wear: seeded, so every visit shows the same scuffs

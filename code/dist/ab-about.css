@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about.css v0.33.24 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about.css v0.33.25 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · About page (/about). Loaded with a page-head <link>. Layout, type and color live on the
    Webflow classes; this holds what the Designer can't: keyframes, 3D, pseudos, descendant rules and
    the state classes ab-about.js toggles. */
@@ -81,7 +81,7 @@
 @media (prefers-reduced-motion:reduce){.ab_badge_barcode.is-scan .ab_bc_laser{animation:none}}
 :where(html.ab-calm) .ab_badge_barcode.is-scan .ab_bc_laser{animation:none}
 
-.ab_badge_clasp{position:absolute;left:50%;top:-26px;width:40px;height:62px;margin-left:-20px;z-index:4;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.55));transform:translateZ(0);will-change:transform}
+.ab_badge_clasp{position:absolute;left:0;top:0;width:40px;height:62px;z-index:4;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.55));transform-origin:20px 44px}
 .ab_badge_clasp svg{display:block;width:100%;height:100%}
 .ab_badge_wear{position:absolute;inset:0;z-index:3;pointer-events:none;mix-blend-mode:screen}
 .ab_badge_wear svg{display:block;width:100%;height:100%}
