@@ -141,6 +141,9 @@
 @media (max-width:767px){.ab_ks-cats{grid-template-columns:1fr}}
 /* hero title: "OBSERVATORY" is ~9.2em wide, so below 480 the Designer's 46px floor ran it off the column */
 @media (max-width:479px){.ab_dbh.is-ks .ab_dbh_title.is-ks{font-size:min(46px,calc((100vw - 2rem) / 9.5))}}
+/* the hero toys make these words inline-block after load; start them that way, or /topics "STAR CHART" painted on two
+   lines and snapped to one (CLS 0.27 desktop, 0.13 phones) */
+.ab_dbh_title.is-ks .ab_dbh_word{display:inline-block}
 /* hero record line (dot · Observatory · 15 observations · 27 topics) is ~359px as one flex row: below 480 it squashed,
    broke mid-piece and ran off the column. Scale its type to the column (dot + gap = 24px fixed) and keep it one line. */
 /* theme tabs (All · Build notes · Why before how) need ~391px on one line: on a phone the third wrapped under the
@@ -262,6 +265,13 @@
 .ab_ks-chart_f span{display:inline-flex;align-items:center;gap:8px}
 .ab_ks-chart_f span::before{content:"";width:7px;height:7px;background:var(--kc);transform:rotate(45deg)}
 @media (max-width:991px){.ab_ks-chart{grid-template-columns:1fr}.ab_ks-read{border-left:0;border-top:1px solid var(--hair)}}
+/* /topics star chart is drawn by 30-chart.js after first paint: hold its built height (header + map at the SVG's 1510:760
+   + readout + fly-to row + 2px border, measured 768–2400) or the vocabulary below jumped ~610px (CLS 0.17 desktop) */
+.container-large:has(> .ab_ks-chartwrap){container-type:inline-size}
+@media (min-width:768px){.ab_ks-chartwrap:empty{visibility:hidden;min-height:calc(55px + (100cqw - 2px) * 760 / 1510 + 442px + 101px + 2px)}}
+@media (min-width:848px){.ab_ks-chartwrap:empty{min-height:calc(38px + (100cqw - 2px) * 760 / 1510 + 442px + 101px + 2px)}}
+@media (min-width:992px){.ab_ks-chartwrap:empty{min-height:calc(38px + (100cqw - 322px) * 760 / 1510 + 101px + 2px)}}
+@media (min-width:1356px){.ab_ks-chartwrap:empty{min-height:calc(38px + (100cqw - 322px) * 760 / 1510 + 59px + 2px)}}
 @media (max-width:767px){.section_ks-chart{display:none}}
 
 /* ---------- topic page ---------- */
@@ -279,7 +289,11 @@
 .ab_ks-mini .tl{font-family:var(--mono);font-size:11px;fill:var(--dust)}
 .ab_ks-mini .is-on .tl{fill:var(--star)}
 .ab_ks-tstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:clamp(34px,4vw,56px);border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);position:relative;z-index:4}
-.ab_ks-tstats:empty{display:none}
+/* filled by 40-topic.js after first paint: hold the filled height (and the mini chart's, the two-line eyebrow's on phones)
+   or the topic hero grew ~450px under a reader on phones (CLS 0.20) */
+.ab_ks-tstats:empty{visibility:hidden;min-height:85px}
+@media (max-width:767px){.ab_ks-tstats:empty{min-height:169px}.ab_ks-mini{aspect-ratio:480/270}}
+@media (max-width:479px){.ab_dbh.is-ks-topic .ab_dbh_eyebrow{min-height:38px}}
 .ab_ks-tstat{display:block;padding:16px 18px;text-decoration:none;border-right:1px solid var(--hair);color:var(--star)}
 .ab_ks-tstat:first-child{padding-left:0}
 .ab_ks-tstat:last-child{border-right:0}

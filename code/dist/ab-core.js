@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.33.27 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.33.29 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -574,7 +574,7 @@ window.Webflow.push(function(){
       // wormholes on screen: point-lens each star (r' = (r + sqrt(r^2 + 4 th^2)) / 2) with a smooth falloff; hover swells th and makes it ring
       LENSES.forEach(function(o){
         o.b += (o.to - o.b) * (dt ? Math.min(1, dt * 4) : 1);
-        var r = o.el.getBoundingClientRect(); if (!r.width || r.bottom < -200 || r.top > h + 200) return;
+        var r = o.r || o.el.getBoundingClientRect(); if (!r.width || r.bottom < -200 || r.top > h + 200) return;
         var R = r.width / 2, th = R * (1.06 + o.b * .34 + (o.b > .05 ? Math.sin(time * .0021) * .1 * Math.min(1, o.b) : 0));
         LS.push({ x: r.left + R, y: r.top + R, t: th, a: th * 3, z: th * 7 });
       });
@@ -607,6 +607,9 @@ window.Webflow.push(function(){
     }
     function loop(t){ var dt = last ? Math.min(.05, (t - last) / 1000) : 0; last = t; if (running) draw(t, dt); requestAnimationFrame(loop); }
     resize(); addEventListener('resize', resize);
+    // lens positions are read at the front of GSAP's tick, before any tween writes: reading them in draw() (after the
+    // tweens) forced a full layout every frame (~400 ms of Home's load in Lighthouse). One frame behind is invisible.
+    if (hasGsap) gsap.ticker.add(function(){ if (running) LENSES.forEach(function(o){ o.r = o.el.getBoundingClientRect(); }); }, false, true);
     if (!reduce) requestAnimationFrame(loop);
     addEventListener('pointermove', function(e){ tmx = e.clientX / w - .5; tmy = e.clientY / h - .5; });
     document.addEventListener('visibilitychange', function(){ running = !document.hidden; last = 0; });
