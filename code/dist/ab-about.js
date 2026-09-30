@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.33.4 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.33.7 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -1230,8 +1230,9 @@ window.Webflow.push(function(){
         t.add(function(){ warp.speed(3.4, .7); SFX.whoosh(); })
           .set(fin, { visibility: 'visible' })
           .fromTo(fsm[0], { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: .5 }, '+=.3')
-          .fromTo(L, { x: function(){ return -innerWidth; }, skewX: -28 }, { x: 0, skewX: 0, duration: .6, ease: 'power4.in' }, '+=.15')
-          .fromTo(R, { x: function(){ return innerWidth; }, skewX: 28 }, { x: 0, skewX: 0, duration: .6, ease: 'power4.in' }, '<')
+          // each half starts just past its screen edge (layout offsets: transforms don't move them), so the whole flight shows
+          .fromTo(L, { x: function(){ return -(L.offsetLeft + L.offsetWidth) - 60; }, skewX: -28 }, { x: 0, skewX: 0, duration: .75, ease: 'power3.in' }, '+=.15')
+          .fromTo(R, { x: function(){ return innerWidth - R.offsetLeft + 60; }, skewX: 28 }, { x: 0, skewX: 0, duration: .75, ease: 'power3.in' }, '<')
           .add(function(){ SFX.boom(); SFX.fanfare(); gsap.fromTo(flash, { opacity: .7 }, { opacity: 0, duration: .9, ease: 'power2.out' }); warp.speed(.3, 2); })
           .to(trails, { scaleX: 0, opacity: 0, duration: .5, ease: 'power3.out' })
           .fromTo([L, R], { scaleX: 1.14, scaleY: .88 }, { scaleX: 1, scaleY: 1, duration: .7, ease: 'elastic.out(1,.35)' }, '<')

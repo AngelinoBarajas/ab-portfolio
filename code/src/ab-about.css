@@ -247,6 +247,28 @@
 .ab_boss::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(180deg,rgba(255,255,255,.04) 0 1px,transparent 1px 3px)}
 .ab_boss_stars{position:absolute;inset:-100% 0 0;background-image:radial-gradient(1.5px 1.5px at 20% 30%,#fff,transparent),radial-gradient(1px 1px at 70% 60%,#fff,transparent),radial-gradient(1.5px 1.5px at 40% 80%,#ffe6cf,transparent),radial-gradient(1px 1px at 85% 15%,#fff,transparent),radial-gradient(1px 1px at 10% 70%,#9b7dff,transparent);background-size:220px 220px;animation:ab-boss-stars 3s linear infinite;opacity:.7}
 @keyframes ab-boss-stars{to{transform:translateY(50%)}}
+/* hyperspeed: a canvas starfield rushing out of a vanishing point behind the boss (replaces the CSS stars) */
+.ab_boss.is-warp{background:radial-gradient(46% 36% at 50% 34%,rgba(76,141,255,.13),transparent 72%),#07080d}
+.ab_boss.is-warp .ab_boss_stars{display:none}
+.ab_boss_warp{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+/* credits finale: the roles, then the name streaks in from both sides and meets in the middle */
+.ab_boss_fin{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(14px,2.4vw,26px);padding:16px;text-align:center;visibility:hidden;pointer-events:none;overflow:hidden}
+.ab_boss_fin small{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--signal)}
+.ab_boss_fin-name{display:flex;justify-content:center;align-items:center;gap:.32em;font-family:var(--display);font-weight:900;font-stretch:125%;font-size:clamp(30px,5.6vw,96px);line-height:.95;text-transform:uppercase;color:#F2F0EA}
+.ab_boss_fin-name span{position:relative;display:inline-block;white-space:nowrap}
+.ab_boss_fin-name .is-l{text-shadow:5px 5px 0 #FF6A3D}
+.ab_boss_fin-name .is-r{text-shadow:5px 5px 0 #9b7dff}
+.ab_boss_fin-name i{position:absolute;height:.07em;width:120vw;pointer-events:none}
+.ab_boss_fin-name .is-l i{right:100%;transform-origin:100% 50%;background:linear-gradient(90deg,transparent,rgba(255,106,61,.9))}
+.ab_boss_fin-name .is-r i{left:100%;transform-origin:0 50%;background:linear-gradient(270deg,transparent,rgba(155,125,255,.9))}
+.ab_boss_fin-name i:nth-child(1){top:22%}
+.ab_boss_fin-name i:nth-child(2){top:48%;height:.12em}
+.ab_boss_fin-name i:nth-child(3){top:74%}
+.ab_boss_fin .ab_boss_fin-tap{color:var(--dust);opacity:0}
+@media (max-width:600px){.ab_boss_fin-name{flex-direction:column;gap:.08em;font-size:clamp(34px,13vw,64px)}}
+.ab_boss.is-still .ab_boss_fin{position:static;visibility:visible;padding:8px 0 40px}
+.ab_boss.is-still .ab_boss_fin i{display:none}
+.ab_boss.is-still .ab_boss_fin .ab_boss_fin-tap{opacity:1}
 .ab_boss_ctl{position:absolute;top:14px;right:14px;z-index:9;display:flex;gap:8px}
 .ab_boss_snd{padding:8px 12px;border:1px solid var(--hair2);background:rgba(7,8,13,.7);color:var(--dust);font:inherit;font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:var(--hand,pointer)}
 .ab_boss_snd[aria-pressed="true"]{color:#4cf2a0;border-color:#4cf2a0}
@@ -313,26 +335,10 @@
 .ab_boss_mon.is-rage rect[fill="#ff5a6a"]{fill:#ffd166}
 .ab_boss_spark{position:absolute;left:-3px;top:-3px;width:6px;height:6px;background:#ffd166;box-shadow:0 0 10px #FF6A3D;z-index:2}
 
-/* the finisher: freeze frame, speed lines, the pilot cut-in, the move name, the mega beam, impact frames */
-.ab_boss.is-freeze .ab_boss_arena{filter:grayscale(1) contrast(1.35) brightness(.75)}
-.ab_boss_cut{position:absolute;inset:0;z-index:6;pointer-events:none;visibility:hidden;overflow:hidden}
-.ab_boss_lines{position:absolute;inset:-25%;opacity:0;background:repeating-conic-gradient(from 0deg at 50% 50%,transparent 0deg 3.2deg,rgba(242,240,234,.6) 3.2deg 4deg);-webkit-mask-image:radial-gradient(circle at 50% 50%,transparent 20%,#000 62%);mask-image:radial-gradient(circle at 50% 50%,transparent 20%,#000 62%);animation:ab-boss-lines .14s steps(2) infinite}
-@keyframes ab-boss-lines{to{transform:rotate(2.5deg)}}
-@media (max-width:600px){.ab_boss_panel{height:min(62vh,440px);margin-top:calc(min(62vh,440px) / -2)}.ab_boss_panel-in{flex-direction:column;gap:6px;padding:10% 6vw 12%}.ab_boss_pilot{height:50%;max-width:70vw;margin-top:0}.ab_boss_panel-tx{justify-items:center}}
-.ab_boss_panel{position:absolute;left:-4%;right:-4%;top:50%;height:min(52vh,380px);margin-top:calc(min(52vh,380px) / -2);filter:drop-shadow(0 7px 0 #07080d) drop-shadow(0 -7px 0 #07080d)}
-.ab_boss_panel-in{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:3vw;padding:0 8vw;-webkit-clip-path:polygon(0 20%,100% 0,100% 80%,0 100%);clip-path:polygon(0 20%,100% 0,100% 80%,0 100%);
-  background:radial-gradient(rgba(7,8,13,.28) 1.3px,transparent 1.7px) 0 0/9px 9px,linear-gradient(100deg,#ff5a2d,#FF6A3D 45%,#ffb04d)}
-.ab_boss_pilot{height:88%;width:auto;max-width:44vw;flex:0 1 auto;margin-top:5%}
-.ab_boss_pilot-mark path{fill:#07080d}
-.ab_boss_panel-tx{display:grid;gap:4px;min-width:0;transform:skewX(-10deg)}
-.ab_boss_panel-tx small{font-size:clamp(14px,2.4vw,24px);font-weight:700;letter-spacing:.3em;color:#07080d}
-.ab_boss_panel-tx b{font-family:var(--display);font-weight:900;font-stretch:125%;font-size:clamp(28px,6.4vw,104px);line-height:.9;text-transform:uppercase;color:#F2F0EA;-webkit-text-stroke:3px #07080d;paint-order:stroke fill;text-shadow:6px 6px 0 #07080d}
-.ab_boss_move{position:absolute;left:12px;right:12px;top:30%;display:grid;gap:6px;justify-items:center;text-align:center;opacity:0;transform-origin:50% 50%}
-.ab_boss_move small{font-size:clamp(26px,5.5vw,60px);font-weight:900;letter-spacing:.18em;color:#ffd166;text-shadow:4px 4px 0 #07080d}
-.ab_boss_move b{font-family:var(--display);font-weight:900;font-stretch:125%;font-size:clamp(34px,8vw,124px);line-height:.9;text-transform:uppercase;color:#F2F0EA;-webkit-text-stroke:3px #07080d;paint-order:stroke fill;text-shadow:7px 7px 0 #FF6A3D;transform:skewX(-10deg)}
+/* the finisher: the ship charges, the mega beam, impact frames */
 .ab_boss_mega{position:absolute;top:0;left:0;width:132px;margin-left:-66px;z-index:1;opacity:0;transform:scaleX(0);background:linear-gradient(90deg,transparent,#FF6A3D 16%,#ffd166 34%,#fff 50%,#ffd166 66%,#FF6A3D 84%,transparent);box-shadow:0 0 70px 24px rgba(255,106,61,.55)}
 .ab_boss.is-impact{background:#F2F0EA}
-.ab_boss.is-impact .ab_boss_stars,.ab_boss.is-impact::after{opacity:0}
+.ab_boss.is-impact .ab_boss_stars,.ab_boss.is-impact .ab_boss_warp,.ab_boss.is-impact::after{opacity:0}
 .ab_boss.is-impact .ab_boss_arena svg{filter:brightness(0)!important}
 .ab_boss.is-impact .ab_boss_mega{background:#07080d;box-shadow:none}
 .ab_boss.is-invert{filter:invert(1) contrast(1.5)}
