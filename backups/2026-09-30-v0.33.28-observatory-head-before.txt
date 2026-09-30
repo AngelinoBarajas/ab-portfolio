@@ -1,0 +1,3 @@
+# /observatory page head (6ab88dfc86c563fd3fd8e914) before v0.33.28
+<!-- AB Portfolio · ab-knowledge.css (source: code/src/ab-knowledge.css) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.33.26/code/dist/ab-knowledge.prod.css" integrity="sha384-m1yg6oXxeDWyxBDYb0DwtsZUr+4nmdVpfh6G3JGWk3irkIHzR4e9AqrEjTRt60BX" crossorigin="anonymous">

@@ -1,6 +1,10 @@
-# Session handoff (2026-09-30, field notes + reel + mobile grid session: v0.33.27 on staging)
+# Session handoff (2026-09-30, Lighthouse re-check + Observatory CLS fix: v0.33.28 on staging)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
+
+## Lighthouse re-check + Observatory layout shift (2026-09-30, v0.33.28) · verified on staging 2026-09-30
+
+Live: ab-knowledge CSS **v0.33.28** on `/observatory` only (page head `<link>` bumped by API, SRI checked against jsDelivr; backup `backups/2026-09-30-v0.33.28-observatory-head-before.txt`). `ab-knowledge.css`: `.ab_ks-ask:empty` / `.ab_ks-hstats:empty` were `display:none`, so the script-filled ask box + stats row (~430 px on phones) appeared after first paint and pushed `#library` down. Now `visibility:hidden` + a `min-height` equal to the filled height per wrap step. Verified live: CLS 0.40 → 0.001 (390/412), 0.35 → 0.002 (768), 0.075 → 0.002 (1440); Lighthouse mobile /observatory 53 → 70/70/71; no console errors. Full 11-page Lighthouse table + the Mission 8.8 s diagnosis (simulated, observed paint ~2 s: not a real delay) in `docs/qa-report.md`. Open (minor): /topics `section#vocabulary` light-bg canvas shifted 0.13 in 1 of 3 runs.
 
 ## Layout grid on phones (2026-09-30, v0.33.27) · verified on staging 2026-09-30
 
@@ -64,7 +68,7 @@ Live: ab-about JS + CSS **v0.33.7** (backup `backups/2026-09-29-v0.33.7-about-be
 
 **Angelino's queue for the next chat:** nothing queued (field notes 18–22 live, v0.33.27 layout grid on phones live, reel + film delivered). Film follow-ups if he asks: trim to ~64 s (drop the headline throw), personal details in the timelapse (glasses, a real shirt/poster), a 9:16 cut; re-render with `reel/film.py full` after `reel/life_render.py full`. Open: Designer step M2 (Flight hours text), knowledge drift (item 2 below). He sends phone screenshots one after another: ship each as a patch tag.
 
-**Live on webflow.io** (updated 2026-09-30 ~13:15 ET after the field notes + mobile grid session): ab-core JS + CSS **v0.33.27** (head script `abwarpin` 0.5.0), ab-home JS **v0.33.10** (+ knowledge 0.25.5), ab-about JS + CSS **v0.33.25**, ab-mission JS **v0.33.8** + CSS **v0.33.16**, ab-services JS 0.30.9 + CSS **0.33.26** (+ knowledge 0.25.5 on the template), ab-hub JS 0.30.3 + CSS **0.33.26**, ab-process JS 0.32.0 + CSS **0.33.26**, ab-contact JS 0.32.0 + CSS **0.33.26**, ab-knowledge JS 0.31.0 + CSS **0.33.26** on /observatory (/topics 0.30.0), ab-work JS 0.26.1, ab-404 JS 0.14.0 + CSS **0.33.26**. Home statement planet is `data-planet="wormhole"`.
+**Live on webflow.io** (updated 2026-09-30 ~13:15 ET after the field notes + mobile grid session): ab-core JS + CSS **v0.33.27** (head script `abwarpin` 0.5.0), ab-home JS **v0.33.10** (+ knowledge 0.25.5), ab-about JS + CSS **v0.33.25**, ab-mission JS **v0.33.8** + CSS **v0.33.16**, ab-services JS 0.30.9 + CSS **0.33.26** (+ knowledge 0.25.5 on the template), ab-hub JS 0.30.3 + CSS **0.33.26**, ab-process JS 0.32.0 + CSS **0.33.26**, ab-contact JS 0.32.0 + CSS **0.33.26**, ab-knowledge JS 0.31.0 + CSS **0.33.28** on /observatory (/topics 0.30.0), ab-work JS 0.26.1, ab-404 JS 0.14.0 + CSS **0.33.26**. Home statement planet is `data-planet="wormhole"`.
 
 Open, most blocking first:
 1. **Designer steps (Angelino; hard-refresh the Designer first, custom code was written by API all session):** **L1** fallback logo image in the Nav + Footer components still shows the old `ab-logo.svg` (verified): Replace image with asset `ab-logo-v2.svg` (`6abc73b3d5dccb4f1a7f29ad`). **L2** favicon/webclip are still the 2026-09-28 uploads (verified): upload `logo/favicon-32.png` + `logo/webclip-512.png`. Older ones still open: J1/J2, I1, H1–H6, G5/G6/G8, Nav `ture`, the period in "↗ Go ahead, throw it." (`docs/designer-steps.md`).
