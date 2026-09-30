@@ -73,18 +73,19 @@ html.ab-warp-in body::after{content:"";position:fixed;inset:0;z-index:70;pointer
 .ab_planet.is-wormhole .pring{display:none}
 .is-wormhole .pbody{overflow:visible}
 .wh-halo{position:absolute;inset:-22%;border-radius:50%;pointer-events:none;background:radial-gradient(closest-side,rgba(150,200,255,.2),rgba(150,200,255,.07) 58%,transparent 74%);transition:transform .8s cubic-bezier(.2,.9,.2,1),opacity .8s}
-.wh-ball{position:absolute;inset:0;border-radius:50%;overflow:hidden;isolation:isolate;animation:wh-breathe 7s ease-in-out infinite;
+.wh-ball{position:absolute;inset:0;border-radius:50%;overflow:hidden;isolation:isolate;animation:wh-drop 9s ease-in-out infinite;
   box-shadow:0 0 calc(var(--sz,200px) * .22) rgba(140,190,255,.22),0 0 calc(var(--sz,200px) * .05) rgba(220,240,255,.3)}
-.wh-far{position:absolute;inset:0;border-radius:50%;opacity:0;transition:opacity 1s ease}
+.wh-far{position:absolute;inset:0;border-radius:inherit;opacity:0;transition:opacity 1s ease}
 .pbody.on .wh-far{opacity:1}
-.wh-far i{position:absolute;inset:0;border-radius:50%;background-position:center;background-size:cover}
+.wh-far i{position:absolute;inset:-6%;border-radius:0;background-position:center;background-size:cover}
 .wh-far .is-a{animation:wh-turn 110s linear infinite}
 /* the rim: the far sky squeezed into a band and mirrored, the way a lens wraps light around its edge */
 .wh-far .is-b{background-size:38%;background-repeat:repeat;transform:scaleX(-1);animation:wh-turn-b 70s linear infinite;
   -webkit-mask-image:radial-gradient(closest-side,transparent 66%,#000 84%,#000 100%);mask-image:radial-gradient(closest-side,transparent 66%,#000 84%,#000 100%);opacity:.9}
-.wh-lens{position:absolute;inset:0;border-radius:50%;pointer-events:none;
-  background:radial-gradient(closest-side,transparent 56%,rgba(4,6,14,.32) 80%,rgba(170,210,255,.5) 93.5%,rgba(255,255,255,.92) 97%,rgba(130,180,255,.35) 100%)}
-.wh-glass{position:absolute;inset:0;border-radius:50%;pointer-events:none;mix-blend-mode:screen;
+.wh-lens{position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(closest-side,transparent 56%,rgba(4,6,14,.3) 84%,rgba(120,170,255,.12) 100%);
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.85),inset 0 0 calc(var(--sz,200px) * .035) rgba(200,230,255,.75),inset 0 0 calc(var(--sz,200px) * .1) rgba(130,180,255,.35)}
+.wh-glass{position:absolute;inset:0;border-radius:inherit;pointer-events:none;mix-blend-mode:screen;
   background:radial-gradient(circle at 31% 25%,rgba(255,255,255,.62),rgba(255,255,255,.14) 11%,transparent 27%),radial-gradient(circle at 71% 80%,rgba(150,205,255,.3),transparent 30%),radial-gradient(circle at 50% 50%,transparent 62%,rgba(255,140,220,.12) 90%,rgba(120,220,255,.16) 99%);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.3),inset calc(var(--sz,200px) * -.04) calc(var(--sz,200px) * -.06) calc(var(--sz,200px) * .14) rgba(120,180,255,.22)}
 .wh-rip{position:absolute;inset:0;pointer-events:none}
@@ -94,7 +95,7 @@ html.ab-warp-in body::after{content:"";position:fixed;inset:0;z-index:70;pointer
 .is-wormhole.is-hot .wh-rip i{animation:wh-rip 2.1s cubic-bezier(.2,.6,.3,1) infinite}
 .is-wormhole.is-hot .wh-rip i:nth-child(2){animation-delay:.7s}
 .is-wormhole.is-hot .wh-rip i:nth-child(3){animation-delay:1.4s}
-.is-wormhole.is-hot .wh-ball{animation:wh-breathe 7s ease-in-out infinite,wh-jelly 1.1s cubic-bezier(.3,1.4,.5,1) both}
+.is-wormhole.is-hot .wh-ball{animation:wh-drop 3.2s ease-in-out infinite,wh-jelly 1.1s cubic-bezier(.3,1.4,.5,1) both}
 .is-wormhole.is-hot .wh-halo{transform:scale(1.18)}
 .is-wormhole:focus-visible .wh-ball{box-shadow:0 0 0 2px var(--select,#4C8DFF),0 0 calc(var(--sz,200px) * .22) rgba(140,190,255,.3)}
 .is-wormhole.is-go .wh-ball{animation:none;transition:transform .7s cubic-bezier(.7,0,.84,0),filter .7s;transform:scale(5);filter:brightness(1.8)}
@@ -106,7 +107,8 @@ html.ab-warp-in body::after{content:"";position:fixed;inset:0;z-index:70;pointer
 .is-wormhole.is-hot .wh-tip{opacity:1;transform:translate(-50%,0)}
 @keyframes wh-turn{from{transform:rotate(0) scale(1.18)}to{transform:rotate(360deg) scale(1.18)}}
 @keyframes wh-turn-b{from{transform:scaleX(-1) rotate(0)}to{transform:scaleX(-1) rotate(-360deg)}}
-@keyframes wh-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.015)}}
+/* a drop of water floating free: the outline sloshes (border-radius), squashes a little and turns; faster while hovered */
+@keyframes wh-drop{0%,100%{border-radius:50% 50% 50% 50%/50% 50% 50% 50%;transform:rotate(0) scale(1,1)}20%{border-radius:58% 42% 55% 45%/45% 57% 43% 55%;transform:rotate(5deg) scale(1.04,.96)}40%{border-radius:44% 56% 42% 58%/57% 44% 56% 43%;transform:rotate(-4deg) scale(.965,1.035)}60%{border-radius:55% 45% 59% 41%/46% 58% 42% 54%;transform:rotate(3deg) scale(1.03,.975)}80%{border-radius:43% 57% 47% 53%/56% 43% 57% 45%;transform:rotate(-3deg) scale(.975,1.025)}}
 @keyframes wh-jelly{0%{transform:scale(1,1)}22%{transform:scale(1.08,.92)}42%{transform:scale(.94,1.06)}60%{transform:scale(1.04,.97)}78%{transform:scale(.985,1.015)}100%{transform:scale(1,1)}}
 @keyframes wh-rip{0%{transform:scale(1);opacity:.95}100%{transform:scale(2.7);opacity:0}}
 @media (prefers-reduced-motion:reduce){.wh-ball,.wh-far i,.is-wormhole.is-hot .wh-rip i,.is-wormhole.is-hot .wh-ball{animation:none}}
