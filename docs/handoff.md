@@ -2,6 +2,14 @@
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
+## Calm mode (2026-09-29, v0.33.0) · verified on staging
+
+- **What:** the visitor's own reduced-motion switch. Footer bar "Calm mode · Off/On" (next to Layout grid, also shown on touch) + **Shift+M**; stored in `localStorage ab:calm`, applied on reload. Same effect as the device setting (a device asking for reduced motion shows "On (device setting)", locked).
+- **How:** `core/00-base.js` `AB.reduce = system || calm` (+ `AB.sysReduce`, `AB.calm`), so every bundle follows it; `html.ab-calm` set before first paint by head script **`abwarpin` 0.5.0** (also skips the first-visit warp). `build.mjs` `calmMirror()` copies every `@media (prefers-reduced-motion:reduce)` block under `:where(html.ab-calm)` (no added specificity) and scopes `no-preference` blocks with `:where(html:not(.ab-calm))`. Toggle in `core/20-ui.js`, styles in `ab-core.css`.
+- **Live:** ab-core JS + CSS **v0.33.0**, abwarpin **0.5.0** (site scripts order unchanged). Verified: toggle on → reload, Lenis off, 0 GSAP tweens, CSS keyframes off, persists on /about, /services/motion, /observatory; Shift+M back off; no console errors. Backup: `backups/2026-09-29-v0.33.0-calm-before.txt`.
+- **Follow-up:** page CSS bundles (about, hub, services, process, contact, knowledge, 404) were built at v0.33.0 with the calm mirror but their page-head `<link>`s were NOT bumped (their source is otherwise unchanged since the live versions, so bumping to v0.33.0 is safe). Their few page-level reduced-motion rules (shelf, hub, etc.) ignore Calm mode until then. `mission/20-scenes.js` + `vendor/aguirre-case-map.js` read `AB.reduce` in source but ship with the next ab-mission release (item 1 below).
+- Field note draft **18** (`content/insights/drafts/18-designers-hardest-audience.md`, status draft) names Calm mode; not imported.
+
 ## Next session
 
 **Live on webflow.io (verified 2026-09-29 04:35 ET, API + 10 pages at 1440 and 390, no page errors, no horizontal overflow, after Angelino's own Designer publish):** ab-core JS + CSS **v0.32.0** (site-wide; head script `abwarpin` 0.4.0), ab-home **v0.32.0** (+ knowledge 0.25.5), ab-about JS + CSS **v0.32.3**, ab-contact JS + CSS **v0.32.0**, ab-process JS + CSS **v0.32.0**, ab-hub JS 0.30.3 + CSS 0.30.8, ab-services JS **0.30.9** + CSS **0.30.10** (+ knowledge 0.25.5 on the template), ab-knowledge JS + CSS **0.31.0** on /observatory (/topics still 0.30.0), ab-mission JS 0.28.6 + CSS 0.26.5, ab-work JS 0.26.1, ab-404 JS 0.14.0 + CSS 0.7.1. Home hero cue is now Designer text "↗ Go ahead, throw it." (he typed it). Webflow asset `6abb34929dc4c32cda9248fa` = his astronaut portrait (badge).

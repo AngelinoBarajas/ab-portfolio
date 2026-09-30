@@ -35,7 +35,7 @@ The Eiffel Tower is the classic case. In 1887, while it was still being built, a
 
 None of this means "ignore designers." The industrial designer Raymond Loewy had a rule he called MAYA: *most advanced, yet acceptable*. People want something new, he said, but only up to the point where it stops feeling familiar. Push past that, and they reject it no matter how good it is.
 
-That's the real job on a maximalist site: go as far as you can while keeping one foot in what people already know how to use. On this site, that foot is the boring stuff done right: a nav where you expect it, headlines that say what the page is, a contact form that's always one click away, and animations that calm down for anyone whose device asks for less motion.
+That's the real job on a maximalist site: go as far as you can while keeping one foot in what people already know how to use. On this site, that foot is the boring stuff done right: a nav where you expect it, headlines that say what the page is, a contact form that's always one click away, and a Calm mode switch in the footer (or Shift+M) that stills the whole site for anyone who wants less.
 
 ## A flinch or a flaw?
 
@@ -69,4 +69,4 @@ The alarm going off isn't proof the site is wrong. Sometimes it just means the s
 - "Fifteen years" of the minimal default matches note 16's 2010–2013 timeline.
 - The designer-vs-non-designer pattern is Angelino's own observation (2026-09-29). No specific people or quotes.
 - Links to note 16 (*Less is a bore*, /observatory/less-is-a-bore-maximalist-web-design) by title; add the real link on import.
-- Motion line describes what's live today (the system reduced-motion setting). Calm mode, an on-site toggle, is NOT built yet; if it ships, update that line to name it.
+- Calm mode shipped 2026-09-29 (v0.33.0, footer bar toggle + Shift+M, same effect as the device's reduced-motion setting); the motion line names it.
