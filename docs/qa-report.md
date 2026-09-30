@@ -99,3 +99,32 @@ Every visible link / button / submit on all 22 URLs, read after the page scripts
 2. 404 page: the footer "back to top" logo pointed at a `#top` that page doesn't have → core v0.13.1 treats `#top` as scroll-to-top everywhere.
 
 **Left as is (flag to Angelino):** the Work page breadcrumb "/home" goes to `/#work` (Home's work board) while every other "/home" goes to `/`.
+
+## Re-check at v0.33.27 (live webflow.io, Lighthouse 13 mobile, 2026-09-30)
+
+Median of 3 runs per page (Home: 2 runs, the first failed to launch). Perf column: median (v0.13.0).
+
+| Page | Perf | A11y | Best practices | SEO* | LCP | TBT | CLS |
+|---|---|---|---|---|---|---|---|
+| Home | 48 (45) | 97 | 100 | 63 | 5.2 s | 876 ms | 0 |
+| About | 50 (53) | 95 | 100 | 66 | 5.8 s | 607 ms | 0 |
+| Contact | 72 (70) | 100 | 100 | 63 | 4.4 s | 116 ms | 0 |
+| Process | 59 (56) | 97 | 100 | 63 | 5.3 s | 374 ms | 0.001 |
+| Services hub | 69 (57) | 97 | 100 | 63 | 4.9 s | 96 ms | 0.001 |
+| Service item (`webgl-data`) | 63 (56) | 91 | 100 | 66 | 4.8 s | 378 ms | 0.004 |
+| Work | 67 (70) | 97 | 100 | 66 | 5.4 s | 85 ms | 0 |
+| Mission (`cks`) | 57 (44) | 95 | 100 | 63 | 8.8 s | 0 ms | 0 |
+| Observatory (new) | 53 | 100 | 100 | 63 | 4.5 s | 173 ms | **0.400** |
+| Observatory article (new) | 70 | 96 | 100 | 63 | 4.9 s | 103 ms | 0 |
+| Topics (new) | 69 | 100 | 100 | 63 | 4.6 s | 78 ms | 0.130 (1 of 3 runs) |
+
+\* SEO still reads low because webflow.io is `noindex`.
+
+- **Observatory CLS 0.40** (2 of 3 runs): `section#library` (the observation log, 8,816 px tall on a phone) shifts after load. This is the one real regression; it alone costs ~15 perf points.
+- **Topics CLS 0.13** (1 of 3 runs): the `section#vocabulary` light-bg canvas resizes after first paint.
+- **Mission LCP 8.8 s with 0 ms TBT** in 2 of 3 runs: first paint itself lands at 8.5 s while the network finishes by ~1.3 s and the main thread is idle. Consistent with content held hidden by a timed intro/reveal rather than load cost; needs a look.
+
+### Follow-up diagnosis (2026-09-30)
+
+- **Observatory CLS: fixed in source (`ab-knowledge.css`), not yet shipped.** Cause: the hero's ask box and stats row are empty Webflow divs that the library script fills; `:empty{display:none}` collapsed them, so ~430 px (phone) appeared after first paint and pushed `#library` down. Fix: while `:empty`, `visibility:hidden` + a `min-height` equal to the filled height at each wrap step (swept 300–1000 px: ask 312/295/252/209/167, stats 268/135/68). Verified by serving the local build over the live page (4× CPU, 3 runs each): 360 0.398 → 0.001, 390 0.389 → 0.001, 412 0.397 → 0.001, 768 0.352 → 0, 1440 0.075 → 0.002. Both boxes exist only on `/observatory`.
+- **Mission LCP 8.8 s: not a real delay.** Lighthouse's *observed* FCP/LCP was 1.7–2.3 s (same as About); 8.5 s is its simulated estimate. Nothing on the page is held hidden. The simulation is driven by the same ~19 synchronous head scripts/styles on every page; the only lever is the deferred-footer loading that was reverted on 2026-09-26.

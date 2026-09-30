@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-knowledge.css v0.33.26 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-knowledge.css v0.33.28 · github.com/AngelinoBarajas/ab-portfolio */
 /* =========================================================
    KNOWLEDGE SYSTEM · the Observatory (/observatory, /observatory/*, /topics, /topics/*) + rows on Mission,
    Service and Home. Webflow gives each ab_ks-* class a stub rule; the look lives here (approved prototype:
@@ -74,7 +74,12 @@
 /* ---------- library hero: ask box + stats ---------- */
 .ab_dbh.is-ks{min-height:0}
 .ab_ks-ask{position:relative;z-index:4;margin-top:clamp(30px,4vw,50px);max-width:860px;border:1px solid var(--_color---neutral--hair-strong);background:rgba(7,8,13,.82);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-.ab_ks-ask:empty{display:none}
+/* empty until the library script fills it: hold its filled height (measured per wrap step) so the log below doesn't jump (CLS 0.40 on phones) */
+.ab_ks-ask:empty{visibility:hidden;min-height:167px}
+@media (max-width:839px){.ab_ks-ask:empty{min-height:209px}}
+@media (max-width:453px){.ab_ks-ask:empty{min-height:252px}}
+@media (max-width:415px){.ab_ks-ask:empty{min-height:295px}}
+@media (max-width:399px){.ab_ks-ask:empty{min-height:312px}}
 .ab_ks-ask_h{display:flex;justify-content:space-between;gap:12px;padding:9px 14px;border-bottom:1px solid var(--_color---neutral--hair);font-family:var(--_typography---font--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--_color---text--tertiary)}
 .ab_ks-ask_h b{color:var(--_color---text--primary);font-weight:500;font-variant-numeric:tabular-nums}
 .ab_ks-ask_row{display:flex;align-items:center;gap:12px;padding:16px 16px 14px}
@@ -91,7 +96,9 @@
 .ab_ks-ask_hit a{color:var(--_color---text--primary)}
 .ab_ks-ask_hit b{color:var(--_color---brand--signal);font-weight:500}
 .ab_ks-hstats{display:flex;flex-wrap:wrap;margin-top:clamp(28px,3.4vw,44px);border-top:1px solid var(--_color---neutral--hair);position:relative;z-index:4;max-width:860px}
-.ab_ks-hstats:empty{display:none}
+.ab_ks-hstats:empty{visibility:hidden;min-height:68px}
+@media (max-width:653px){.ab_ks-hstats:empty{min-height:135px}}
+@media (max-width:331px){.ab_ks-hstats:empty{min-height:268px}}
 .ab_ks-hstat{flex:1 1 150px;padding:14px 18px 0 0}
 .ab_ks-hstat span{display:block;font-family:var(--_typography---font--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--_color---text--tertiary)}
 .ab_ks-hstat b{display:block;margin-top:6px;font-family:var(--_typography---font--display);font-weight:900;font-stretch:118%;font-size:30px;line-height:1}
