@@ -40,7 +40,7 @@
 .ab_badge:hover .ab_badge_face::after{opacity:.4}
 .ab_badge_slot{box-shadow:inset 0 1px 3px rgba(0,0,0,.8),0 0 0 1px var(--hair)}
 .ab_badge_logo{display:block;width:100%;height:100%}
-.ab_badge_logo .lg-a,.ab_badge_logo .lg-b{fill:var(--star)}
+.ab_badge_logo .lg-a,.ab_badge_logo .lg-leg,.ab_badge_logo .lg-b{fill:var(--star)}
 .ab_badge_logo .lg-planet{fill:var(--signal)}
 .ab_badge_photo{background:radial-gradient(70% 60% at 50% 38%,rgba(255,106,61,.12),transparent 70%),repeating-linear-gradient(45deg,rgba(255,255,255,.025) 0 8px,transparent 8px 16px)}
 .ab_badge_photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}

@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission.css v0.33.4 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission.css v0.33.8 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · ab-mission.css · Mission template (/work/[slug]) only. Script-built parts + states the Designer cannot express. */
 /* ---------- monitor internals (views are built by ab-mission; the monitor frame/decor lives in ab-core.css) ---------- */
 .ab_screen canvas{max-width:100%}
@@ -791,6 +791,7 @@ body.eng .crew-dock .dot{background:#7cc4ff;box-shadow:0 0 10px #7cc4ff}
 .ai-tpl path{fill:none;stroke:#8a8a8a;stroke-width:2.4;vector-effect:non-scaling-stroke}
 .ai-mark path{fill:#111;stroke:#1473e6;stroke-width:1.5;vector-effect:non-scaling-stroke;transition:fill .8s}
 .stg-vector.is-color .ai-mark path{fill:#F2F0EA}
+.stg-vector.is-color .ai-mark .ai-p-planet{fill:#f36c42}
 .ai-a rect{fill:#fff;stroke:#1473e6;stroke-width:1.2}
 .ai-h path{stroke:#1473e6;stroke-width:1}
 .ai-h circle{fill:#1473e6}

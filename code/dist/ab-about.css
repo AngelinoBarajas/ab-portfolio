@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about.css v0.33.7 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about.css v0.33.8 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · About page (/about). Loaded with a page-head <link>. Layout, type and color live on the
    Webflow classes; this holds what the Designer can't: keyframes, 3D, pseudos, descendant rules and
    the state classes ab-about.js toggles. */
@@ -41,7 +41,7 @@
 .ab_badge:hover .ab_badge_face::after{opacity:.4}
 .ab_badge_slot{box-shadow:inset 0 1px 3px rgba(0,0,0,.8),0 0 0 1px var(--_color---neutral--hair)}
 .ab_badge_logo{display:block;width:100%;height:100%}
-.ab_badge_logo .lg-a,.ab_badge_logo .lg-b{fill:var(--_color---text--primary)}
+.ab_badge_logo .lg-a,.ab_badge_logo .lg-leg,.ab_badge_logo .lg-b{fill:var(--_color---text--primary)}
 .ab_badge_logo .lg-planet{fill:var(--_color---brand--signal)}
 .ab_badge_photo{background:radial-gradient(70% 60% at 50% 38%,rgba(255,106,61,.12),transparent 70%),repeating-linear-gradient(45deg,rgba(255,255,255,.025) 0 8px,transparent 8px 16px)}
 .ab_badge_photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}

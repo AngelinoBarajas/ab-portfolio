@@ -517,7 +517,7 @@
         cells.map(function(c, i){
           // stroke widths in user units (non-scaling-stroke broke the dash-draw inside the scaled cells)
           var sw = 'stroke-width:' + (2.2 / k).toFixed(2), swm = 'stroke-width:' + (2.2 / (k * .367)).toFixed(2);
-          var s = c.s, inner = s.mark ? '<g transform="translate(10 30) scale(.367)"><path class="sk-l" style="' + swm + '" d="' + M.a + '"/><path class="sk-l" style="' + swm + '" d="' + M.planet + '"/><path class="sk-l" style="' + swm + '" d="' + M.b + '"/></g>' :
+          var s = c.s, inner = s.mark ? '<g transform="translate(10 30) scale(.367)"><path class="sk-l" style="' + swm + '" d="' + M.a + '"/><path class="sk-l" style="' + swm + '" d="' + M.leg + '"/><path class="sk-l" style="' + swm + '" d="' + M.planet + '"/><path class="sk-l" style="' + swm + '" d="' + M.b + '"/></g>' :
             s.d.map(function(d){ return '<path class="sk-l" style="' + sw + '" d="' + d + '"/>'; }).join('');
           return '<div class="sk-cell" data-i="' + i + '" style="left:' + c.x + 'px;top:' + c.y + 'px;width:' + cw + 'px;height:' + ch + 'px">' +
             '<svg viewBox="0 0 200 150" preserveAspectRatio="xMidYMid meet"><g filter="url(#' + fid + ')">' + inner +
@@ -583,7 +583,7 @@
       var panelW = P ? 0 : 250, cvX = 44, cvW = SW - cvX - panelW, top = 62 + 26;
       var artW = P ? 540 : 700, artH = P ? 330 : 430, artX = cvX + (cvW - artW) / 2, artY = P ? 250 : top + 70;
       var s = (artW * (P ? .88 : .8)) / 490.16, mx = artX + (artW - 490.16 * s) / 2, my = artY + (artH - 241.75 * s) / 2;
-      var names = ['A stroke', 'Planet + ring', 'B'], keys = ['a', 'planet', 'b'];
+      var names = ['A stroke', 'A leg', 'B', 'Planet + ring'], keys = ['a', 'leg', 'b', 'planet'];
       st.innerHTML = '<div class="ai-bar"><b>Ai</b><span>File</span><span>Edit</span><span>Object</span><span>Type</span><span>Select</span><span>Effect</span><span>View</span><span>Window</span></div>' +
         '<div class="ai-ctl"><span class="ai-ctl-k">Path</span><span>Stroke <i>1 pt</i></span><span>Opacity <i>100%</i></span><span class="ai-mode">Pen tool</span></div>' +
         '<div class="ai-tools">' + AI_TOOLS.map(function(p, i){ return '<i class="ai-t' + (i === 2 ? ' pen' : i === 0 ? ' sel' : '') + '"><svg viewBox="0 0 24 24">' + p + '</svg></i>'; }).join('') + '<i class="ai-fs"><b class="f"></b><b class="s"></b></i></div>' +
@@ -605,12 +605,12 @@
       function toStage(pt){ return { x: mx + pt.x * s, y: my + pt.y * s }; }
       // anchor points + a few bezier handles along each path
       var PATHS = paths.map(function(p, i){
-        var L = p.getTotalLength ? p.getTotalLength() : 800, n = i === 1 ? 16 : 10, pts = [];
+        var L = p.getTotalLength ? p.getTotalLength() : 800, pl = keys[i] === 'planet', n = pl ? 16 : keys[i] === 'leg' ? 6 : 10, pts = [];
         for (var j = 0; j <= n; j++){ var a = p.getPointAtLength ? p.getPointAtLength(L * j / n) : { x: 0, y: 0 }; pts.push(toStage(a)); }
         var g = document.createElementNS('http://www.w3.org/2000/svg', 'g'); g.setAttribute('class', 'ai-an'); anch.appendChild(g);
         g.innerHTML = pts.map(function(pt, j){
           var h = '';
-          if (i === 1 && j % 4 === 2 && pts[j + 1]){ var dx = pts[j + 1].x - pts[j - 1].x, dy = pts[j + 1].y - pts[j - 1].y, dl = Math.sqrt(dx * dx + dy * dy) || 1, ux = dx / dl * 22, uy = dy / dl * 22;
+          if (pl && j % 4 === 2 && pts[j + 1]){ var dx = pts[j + 1].x - pts[j - 1].x, dy = pts[j + 1].y - pts[j - 1].y, dl = Math.sqrt(dx * dx + dy * dy) || 1, ux = dx / dl * 22, uy = dy / dl * 22;
             h = '<g class="ai-h"><path d="M' + (pt.x - ux) + ' ' + (pt.y - uy) + 'L' + (pt.x + ux) + ' ' + (pt.y + uy) + '"/><circle cx="' + (pt.x - ux) + '" cy="' + (pt.y - uy) + '" r="2.6"/><circle cx="' + (pt.x + ux) + '" cy="' + (pt.y + uy) + '" r="2.6"/></g>'; }
           return '<g class="ai-a" data-j="' + j + '">' + h + '<rect x="' + (pt.x - 3.5) + '" y="' + (pt.y - 3.5) + '" width="7" height="7"/></g>';
         }).join('');
@@ -631,7 +631,7 @@
       tl.to(curA, { autoAlpha: 0, duration: .2 }, .6).to(pen, { autoAlpha: 1, duration: .2 }, .6);
       var t = .8;
       PATHS.forEach(function(o, i){
-        var d = i === 1 ? 2.6 : 1.5, prog = { v: 0 };
+        var d = keys[i] === 'planet' ? 2.6 : keys[i] === 'leg' ? .9 : 1.5, prog = { v: 0 };
         tl.to(o.p, { strokeDashoffset: 0, duration: d, ease: 'none' }, t);
         tl.fromTo(prog, { v: 0 }, { v: 1, duration: d, ease: 'none', immediateRender: false, onUpdate: function(){ if (!o.p.getPointAtLength) return; var pt = toStage(o.p.getPointAtLength(prog.v * o.L)); gsap.set(pen, { x: pt.x - 3, y: pt.y - 21 }); } }, t);
         tl.fromTo(o.dots, { autoAlpha: 0, scale: 0, transformOrigin: '50% 50%' }, { autoAlpha: 1, scale: 1, duration: .18, stagger: d / o.dots.length, ease: 'back.out(3)', immediateRender: false }, t);
@@ -641,7 +641,7 @@
       // pathfinder: select all, Minus Front → solid shapes with real cuts
       tl.addLabel('pathfinder', t);
       tl.to(pen, { autoAlpha: 0, duration: .2 }, t).to(curA, { autoAlpha: 1, duration: .2 }, t);
-      at(t + .1, function(){ st.classList.add('is-sel'); if (mode) mode.textContent = 'Selection · 3 paths'; });
+      at(t + .1, function(){ st.classList.add('is-sel'); if (mode) mode.textContent = 'Selection · 4 paths'; });
       tl.to(bbox, { autoAlpha: 1, duration: .25 }, t + .1);
       if (minus){ var mp = center(minus); tl.to(curA, { x: mp.x, y: mp.y, duration: .7, ease: 'power2.inOut' }, t + .3); at(t + 1.05, function(){ minus.classList.add('hit'); }); }
       tl.to(paths, { fillOpacity: 1, strokeOpacity: 0, duration: .6, stagger: .12 }, t + 1.15);
