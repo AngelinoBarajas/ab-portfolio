@@ -1,0 +1,4 @@
+About page 6ab6d8aa86c563fd3f8b64a4 before v0.33.7 (2026-09-29)
+script ababout 0.32.3 footer
+<!-- AB Portfolio · ab-about.css (source: code/src/ab-about.css) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.32.3/code/dist/ab-about.prod.css" integrity="sha384-TZC61fiC9mrZWfiGwXin9BwCXbAbzrrN+QGEuuobVkFe5zTfpMiMMMxiy9Uol2/D" crossorigin="anonymous">

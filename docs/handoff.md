@@ -2,6 +2,14 @@
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
+## Hidden boss fight (2026-09-29, v0.33.7) · verified on staging 2026-09-30
+
+Live: ab-about JS + CSS **v0.33.7** (backup `backups/2026-09-29-v0.33.7-about-before.txt`). At Angelino's ask (`about/10-boss.js`):
+- **Hyperspeed:** `warpField()` canvas starfield (vanishing point 50%/34%, behind the boss) on gsap's ticker, `speed(v, dur)`: 3.4 on arrival → 0.55 cruise when the warning plays, 0.08 while the ship charges the finisher, 3.6 burst on the mega beam, 0.12 on game over. Replaces the CSS `.ab_boss_stars` (kept only for reduced motion).
+- **Cut-in removed:** helmet close-up, speed lines, "Final deploy" move name, `is-freeze` and their CSS are gone; the finisher is charge → zoom → mega beam → impact frames.
+- **Credits:** no family/personal lines; crawl = Starring / Final boss / Soundtrack / Built with / no-scope line (13 s). Finale `.ab_boss_fin`: "Game idea · Story · Pixel art · Code · Sound", then ANGELINO (left, orange trail) and BARAJAS (right, violet trail) streak in and meet in the middle (stacked ≤600px). Start x from `offsetLeft` (a `getBoundingClientRect` start read the already-applied transform and the words jumped). The only place the name appears.
+- Test hook for headless runs: serve unminified `dist/ab-about.js` with `var DMG = 2;` raised and an rAF autopilot dispatching arrow/Space keydowns every frame (the dialog's blur handler clears held keys).
+
 ## Engines switch / Calm mode (2026-09-29, v0.33.0–v0.33.3) · verified on staging
 
 - **What:** the visitor's own reduced-motion switch, labeled **"Engines on / off"** (Angelino's pick; code and storage still say calm). Three buttons, one controller in `core/20-ui.js`: nav status line (after "Available…"; orange when off), footer bar (next to Layout grid, also on touch), mobile menu (above the footer lines, "Engines off · Motion held"), plus **Shift+M**. Stored in `localStorage ab:calm`, applied on reload. A device asking for reduced motion shows "Engines off (device)", locked. Screen-reader name starts with the visible text ("Engines on: press to turn the site's motion off").
