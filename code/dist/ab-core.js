@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.33.29 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.33.30 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -607,9 +607,17 @@ window.Webflow.push(function(){
     }
     function loop(t){ var dt = last ? Math.min(.05, (t - last) / 1000) : 0; last = t; if (running) draw(t, dt); requestAnimationFrame(loop); }
     resize(); addEventListener('resize', resize);
-    // lens positions are read at the front of GSAP's tick, before any tween writes: reading them in draw() (after the
-    // tweens) forced a full layout every frame (~400 ms of Home's load in Lighthouse). One frame behind is invisible.
-    if (hasGsap) gsap.ticker.add(function(){ if (running) LENSES.forEach(function(o){ o.r = o.el.getBoundingClientRect(); }); }, false, true);
+    // lens positions: reading them in draw() forced a full layout every frame (~400 ms of Home's load in Lighthouse), and
+    // reading them at the front of GSAP's tick still did (other code dirties layout between frames). So only measure a
+    // lens while it's near the screen (an IntersectionObserver says when, for free); off screen it reads as width 0,
+    // which draw() already skips. On load the wormhole is far down Home, so nothing is measured at all.
+    if (hasGsap){
+      var OFF = { width: 0 }, lensIO = window.IntersectionObserver ? new IntersectionObserver(function(es){ es.forEach(function(e){ e.target.__lensOn = e.isIntersecting; }); }, { rootMargin: '200px' }) : null;
+      gsap.ticker.add(function(){
+        if (!running) return;
+        LENSES.forEach(function(o){ if (lensIO && !o.io){ o.io = 1; lensIO.observe(o.el); } o.r = !lensIO || o.el.__lensOn ? o.el.getBoundingClientRect() : OFF; });
+      }, false, true);
+    }
     if (!reduce) requestAnimationFrame(loop);
     addEventListener('pointermove', function(e){ tmx = e.clientX / w - .5; tmy = e.clientY / h - .5; });
     document.addEventListener('visibilitychange', function(){ running = !document.hidden; last = 0; });

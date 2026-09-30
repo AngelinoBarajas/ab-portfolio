@@ -6,6 +6,25 @@ How to run it: one step at a time. Claude gives the exact Navigator path + click
 
 Already done (don't redo): Home color bindings, Work card tags + brand colors, the 5 Mission template "Mission = Current Mission" filters, Services rail = all services, Mission Planner form rename (ID kept `planner`).
 
+## Open items at a glance (updated 2026-09-30, after v0.33.29)
+
+**Before any of these: reload the Designer.** On 2026-09-30 the API rewrote the site head (Geist preload + ab-core CSS v0.33.29) and the heads of `/observatory`, `/topics`, the Topics template and the Observatory template (ab-knowledge CSS v0.33.29). A Page-settings Save from a tab opened earlier would put the old versions back.
+
+Quickest wins first (each is a few clicks):
+1. **P1** Topics template: show "Shown in practice" only when *Missions is set* (removes the last layout jump over 0.1). New.
+2. **P2** Topics template: same for "Related services" (*Services is set*). New, optional.
+3. **M2** About badge: "Training / Self-taught" → "Flight hours / 10,000+".
+4. **J1 / J2** Home: hero badge year 1987, services lede text.
+5. **H3** Email fallback text in Nav, Footer, Contact.
+6. **L1 / L2** Logo v2 fallback image; favicon + webclip upload.
+7. **I1** Services template "Flight computer" (steps 1, 3, 4, 5 + re-add the outline span).
+8. **H1** Home statement planet size/position (values below).
+9. **H2** Missions template Benefits field binding.
+10. **G6 / G8** List sorts; Mission template color bindings.
+11. **N** Nav tidy-ups (attribute `ture` → `true`).
+
+Needs something from you first: **D2** headshot photo, **H5** real testimonials (before launch), **C2** Services JSON-LD (at launch). Your call: **G5** (recommended skip), **H6** (optional). **H4** is superseded by L3 (done).
+
 ---
 
 ## A. Crawlable links (highest SEO value)
@@ -76,7 +95,7 @@ Back up the current field first (paste into `webflow/backup/`). Insert each `[Fi
   - Verify: `/` at 1440 and 390 on staging; the headline must stay on top of the planet.
 - [ ] **H2. Benefits list on missions** (Mission template › `section_briefing` › `ab_brief_side`): select the hidden `div.ab_cms-source` under the parameters list (attribute `data-field="params"`) › Duplicate › bind the copy's text to **Benefits** (new Missions field) › change its attribute to `data-field="benefits"`. The script lists the lines under Mission parameters as "Benefits for the people using it" (reuses the parameters' classes, no CSS). Verify: `/work/kip` shows B-01…B-04; other missions (Benefits empty) show nothing new.
 - [ ] **H3. Email fallback text** → `angelino@barajasdsgn.com` in every `[data-bind="email"]` element: Nav component › mobile menu › `ab_menu_foot` span; Footer component › `#footEmail` button label; Contact page › email button label (`is-contact`). Visitors already see the right address (the script fills it from Site settings › Email); this fixes the raw HTML for crawlers and no-JS. Verify: `curl` any page, no `your-domain` left.
-- [ ] **H4. (optional) Mission template stylesheet link** (Page settings › Custom code › head, **keep the robots `<meta>` binding below it untouched**): change the ab-mission.css link to
+- [x] ~~**H4. (optional) Mission template stylesheet link**~~ superseded by L3 (v0.33.16, done 2026-09-30). (Page settings › Custom code › head, **keep the robots `<meta>` binding below it untouched**): change the ab-mission.css link to
   `<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.28.4/code/dist/ab-mission.prod.css" integrity="sha384-cN5rSLnIcJZugZozlUAvBrBSrbndlU9JToeelXU0PfMzLKRObdozUwyRVaL0XHAS" crossorigin="anonymous">`
   (was v0.26.5). Nothing visible depends on it: the new mobile-channel centering and Benefits styling are inline in the script. Not done through the API because a full rewrite of that head block risks the Designer-bound robots field.
 - [ ] **H6. (optional) Make the Observatory bento card native** (Home › `section_services` › `ab_bento_grid`). Today ab-home v0.28.5 builds it: it drops the Marks card (`Card / branding`) to one row by removing `is-tall` from its `ab_bento_cell`, and inserts an `ab_bento_cell` › `article.ab_bento-card.is-observatory` (`data-visual="observatory"`) right after Custom deploys. To make it native: in the Designer remove `is-tall` from the branding cell, duplicate the Design systems cell, move it right after Custom deploys, set `data-name="Card / observatory"` and `data-visual="observatory"`, background gradient `135deg #4C8DFF → #7C5CFF → #FF6A3D`, text white, label *The Observatory*, title *Field notes from real builds*, text *Articles on the how and the why: build notes from real projects and the ideas behind them, linked by topic.*, link `/observatory`. The script then only draws the star chart into it. Benefit: the card's copy is in the raw HTML (crawlers, no-JS) and editable in the Designer.
@@ -113,3 +132,12 @@ Placeholders in `docs/placeholders.md` (email, socials, 4 pin images, testimonia
 ## M. Bookshelf card dark (added 2026-09-30, bookshelf session)
 - [x] **M1. Bookshelf card → dark** (done 2026-09-30 by MCP, verified live: `class="ab_bento-card is-shelf is-dark"`, bg rgb(14,16,32) like the Interstellar card. `set_style` fails with "styles not found" until the 3-class chain exists: created combo `is-dark` under [ab_bento-card, is-shelf] with the same two variables as `.ab_bento-card.is-dark`, then set_style worked. Steps below kept for reference): hard-refresh the Designer first. About page › Navigator › `section_about-off` › … › `ab_bento_cell is-full` › **Card / bookshelf** (`ab_bento-card is-shelf`, an `<article>`) › Style panel › Selector field › type `is-dark` › Enter (reuses the existing combo; don't create a new style or change any properties). The card turns navy like the Interstellar card; the text colors follow. Previewed 2026-09-30 by rewriting the class in the staging HTML: wood shelf + tesseract both read well on navy. Publish to webflow.io only, then Claude checks the HTML shows `class="ab_bento-card is-shelf is-dark"`.
 - [ ] **M2. Flight hours text** (the API can't edit text inside Div Blocks; a script shows it meanwhile): About › hero › crew badge front › `ab_badge_fields` › 2nd `ab_badge_field`: double-click `ab_badge_dt` "Training" → **Flight hours**, `ab_badge_dd` "Self-taught" → **10,000+**. Same in the meta row under the badge (`ab_meta` › 3rd `ab_meta_item`: `ab_meta_label` → Flight hours, `ab_meta_value` → 10,000+). The hero sentence "self-taught designer and developer" stays unless Angelino says otherwise.
+
+## P. Page speed session (added 2026-09-30, v0.33.29)
+Context: v0.33.29 removed the layout jumps on load (details in `docs/qa-report.md`). One jump is left that CSS can't fix: on the 11 topics with no missions, the script hides the "Shown in practice" section after the page has painted, so everything below it moves up (CLS 0.11 at ~1024px, 0.05 at 1440). The Topics' own **Missions** field is filled on exactly the 16 topics that show the section and empty on the 11 that hide it (checked 2026-09-30), so Webflow can leave the section out before the page is sent.
+
+- [ ] **P1. Hide "Shown in practice" when a topic has no missions.** Topics template › Navigator › `section#practice` (class `section_ks-topic`, attribute `data-ks-sec="practice"`, frame label `▢ shown-in-practice`) › Settings (gear) › **Visibility** › Conditions › **+ Add condition** › field **Missions** › **is set** › Save. Publish to webflow.io.
+  - Verify (Claude): raw HTML of `/topics/agencies-partners` has no `data-ks-sec="practice"`; `/topics/webflow-cms` still has it with its 2 missions; CLS at 1024 under 0.1.
+  - Keep in mind: a new topic only shows missions if its **Missions** field is filled (the script's fallback that also matched missions tagging the topic won't be reached for a hidden section).
+- [ ] **P2. (optional) Same for "Related services".** Topics template › `section#services` (`data-ks-sec="services"`) › Visibility › **Services is set**. The 3 topics without services (Saying no, Science of time, Philosophy at work) are the 3 that hide it. It sits further down the page, so it doesn't cause a visible jump today; this just makes the HTML match what visitors see.
+- Note, not a step: `ab-core.css` now re-declares the body and mono font variables (Geist / JetBrains Mono plus size-matched fallbacks). If you ever change the body or mono font in **Variables**, tell Claude so the fallback is updated too.
