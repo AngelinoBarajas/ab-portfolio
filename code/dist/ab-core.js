@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.33.12 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.33.13 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -283,8 +283,11 @@ window.Webflow.push(function(){
      starfield (sf reads LENSES: stars bend around it into an Einstein ring), wobbles like jelly and sends ripples out on
      hover with a note ("They put it there."), and a click falls through to a random page of the site. ---------- */
   var LENSES = [];
-  function farSide(W){
-    var cv = document.createElement('canvas'); cv.width = cv.height = W; var x = cv.getContext('2d'), i, r;
+  // the far side, drawn from a fixed seed so every size is the same picture: the ball uses 320–512px, the fall a 1536–2048px
+  // canvas (crisp at 5x zoom). Star and dust sizes scale with W so the two read alike when they swap.
+  function farCanvas(W){
+    var cv = document.createElement('canvas'); cv.width = cv.height = W; var x = cv.getContext('2d'), i, r, k = W / 512, sd = 7;
+    function rnd(){ sd = (sd + 0x6D2B79F5) | 0; var t = Math.imul(sd ^ (sd >>> 15), 1 | sd); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }
     var g = x.createRadialGradient(W * .5, W * .5, 0, W * .5, W * .5, W * .72);
     g.addColorStop(0, '#1c2a52'); g.addColorStop(.45, '#0d1330'); g.addColorStop(1, '#03040a'); x.fillStyle = g; x.fillRect(0, 0, W, W);
     // nebula veils: a warm, a cold and a violet one
@@ -293,16 +296,18 @@ window.Webflow.push(function(){
       x.fillStyle = ng; x.fillRect(0, 0, W, W);
     });
     // a spiral galaxy on the far side (two log-spiral arms)
-    var gs = W * .2;
+    var gs = W * .2, dot = 1.2 * Math.max(1, k * .75);
     x.save(); x.translate(W * .6, W * .42); x.rotate(-.5); x.scale(1, .55);
     var core = x.createRadialGradient(0, 0, 0, 0, 0, gs * .5); core.addColorStop(0, 'rgba(255,240,215,.95)'); core.addColorStop(1, 'rgba(255,200,150,0)'); x.fillStyle = core; x.beginPath(); x.arc(0, 0, gs * .5, 0, 7); x.fill();
-    for (i = 0; i < 900; i++){ var tt = Math.random() * 3.2, rr = gs * .12 * Math.exp(tt * .55), an = tt * 2 + (i % 2) * Math.PI + (Math.random() - .5) * .5;
-      x.fillStyle = 'rgba(' + (Math.random() < .5 ? '200,220,255' : '255,225,190') + ',' + (.25 + Math.random() * .6) + ')'; x.fillRect(Math.cos(an) * rr, Math.sin(an) * rr, 1.2, 1.2); }
+    for (i = 0; i < 900; i++){ var tt = rnd() * 3.2, rr = gs * .12 * Math.exp(tt * .55), an = tt * 2 + (i % 2) * Math.PI + (rnd() - .5) * .5;
+      x.fillStyle = 'rgba(' + (rnd() < .5 ? '200,220,255' : '255,225,190') + ',' + (.25 + rnd() * .6) + ')'; x.fillRect(Math.cos(an) * rr, Math.sin(an) * rr, dot, dot); }
     x.restore();
-    for (i = 0; i < 700; i++){ r = Math.random() < .9 ? .6 + Math.random() * .7 : 1.4 + Math.random() * 1.2;
-      x.fillStyle = 'rgba(' + (Math.random() < .2 ? '255,214,180' : Math.random() < .3 ? '190,215,255' : '255,255,255') + ',' + (.35 + Math.random() * .65) + ')'; x.beginPath(); x.arc(Math.random() * W, Math.random() * W, r, 0, 7); x.fill(); }
-    return cv.toDataURL('image/jpeg', .88);
+    for (i = 0; i < 700; i++){ r = (rnd() < .9 ? .6 + rnd() * .7 : 1.4 + rnd() * 1.2) * Math.max(1, k * .75);
+      x.fillStyle = 'rgba(' + (rnd() < .2 ? '255,214,180' : rnd() < .3 ? '190,215,255' : '255,255,255') + ',' + (.35 + rnd() * .65) + ')'; x.beginPath(); x.arc(rnd() * W, rnd() * W, r, 0, 7); x.fill(); }
+    return cv;
   }
+  function farSide(W){ return farCanvas(W).toDataURL('image/jpeg', .88); }
+
   function wormLinks(){
     var here = location.pathname.replace(/\/$/, '') || '/', seen = {}, out = [];
     $$('a[href]').forEach(function(a){
@@ -327,7 +332,9 @@ window.Webflow.push(function(){
     var paint = function(){ farTx = farSide(sz > 240 ? 512 : 320); $$('.wh-far i', body).forEach(function(i){ i.style.backgroundImage = 'url(' + farTx + ')'; }); body.classList.add('on'); };
     if ('requestIdleCallback' in window) requestIdleCallback(paint, { timeout: 800 }); else setTimeout(paint, 30);
     var lens = { el: $('.wh-ball', body), b: 0, to: 0 }; LENSES.push(lens);
-    function hot(on){ el.classList.toggle('is-hot', on); if (!el.classList.contains('is-go')) lens.to = on ? 1 : 0; }
+    var hiCv = null;
+    function hi(){ if (!hiCv) hiCv = farCanvas(coarse ? 1536 : 2048); }
+    function hot(on){ el.classList.toggle('is-hot', on); if (!el.classList.contains('is-go')) lens.to = on ? 1 : 0; if (on && !hiCv) setTimeout(hi, 0); }
     function fall(){
       if (el.classList.contains('is-go')) return;
       var list = wormLinks(), url = list[Math.random() * list.length | 0];
@@ -343,9 +350,10 @@ window.Webflow.push(function(){
     function tunnel(url){
       var ball = $('.wh-ball', body), r = ball.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2, R = r.width / 2;
       var D = Math.sqrt(Math.pow(Math.max(x, innerWidth - x), 2) + Math.pow(Math.max(y, innerHeight - y), 2)) + 60;
-      var t = document.createElement('div'); t.className = 'wh-tunnel'; t.setAttribute('aria-hidden', 'true'); t.innerHTML = '<i></i>';
+      var t = document.createElement('div'); t.className = 'wh-tunnel'; t.setAttribute('aria-hidden', 'true');
       var ring = document.createElement('div'); ring.className = 'wh-tunnel-ring'; ring.setAttribute('aria-hidden', 'true');
-      var tex = t.firstChild; tex.style.cssText = 'left:' + (x - R) + 'px;top:' + (y - R) + 'px;width:' + 2 * R + 'px;height:' + 2 * R + 'px' + (farTx ? ';background-image:url(' + farTx + ')' : '');
+      hi(); var tex = hiCv; t.appendChild(tex);
+      tex.style.cssText = 'left:' + (x - R) + 'px;top:' + (y - R) + 'px;width:' + 2 * R + 'px;height:' + 2 * R + 'px';
       document.body.appendChild(t); document.body.appendChild(ring);
       var st = { r: R * .96 };
       function paintR(){ t.style.clipPath = 'circle(' + st.r.toFixed(1) + 'px at ' + x.toFixed(1) + 'px ' + y.toFixed(1) + 'px)'; gsap.set(ring, { left: x - st.r, top: y - st.r, width: st.r * 2, height: st.r * 2 }); }

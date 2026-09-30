@@ -101,7 +101,7 @@ html.ab-warp-in body::after{content:"";position:fixed;inset:0;z-index:70;pointer
 .is-wormhole.is-go .wh-ball{animation:none}
 /* the fall (buildWormhole › tunnel): a window onto the far galaxy grows from the hole to the whole screen, under the warp flash (z 70) */
 .wh-tunnel{position:fixed;inset:0;z-index:68;pointer-events:none;overflow:hidden;background:#03040a}
-.wh-tunnel i{position:absolute;border-radius:50%;background-color:#0d1330;background-position:center;background-size:cover;will-change:transform}
+.wh-tunnel canvas{position:absolute;border-radius:50%;will-change:transform}
 .wh-tunnel-ring{position:fixed;z-index:69;border-radius:50%;pointer-events:none;box-shadow:0 0 0 2px rgba(235,246,255,.95),0 0 34px 8px rgba(150,200,255,.55),inset 0 0 50px rgba(150,200,255,.5)}
 .is-wormhole.is-go .wh-tip{opacity:0!important}
 .wh-tip{position:absolute;left:50%;bottom:calc(100% + 14px);z-index:6;display:grid;gap:3px;min-width:200px;padding:10px 12px;transform:translate(-50%,6px);opacity:0;pointer-events:none;
