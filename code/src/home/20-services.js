@@ -143,13 +143,18 @@
         if (busy) return; busy = true;
         look = (look + 1 + Math.floor(Math.random() * (LOOKS.length - 1))) % LOOKS.length;
         var L = LOOKS[look], seed = 1 + Math.floor(Math.random() * 998), ring = L[0] === 'gas' || Math.random() < .35, tilt = -8 - Math.floor(Math.random() * 22);
+        // mostly a freshly generated planet (core AB.planetLook: 11 surface types x color harmonies x ring styles), sometimes a classic
+        var G = AB.planetLook && Math.random() < .75 ? AB.planetLook() : null;
         function swap(){
           pw.innerHTML = ''; pw.__built = false; pw.__body = null;
-          pw.setAttribute('data-planet', L[0]); pw.setAttribute('data-colors', L[1]); pw.setAttribute('data-glow', L[2]); pw.setAttribute('data-seed', seed);
-          if (ring){ var c = L[1].split(','); pw.setAttribute('data-ring', [c[c.length - 2] || c[1], c[1], c[0]].join(',')); pw.setAttribute('data-tilt', tilt); } else pw.removeAttribute('data-ring');
+          if (G){ AB.applyPlanetLook(pw, G); seed = G.seed; ring = !!G.ring; tilt = G.tilt; }
+          else {
+            pw.setAttribute('data-planet', L[0]); pw.setAttribute('data-colors', L[1]); pw.setAttribute('data-glow', L[2]); pw.setAttribute('data-seed', seed); pw.removeAttribute('data-ring-style');
+            if (ring){ var c = L[1].split(','); pw.setAttribute('data-ring', [c[c.length - 2] || c[1], c[1], c[0]].join(',')); pw.setAttribute('data-tilt', tilt); } else pw.removeAttribute('data-ring');
+          }
           buildPlanet(pw);
-          if (tSeed) tSeed.textContent = 'SEED ' + seed;
-          if (tTilt) tTilt.textContent = ring ? 'RING TILT −' + Math.abs(tilt) + '°' : 'NO RING';
+          if (tSeed) tSeed.textContent = 'SEED ' + seed + ' · ' + pw.getAttribute('data-planet').toUpperCase();
+          if (tTilt) tTilt.textContent = ring ? 'RING TILT ' + (tilt < 0 ? '−' : '+') + Math.abs(tilt) + '°' : 'NO RING';
           if (AB.quest) AB.quest('spin');
         }
         if (!hasGsap || reduce){ swap(); busy = false; return; }

@@ -14,6 +14,7 @@
     ['satellite', 'Make the satellite leave', 'Something on the homepage really hates being dragged.'],
     ['toys', 'Throw a headline around', 'Headlines here are toys.'],
     ['blackhole', 'Feed the black hole', 'Scroll all the way down. It\'s hungry.'],
+    ['wormhole', 'Fall through the wormhole', 'One of the planets on the homepage isn\'t a planet. Someone put it there.'],
     ['channels', 'Watch every channel', 'Mission monitors carry more than one channel.'],
     ['diagnostics', 'Run diagnostics', 'Launch control can tell you what\'s wrong.'],
     ['touchdown', 'Land a mission', 'Follow a flight plan all the way to the end.'],
@@ -42,3 +43,12 @@
   quest.count = qCount;
   quest.reset = function(){ qFound = {}; qSave(); qEmit(''); };
   AB.quest = quest;
+  // arrived through the wormhole (core 10-space sets the flag before it jumps): say so here, since the quest toast never got its turn there
+  (function(){
+    var w = null; try { w = sessionStorage.getItem('ab:wormhole'); sessionStorage.removeItem('ab:wormhole'); } catch (e){}
+    if (!w) return;
+    setTimeout(function(){
+      toast('You came out the other side.');
+      if (w === 'new') setTimeout(function(){ toast('✦ Side quest complete · Fall through the wormhole · ' + qCount() + '/' + QUESTS.length); }, 2800);
+    }, 1400);
+  })();

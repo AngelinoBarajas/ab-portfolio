@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.33.8 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.33.9 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -519,7 +519,10 @@ window.Webflow.push(function(){
     box.classList.add('is-astro');
     // deep space behind him (the badge's sky: nebula + two drifting star layers + the odd shooting star) and a far planet
     box.insertAdjacentHTML('afterbegin', '<div class="ab_badge_sky abpa-sky" aria-hidden="true"><i class="neb"></i><i class="st is-a"></i><i class="st is-b"></i><i class="shoot"></i><span class="abpa-far"><span class="ab_planet" data-planet="gas" data-seed="17" data-colors="#2a1d6b,#5b3fd1,#9d85ff,#e6ddff,#3a2a8a" data-ring="#ffd9b3,#ff9e6a,#8a4a2a" data-tilt="-16" data-spin="60" data-glow="rgba(124,92,255,.4)"></span></span></div>');
-    var far = $('.abpa-far', box); if (AB.buildPlanet) AB.buildPlanet($('.ab_planet', far));
+    var far = $('.abpa-far', box), farP = $('.ab_planet', far);
+    // a different far planet every visit (core AB.planetLook), always ringed so it reads at that size
+    if (AB.planetLook && farP){ var FL = AB.planetLook(); if (!FL.ring){ FL.ring = '#ffd9b3,#ff9e6a,#8a4a2a'; FL.tilt = -16; FL.open = .24; } AB.applyPlanetLook(farP, FL); }
+    if (AB.buildPlanet) AB.buildPlanet(farP);
     box.insertAdjacentHTML('beforeend',
       '<div class="abpa-cordw" aria-hidden="true"><svg class="abpa-cord"><path class="c0"/><path class="c1"/><path class="c4"/><path class="c2"/><path class="c3"/></svg></div>' +
       '<div class="abpa" aria-hidden="true"><svg viewBox="0 0 701 833">' +
