@@ -131,7 +131,11 @@ input.button.is-primary:hover{background-color:var(--star)}
 .ab_nav_link.w--current::after,.ab_nav_link.is-current::after{transform:scaleX(1);transform-origin:left}
 .ab_nav_link:hover::after,.ab_nav_link:focus-visible::after{transform:scaleX(1);transform-origin:left}
 .ab_nav_status-dot{box-shadow:0 0 10px #3BE38A;animation:ab-blink 2s infinite}
-@media (max-width:1100px){.ab_nav_clock-wrap{display:none}}
+/* the status line steps down so "Book a call" never leaves the bar (measured 992–1440 with "Available Q4 2026" + Engines):
+   clock + cursors under 1440, Engines icon-only under 1280, dot + Engines icon under 1100 */
+@media (max-width:1439px){.ab_nav_clock-wrap{display:none}}
+@media (max-width:1279px){.ab_nav_engines span{display:none}}
+@media (max-width:1100px){.ab_nav_status [data-bind="availability"],.ab_nav_eng-sep{display:none}}
 .ab_nav_menu-line{transition:transform .45s cubic-bezier(.7,0,.2,1),top .45s cubic-bezier(.7,0,.2,1),background-color .2s}
 .ab_nav_menu-button[aria-expanded="true"] .ab_nav_menu-line{background-color:var(--signal);top:20px;transform:rotate(45deg)}
 .ab_nav_menu-button[aria-expanded="true"] .ab_nav_menu-line.is-bottom{transform:rotate(-45deg)}
