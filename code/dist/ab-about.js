@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.33.10 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.33.20 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -787,13 +787,256 @@ window.Webflow.push(function(){
     }
     if (!coarse && !reduce){
       shelf.addEventListener('pointermove', function(e){
-        if (e.pointerType !== 'mouse') return;
+        if (e.pointerType !== 'mouse' || !room) return;
         var pick = null, op = books[0] && books[0].offsetParent, x = op ? e.clientX - op.getBoundingClientRect().left : 0;
         for (var i = 0; op && i < books.length; i++){ var b = books[i]; if (x >= b.offsetLeft - 2 && x <= b.offsetLeft + b.offsetWidth + 2){ pick = b; break; } }
         setHot(pick);
       });
       shelf.addEventListener('pointerleave', function(){ setHot(null); });
     }
+
+    /* ---------- the other side: Cooper's tesseract (Angelino, 2026-09-29). At rest the stage shows the shelf from behind,
+       inside the tesseract: the same books mirrored (fore-edges, room light in the gaps) in an endless lattice of copies,
+       strands running to the vanishing point, light drifting in along them. Hover (tap on touch, keyboard focus) steps
+       through to the room: the real books plus Murph's watch, whose second hand twitches STAY in Morse; from the tesseract
+       side the strand tied to the watch answers. Canvas: the lattice is drawn once per size, each frame only adds motes +
+       the strand, and only while it's on screen and showing. ---------- */
+    var WATCH = '<svg viewBox="0 0 34 66" aria-hidden="true"><defs>' +
+      '<radialGradient id="abw-c" cx="34%" cy="28%" r="80%"><stop offset="0" stop-color="#f4f5f8"/><stop offset=".5" stop-color="#a9adb8"/><stop offset="1" stop-color="#565a66"/></radialGradient>' +
+      '<linearGradient id="abw-s" x1="0" x2="1"><stop offset="0" stop-color="#3a2416"/><stop offset=".5" stop-color="#6e472b"/><stop offset="1" stop-color="#3a2416"/></linearGradient></defs>' +
+      '<rect x="11" y="0" width="12" height="17" rx="2" fill="url(#abw-s)"/><rect x="11" y="43" width="12" height="23" rx="1.5" fill="url(#abw-s)"/>' +
+      '<path d="M12.6 2v13M21.4 2v13M12.6 46v18M21.4 46v18" stroke="rgba(255,220,180,.35)" stroke-width=".6" stroke-dasharray="1.4 1.2"/>' +
+      '<rect x="10" y="12.5" width="14" height="5" rx="1" fill="#8b8f9a"/><rect x="10" y="42.5" width="14" height="5" rx="1" fill="#8b8f9a"/>' +
+      '<rect x="31" y="27.5" width="3" height="5" rx="1" fill="#9a9ea9"/><circle cx="17" cy="30" r="15" fill="url(#abw-c)"/>' +
+      '<circle cx="17" cy="30" r="12.6" fill="#0d0e13" stroke="#2a2c35" stroke-width=".6"/><g class="abw-t"></g>' +
+      '<g class="abw-h"><path d="M17 30v-6.4" stroke="#e8dcc0" stroke-width="1.6" stroke-linecap="round"/></g>' +
+      '<g class="abw-m"><path d="M17 30v-10.2" stroke="#e8dcc0" stroke-width="1.1" stroke-linecap="round"/></g>' +
+      '<g class="abw-s"><path d="M17 32.6V19.2" stroke="#FF6A3D" stroke-width=".6"/><circle cx="17" cy="30" r="1.1" fill="#FF6A3D"/></g>' +
+      '<path d="M8.6 24.4a9.6 9.6 0 0 1 8.4-6.6" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1.2" stroke-linecap="round"/></svg>';
+    var watch = document.createElement('div');
+    watch.className = 'ab_watch'; watch.setAttribute('role', 'button'); watch.tabIndex = 0;
+    watch.setAttribute('aria-label', 'Murph’s watch. Listen to the second hand.');
+    watch.innerHTML = WATCH;
+    var ticks = '';
+    for (var q = 0; q < 12; q++){
+      var qa = q * Math.PI / 6, r2 = q % 3 ? 10.3 : 8.9;
+      ticks += '<line x1="' + (17 + Math.sin(qa) * 11.5).toFixed(2) + '" y1="' + (30 - Math.cos(qa) * 11.5).toFixed(2) + '" x2="' + (17 + Math.sin(qa) * r2).toFixed(2) + '" y2="' + (30 - Math.cos(qa) * r2).toFixed(2) + '" stroke="#e8dcc0" stroke-width="' + (q % 3 ? .5 : 1.1) + '"/>';
+    }
+    watch.querySelector('.abw-t').innerHTML = ticks;
+    // right after the current read, so phones (middle ~11 spines) see it too
+    if (cur && cur.parentNode === shelf) shelf.insertBefore(watch, cur.nextSibling);
+    else shelf.insertBefore(watch, books[Math.floor(books.length / 2)] || null);
+
+    var hH = watch.querySelector('.abw-h'), hM = watch.querySelector('.abw-m'), hS = watch.querySelector('.abw-s'), twitch = 0, signal = 0;
+    function rot(g, a){ g.setAttribute('transform', 'rotate(' + a.toFixed(2) + ' 17 30)'); }
+    function hands(){
+      var d = new Date(), s = d.getSeconds(), m = d.getMinutes() + s / 60;
+      rot(hH, (d.getHours() % 12 + m / 60) * 30); rot(hM, m * 6); rot(hS, s * 6 + twitch);
+    }
+    hands();
+    // STAY in Morse: the watch's second hand jumps ahead on each dot/dash, the tesseract strand shakes on the same beat
+    var CODE = { S: '...', T: '-', A: '.-', Y: '-.--' }, sending = null;
+    function morse(done){
+      var ids = [], t = 0, word = 'STAY';
+      function on(){ signal = 1; twitch = 6; hands(); }
+      function off(){ signal = 0; twitch = 0; hands(); }
+      for (var i = 0; i < word.length; i++){
+        var mc = CODE[word.charAt(i)];
+        for (var j = 0; j < mc.length; j++){
+          ids.push(setTimeout(on, t)); t += mc.charAt(j) === '.' ? 150 : 450;
+          ids.push(setTimeout(off, t)); t += 160;
+        }
+        t += 320;
+      }
+      ids.push(setTimeout(function(){ sending = null; if (done) done(); }, t));
+      return function(){ ids.forEach(clearTimeout); off(); sending = null; };
+    }
+    function play(){ if (sending) sending(); sending = morse(); }
+    function watchNote(){
+      if (AB.quest) AB.quest('murph');
+      if (note){ note.innerHTML = '<b>Murph’s watch</b>The second hand twitches in Morse. It keeps spelling STAY.'; note.classList.add('show'); clearTimeout(nt); nt = setTimeout(function(){ note.classList.remove('show'); }, 3400); }
+      if (!reduce) play();
+    }
+    watch.addEventListener('click', watchNote); keyAct(watch, watchNote);
+
+    var tess = document.createElement('div'); tess.className = 'ab_tess'; tess.setAttribute('aria-hidden', 'true');
+    var cv = document.createElement('canvas'); tess.appendChild(cv); shelf.appendChild(tess);
+    var ctx = cv.getContext('2d'), still = document.createElement('canvas'), sctx = still.getContext('2d');
+    var W = 0, H = 0, DPR = 1, VX = 0, VY = 0, WX = 0, WY = 0, B6 = 6, WR = 15, ZF = 6.2, motes = [];
+    function proj(x, y, z){ return [VX + (x - VX) / z, VY + (y - VY) / z]; }
+    function build(){
+      W = shelf.clientWidth; H = shelf.clientHeight; if (!W || !H) return;
+      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      cv.width = still.width = Math.round(W * DPR); cv.height = still.height = Math.round(H * DPR);
+      VX = W / 2; VY = H * .38;
+      // the room side, mirrored: x flips, bottoms stay (offsets ignore transforms, so lifted/leaning books read at rest)
+      var sl = [], rowL = W, rowR = 0, rowH = 0, rowB = H - 12;
+      $$('[data-book]', shelf).forEach(function(b){
+        var w = b.offsetWidth, h = b.offsetHeight, x = W - b.offsetLeft - w;
+        sl.push({ x: x, w: w, h: h, b: b.offsetTop + h, c: b.getAttribute('data-c') || '#333', cur: !!b.__cur });
+        rowL = Math.min(rowL, x); rowR = Math.max(rowR, x + w); rowH = Math.max(rowH, h); rowB = b.offsetTop + h;
+      });
+      sl.sort(function(a, b){ return a.x - b.x; });
+      WX = W - watch.offsetLeft - 17; WY = watch.offsetTop + 30;
+      var c = sctx; c.setTransform(DPR, 0, 0, DPR, 0, 0);
+      var g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#0b0c16'); g.addColorStop(1, '#05060a');
+      c.fillStyle = g; c.fillRect(0, 0, W, H);
+      // copies of the unit, far to near; a fog pass after each layer pushes the far ones into the blue
+      var K = 9, k, i, j, z, s, a, x0, y0;
+      for (k = K; k >= 1; k--){
+        z = 1 + k * .62; s = 1 / z; a = Math.min(1, 1.25 * s);
+        for (i = -5; i <= 5; i++) for (j = -3; j <= 3; j++){
+          x0 = VX + (i * W - VX) * s; y0 = VY + (j * H - VY) * s;
+          if (x0 > W || y0 > H || x0 + W * s < 0 || y0 + H * s < 0) continue;
+          c.fillStyle = 'rgba(255,170,92,' + (a * .5).toFixed(3) + ')';
+          c.fillRect(x0 + rowL * s, y0 + (rowB - rowH) * s, (rowR - rowL) * s, rowH * s);
+          c.fillStyle = 'rgba(206,178,132,' + a.toFixed(3) + ')';
+          for (var n = 0; n < sl.length; n++) c.fillRect(x0 + sl[n].x * s, y0 + (sl[n].b - sl[n].h) * s, Math.max(.6, sl[n].w * s - .4), sl[n].h * s);
+          c.fillStyle = 'rgba(28,21,16,' + a.toFixed(3) + ')'; c.fillRect(x0, y0 + (H - 12) * s, W * s, 12 * s);
+          c.strokeStyle = 'rgba(255,190,125,' + (a * .55).toFixed(3) + ')'; c.lineWidth = Math.max(.5, 1.2 * s);
+          c.strokeRect(x0, y0, W * s, H * s);
+        }
+        c.fillStyle = 'rgba(7,9,20,.24)'; c.fillRect(0, 0, W, H);
+      }
+      // strands: every lattice corner runs back to the vanishing point
+      c.lineWidth = .7;
+      for (i = -5; i <= 6; i++) for (j = -3; j <= 4; j++){
+        var p1 = proj(i * W, j * H, 1), p2 = proj(i * W, j * H, 1 + K * .62), sg = c.createLinearGradient(p1[0], p1[1], p2[0], p2[1]);
+        sg.addColorStop(0, 'rgba(255,220,170,.4)'); sg.addColorStop(1, 'rgba(255,220,170,0)');
+        c.strokeStyle = sg; c.beginPath(); c.moveTo(p1[0], p1[1]); c.lineTo(p2[0], p2[1]); c.stroke();
+      }
+      // the film's smeared lines (slit-scan): a zoom blur toward the vanishing point, then 1px slices of the lattice
+      // stretched into full-width / full-height lines at low alpha, brighter and darker at random
+      var tmp = document.createElement('canvas'), tc = tmp.getContext('2d'), sx;
+      tmp.width = still.width; tmp.height = still.height;
+      function snap(){ tc.clearRect(0, 0, tmp.width, tmp.height); tc.drawImage(still, 0, 0); }
+      snap();
+      for (n = 1; n <= 16; n++){ s = 1 + n * .022; c.globalAlpha = .16; c.drawImage(tmp, VX - VX * s, VY - VY * s, W * s, H * s); }
+      snap();
+      for (var ly = 0; ly < H; ly += 2){
+        sx = Math.random() * W; c.globalAlpha = .08 + Math.random() * .22;
+        c.drawImage(tmp, Math.floor(sx * DPR), Math.floor(ly * DPR), 1, Math.max(1, Math.floor(2 * DPR)), 0, ly, W, 2);
+      }
+      for (var lx = 0; lx < W; lx += 2){
+        sx = Math.random() * H; c.globalAlpha = .06 + Math.random() * .18;
+        c.drawImage(tmp, Math.floor(lx * DPR), Math.floor(sx * DPR), Math.max(1, Math.floor(2 * DPR)), 1, lx, 0, 2, H);
+      }
+      // the film's highlights: a few pale and blue-white lines running full length, brighter than the rest
+      c.globalAlpha = 1; c.globalCompositeOperation = 'lighter';
+      for (n = 0; n < 60; n++){
+        var hz = Math.random() < .55, lw = Math.random() < .8 ? .6 : 1.4, la = .05 + Math.random() * .16;
+        c.fillStyle = Math.random() < .3 ? 'rgba(160,200,240,' + la.toFixed(3) + ')' : 'rgba(255,230,190,' + la.toFixed(3) + ')';
+        if (hz) c.fillRect(0, Math.random() * H, W, lw); else c.fillRect(Math.random() * W, 0, lw, H);
+      }
+      g = c.createRadialGradient(VX, VY, 0, VX, VY, Math.max(W, H) * .45);
+      g.addColorStop(0, 'rgba(255,168,90,.22)'); g.addColorStop(1, 'rgba(255,168,90,0)');
+      c.fillStyle = g; c.fillRect(0, 0, W, H);
+      c.globalCompositeOperation = 'source-over';
+      // the near shelf, pulled back a touch (z 1.14) so the lattice wraps it: frame, room light through the gaps, then the
+      // books' fore-edges as backlit silhouettes with their cover boards
+      var NZ = 1 / 1.14; B6 = 0; c.save(); c.translate(VX, VY); c.scale(NZ, NZ); c.translate(-VX, -VY);
+      c.fillStyle = 'rgba(6,7,12,.55)'; c.fillRect(0, 0, W, H);
+      c.strokeStyle = 'rgba(255,196,130,.7)'; c.lineWidth = 1.4; c.strokeRect(0, 0, W, H);
+      c.fillStyle = '#0a0907'; c.fillRect(0, 0, W, 6);
+      c.fillStyle = 'rgba(255,190,125,.35)'; c.fillRect(0, 6, W, 1);
+      c.shadowColor = 'rgba(255,160,80,.95)'; c.shadowBlur = 10; c.fillStyle = 'rgba(255,214,160,.95)';
+      for (n = 0; n < sl.length - 1; n++){
+        var gx = sl[n].x + sl[n].w, gw = sl[n + 1].x - gx, gh = Math.min(sl[n].h, sl[n + 1].h);
+        if (gw > 0 && gw < 14) c.fillRect(gx, rowB - gh + 4, gw, gh - 4);
+      }
+      c.shadowBlur = 0;
+      for (n = 0; n < sl.length; n++){
+        var b = sl[n], top = b.b - b.h, bg = c.createLinearGradient(0, top, 0, b.b);
+        bg.addColorStop(0, '#5e4a31'); bg.addColorStop(.35, '#3a2c1e'); bg.addColorStop(1, '#17110c');
+        c.fillStyle = bg; c.fillRect(b.x, top, b.w, b.h);
+        c.fillStyle = 'rgba(255,200,140,.13)';
+        for (var qx = 5; qx < b.w - 4; qx += 3) c.fillRect(b.x + qx, top + 4, .6, b.h - 8);
+        c.fillStyle = b.c; c.fillRect(b.x, top, 2.2, b.h); c.fillRect(b.x + b.w - 2.2, top, 2.2, b.h); c.fillRect(b.x, top, b.w, 2);
+        c.fillStyle = 'rgba(255,214,160,.8)'; c.fillRect(b.x, top, .8, b.h); c.fillRect(b.x + b.w - .8, top, .8, b.h);
+        if (b.cur){ c.fillStyle = '#FF6A3D'; c.fillRect(b.x + b.w * .44 - 3, top - 11, 6, 12); }
+      }
+      c.fillStyle = '#140f0b'; c.fillRect(0, rowB, W, H - rowB);
+      c.fillStyle = 'rgba(255,196,130,.6)'; c.fillRect(0, rowB, W, 1);
+      // the watch from behind: steel case back on its strap
+      c.fillStyle = '#4a3020'; c.fillRect(WX - 6, WY - 30, 12, 17); c.fillRect(WX - 6, WY + 13, 12, 23);
+      g = c.createRadialGradient(WX - 5, WY - 6, 1, WX, WY, 15);
+      g.addColorStop(0, '#c9ccd4'); g.addColorStop(.6, '#7d818c'); g.addColorStop(1, '#3d404a');
+      c.fillStyle = g; c.beginPath(); c.arc(WX, WY, 15, 0, 6.2832); c.fill();
+      c.strokeStyle = 'rgba(20,22,28,.5)'; c.lineWidth = .7;
+      c.beginPath(); c.arc(WX, WY, 11, 0, 6.2832); c.stroke(); c.beginPath(); c.arc(WX, WY, 6, 0, 6.2832); c.stroke();
+      c.restore(); WX = VX + (WX - VX) * NZ; WY = VY + (WY - VY) * NZ; B6 = VY + (6 - VY) * NZ; WR = 15 * NZ;
+      // a light vertical smear over the near books too, so their tops and edges streak like the lattice
+      snap();
+      for (n = 1; n <= 7; n++){ c.globalAlpha = .075; c.drawImage(tmp, 0, -n * 4, W, H); c.drawImage(tmp, n * 2, 0, W, H); }
+      c.globalAlpha = 1;
+      // vignette
+      g = c.createRadialGradient(VX, VY, Math.min(W, H) * .3, VX, VY, Math.max(W, H) * .75);
+      g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.5)');
+      c.fillStyle = g; c.fillRect(0, 0, W, H);
+      tess.style.transformOrigin = WX + 'px ' + WY + 'px';
+      if (!motes.length) for (n = 0; n < 34; n++) motes.push(mote({}, true));
+      draw(0);
+    }
+    function mote(m, any){
+      m.x = (Math.floor(Math.random() * 6) - 2) * W + (Math.random() - .5) * W * .5;
+      m.y = (Math.floor(Math.random() * 4) - 1) * H + (Math.random() - .5) * H * .3;
+      m.z = any ? 1.2 + Math.random() * (ZF - 1.2) : ZF; m.sp = .35 + Math.random() * .5;
+      return m;
+    }
+    var last = 0;
+    function draw(t){
+      if (!W) return;
+      var c = ctx, dt = last && t ? Math.min(50, t - last) / 1000 : 0; last = t;
+      c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(still, 0, 0);
+      c.setTransform(DPR, 0, 0, DPR, 0, 0);
+      if (reduce) return;
+      c.globalCompositeOperation = 'lighter';
+      for (var n = 0; n < motes.length; n++){
+        var m = motes[n]; m.z -= m.sp * dt * m.z * .5; if (m.z < 1.2) mote(m);
+        var p = proj(m.x, m.y, m.z), al = Math.min(1, (ZF - m.z) / 1.2, (m.z - 1.2) / .5) * .55;
+        // a streak, not a dot: from where it is to where it was a moment ago (further back)
+        var p0 = proj(m.x, m.y, m.z * 1.07);
+        c.strokeStyle = 'rgba(255,214,160,' + Math.max(0, al).toFixed(3) + ')'; c.lineWidth = 1.6 / m.z + .3;
+        c.beginPath(); c.moveTo(p0[0], p0[1]); c.lineTo(p[0], p[1]); c.stroke();
+      }
+      // the watch's strand: from the beam down to the case back and away to the vanishing point; shakes on the Morse beat
+      var amp = .5 + signal * 3.2, ts = t / 1000;
+      c.strokeStyle = 'rgba(255,226,180,' + (.55 + signal * .4) + ')'; c.lineWidth = 1 + signal * .8;
+      c.shadowColor = 'rgba(255,170,90,.9)'; c.shadowBlur = 5 + signal * 9;
+      c.beginPath(); c.moveTo(WX, B6);
+      for (var y = B6 + 6; y <= WY - WR; y += 6) c.lineTo(WX + Math.sin(y * .09 + ts * 7) * amp * Math.sin(Math.PI * (y - B6) / (WY - WR - B6)), y);
+      c.lineTo(WX, WY - WR); c.stroke();
+      c.lineWidth = .8; c.beginPath(); c.moveTo(WX, WY); c.lineTo(VX + (WX - VX) * .2, VY + (WY - VY) * .2); c.stroke();
+      c.shadowBlur = 0; c.globalCompositeOperation = 'source-over';
+    }
+
+    var room = false, over = false, vis = false, raf = 0;
+    var card = shelf.closest('.ab_bento-card') || shelf, hint = $('.ab_off_hint.is-shelf', card), hint0 = hint ? hint.textContent : '';
+    function frame(t){ raf = 0; draw(t); loop(); }
+    function loop(){ if (!raf && vis && !room && !reduce) { last = 0; raf = requestAnimationFrame(frame); } }
+    function setRoom(on){
+      if (on === room) return; room = on; shelf.classList.toggle('is-room', on);
+      if (hint) hint.textContent = on ? hint0 : (coarse ? 'Tap to step through the shelf' : 'Hover to step through the shelf');
+      if (!on) setHot(null);
+      loop();
+    }
+    if (hint) hint.textContent = coarse ? 'Tap to step through the shelf' : 'Hover to step through the shelf';
+    card.addEventListener('pointerenter', function(e){ if (e.pointerType === 'mouse'){ over = true; setRoom(true); } });
+    card.addEventListener('pointerleave', function(e){ if (e.pointerType === 'mouse'){ over = false; if (!shelf.contains(document.activeElement)) setRoom(false); } });
+    tess.addEventListener('click', function(){ setRoom(true); });
+    shelf.addEventListener('focusin', function(){ setRoom(true); });
+    shelf.addEventListener('focusout', function(){ setTimeout(function(){ if (!over && !shelf.contains(document.activeElement)) setRoom(false); }, 0); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){
+      vis = es[0].isIntersecting; if (!vis && !over) setRoom(false); loop();
+    }).observe(shelf);
+    else vis = true;
+    // clock ticks while on screen; every ~11 s the shown side sends STAY (watch in the room, strand in the tesseract)
+    setInterval(function(){ if (vis && !sending) hands(); }, 1000);
+    if (!reduce) setInterval(function(){ if (vis && !sending && !document.hidden) sending = morse(); }, 11000);
+    var rz;
+    function rebuild(){ clearTimeout(rz); rz = setTimeout(build, 120); }
+    if (window.ResizeObserver) new ResizeObserver(rebuild).observe(shelf); else window.addEventListener('resize', rebuild);
+    requestAnimationFrame(build);
   })();
 
   /* ===== about/10-boss.js ===== */

@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about.css v0.33.10 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about.css v0.33.20 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · About page (/about). Loaded with a page-head <link>. Layout, type and color live on the
    Webflow classes; this holds what the Designer can't: keyframes, 3D, pseudos, descendant rules and
    the state classes ab-about.js toggles. */
@@ -246,6 +246,22 @@
 .ab_shelf_note{transform:translateY(-6px);transition:opacity .3s,transform .3s}
 .ab_shelf_note.show{opacity:1;transform:none}
 .ab_shelf_note b{display:block;margin-bottom:3px;color:var(--_color---brand--signal);font-weight:500;text-transform:uppercase;letter-spacing:.1em}
+/* the other side (2026-09-29): the stage rests on the tesseract view (canvas, script-built); hovering the card steps
+   through it (zoom from the watch's spot + fade) to the room side with the real books and Murph's watch */
+.ab_tess{position:absolute;inset:0;z-index:5;overflow:hidden;background:#06070c;cursor:pointer;transition:opacity .45s cubic-bezier(.5,0,.2,1),transform .8s cubic-bezier(.6,0,.2,1),visibility 0s}
+.ab_tess canvas{position:absolute;inset:0;width:100%;height:100%;display:block;transform-origin:50% 38%;animation:abt-drift 16s ease-in-out infinite alternate}
+@keyframes abt-drift{to{transform:scale(1.05)}}
+.ab_shelf.is-room .ab_tess{opacity:0;transform:scale(1.5);pointer-events:none;visibility:hidden;transition:opacity .5s cubic-bezier(.5,0,.2,1) .12s,transform .8s cubic-bezier(.6,0,.2,1),visibility 0s .8s}
+.ab_shelf.is-room .ab_tess canvas{animation-play-state:paused}
+.ab_shelf .ab_shelf_note{z-index:6}
+.ab_watch{position:relative;z-index:1;flex:0 0 auto;width:34px;height:66px;margin:0 3px 12px;cursor:pointer;transition:transform .35s cubic-bezier(.22,1,.36,1)}
+.ab_watch svg{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 3px 3px rgba(11,12,20,.35))}
+@media (hover:hover){.ab_watch:hover{transform:translateY(-5px) rotate(-5deg)}}
+.ab_watch:focus-visible{transform:translateY(-5px) rotate(-5deg)}
+@media (prefers-reduced-motion:reduce){.ab_tess,.ab_shelf.is-room .ab_tess,.ab_watch{transition:none}.ab_tess canvas{animation:none}}
+:where(html.ab-calm) .ab_tess,:where(html.ab-calm) .ab_shelf.is-room .ab_tess,:where(html.ab-calm) .ab_watch{transition:none}
+:where(html.ab-calm) .ab_tess canvas{animation:none}
+
 
 /* player one secret: boss fight + credits */
 .ab_boss{position:fixed;inset:0;z-index:96;overflow:hidden;background:#07080d;color:var(--_color---text--primary);font-family:var(--_typography---font--mono);-webkit-user-select:none;user-select:none}
