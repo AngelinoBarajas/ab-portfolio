@@ -16,8 +16,8 @@
 .ab_planet .pring.is-thin > i{background:radial-gradient(closest-side,transparent 90.5%,var(--t1) 92%,var(--t2) 95.5%,transparent 97%)}
 .ab_moon{position:absolute;left:50%;top:50%;pointer-events:none;will-change:transform}
 .ab_moon_body{position:absolute;inset:0;border-radius:50%}
-.ab_moon.is-wife .ab_moon_body{background:radial-gradient(circle at 34% 30%,#f3e9ff,#9b7dff 45%,#3a2a78 80%);box-shadow:0 0 14px rgba(155,125,255,.55)}
-.ab_moon.is-son .ab_moon_body{background:radial-gradient(circle at 34% 30%,#e3fff1,#4cf2a0 45%,#11643e 85%);box-shadow:0 0 12px rgba(76,242,160,.55)}
+.ab_moon.is-wife .ab_moon_body{background:radial-gradient(circle at 34% 30%,#e3fff1,#4cf2a0 45%,#11643e 85%);box-shadow:0 0 14px rgba(76,242,160,.55)}
+.ab_moon.is-son .ab_moon_body{background:radial-gradient(circle at 34% 30%,#f3e9ff,#9b7dff 45%,#3a2a78 80%);box-shadow:0 0 12px rgba(155,125,255,.55)}
 .ab_moon_body::after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:inset -3px -2px 5px rgba(0,0,0,.6)}
 .ab_moon_tag{position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;color:var(--star);background:rgba(7,8,13,.8);border:1px solid var(--hair);padding:2px 6px;opacity:0;transition:opacity .3s}
 .ab_planet.is-pilot:hover .ab_moon_tag,.ab_planet.is-pilot:focus-visible .ab_moon_tag{opacity:1}
@@ -145,7 +145,7 @@
 .ab_crew_orbit{animation:ab-about-orb 7s linear infinite}
 .ab_crew_orbit.is-b{animation-duration:12s}
 .ab_crew_moon{animation:ab-about-orb 3s linear infinite}
-.ab_crew_body.is-kid{box-shadow:0 0 10px #4cf2a0}
+.ab_crew_body.is-kid{box-shadow:0 0 10px #9b7dff}
 @keyframes ab-about-orb{to{transform:rotate(360deg)}}
 .ab_crew_dot{display:inline-block}
 /* crew of three in 3D (about/00-about.js): the layer fills the viz, the Designer's CSS orbits hide, legend dots match the planets */
@@ -157,8 +157,8 @@
 .ab_c3_sun{position:absolute;z-index:5;border-radius:50%;background:radial-gradient(circle at 36% 34%,#ffe6cf,#ff6a3d 55%,#b83a1c);box-shadow:0 0 28px rgba(255,106,61,.65),0 0 70px rgba(255,106,61,.25)}
 .ab_c3_pl{position:absolute;left:0;top:0;border-radius:50%;will-change:transform}
 .ab_crew_legend{z-index:2}
-.ab_crew_sys.is-3d~.ab_crew_legend .ab_crew_dot.is-spouse{background-color:#8b5cff}
-.ab_crew_sys.is-3d~.ab_crew_legend .ab_crew_dot.is-kid{background-color:#3fe08e}
+.ab_crew_sys.is-3d~.ab_crew_legend .ab_crew_dot.is-spouse{background-color:#3fe08e}
+.ab_crew_sys.is-3d~.ab_crew_legend .ab_crew_dot.is-kid{background-color:#8b5cff}
 .ab_crew_sys.is-3d~.ab_crew_legend .ab_crew_dot.is-me{background-color:#4a7fd6}
 .ab_bento-card_viz.is-ph{background:var(--void)}
 .ab_ph_mark{-webkit-text-stroke:1px var(--hair2);transition:transform .5s cubic-bezier(.2,.9,.2,1.4)}

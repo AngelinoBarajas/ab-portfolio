@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.33.21 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.33.22 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -406,8 +406,8 @@ window.Webflow.push(function(){
     var box = sys.parentNode, card = sys.closest('.ab_bento-card') || box, NS = 'http://www.w3.org/2000/svg';
     var P = [
       { k: 'me', c: ['#bcd6ff', '#4a7fd6', '#1c2f5c'], r: .5, s: 20, T: 7, a0: .6 },
-      { k: 'spouse', c: ['#e2d6ff', '#8b5cff', '#3a2381'], r: .86, s: 28, T: 12, a0: 3.6 },
-      { k: 'kid', c: ['#d8ffe9', '#3fe08e', '#137a48'], moon: 1, r: 26, s: 11, T: 3, a0: 0 }
+      { k: 'spouse', c: ['#d8ffe9', '#3fe08e', '#137a48'], r: .86, s: 28, T: 12, a0: 3.6 },
+      { k: 'kid', c: ['#e2d6ff', '#8b5cff', '#3a2381'], moon: 1, r: 26, s: 11, T: 3, a0: 0 }
     ];
     var c3 = document.createElement('div'); c3.className = 'ab_crew3d'; c3.setAttribute('aria-hidden', 'true');
     c3.innerHTML = '<svg class="ab_c3_svg"><g></g><g></g></svg><div class="ab_c3_sun"></div><svg class="ab_c3_svg is-front"><g></g></svg>';
