@@ -2,6 +2,12 @@
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
+## Layout grid on phones (2026-09-30, v0.33.27) · verified on staging 2026-09-30
+
+Live: ab-core JS + CSS **v0.33.27** (site head `<link>` and registered ABCore bumped by API; backup `backups/2026-09-30-v0.33.27-before.txt`). `core/20-ui.js` › layout grid: on touch the footer `#gridToggle` drops its "· Shift+G" label; the mobile menu gets a `.ab_menu_grid` switch after Engines (aria-pressed, "On/Off", closes the menu when turned on). `ab-core.css`: `@media (pointer:coarse),(max-width:991px){#gridToggle.ab_footer_grid-toggle{display:inline}}` overrides the Designer's phone hide (no Designer step needed). Verified live at 390 (footer + menu switch, grid on) and 1440 (Shift+G). Next free tag v0.33.28.
+
+Also this session: field notes 18–22 published (see below); highlight reel + 66 s film built in `reel/` (git-excluded locally, not deployed).
+
 ## Bookshelf + crew badge session (2026-09-30, v0.33.20 → v0.33.26) · verified on staging 2026-09-30
 
 Live at the end of this session (verified 2026-09-30 ~05:00 ET): ab-core JS **v0.33.20** + CSS 0.33.19, ab-about JS + CSS **v0.33.25**, page CSS for 404 / Contact / Process / Services hub / Services template / Observatory **v0.33.26**; everything else as listed under Next session. Bookshelf card (below) first shipped in v0.33.20; backup `backups/2026-09-30-v0.33.20-before.txt`. At Angelino's ask (`about/00-about.js` › end of the bookshelf block, `ab-about.css` › after `.ab_shelf_note b`):
