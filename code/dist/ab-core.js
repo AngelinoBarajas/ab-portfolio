@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.33.3 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.33.4 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -69,8 +69,14 @@ window.Webflow.push(function(){
   if (hasGloss) cache.g = GLOSS; else if (siteCache && siteCache.g) GLOSS = siteCache.g;
   if (hasSiteData || hasGloss){ try { localStorage.setItem(SITE_KEY, JSON.stringify(cache)); } catch (e){} }
   function bind(key, val){ if (!val) return; $$('[data-bind="' + key + '"]').forEach(function(e){ e.textContent = val; }); }
+  // the nav status line gets a condensed availability ("Available Q4 2026" → "Booking Q4 ’26") so it fits beside the
+  // clock, crew and Engines switch; the footer and mobile menu keep the full CMS wording
+  function navAvail(t){ return t.replace(/^Available\b/i, 'Booking').replace(/\b20(\d\d)\b/, '’$1'); }
+  var navAv = $('.ab_nav_status [data-bind="availability"]');
+  if (navAv){ navAv.setAttribute('data-bind', 'availability-nav'); navAv.classList.add('ab_nav_avail'); navAv.textContent = navAvail(navAv.textContent.trim()); }
   function applySettings(){
     bind('availability', S0.availability);
+    if (S0.availability) bind('availability-nav', navAvail(S0.availability));
     if (S0.availability) bind('availability-short', S0.availability.replace(/^Available\s*/i, ''));
     bind('tz-label', S0['tz-label']);
     bind('email', S0.email);
@@ -515,6 +521,10 @@ window.Webflow.push(function(){
     }
     var ico = '<svg class="ab_eng-ico" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1v4.2M3.2 2.8a4 4 0 1 0 5.6 0"/></svg>';
     var status = $('.ab_nav_status');
+    // "2 cursors online" (Designer text) reads as a mission readout: "Crew: 2"
+    $$('.ab_nav_clock-wrap', status || document).forEach(function(cw){
+      Array.prototype.forEach.call(cw.childNodes, function(n){ if (n.nodeType === 3) n.nodeValue = n.nodeValue.replace(/(\d+)\s+cursors?\s+online/i, 'Crew: $1'); });
+    });
     if (status){
       var sep = document.createElement('span'); sep.className = 'ab_nav_eng-sep'; sep.setAttribute('aria-hidden', 'true'); sep.textContent = '·';
       status.appendChild(sep); status.appendChild(make('ab_nav_engines', ico + '<span>' + state + '</span>'));

@@ -63,8 +63,14 @@
   if (hasGloss) cache.g = GLOSS; else if (siteCache && siteCache.g) GLOSS = siteCache.g;
   if (hasSiteData || hasGloss){ try { localStorage.setItem(SITE_KEY, JSON.stringify(cache)); } catch (e){} }
   function bind(key, val){ if (!val) return; $$('[data-bind="' + key + '"]').forEach(function(e){ e.textContent = val; }); }
+  // the nav status line gets a condensed availability ("Available Q4 2026" → "Booking Q4 ’26") so it fits beside the
+  // clock, crew and Engines switch; the footer and mobile menu keep the full CMS wording
+  function navAvail(t){ return t.replace(/^Available\b/i, 'Booking').replace(/\b20(\d\d)\b/, '’$1'); }
+  var navAv = $('.ab_nav_status [data-bind="availability"]');
+  if (navAv){ navAv.setAttribute('data-bind', 'availability-nav'); navAv.classList.add('ab_nav_avail'); navAv.textContent = navAvail(navAv.textContent.trim()); }
   function applySettings(){
     bind('availability', S0.availability);
+    if (S0.availability) bind('availability-nav', navAvail(S0.availability));
     if (S0.availability) bind('availability-short', S0.availability.replace(/^Available\s*/i, ''));
     bind('tz-label', S0['tz-label']);
     bind('email', S0.email);

@@ -92,6 +92,10 @@
     }
     var ico = '<svg class="ab_eng-ico" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1v4.2M3.2 2.8a4 4 0 1 0 5.6 0"/></svg>';
     var status = $('.ab_nav_status');
+    // "2 cursors online" (Designer text) reads as a mission readout: "Crew: 2"
+    $$('.ab_nav_clock-wrap', status || document).forEach(function(cw){
+      Array.prototype.forEach.call(cw.childNodes, function(n){ if (n.nodeType === 3) n.nodeValue = n.nodeValue.replace(/(\d+)\s+cursors?\s+online/i, 'Crew: $1'); });
+    });
     if (status){
       var sep = document.createElement('span'); sep.className = 'ab_nav_eng-sep'; sep.setAttribute('aria-hidden', 'true'); sep.textContent = '·';
       status.appendChild(sep); status.appendChild(make('ab_nav_engines', ico + '<span>' + state + '</span>'));
