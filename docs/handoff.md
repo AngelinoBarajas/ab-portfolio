@@ -1,6 +1,16 @@
-# Session handoff (2026-09-30, Lighthouse re-check + Observatory CLS fix: v0.33.28 on staging)
+# Session handoff (2026-09-30, page speed session: v0.33.30 on staging)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
+
+## Page speed: layout jumps + starfield (2026-09-30, v0.33.29 + v0.33.30) · verified on staging 2026-09-30
+
+Live: ab-core JS **v0.33.30** + CSS **v0.33.29** (site head; registered ABCore re-registered), site head also preloads **Geist** next to Archivo; ab-knowledge CSS **v0.33.29** on `/observatory`, `/topics`, **Topics template** and **Observatory template** (the templates were on 0.25.5, /topics on 0.30.0: screenshot-diffed old vs new at 390/1440 on 8 pages, same page heights, only random stars/planets differ). Backup `backups/2026-09-30-v0.33.29-before.txt`.
+- `ab-core.css`: re-declares `--_typography---font--body` / `--_typography---font--mono` / `--mono` with metric-matched fallbacks ("Geist Fallback" = local Arial at size-adjust 102.47%; "JetBrains Mono Fallback" = Courier New, same 0.6em advance). **If the body or mono font changes in Variables, update these.**
+- `ab-knowledge.css`: `.ab_dbh_title.is-ks .ab_dbh_word{display:inline-block}` (the hero toys' final state); `/topics` star chart mount `:empty` holds its built height via container units (`.container-large:has(> .ab_ks-chartwrap){container-type:inline-size}`, 3 width bands); topic hero reserves `.ab_ks-tstats:empty`, `.ab_ks-mini` aspect-ratio 480/270 (≤767) and a two-line eyebrow (≤479).
+- `core/10-space.js`: wormhole lens rects are read at the front of GSAP's tick and only while an IntersectionObserver says the lens is within 200px of the screen (live had ~190 layout reads/s after scrolling past it; now 0 off screen, ~160/s on screen).
+- Live CLS (4× CPU, 412/1024/1440): About desktop 0.24 → 0.007, Services hub 0.12 → 0.005, Home 1024 0.33 → 0.047, /topics 0.38 → 0.002, topic pages phones 0.20 → 0.001, /work 1024 0.05 → 0.002. Lighthouse mobile medians: Home 48 → **54**, About 50 → **66**, Services hub 69 → **70**, /topics 69 → **74**, topic page → **72**, Observatory **69**; CLS 0 on all six.
+- Left: topic pages **without missions** at ~1024px still 0.11 (the script hides "Shown in practice" after paint) → Designer step **P1** in `docs/designer-steps.md` (visibility condition *Missions is set*; data verified 16/11). Home's remaining forced reflow (~350 ms, now charged to GSAP's tick) is layout work from load-time animations, not a single reader. Contact's console errors are Cloudflare Turnstile's own.
+- Correction logged: the fonts were never on Google Fonts (all four are Webflow-hosted); no font upload needed.
 
 ## Lighthouse re-check + Observatory layout shift (2026-09-30, v0.33.28) · verified on staging 2026-09-30
 
@@ -8,7 +18,7 @@ Live: ab-knowledge CSS **v0.33.28** on `/observatory` only (page head `<link>` b
 
 ## Layout grid on phones (2026-09-30, v0.33.27) · verified on staging 2026-09-30
 
-Live: ab-core JS + CSS **v0.33.27** (site head `<link>` and registered ABCore bumped by API; backup `backups/2026-09-30-v0.33.27-before.txt`). `core/20-ui.js` › layout grid: on touch the footer `#gridToggle` drops its "· Shift+G" label; the mobile menu gets a `.ab_menu_grid` switch after Engines (aria-pressed, "On/Off", closes the menu when turned on). `ab-core.css`: `@media (pointer:coarse),(max-width:991px){#gridToggle.ab_footer_grid-toggle{display:inline}}` overrides the Designer's phone hide (no Designer step needed). Verified live at 390 (footer + menu switch, grid on) and 1440 (Shift+G). Next free tag v0.33.28.
+Live: ab-core JS **v0.33.30** + CSS **v0.33.29** (site head `<link>` and registered ABCore bumped by API; backup `backups/2026-09-30-v0.33.27-before.txt`). `core/20-ui.js` › layout grid: on touch the footer `#gridToggle` drops its "· Shift+G" label; the mobile menu gets a `.ab_menu_grid` switch after Engines (aria-pressed, "On/Off", closes the menu when turned on). `ab-core.css`: `@media (pointer:coarse),(max-width:991px){#gridToggle.ab_footer_grid-toggle{display:inline}}` overrides the Designer's phone hide (no Designer step needed). Verified live at 390 (footer + menu switch, grid on) and 1440 (Shift+G). Next free tag v0.33.28.
 
 Also this session: field notes 18–22 published (see below); highlight reel + 66 s film built in `reel/` (git-excluded locally, not deployed).
 
@@ -68,7 +78,7 @@ Live: ab-about JS + CSS **v0.33.7** (backup `backups/2026-09-29-v0.33.7-about-be
 
 **Angelino's queue for the next chat:** nothing queued (field notes 18–22 live, v0.33.27 layout grid on phones live, reel + film delivered). Film follow-ups if he asks: trim to ~64 s (drop the headline throw), personal details in the timelapse (glasses, a real shirt/poster), a 9:16 cut; re-render with `reel/film.py full` after `reel/life_render.py full`. Open: Designer step M2 (Flight hours text), knowledge drift (item 2 below). He sends phone screenshots one after another: ship each as a patch tag.
 
-**Live on webflow.io** (updated 2026-09-30 ~13:15 ET after the field notes + mobile grid session): ab-core JS + CSS **v0.33.27** (head script `abwarpin` 0.5.0), ab-home JS **v0.33.10** (+ knowledge 0.25.5), ab-about JS + CSS **v0.33.25**, ab-mission JS **v0.33.8** + CSS **v0.33.16**, ab-services JS 0.30.9 + CSS **0.33.26** (+ knowledge 0.25.5 on the template), ab-hub JS 0.30.3 + CSS **0.33.26**, ab-process JS 0.32.0 + CSS **0.33.26**, ab-contact JS 0.32.0 + CSS **0.33.26**, ab-knowledge JS 0.31.0 + CSS **0.33.28** on /observatory (/topics 0.30.0), ab-work JS 0.26.1, ab-404 JS 0.14.0 + CSS **0.33.26**. Home statement planet is `data-planet="wormhole"`.
+**Live on webflow.io** (updated 2026-09-30 ~13:15 ET after the field notes + mobile grid session): ab-core JS + CSS **v0.33.27** (head script `abwarpin` 0.5.0), ab-home JS **v0.33.10** (+ knowledge 0.25.5), ab-about JS + CSS **v0.33.25**, ab-mission JS **v0.33.8** + CSS **v0.33.16**, ab-services JS 0.30.9 + CSS **0.33.26** (+ knowledge 0.25.5 on the template), ab-hub JS 0.30.3 + CSS **0.33.26**, ab-process JS 0.32.0 + CSS **0.33.26**, ab-contact JS 0.32.0 + CSS **0.33.26**, ab-knowledge JS 0.31.0 + CSS **0.33.29** on /observatory, /topics and both knowledge templates (/topics 0.30.0), ab-work JS 0.26.1, ab-404 JS 0.14.0 + CSS **0.33.26**. Home statement planet is `data-planet="wormhole"`.
 
 Open, most blocking first:
 1. **Designer steps (Angelino; hard-refresh the Designer first, custom code was written by API all session):** **L1** fallback logo image in the Nav + Footer components still shows the old `ab-logo.svg` (verified): Replace image with asset `ab-logo-v2.svg` (`6abc73b3d5dccb4f1a7f29ad`). **L2** favicon/webclip are still the 2026-09-28 uploads (verified): upload `logo/favicon-32.png` + `logo/webclip-512.png`. Older ones still open: J1/J2, I1, H1–H6, G5/G6/G8, Nav `ture`, the period in "↗ Go ahead, throw it." (`docs/designer-steps.md`).

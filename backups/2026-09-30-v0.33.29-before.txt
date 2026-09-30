@@ -1,0 +1,12 @@
+# Before v0.33.29 (2026-09-30)
+## site head
+<!-- AB Portfolio · perf: connect to the code CDN early, fetch the display font before CSS asks for it -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" href="https://webflow-files-prod.global.ssl.fastly.net/6ab5fe4a5ee75f9c981dc0be/fonts/6ab5ff8d2159a2087d3ac41e-Archivo-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<!-- AB Portfolio · ab-core.css (source: github.com/AngelinoBarajas/ab-portfolio code/src/ab-core.css) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.33.27/code/dist/ab-core.prod.css" integrity="sha384-yOWj1um3mN+Pq3hPK+o6810gLe+RKFR2oO0DqHr0nV50Bl6cNw/AcNOHLEnPMBHB" crossorigin="anonymous">
+## site scripts (footer order): gsap, gsapscrolltrigger, gsapdraggable, gsapinertia, gsapsplittext, gsapscrambletext, gsapflip (3.13.0), lenis 1.3.26, abwarpin 0.5.0 (header), abcore 0.33.27
+## /observatory head: ab-knowledge.prod.css v0.33.28 sha384-2h4+XQFL4cCkZmyzg/qQ1Igx5n76cP5pp2Wmezv7lp9Bf99q20rdW7shrS9UtXqu
+## /topics head: ab-knowledge.prod.css v0.30.0 sha384-woQV7bCIlwsfRA5LfWlYBsJl7VnVGCcXvFAW65HsY1LKcic5VpNmpIT6QuyNsdmn
+## Topics template + Observatory template heads: ab-knowledge.prod.css v0.25.5 sha384-rzInPny7mBiDHEBtUtMdSduMaPsLJ1IIYUd5E1X/IFG+3L9ytRXIC9oKn4YX39iO
+##   + <meta property="og:image" content="https://cdn.prod.website-files.com/6ab5fe4a5ee75f9c981dc0be/6ab8149fe5d9f17124004a93_og-site.jpg">

@@ -128,3 +128,19 @@ Median of 3 runs per page (Home: 2 runs, the first failed to launch). Perf colum
 
 - **Observatory CLS: fixed, shipped v0.33.28** (live re-check: CLS 0.001, perf 70/70/71). Cause: the hero's ask box and stats row are empty Webflow divs that the library script fills; `:empty{display:none}` collapsed them, so ~430 px (phone) appeared after first paint and pushed `#library` down. Fix: while `:empty`, `visibility:hidden` + a `min-height` equal to the filled height at each wrap step (swept 300–1000 px: ask 312/295/252/209/167, stats 268/135/68). Verified by serving the local build over the live page (4× CPU, 3 runs each): 360 0.398 → 0.001, 390 0.389 → 0.001, 412 0.397 → 0.001, 768 0.352 → 0, 1440 0.075 → 0.002. Both boxes exist only on `/observatory`.
 - **Mission LCP 8.8 s: not a real delay.** Lighthouse's *observed* FCP/LCP was 1.7–2.3 s (same as About); 8.5 s is its simulated estimate. Nothing on the page is held hidden. The simulation is driven by the same ~19 synchronous head scripts/styles on every page; the only lever is the deferred-footer loading that was reverted on 2026-09-26.
+
+## Layout jumps site-wide + Home/About (v0.33.29 / v0.33.30, 2026-09-30)
+
+Desktop + CMS pages had jumps the phone-only Lighthouse pass missed. Causes and fixes:
+
+| Page · width | Cause | Fix | CLS live before → after |
+|---|---|---|---|
+| About · 1440 | summary re-wrapped 3 → 2 lines when Geist swapped in; the centered hero + badge moved | Geist preload + metric-matched fallback | 0.24 → 0.007 |
+| Services hub · 1024/1440 | diagnostics chips (JetBrains Mono) wrapped to a 3rd row in the sans-serif fallback | mono fallback = Courier New (same advance) | 0.14 / 0.12 → 0.004 / 0.005 |
+| Home · 1024 | font swaps | both fallbacks | 0.33 → 0.047 |
+| /topics · all | title words block → inline-block when the hero toys start; star chart built 0 → 613px | start inline-block; chart mount holds its height | 0.38 (1024) / 0.27 (1440) / 0.13 (phone) → ≤ 0.002 |
+| Topic pages · phones | mini chart + stats grid + 2-line eyebrow injected into the hero (+450px) | reserved | 0.20 → 0.001 |
+| Topic pages w/o missions · 1024 | script hides "Shown in practice" after paint | **Designer P1** (visibility *Missions is set*) | 0.07 → 0.11 (now visible because the hero no longer jumps first) |
+
+Lighthouse mobile after (median of 3, live): Home **54** (48), About **66** (50), Services hub **70** (69), /topics **74** (69), topic page **72**, Observatory **69**; CLS 0.000–0.001 on all. Home TBT 876 → 604 ms. Starfield: the wormhole lens was re-measured every frame; v0.33.30 measures it only near the screen (live had ~190 reads/s after scrolling past it, now 0). Home's remaining ~350 ms forced reflow is charged to whichever code measures first after the load-time animations write; reducing it means fewer layout-affecting animations during load.
+
