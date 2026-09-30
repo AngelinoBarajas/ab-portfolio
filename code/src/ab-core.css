@@ -655,6 +655,9 @@ input.button.is-primary:hover{background-color:var(--star)}
 .ab_eng-ico{width:10px;height:10px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
 .ab_nav_eng-sep{opacity:.6}
 @media (pointer:coarse){.ab_footer_grid-toggle.is-calm{display:inline}}
+@media (pointer:coarse),(max-width:991px){#gridToggle.ab_footer_grid-toggle{display:inline}}
+.ab_menu_grid{margin-top:-6px}.ab_menu_grid.is-on{border-color:var(--signal)}.ab_menu_grid.is-on b,.ab_menu_grid.is-on span{color:var(--signal)}
+.ab_menu_grid .ab_eng-ico{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round}
 .ab_menu_engines{cursor:var(--hand,pointer);background:none;margin:18px 0 16px;font:inherit;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
 .ab_menu_engines .ab_eng-ico{width:14px;height:14px}
 /* "Engines on" stays quiet (the orange belongs to Book a call), but its power icon is lit so it reads as a control;

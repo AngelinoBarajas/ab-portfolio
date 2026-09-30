@@ -57,9 +57,13 @@
     var cs = getComputedStyle(inner), n = $$('i', inner).filter(function(i){ return getComputedStyle(i).display !== 'none'; }).length;
     return ' · ' + n + ' columns · ' + Math.round(parseFloat(cs.columnGap)) + 'px gap · ' + Math.round(parseFloat(getComputedStyle(lgrid).paddingLeft)) + 'px margins · ' + Math.round(parseFloat(cs.maxWidth)) + 'px max';
   }
-  function toggleGrid(){ var on = !lgrid.classList.contains('on'); lgrid.classList.toggle('on', on); if (gbtn) gbtn.setAttribute('aria-pressed', on); toast(on ? 'Layout grid on' + gridInfo() : 'Layout grid off'); }
+  function toggleGrid(){ var on = !lgrid.classList.contains('on'); lgrid.classList.toggle('on', on); if (gbtn) gbtn.setAttribute('aria-pressed', on);
+    $$('.ab_menu_grid').forEach(function(b){ b.setAttribute('aria-pressed', on); b.classList.toggle('is-on', on); var s = $('span', b); if (s) s.textContent = on ? 'On' : 'Off'; });
+    toast(on ? 'Layout grid on' + gridInfo() : 'Layout grid off'); }
   if (gbtn){
     if (!gbtn.hasAttribute('tabindex')) gbtn.tabIndex = 0;
+    // touch screens: the footer button shows there too (ab-core.css), without the keyboard shortcut in its label
+    if (coarse) (function strip(n){ if (n.nodeType === 3) n.nodeValue = n.nodeValue.replace(/\s*·\s*Shift\s*\+\s*G/i, ''); else Array.prototype.forEach.call(n.childNodes, strip); })(gbtn);
     gbtn.setAttribute('aria-pressed', 'false');
     gbtn.addEventListener('click', toggleGrid);
     gbtn.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleGrid(); } });
@@ -104,6 +108,14 @@
     if (bar){ var fb = make('ab_footer_grid-toggle is-calm', state + (dev ? ' (device)' : '')); fb.id = 'calmToggle'; if (gbtn && gbtn.parentNode === bar) bar.insertBefore(fb, gbtn); else bar.appendChild(fb); }
     var mfoot = $('#mmenu .ab_menu_foot');
     if (mfoot) mfoot.parentNode.insertBefore(make('ab_menu_hq ab_menu_engines', ico + '<b>' + state + '</b><span>' + (off ? 'Motion held' : 'Tap to still') + '</span>'), mfoot);
+    // the layout grid gets the same kind of switch in the mobile menu; turning it on closes the menu so the grid is visible
+    if (mfoot){
+      var gm = document.createElement('button'); gm.type = 'button'; gm.className = 'ab_menu_hq ab_menu_engines ab_menu_grid'; gm.setAttribute('aria-pressed', 'false');
+      gm.setAttribute('aria-label', 'Layout grid: show the columns the site is built on');
+      gm.innerHTML = '<svg class="ab_eng-ico" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1.5v9M6 1.5v9M10 1.5v9"/></svg><b>Layout grid</b><span>Off</span>';
+      gm.addEventListener('click', function(){ toggleGrid(); var mb = $('#menuBtn'); if (lgrid.classList.contains('on') && mb && document.documentElement.classList.contains('menu-open')) setTimeout(function(){ mb.click(); }, 250); });
+      mfoot.parentNode.insertBefore(gm, mfoot);
+    }
     document.addEventListener('keydown', function(e){ if (e.shiftKey && (e.key === 'M' || e.key === 'm') && !e.ctrlKey && !e.metaKey && !e.altKey && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && !document.activeElement.isContentEditable){ e.preventDefault(); flip(); } });
   })();
 
