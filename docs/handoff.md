@@ -2,6 +2,14 @@
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
+## Planets, wormhole, drifters (2026-09-30, v0.33.9 → v0.33.11) · verified on staging 2026-09-30
+
+Live: ab-core JS + CSS **v0.33.11**, ab-home JS **v0.33.10**, ab-about JS + CSS **v0.33.10**. Backup `backups/2026-09-30-v0.33.10-before.txt`.
+- **Generator** (`core/10-space.js`): 5 new surface types (storm, desert, ocean, toxic, crystal; 11 total), `AB.planetLook()` (type + analogous / complementary / triad palette + ring style) and `AB.applyPlanetLook(el, look)`. Ring styles `data-ring-style` → `.is-ring-thin|wide|double|banded` (classic = none). Used by the Home "tap to morph" specimen (75% generated) and the About astronaut far planet (new each visit). Designer + service-color planets unchanged.
+- **Wormhole** (`data-planet="wormhole"`): the Home statement planet (element `790d868d-…`, attribute changed via API; ring attributes left in place, ignored). Glass lens onto a canvas far-side galaxy, rim = mirrored compressed sky; the real starfield is point-lensed around it (`LENSES` in sf, Einstein ring, swells on hover); hover = jelly + backdrop-blur ripples + note "Looks like a wormhole. They put it there."; click (touch: second tap) dives in and `AB.go`es to a random same-origin link. v0.33.11: floats like a water drop (morphing border-radius, rim is inset shadows so it follows the shape).
+- **Side quest** `wormhole` (17 total): recorded before the jump; `24-quests.js` shows "You came out the other side." + the quest toast on the landing page (sessionStorage `ab:wormhole`). Note: About reports `untethered`, which is not in the list (offered to Angelino as #18).
+- **Drifters** (`core/44-drifters.js`): 1 per ~1.3 screens (max 6, phones 3) small generated planets on the edges of dark top-level sections (not hero/footer/light), draggable with a 6 s spring-back; any other small planet ≤ 60px outside cards/links gets the same drag. Under AB.reduce no spring-back and instant press scale (Engines chat's fix, v0.33.10).
+
 ## Logo v2 (2026-09-30, v0.33.8) · verified on staging 2026-09-30
 
 Live: ab-core JS + CSS **v0.33.8** (site-wide), ab-about JS + CSS **v0.33.8**, ab-mission JS **v0.33.8** (Missions template; CSS still 0.26.5, its head needs a Designer edit). Backup `backups/2026-09-30-v0.33.8-before.txt`.
