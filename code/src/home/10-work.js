@@ -205,19 +205,29 @@
       frames.forEach(function(f){ var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', 'Show ' + (f.getAttribute('data-slug') || 'frame')); b.addEventListener('click', function(){ world.scrollTo({ left: f.offsetLeft - (world.clientWidth - f.offsetWidth) / 2, behavior: reduce ? 'auto' : 'smooth' }); }); dots.appendChild(b); });
       board.parentNode.insertBefore(dots, board.nextSibling);
       var help = $('.ab_board_help'); if (help) help.innerHTML = '<div>Swipe the deck · tap a frame to open it</div>';
+      // the tilt goes on each frame's inner layer, never the frame: iOS Safari re-snaps a scroll-snap target whose style
+      // changes mid-swipe (the deck jumped back to the same card). The selection only changes when the centered card does.
+      var tilts = frames.map(function(f){ return $('.ab_board_frame-inner', f); }), cur = -1;
       var update = function(){
         var mid = world.scrollLeft + world.clientWidth / 2, best = 0, bd = 1e9;
         frames.forEach(function(f, i){
           var c = f.offsetLeft + f.offsetWidth / 2, off = (c - mid) / world.clientWidth, a = Math.abs(off);
           if (a < bd){ bd = a; best = i; }
-          if (!reduce) f.style.transform = 'rotateY(' + (-off * 28) + 'deg) scale(' + (1 - Math.min(a, 1) * .1) + ')';
+          // the vanishing point stays at the middle of the deck (the old perspective on the scroller), not each card's own
+          var D = (c - mid).toFixed(1);
+          if (!reduce && tilts[i]) tilts[i].style.transform = 'translateX(' + (-D) + 'px) perspective(900px) translateX(' + D + 'px) rotateY(' + (-off * 28) + 'deg) scale(' + (1 - Math.min(a, 1) * .1) + ')';
         });
-        frames.forEach(function(f, i){ f.classList.toggle('is-selected', i === best); });
+        if (best === cur) return; cur = best;
+        frames.forEach(function(f, i){
+          f.classList.toggle('is-selected', i === best);
+          // the size tag was measured before the deck laid the frames out (it read 0 × 0)
+          var sz = i === best && f.__sel && $('.sel-size', f.__sel); if (sz && !f.getAttribute('data-size')) sz.textContent = Math.round(f.offsetWidth) + ' × ' + Math.round(f.offsetHeight);
+        });
         $$('button', dots).forEach(function(b, i){ b.classList.toggle('on', i === best); });
       };
       var raf = 0; world.addEventListener('scroll', function(){ if (!raf) raf = requestAnimationFrame(function(){ raf = 0; update(); }); }, { passive: true });
-      update(); addEventListener('resize', update);
-      if (!reduce) ScrollTrigger.create({ trigger: board, start: 'top 85%', once: true, onEnter: function(){ gsap.from(frames, { x: 80, opacity: 0, duration: .9, stagger: .1, ease: 'expo.out', clearProps: 'opacity' }); } });
+      update(); addEventListener('resize', function(){ cur = -1; update(); });
+      if (!reduce) ScrollTrigger.create({ trigger: board, start: 'top 85%', once: true, onEnter: function(){ gsap.from(frames, { x: 80, opacity: 0, duration: .9, stagger: .1, ease: 'expo.out', clearProps: 'transform,opacity' }); } });
       return;
     }
 

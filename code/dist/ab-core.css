@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.33.29 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.33.31 · github.com/AngelinoBarajas/ab-portfolio */
 /* body font fallback sized to Geist (Arial measured against it: 102.47% wide), so text keeps its line breaks when Geist
    swaps in and the heroes don't jump (About CLS 0.24 on desktop). Re-declares the Webflow variable: if the body font is
    changed in the Designer, change it here too. Android (no Arial) falls through to plain sans-serif. */
@@ -88,9 +88,11 @@ html.ab-warp-in body::after{content:"";position:fixed;inset:0;z-index:70;pointer
 }
 .is-wormhole .pbody{overflow:visible}
 .wh-halo{position:absolute;inset:-22%;border-radius:50%;pointer-events:none;background:radial-gradient(closest-side,rgba(150,200,255,.2),rgba(150,200,255,.07) 58%,transparent 74%);transition:transform .8s cubic-bezier(.2,.9,.2,1),opacity .8s}
-.wh-ball{position:absolute;inset:0;border-radius:50%;overflow:hidden;isolation:isolate;animation:wh-drop 9s ease-in-out infinite;
+/* iOS Safari: a spinning layer inside a rounded overflow:hidden box escapes the clip (the far side showed as a square);
+   an opaque mask makes WebKit clip the composited children to the (animated) border-radius */
+.wh-ball{position:absolute;inset:0;border-radius:50%;overflow:hidden;isolation:isolate;animation:wh-drop 9s ease-in-out infinite;-webkit-mask-image:-webkit-radial-gradient(#fff,#000);-webkit-transform:translateZ(0);
   box-shadow:0 0 calc(var(--sz,200px) * .22) rgba(140,190,255,.22),0 0 calc(var(--sz,200px) * .05) rgba(220,240,255,.3)}
-.wh-far{position:absolute;inset:0;border-radius:inherit;opacity:0;transition:opacity 1s ease}
+.wh-far{position:absolute;inset:0;border-radius:inherit;overflow:hidden;opacity:0;transition:opacity 1s ease}
 .pbody.on .wh-far{opacity:1}
 .wh-far i{position:absolute;inset:-6%;border-radius:0;background-position:center;background-size:cover}
 .wh-far .is-a{animation:wh-turn 110s linear infinite}
@@ -315,10 +317,12 @@ input.button.is-primary:hover{background-color:var(--_color---text--primary)}
   .ab_board_component.is-deck{height:auto;overflow:visible;background:none;border:0}
   .is-deck .ab_board_top,.is-deck .ab_board_layers,.is-deck .ab_board_ui,.is-deck .ab_board_cursor{display:none}
   .is-deck .ab_board_viewport{position:static;cursor:auto;touch-action:auto}
-  .is-deck .ab_board_world{position:relative!important;transform:none!important;width:auto!important;height:auto!important;display:flex;gap:14px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;padding:34px var(--_spacing---layout--gutter) 30px;margin-inline:calc(var(--_spacing---layout--gutter) * -1);scrollbar-width:none;perspective:900px}
+  .is-deck .ab_board_world{position:relative!important;transform:none!important;width:auto!important;height:auto!important;display:flex;gap:14px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:34px var(--_spacing---layout--gutter) 30px;margin-inline:calc(var(--_spacing---layout--gutter) * -1);scrollbar-width:none}
   .is-deck .ab_board_world::-webkit-scrollbar{display:none}
   .is-deck .ab_board_world .w-dyn-list,.is-deck .ab_board_world .w-dyn-items,.is-deck .ab_board_world .w-dyn-item{display:contents}
-  .is-deck .ab_board_frame{touch-action:pan-x pan-y;position:relative!important;left:auto!important;top:auto!important;width:auto!important;height:auto!important;flex:0 0 84%;aspect-ratio:4/5;scroll-snap-align:center;transform-origin:center;will-change:transform}
+  .is-deck .ab_board_frame{touch-action:pan-x pan-y;position:relative!important;left:auto!important;top:auto!important;width:auto!important;height:auto!important;flex:0 0 84%;aspect-ratio:4/5;scroll-snap-align:center}
+  /* iOS Safari: restyling a snap target mid-swipe re-snaps it (the deck jumped back), so the tilt is on .ab_board_frame-inner (home/10-work.js) */
+  .is-deck .ab_board_frame-inner{transform-origin:center;will-change:transform}
   .is-deck .ab_board_fname{display:none}
   .is-deck .ab_board_frame canvas.pv{left:50%;right:auto;top:18%;transform:translateX(-50%)}
   .is-deck .ab_board_fopen{opacity:.85}

@@ -27,6 +27,29 @@
     function start(){ setTimeout(aim, 150); setTimeout(aim, 900); setTimeout(aim, 2000); }
     if (document.readyState === 'complete') start(); else addEventListener('load', start);
   })();
+  // after the Engines switch reloads the page (20-ui flip): start at the top, then once pins and late layout have
+  // settled put the visitor back in the same section, the same distance in, unless they've started scrolling
+  (function(){
+    var at = null; try { at = JSON.parse(sessionStorage.getItem('ab:calm-at') || 'null'); sessionStorage.removeItem('ab:calm-at'); } catch (e){}
+    if (!at || at.p !== location.pathname) return;
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+    var touched = false, mark = function(){ touched = true; };
+    ['wheel', 'touchmove', 'keydown'].forEach(function(ev){ addEventListener(ev, mark, { passive: true, once: true }); });
+    function place(last){
+      if (!touched){
+        if (window.ScrollTrigger) ScrollTrigger.refresh();
+        var box = at.i >= 0 && calmSecs()[at.i], y = at.y || 0;
+        if (box){ var r = box.getBoundingClientRect(); y = scrollY + r.top + at.f * r.height - innerHeight * .3; }
+        y = Math.max(0, Math.round(y));
+        if (lenis) lenis.scrollTo(y, { immediate: true, force: true }); else window.scrollTo(0, y);
+        if (window.ScrollTrigger) ScrollTrigger.update();
+      }
+      if (last && 'scrollRestoration' in history) history.scrollRestoration = 'auto';
+    }
+    function start(){ setTimeout(place, 150); setTimeout(function(){ place(true); }, 900); }
+    if (document.readyState === 'complete') start(); else addEventListener('load', start);
+  })();
   // same-page anchors (#work, /#launch on Home): warp, then jump. stopPropagation keeps Webflow's own smooth scroll out of it
   $$('a[href*="#"]').forEach(function(a){
     if (a.hasAttribute('data-board-frame') || a.hasAttribute('data-social') || a.hasAttribute('data-copy-email')) return;

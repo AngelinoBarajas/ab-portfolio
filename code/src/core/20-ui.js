@@ -75,6 +75,17 @@
      localStorage ab:calm and applied on reload (00-base reads it into AB.reduce, abwarpin sets html.ab-calm before
      first paint), so every animation takes the same path as the system setting. A device that already asks for
      less motion shows "Engines off (device)", locked. */
+  // top-level sections (a pinned one is measured by its pin-spacer) and where the visitor is: the section under a line
+  // 30% down the screen and how far into it
+  function calmSecs(){
+    return $$('[class^="section_"], [class*=" section_"]').filter(function(s){ return !(s.parentElement && s.parentElement.closest('[class^="section_"], [class*=" section_"]')); })
+      .map(function(s){ return s.parentNode.classList && s.parentNode.classList.contains('pin-spacer') ? s.parentNode : s; });
+  }
+  function calmSpot(){
+    var y = innerHeight * .3, secs = calmSecs();
+    for (var i = 0; i < secs.length; i++){ var r = secs[i].getBoundingClientRect(); if (r.top <= y && r.bottom > y) return { p: location.pathname, i: i, f: (y - r.top) / r.height }; }
+    return { p: location.pathname, i: -1, y: scrollY };
+  }
   (function(){
     var off = reduce, dev = AB.sysReduce;
     var state = 'Engines ' + (off ? 'off' : 'on'), hint = dev ? 'your device asks for reduced motion' : 'press to turn the site’s motion ' + (off ? 'back on' : 'off');
@@ -83,6 +94,10 @@
       try { if (AB.calm) localStorage.removeItem('ab:calm'); else localStorage.setItem('ab:calm', '1'); }
       catch (er){ toast('The engine switch needs site storage, which this browser is blocking.'); return; }
       toast(AB.calm ? 'Engines on · motion back online' : 'Engines off · everything holds still');
+      // the two modes lay the page out differently (pins, reveals), so the browser's own scroll restore landed somewhere
+      // else, and on iPhones mid-pin, a black screen. Remember the section instead; 30-motion puts the visitor back in it.
+      try { sessionStorage.setItem('ab:calm-at', JSON.stringify(calmSpot())); } catch (er){}
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
       setTimeout(function(){ location.reload(); }, 450);
     }
     // every switch is a real <button>: its name starts with the visible text (label-in-name), aria-pressed = motion off

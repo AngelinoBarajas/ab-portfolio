@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.33.30 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.33.31 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -753,6 +753,17 @@ window.Webflow.push(function(){
      localStorage ab:calm and applied on reload (00-base reads it into AB.reduce, abwarpin sets html.ab-calm before
      first paint), so every animation takes the same path as the system setting. A device that already asks for
      less motion shows "Engines off (device)", locked. */
+  // top-level sections (a pinned one is measured by its pin-spacer) and where the visitor is: the section under a line
+  // 30% down the screen and how far into it
+  function calmSecs(){
+    return $$('[class^="section_"], [class*=" section_"]').filter(function(s){ return !(s.parentElement && s.parentElement.closest('[class^="section_"], [class*=" section_"]')); })
+      .map(function(s){ return s.parentNode.classList && s.parentNode.classList.contains('pin-spacer') ? s.parentNode : s; });
+  }
+  function calmSpot(){
+    var y = innerHeight * .3, secs = calmSecs();
+    for (var i = 0; i < secs.length; i++){ var r = secs[i].getBoundingClientRect(); if (r.top <= y && r.bottom > y) return { p: location.pathname, i: i, f: (y - r.top) / r.height }; }
+    return { p: location.pathname, i: -1, y: scrollY };
+  }
   (function(){
     var off = reduce, dev = AB.sysReduce;
     var state = 'Engines ' + (off ? 'off' : 'on'), hint = dev ? 'your device asks for reduced motion' : 'press to turn the site’s motion ' + (off ? 'back on' : 'off');
@@ -761,6 +772,10 @@ window.Webflow.push(function(){
       try { if (AB.calm) localStorage.removeItem('ab:calm'); else localStorage.setItem('ab:calm', '1'); }
       catch (er){ toast('The engine switch needs site storage, which this browser is blocking.'); return; }
       toast(AB.calm ? 'Engines on · motion back online' : 'Engines off · everything holds still');
+      // the two modes lay the page out differently (pins, reveals), so the browser's own scroll restore landed somewhere
+      // else, and on iPhones mid-pin, a black screen. Remember the section instead; 30-motion puts the visitor back in it.
+      try { sessionStorage.setItem('ab:calm-at', JSON.stringify(calmSpot())); } catch (er){}
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
       setTimeout(function(){ location.reload(); }, 450);
     }
     // every switch is a real <button>: its name starts with the visible text (label-in-name), aria-pressed = motion off
@@ -1173,6 +1188,29 @@ window.Webflow.push(function(){
     ['wheel', 'touchmove', 'keydown'].forEach(function(ev){ addEventListener(ev, mark, { passive: true, once: true }); });
     function aim(){ if (!touched){ if (window.ScrollTrigger) ScrollTrigger.refresh(); scrollToTarget(t); } if (AB.arrived) AB.arrived(); } // AB.arrived: lift the warp-in cover (10-space)
     function start(){ setTimeout(aim, 150); setTimeout(aim, 900); setTimeout(aim, 2000); }
+    if (document.readyState === 'complete') start(); else addEventListener('load', start);
+  })();
+  // after the Engines switch reloads the page (20-ui flip): start at the top, then once pins and late layout have
+  // settled put the visitor back in the same section, the same distance in, unless they've started scrolling
+  (function(){
+    var at = null; try { at = JSON.parse(sessionStorage.getItem('ab:calm-at') || 'null'); sessionStorage.removeItem('ab:calm-at'); } catch (e){}
+    if (!at || at.p !== location.pathname) return;
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+    var touched = false, mark = function(){ touched = true; };
+    ['wheel', 'touchmove', 'keydown'].forEach(function(ev){ addEventListener(ev, mark, { passive: true, once: true }); });
+    function place(last){
+      if (!touched){
+        if (window.ScrollTrigger) ScrollTrigger.refresh();
+        var box = at.i >= 0 && calmSecs()[at.i], y = at.y || 0;
+        if (box){ var r = box.getBoundingClientRect(); y = scrollY + r.top + at.f * r.height - innerHeight * .3; }
+        y = Math.max(0, Math.round(y));
+        if (lenis) lenis.scrollTo(y, { immediate: true, force: true }); else window.scrollTo(0, y);
+        if (window.ScrollTrigger) ScrollTrigger.update();
+      }
+      if (last && 'scrollRestoration' in history) history.scrollRestoration = 'auto';
+    }
+    function start(){ setTimeout(place, 150); setTimeout(function(){ place(true); }, 900); }
     if (document.readyState === 'complete') start(); else addEventListener('load', start);
   })();
   // same-page anchors (#work, /#launch on Home): warp, then jump. stopPropagation keeps Webflow's own smooth scroll out of it
