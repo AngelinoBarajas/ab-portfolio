@@ -1,6 +1,14 @@
-# Session handoff (2026-09-30, page speed session: v0.33.30 on staging)
+# Session handoff (2026-09-30, iPhone Safari session: v0.33.33 on staging)
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
+
+## iPhone Safari fixes (2026-09-30, v0.33.31–v0.33.33) · confirmed by Angelino on his iPhone 2026-09-30
+
+Live: ab-core JS **v0.33.31**, ab-core CSS **v0.33.32** (site head), ABHome **v0.33.33** (Home footer, before abknowledge 0.25.5). Backup `backups/2026-09-30-v0.33.31-before.txt`. None of the three bugs reproduced in Playwright WebKit iPhone emulation; only his phone could confirm.
+- **Wormhole square** (`ab-core.css` `.wh-ball`): `-webkit-mask-image:-webkit-radial-gradient(#fff,#000)` + `translateZ(0)` makes iOS clip the spinning far side to the wobbling circle; `.wh-far` also clips.
+- **Work deck swipe** (`home/10-work.js` phone branch + `ab-core.css` `.is-deck`): the tilt sits on `.ab_board_frame-inner` (`translateX(-D) perspective(900px) translateX(D) rotateY()` keeps the old deck-centered vanishing point), never on the snap targets; frames are `touch-action:auto` (was `pan-x pan-y`). His iPhone still never scrolls the deck natively, so a touch fallback takes over after 10px of sideways drag with no native movement: 1:1 drag with snap off, then glide (flick = one card, else nearest), snap back on after 800 ms. Selection size tag now reads the real size (was 0 × 0).
+- **Engines black screen** (`core/20-ui.js` flip + `core/30-motion.js`): before the reload it stores `ab:calm-at` (top-level section index under 30% of the screen + fraction, pin-spacers measured) and sets `history.scrollRestoration='manual'`; after load it restores at 150/900 ms behind `ScrollTrigger.refresh()` unless the visitor scrolled. The two modes differ ~1,000px in height (Process pin), so the pixel restore landed mid-pin.
+- Next free tag **v0.33.34**.
 
 ## Page speed: layout jumps + starfield (2026-09-30, v0.33.29 + v0.33.30) · verified on staging 2026-09-30
 
