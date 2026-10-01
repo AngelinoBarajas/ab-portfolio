@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.33.32 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.33.34 · github.com/AngelinoBarajas/ab-portfolio */
 /* body font fallback sized to Geist (Arial measured against it: 102.47% wide), so text keeps its line breaks when Geist
    swaps in and the heroes don't jump (About CLS 0.24 on desktop). Re-declares the Webflow variable: if the body font is
    changed in the Designer, change it here too. Android (no Arial) falls through to plain sans-serif. */
@@ -53,6 +53,8 @@ html.ab-warp-in body::after{content:"";position:fixed;inset:0;z-index:70;pointer
 .ab_planet .tex{position:absolute;inset:0;border-radius:50%;overflow:hidden;opacity:0;transition:opacity .7s ease}
 .ab_planet .tex::before{content:"";position:absolute;top:0;left:0;width:400%;height:100%;background-image:var(--tex);background-size:50% 100%;background-repeat:repeat-x;will-change:transform;animation:ab-pspin var(--spin,40s) linear infinite;animation-direction:var(--dir,normal)}
 .ab_planet .tex.on{opacity:1}
+/* crystal: a glassy, sharper highlight and a cool rim on top of the shared shading */
+.ab_planet[data-planet="crystal"] .sphere::before{content:"";position:absolute;inset:0;border-radius:50%;z-index:1;pointer-events:none;background:radial-gradient(circle at 33% 27%,rgba(255,255,255,.55),rgba(255,255,255,.12) 7%,transparent 16%),radial-gradient(circle at 50% 50%,transparent 70%,rgba(190,220,255,.22) 93%,transparent 100%);mix-blend-mode:screen}
 .ab_planet .sphere::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.16),transparent 42%),radial-gradient(circle at 50% 50%,transparent 58%,rgba(0,0,0,.4) 100%);box-shadow:inset calc(var(--sz) * -.16) calc(var(--sz) * -.1) calc(var(--sz) * .26) rgba(0,0,0,.9),inset calc(var(--sz) * .05) calc(var(--sz) * .04) calc(var(--sz) * .12) rgba(255,240,225,.16)}
 @keyframes ab-pspin{from{transform:translate3d(-50%,0,0)}to{transform:translate3d(0,0,0)}}
 .ab_planet .pring{position:absolute;left:50%;top:50%;width:calc(var(--rs,2.3) * 100%);aspect-ratio:1;transform:translate(-50%,-50%) rotate(var(--tilt,-14deg));pointer-events:none}
