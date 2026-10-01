@@ -225,6 +225,15 @@
         });
         $$('button', dots).forEach(function(b, i){ b.classList.toggle('on', i === best); });
       };
+      // iOS Safari fallback: a clear sideways swipe that didn't move the deck natively (seen on iPhones) moves it one card
+      var center = function(i){ var f = frames[Math.max(0, Math.min(frames.length - 1, i))]; world.scrollTo({ left: f.offsetLeft - (world.clientWidth - f.offsetWidth) / 2, behavior: reduce ? 'auto' : 'smooth' }); };
+      var sx = 0, sy = 0, sl = 0;
+      world.addEventListener('touchstart', function(e){ var t = e.touches[0]; sx = t.clientX; sy = t.clientY; sl = world.scrollLeft; }, { passive: true });
+      world.addEventListener('touchend', function(e){
+        var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+        if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+        setTimeout(function(){ if (Math.abs(world.scrollLeft - sl) < 12) center((cur < 0 ? 0 : cur) + (dx < 0 ? 1 : -1)); }, 80);
+      }, { passive: true });
       var raf = 0; world.addEventListener('scroll', function(){ if (!raf) raf = requestAnimationFrame(function(){ raf = 0; update(); }); }, { passive: true });
       update(); addEventListener('resize', function(){ cur = -1; update(); });
       if (!reduce) ScrollTrigger.create({ trigger: board, start: 'top 85%', once: true, onEnter: function(){ gsap.from(frames, { x: 80, opacity: 0, duration: .9, stagger: .1, ease: 'expo.out', clearProps: 'transform,opacity' }); } });
