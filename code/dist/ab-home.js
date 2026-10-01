@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.33.32 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.33.33 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -365,15 +365,34 @@ window.Webflow.push(function(){
         });
         $$('button', dots).forEach(function(b, i){ b.classList.toggle('on', i === best); });
       };
-      // iOS Safari fallback: a clear sideways swipe that didn't move the deck natively (seen on iPhones) moves it one card
+      // iOS Safari fallback: some iPhones never scroll the deck natively. If a sideways drag hasn't moved it after 10px,
+      // the script drags it with the finger (snap off so WebKit doesn't fight each write), then glides to a card: a flick
+      // goes one card that way, a slow drag settles on the nearest. Where native swiping works this never kicks in.
       var center = function(i){ var f = frames[Math.max(0, Math.min(frames.length - 1, i))]; world.scrollTo({ left: f.offsetLeft - (world.clientWidth - f.offsetWidth) / 2, behavior: reduce ? 'auto' : 'smooth' }); };
-      var sx = 0, sy = 0, sl = 0;
-      world.addEventListener('touchstart', function(e){ var t = e.touches[0]; sx = t.clientX; sy = t.clientY; sl = world.scrollLeft; }, { passive: true });
-      world.addEventListener('touchend', function(e){
-        var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
-        if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
-        setTimeout(function(){ if (Math.abs(world.scrollLeft - sl) < 12) center((cur < 0 ? 0 : cur) + (dx < 0 ? 1 : -1)); }, 80);
+      var g = null, snapBack = 0;
+      world.addEventListener('touchstart', function(e){
+        if (e.touches.length > 1){ g = null; return; }
+        var t = e.touches[0]; clearTimeout(snapBack);
+        g = { x: t.clientX, y: t.clientY, sl: world.scrollLeft, from: cur < 0 ? 0 : cur, dir: 0, man: false, lx: t.clientX, lt: Date.now(), vx: 0 };
       }, { passive: true });
+      world.addEventListener('touchmove', function(e){
+        if (!g) return;
+        var t = e.touches[0], dx = t.clientX - g.x, dy = t.clientY - g.y, now = Date.now();
+        if (!g.dir && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) g.dir = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+        if (g.dir !== 'x') return;
+        if (now > g.lt){ g.vx = .7 * g.vx + .3 * (t.clientX - g.lx) / (now - g.lt); g.lx = t.clientX; g.lt = now; }
+        if (!g.man && Math.abs(dx) > 10 && Math.abs(world.scrollLeft - g.sl) < 2){ g.man = true; world.style.scrollSnapType = 'none'; g.x = t.clientX + (world.scrollLeft - g.sl); }
+        if (g.man) world.scrollLeft = g.sl - (t.clientX - g.x);
+      }, { passive: true });
+      var end = function(){
+        if (!g) return; var m = g; g = null; if (!m.man) return;
+        var mid = world.scrollLeft + world.clientWidth / 2, near = 0, bd = 1e9;
+        frames.forEach(function(f, i){ var d = Math.abs(f.offsetLeft + f.offsetWidth / 2 - mid); if (d < bd){ bd = d; near = i; } });
+        var to = Math.abs(m.vx) > .3 ? m.from + (m.vx < 0 ? 1 : -1) : near;
+        center(to);
+        snapBack = setTimeout(function(){ world.style.scrollSnapType = ''; }, reduce ? 0 : 800);
+      };
+      world.addEventListener('touchend', end, { passive: true }); world.addEventListener('touchcancel', end, { passive: true });
       var raf = 0; world.addEventListener('scroll', function(){ if (!raf) raf = requestAnimationFrame(function(){ raf = 0; update(); }); }, { passive: true });
       update(); addEventListener('resize', function(){ cur = -1; update(); });
       if (!reduce) ScrollTrigger.create({ trigger: board, start: 'top 85%', once: true, onEnter: function(){ gsap.from(frames, { x: 80, opacity: 0, duration: .9, stagger: .1, ease: 'expo.out', clearProps: 'transform,opacity' }); } });
