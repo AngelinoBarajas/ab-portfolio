@@ -62,11 +62,15 @@ def body_html(md):
             out.append('<%s>%s</%s>' % (tag, ''.join('<li>' + x + '</li>' for x in items), tag)); continue
         if ln.startswith('> '): out.append('<blockquote>' + inline(ln[2:]) + '</blockquote>'); i += 1; continue
         # ![alt](images/x.jpg) on its own line -> a full-width rich text image (Webflow asset url from images/assets.json)
-        im = re.match(r'^!\[([^\]]*)\]\(([^)]+)\)\s*$', ln)
+        im = re.match(r'^!\[([^\]]*)\]\(([^)]+)\)(?:\{width=(\d+)\})?\s*$', ln)
         if im:
             src = ASSETS.get(os.path.basename(im.group(2)))
             if not src: raise SystemExit('no Webflow asset for ' + im.group(2) + ' (add it to content/insights/drafts/images/assets.json)')
-            out.append('<figure class="w-richtext-figure-type-image w-richtext-align-fullwidth" data-rt-type="image" data-rt-align="fullwidth"><div><img src="%s" alt="%s" loading="lazy"></div></figure>' % (src, esc(im.group(1)).replace('"', '&quot;')))
+            alt = esc(im.group(1)).replace('"', '&quot;')
+            if im.group(3):  # {width=N}: a centered figure capped at N px (tall portrait photos)
+                out.append('<figure class="w-richtext-figure-type-image w-richtext-align-center" style="max-width:%spx" data-rt-type="image" data-rt-align="center" data-rt-max-width="%spx"><div><img src="%s" alt="%s" loading="lazy"></div></figure>' % (im.group(3), im.group(3), src, alt))
+            else:
+                out.append('<figure class="w-richtext-figure-type-image w-richtext-align-fullwidth" data-rt-type="image" data-rt-align="fullwidth"><div><img src="%s" alt="%s" loading="lazy"></div></figure>' % (src, alt))
             i += 1; continue
         if ln.strip() in ('', '---'): i += 1; continue
         para = [ln]; i += 1

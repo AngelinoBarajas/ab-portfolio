@@ -11,11 +11,11 @@ meta_description: A website can work perfectly and still feel like it has no sou
 
 **The short answer:** in "Bart Sells His Soul," Bart signs his soul over to Milhouse for five dollars, and nothing dramatic happens. Small things just stop working. Automatic doors don't open for him. His breath doesn't fog the glass. He can't laugh at cartoons. Websites can lose their soul the same way: they still load, the buttons still work, and something small is quietly missing in every corner. That episode, plus a few *Treehouse of Horror* stories, taught me more about building things than I expected a cartoon to.
 
-## A script on my wall
+## A signed script
 
 "Bart Sells His Soul" is one of my favorite episodes of anything, ever. I like it enough that I own a signed reprint of the script: production number 3F02, written by Greg Daniels, marked "Final 1" and dated March 30, 1995. Matt Groening signed the cover and drew a Homer next to his name, and it's covered in signatures from the people who made the show.
 
-![The signed script of "Bart Sells His Soul", with Matt Groening's Homer sketch on the cover](images/27-bart-sells-his-soul-script.jpg)
+![The signed script of "Bart Sells His Soul", with Matt Groening's Homer sketch on the cover](images/27-bart-sells-his-soul-script.jpg){width=520}
 
 It's a strange thing to treasure, a stack of pages from a cartoon. But every time I look at it I think about how much is in those pages that never says itself out loud.
 
@@ -30,7 +30,7 @@ Then the episode does something really smart. It never shows a devil or a lightn
 
 By the end he's desperate, praying alone in his room for his soul back. And it's Lisa, who'd been right the whole time, who buys it back for him.
 
-(On the shelf next to my desk, Milhouse, Comic Book Guy and Moe in his apron are all standing together. That's basically everyone who had a hand on Bart's soul or a bad idea that week. I didn't plan it that way. I'm choosing to believe it means something.)
+(On my Simpsons shelf, Milhouse, Comic Book Guy and Moe in his apron are all standing together. That's basically everyone who had a hand on Bart's soul or a bad idea that week. I didn't plan it that way. I'm choosing to believe it means something.)
 
 ## Soul lives in the small stuff
 
