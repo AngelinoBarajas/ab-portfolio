@@ -64,6 +64,11 @@
     "19": ["philosophy-at-work", "brand-identity", "better-questions"],
     "20": ["philosophy-at-work", "handoff", "science-of-time"],
     "21": ["micro-interaction", "brand-identity", "philosophy-at-work"],
-    "22": ["custom-code", "motion-scroll", "reduced-motion", "scope-creep"]
+    "22": ["custom-code", "motion-scroll", "reduced-motion", "scope-creep"],
+    "23": ["philosophy-at-work", "brand-identity", "design-systems"],
+    "24": ["micro-interaction", "philosophy-at-work", "brand-identity"],
+    "25": ["philosophy-at-work", "micro-interaction", "reduced-motion"],
+    "26": ["philosophy-at-work", "brand-identity", "design-systems"],
+    "27": ["philosophy-at-work", "brand-identity", "versioned-deploys", "interactive-3d"]
   }
 }

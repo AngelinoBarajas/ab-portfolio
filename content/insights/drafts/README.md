@@ -28,6 +28,11 @@ Voice: first person, plain, US spelling, a little playful. No invented clients, 
 | 20 | STAY: Interstellar, love and designing a message for someone you'll never meet | Why before how | Webflow development, CMS integrations |
 | 21 | The first easter egg: Warren Robinett's secret room and why hidden things make people love a site | Why before how | Branding, Motion |
 | 22 | How I hid a boss fight in a website (Webflow, GSAP and a little Web Audio) | Build notes | Motion, Webflow development |
+| 23 | AI is a brush, not a hand: using AI as a creative tool (and why taste still decides) | Why before how | Branding, Webflow development, Motion |
+| 24 | Follow the white rabbit: curiosity as a design material | Why before how | Motion, Branding |
+| 25 | Red pill, blue pill: every interface is a choice you design | Why before how | Webflow development, Branding |
+| 26 | The desert of the real: Baudrillard, The Matrix and websites that copy copies | Why before how | Branding, Design systems |
+| 27 | Bart sold his soul for five dollars: what The Simpsons taught me about building websites | Why before how | Webflow development, Branding, Motion |
 
 Proposed library themes: **Build notes** (Webflow tutorials from real builds) and **Why before how** (philosophy meets science). Topic tags are suggestions for the shared vocabulary; the integration chat maps them to the real Topics collection.
 

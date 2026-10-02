@@ -12,6 +12,8 @@ rd = lambda *p: io.open(os.path.join(ROOT, *p), encoding='utf-8').read()
 VOC = json.loads(rd('cms', 'seed', '_draft-topics.json'))
 IDS = json.loads(rd('docs', 'webflow-cms-ids.json'))
 SVC, MIS = IDS['items']['services'], IDS['items']['missions']
+_AF = os.path.join(ROOT, 'content', 'insights', 'drafts', 'images', 'assets.json')
+ASSETS = json.loads(rd('content', 'insights', 'drafts', 'images', 'assets.json')) if os.path.exists(_AF) else {}
 CAT_OPT = {'who': '36126d486b6d8c4fd5b9039279f3cba3', 'what': '04a7b1cd57287279bab0459dc22e327e', 'how': '94b02790854e096f509a3fe6e1a1222f',
            'watch': '7674f3b31826cddef3e99f65e888ebe2', 'ideas': '6a0a81df0a481f2b21655c57387598bc', 'known': 'be6b72f1686593b6131f66c48f2b9706'}
 THEME_OPT = {'Build notes': '4b0092c451ac19fa10b30b785e05a661', 'Why before how': 'c7bb6077816439c84bdf6b09d6049071'}
@@ -59,9 +61,16 @@ def body_html(md):
                 items.append(inline(re.sub(r'^(\d+\.|-) ', '', lines[i]))); i += 1
             out.append('<%s>%s</%s>' % (tag, ''.join('<li>' + x + '</li>' for x in items), tag)); continue
         if ln.startswith('> '): out.append('<blockquote>' + inline(ln[2:]) + '</blockquote>'); i += 1; continue
+        # ![alt](images/x.jpg) on its own line -> a full-width rich text image (Webflow asset url from images/assets.json)
+        im = re.match(r'^!\[([^\]]*)\]\(([^)]+)\)\s*$', ln)
+        if im:
+            src = ASSETS.get(os.path.basename(im.group(2)))
+            if not src: raise SystemExit('no Webflow asset for ' + im.group(2) + ' (add it to content/insights/drafts/images/assets.json)')
+            out.append('<figure class="w-richtext-figure-type-image w-richtext-align-fullwidth" data-rt-type="image" data-rt-align="fullwidth"><div><img src="%s" alt="%s" loading="lazy"></div></figure>' % (src, esc(im.group(1)).replace('"', '&quot;')))
+            i += 1; continue
         if ln.strip() in ('', '---'): i += 1; continue
         para = [ln]; i += 1
-        while i < len(lines) and lines[i].strip() and not re.match(r'^(#|```|\d+\. |- |> )', lines[i]):
+        while i < len(lines) and lines[i].strip() and not re.match(r'^(#|```|\d+\. |- |> |!\[)', lines[i]):
             para.append(lines[i]); i += 1
         out.append('<p>' + inline(' '.join(para)) + '</p>')
     return ''.join(out)
