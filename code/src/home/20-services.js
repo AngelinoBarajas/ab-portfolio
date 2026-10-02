@@ -400,7 +400,7 @@
         var root = document.documentElement, lenis = AB.lenis, prev = document.activeElement, tls = [];
         var LINES = { blue: 'You take the blue pill—the story ends, you wake up in your bed and believe whatever you want to believe.', red: 'You take the red pill—you stay in Wonderland, and I show you how deep the rabbit hole goes.' };
         var el = document.createElement('div'); el.className = 'ab_mx'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', 'The white rabbit'); el.tabIndex = -1;
-        el.innerHTML = '<canvas class="ab_mx_rain" aria-hidden="true"></canvas><div class="ab_mx_lids" aria-hidden="true"><i></i><i></i></div>' +
+        el.innerHTML = '<canvas class="ab_mx_rain" aria-hidden="true"></canvas><div class="ab_mx_lids" aria-hidden="true"><b class="is-b1"></b><b class="is-b2"></b><i></i></div>' +
           '<div class="ab_mx_stage" hidden><div class="ab_mx_say"><p data-p="blue"></p><p data-p="red"></p></div>' +
           '<div class="ab_mx_pills"><button type="button" class="ab_mx_pill is-blue" data-p="blue">' + px(PILL, { x: '#2F6BFF', w: '#A9C4FF', d: '#1F4FD0', s: '#13328C' }, 'p') + '<span>Blue pill</span></button>' +
           '<button type="button" class="ab_mx_pill is-red" data-p="red">' + px(PILL, { x: '#E8263A', w: '#FFA3AC', d: '#C01528', s: '#7E0D1B' }, 'p') + '<span>Red pill</span></button></div></div>' +
@@ -443,20 +443,24 @@
           b.addEventListener('pointerenter', function(){ says.forEach(function(p){ p.classList.toggle('is-dim', p.getAttribute('data-p') !== k); }); });
           b.addEventListener('pointerleave', function(){ says.forEach(function(p){ p.classList.remove('is-dim'); }); });
           b.addEventListener('focus', function(){ says.forEach(function(p){ p.classList.toggle('is-dim', p.getAttribute('data-p') !== k); }); });
-          b.addEventListener('click', function(){ if (!el.classList.contains('is-choose')) return; el.classList.remove('is-choose'); if (AB.quest) AB.quest('rabbit'); (k === 'blue' ? wake : deeper)(); });
+          b.addEventListener('click', function(){ if (!el.classList.contains('is-choose')) return; el.classList.remove('is-choose'); if (k === 'red' && AB.quest) AB.quest('rabbit'); (k === 'blue' ? wake : deeper)(); });
         });
-        // blue: the story ends, you wake up in your bed: two eyelids blink open on the page
+        // blue: the story ends, you wake up in your bed. One black layer with an eye-shaped hole (a masked radial
+        // gradient, --eh = its height): at 0 it is solid black, no seams for light to leak through. Under it two
+        // backdrop blurs: the first blink sees the page very blurry, the second less, the last one opens into focus
         function wake(){
-          if (reduce || !hasGsap){ finish(); toast('You wake up in your bed. The story ends.'); return; }
-          var lids = $$('.ab_mx_lids i', el);
+          if (reduce || !hasGsap){ finish(); toast('You wake up in your bed. The story ends.'); if (AB.quest) AB.quest('rabbit'); return; }
+          var lid = $('.ab_mx_lids i', el), b1 = $('.ab_mx_lids .is-b1', el), b2 = $('.ab_mx_lids .is-b2', el), shut = '0.01%';
           T().to(stage, { opacity: 0, duration: .5 })
-            .add(function(){ stage.hidden = true; if (rain) rain.stop(); cv.style.display = 'none'; el.classList.add('is-wake'); })
-            .to(lids, { scaleY: .55, duration: .5, ease: 'power2.inOut' }, '+=.5')
-            .to(lids, { scaleY: 1, duration: .22, ease: 'power2.in' })
-            .to(lids, { scaleY: .3, duration: .35, ease: 'power2.out' }, '+=.25')
-            .to(lids, { scaleY: 1, duration: .18, ease: 'power2.in' })
-            .to(lids, { scaleY: 0, duration: 1.1, ease: 'power3.out' }, '+=.3')
-            .add(function(){ finish(); toast('You wake up in your bed. The story ends.'); });
+            .add(function(){ stage.hidden = true; if (rain) rain.stop(); cv.style.display = 'none'; gsap.set(lid, { '--eh': shut }); gsap.set(b1, { opacity: 1 }); gsap.set(b2, { opacity: 0 }); el.classList.add('is-wake'); })
+            .to(lid, { '--eh': '30%', duration: .8, ease: 'power2.out' }, '+=.6')
+            .to(lid, { '--eh': shut, duration: .24, ease: 'power2.in' }, '+=.35')
+            .set(b1, { opacity: 0 }).set(b2, { opacity: 1 })
+            .to(lid, { '--eh': '58%', duration: .6, ease: 'power2.out' }, '+=.3')
+            .to(lid, { '--eh': shut, duration: .2, ease: 'power2.in' }, '+=.3')
+            .to(lid, { '--eh': '260%', duration: 1.7, ease: 'power2.inOut' }, '+=.35')
+            .to(b2, { opacity: 0, duration: 1.6, ease: 'power1.inOut' }, '<.45')
+            .add(function(){ finish(); toast('You wake up in your bed. The story ends.'); if (AB.quest) AB.quest('rabbit'); });
         }
         // red: the rain comes back hard, then decodes the rabbit hole: every side quest on the site
         function deeper(){
