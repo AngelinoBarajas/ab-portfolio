@@ -102,6 +102,12 @@ This site is full of 3D: planets you can spin, a wormhole, a black hole in the f
 
 Homer buys Bart a talking Krusty doll for his birthday, and it tries to kill him. Over and over. Homer goes all the way to the guy who designed it, and the fix turns out to be embarrassing: there's a switch on the back of the doll, set to "Evil." Flip it to "Good." Done.
 
+I have that doll, by the way. Here's the back of mine:
+
+![The back of my talking Krusty doll: a switch between EVIL and GOOD, currently pushed to EVIL](images/27-evil-krusty-switch.jpg){width=420}
+
+Yes, it's set to Evil. I'm leaving it that way. It's a reminder.
+
 I think about that doll every time I fix a bug. So many of the scariest problems end up being one switch. On this site, some little drifting particles on the bookshelf on the About page didn't move at all for a while. I looked at the drawing code, the timing, the browser. The real problem was one line that reset the clock every single frame, so as far as the animation knew, time never passed. One switch on the back.
 
 Now, before I take anything apart, I check the obvious settings first.
@@ -135,4 +141,5 @@ When Lisa hands Bart his soul back, she tells him that some philosophers say nob
 - Site facts: satellite drag toasts in `home/00-hero.js` ("It says do not drag." then a second line on the third drag); versioned jsDelivr releases + backups before every push (`backups/`); eyelid light leak fixed in v0.33.36 (2026-10-02); bookshelf motes frozen because `loop()` reset the clock every frame, fixed in v0.33.21 (`about/00-about.js`); 20 side quests (`core/24-quests.js`).
 - Links: note 19 (/observatory/alchemist-design-trends-going-home), note 06 (/observatory/webflow-custom-code-github-jsdelivr), note 04 (/observatory/interactive-3d-webflow-performance), note 21 (/observatory/warren-robinett-easter-eggs-hidden-details). No em dashes, US spelling.
 - Approved by Angelino 2026-10-02 ("publish them all").
+- Evil Krusty doll photo (Angelino's own, 2026-10-02): `images/27-evil-krusty-switch.jpg`, rotated upright; the slider sits on the EVIL side in the photo.
 - Update 2026-10-02 at his ask: new section "Lisa bought it back" (she buys it back herself and gives it to him; Bart eats the paper; "a very funny episode with a real endearing message", his words). Bart eating it while Lisa explains the philosophers' line is from the episode's ending; check the exact order against the script if you like.
