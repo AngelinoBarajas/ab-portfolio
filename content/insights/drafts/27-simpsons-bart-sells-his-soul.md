@@ -17,7 +17,7 @@ meta_description: A website can work perfectly and still feel like it has no sou
 
 ![The signed script of "Bart Sells His Soul", with Matt Groening's Homer sketch on the cover](images/27-bart-sells-his-soul-script.jpg){width=520}
 
-It's a strange thing to treasure, a stack of pages from a cartoon. But every time I look at it I think about how much is in those pages that never says itself out loud.
+It's a strange thing to treasure, a stack of pages from a cartoon. But it's one of the funniest episodes the show ever made, and underneath all the jokes there's a real, sweet message. Every time I look at the script I think about how much is in those pages that never says itself out loud.
 
 The setup, if you haven't seen it (it's season 7, 1995): Bart insists souls aren't real, and to prove it he writes "Bart Simpson's Soul" on a piece of paper and sells it to Milhouse for five bucks. Lisa is horrified. Bart is five dollars richer.
 
@@ -28,9 +28,21 @@ Then the episode does something really smart. It never shows a devil or a lightn
 - The pets don't like him anymore.
 - He watches *Itchy & Scratchy* and can't laugh.
 
-By the end he's desperate, praying alone in his room for his soul back. And it's Lisa, who'd been right the whole time, who buys it back for him.
+By the end he's desperate. He goes looking for the paper, finds out it's been traded away, and ends up alone in his room at night, praying to get his soul back.
 
 (On my Simpsons shelf, Milhouse, Comic Book Guy and Moe in his apron are all standing together. That's basically everyone who had a hand on Bart's soul or a bad idea that week. I didn't plan it that way. I'm choosing to believe it means something.)
+
+## Lisa bought it back
+
+And then the part that gets me every time. Lisa walks in with the piece of paper. She bought it back herself.
+
+Think about everything that goes into that. She was right from the start, and Bart made fun of her for it. She could have let him learn the hard way, or held it over him, or at least said "I told you so" a few more times. Instead she went and got it, with her own money, for a brother who didn't even believe the thing was real. She didn't wait for him to understand why it mattered. She knew it mattered, so she kept it safe until he did.
+
+And Bart, being Bart, takes the paper that says "Bart Simpson's Soul" and eats it. Nobody is getting that one again.
+
+It's the funniest beat in the episode and the sweetest one at the same time, which is pretty much the whole show at its best.
+
+I think about Lisa a lot in my work. Somewhere in every project, there's a small thing that only seems important to one person in the room: the founder's odd origin story, the hand-drawn mark the team almost replaced with a font, a line of copy that sounds like an actual human. In the rush to launch, it's easy to trade those away for something safer. Part of my job, I think, is to be a bit like Lisa: to notice the soul of a project before anyone has to lose it, keep it safe, and hand it back when it matters. Nobody needs a lecture. They just need someone who knew it was important.
 
 ## Soul lives in the small stuff
 
@@ -103,13 +115,14 @@ A website can have a little of that too. Not on the main path (navigation, conta
 ## In practice
 
 - **Look for the doors that don't open.** Error messages, empty states, hover states, the 404 page. That's where a site's soul is, or isn't.
+- **Be the Lisa.** Notice what makes a project feel human and keep it safe, even before anyone asks you to.
 - **Be Moe's, not Uncle Moe's Family Feedbag.** Build the site for the business you actually are.
 - **Expect butterflies.** Every shared change can step on a mosquito somewhere else. Test the pages you didn't touch.
 - **Keep a way home.** Versioned code and a saved copy of what's live, every time.
 - **Make 3D earn its place.** Beautiful isn't enough if it pulls the whole page into a black hole.
 - **Check the switch on the back first.** Before you rebuild anything, make sure it isn't just set to "Evil."
 
-At the end of the episode, Lisa gives Bart his soul back and tells him that some philosophers say nobody is born with a soul: you have to earn one. I think that's true of websites too. Nobody's site comes with one. You earn it, one tiny detail at a time.
+When Lisa hands Bart his soul back, she tells him that some philosophers say nobody is born with one: you have to earn it. (Bart is mostly busy eating it.) I think that's true of websites too. Nobody's site comes with a soul. You earn it, one tiny detail at a time. And if you're lucky, there's a Lisa around to make sure you don't trade it away for five bucks.
 
 ---
 
@@ -122,3 +135,4 @@ At the end of the episode, Lisa gives Bart his soul back and tells him that some
 - Site facts: satellite drag toasts in `home/00-hero.js` ("It says do not drag." then a second line on the third drag); versioned jsDelivr releases + backups before every push (`backups/`); eyelid light leak fixed in v0.33.36 (2026-10-02); bookshelf motes frozen because `loop()` reset the clock every frame, fixed in v0.33.21 (`about/00-about.js`); 20 side quests (`core/24-quests.js`).
 - Links: note 19 (/observatory/alchemist-design-trends-going-home), note 06 (/observatory/webflow-custom-code-github-jsdelivr), note 04 (/observatory/interactive-3d-webflow-performance), note 21 (/observatory/warren-robinett-easter-eggs-hidden-details). No em dashes, US spelling.
 - Approved by Angelino 2026-10-02 ("publish them all").
+- Update 2026-10-02 at his ask: new section "Lisa bought it back" (she buys it back herself and gives it to him; Bart eats the paper; "a very funny episode with a real endearing message", his words). Bart eating it while Lisa explains the philosophers' line is from the episode's ending; check the exact order against the script if you like.
