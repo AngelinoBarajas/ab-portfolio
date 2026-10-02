@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.33.34 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.33.35 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -1159,7 +1159,8 @@ window.Webflow.push(function(){
     ['channels', 'Watch every channel', 'Mission monitors carry more than one channel.'],
     ['diagnostics', 'Run diagnostics', 'Launch control can tell you what\'s wrong.'],
     ['touchdown', 'Land a mission', 'Follow a flight plan all the way to the end.'],
-    ['aside', 'Read the fine print', 'Some things on this site whisper when you hover (or tap) them.']
+    ['aside', 'Read the fine print', 'Some things on this site whisper when you hover (or tap) them.'],
+    ['rabbit', 'Follow the white rabbit', 'Watch a deploy on the homepage all the way to the end. Then follow what shows up.']
   ];
   var QKEY = 'ab:quests', qFound = {};
   try { qFound = JSON.parse(localStorage.getItem(QKEY) || '{}') || {}; } catch (e){ qFound = {}; }

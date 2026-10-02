@@ -248,16 +248,252 @@
               // type each line in (stepped reveal), terminal lines just appear like output
               if (hasGsap && !SC[k].term){ var n = Math.max(6, Math.min(40, r.textContent.length)); gsap.fromTo(r, { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: n * .014, ease: 'steps(' + n + ')', clearProps: 'clipPath' }); }
               later(nx, step);
+            } else if (SC[k].term){
+              // the deploy is done: a pause, then the white rabbit (side quest #20)
+              k = 0; later(function(){ rabbit(function(){ later(next, 500); }); }, 1400);
             } else {
-              var hold = SC[k].term ? 3800 : 900; k = (k + 1) % SC.length;
-              later(next, hold);
+              k = k + 1; later(next, 900);
             }
           })();
         })();
       }
-      if (reduce){ scene(3).forEach(function(r){ r.style.visibility = 'visible'; }); return; }
+      /* ---------- side quest #20 `rabbit`: after the deploy a pixel white rabbit hops in, the output scrolls up a line
+         and "Follow the white rabbit…" types in Matrix green. Click the rabbit (or the line): the screen goes to black,
+         digital rain takes it over, then the red and blue pills (hole() below). Ignored, it hops off after 9 s. ---------- */
+      var term = $('.v-term', v), bun = null, bunTl = null, held = false;
+      // pixel sprites, one character per pixel (same idea as the About boss fight); both frames share an 18 × 12 grid
+      var BUN = [
+        '...........xx.xx..',
+        '...........xs.xs..',
+        '...........xs.xs..',
+        '............xxxx..',
+        '...........xxxxxx.',
+        '..........xxxxexxx',
+        '.....xxxxxxxxxxxxp',
+        '....xxxxxxxxxxxx..',
+        '..xxxxxxxxxxxxx...',
+        '..xxxxxxxxxxxxx...',
+        '...xxxxxxxxxxxx...',
+        '....xxxxxx.xx.xx..'
+      ], BUN_AIR = [
+        '..........xxx.....',
+        '...........xxxx...',
+        '.............xxx..',
+        '............xxxxx.',
+        '...........xxxxexx',
+        '....xxxxxxxxxxxxxp',
+        '.xxxxxxxxxxxxxxx..',
+        'xxxxxxxxxxxxxxx...',
+        '.xxxxxxxxxxxxx....',
+        '..xxx......xxx....',
+        '.xx..........xx...',
+        'xx............xx..'
+      ], BCOL = { x: '#F2F0EA', s: '#E9A6B4', e: '#07080D', p: '#FF8FA3' };
+      function px(rows, col, cls){
+        var h = rows.length, w = rows[0].length, r = '';
+        rows.forEach(function(row, y){ for (var x = 0; x < w; x++){ var c = row.charAt(x); if (col[c]) r += '<rect x="' + x + '" y="' + y + '" width="1.02" height="1.02" fill="' + col[c] + '"/>'; } });
+        return '<svg class="' + cls + '" viewBox="0 0 ' + w + ' ' + h + '" shape-rendering="crispEdges" aria-hidden="true">' + r + '</svg>';
+      }
+      function rabbit(done){
+        var rows = $$('.ln', out); if (rows[0]) rows[0].parentNode.removeChild(rows[0]);
+        var c = $('.cur', out); if (c) c.parentNode.removeChild(c);
+        var ln = document.createElement('div'); ln.className = 'ln is-mx'; ln.innerHTML = '<span class="v-mx">Follow the white rabbit…</span><span class="cur"></span>';
+        out.appendChild(ln);
+        bun = document.createElement('button'); bun.type = 'button'; bun.className = 'v-bun'; bun.setAttribute('aria-label', 'Follow the white rabbit');
+        bun.innerHTML = px(BUN, BCOL, 'f1') + px(BUN_AIR, BCOL, 'f2');
+        term.appendChild(bun);
+        function follow(e){ if (e) e.preventDefault(); if (held) return; held = true; if (bunTl) bunTl.kill(); timers.forEach(clearTimeout); timers = []; hole(function(){ held = false; if (vis) hopOff(done); else { gone(); running = false; } }); }
+        bun.addEventListener('click', follow); $('.v-mx', ln).addEventListener('click', follow);
+        if (reduce || !hasGsap){ ln.style.visibility = 'visible'; bun.classList.add('is-sat'); return; }
+        ln.style.visibility = 'hidden';
+        // hops in along the bottom: each hop is the airborne frame on an arc, a short sit between
+        var end = term.clientWidth - bun.offsetWidth - 16, n = Math.max(3, Math.round(end / 62)), dx = (end + 50) / n;
+        bunTl = gsap.timeline();
+        bunTl.set(bun, { x: -50, y: 0 });
+        for (var h = 0; h < n; h++) hop(bunTl, -50 + dx * (h + 1), h === n - 1 ? .5 : .12);
+        bunTl.add(function(){
+          ln.style.visibility = 'visible';
+          var m = $('.v-mx', ln), t = m.textContent.length;
+          gsap.fromTo(m, { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: t * .055, ease: 'steps(' + t + ')', clearProps: 'clipPath' });
+          later(function(){ if (!held) hopOff(done); }, 9000);
+        });
+      }
+      function hop(tl, x, rest){
+        tl.add(function(){ bun.classList.add('is-air'); })
+          .to(bun, { x: x, duration: .34, ease: 'none' })
+          .to(bun, { y: -16, duration: .17, ease: 'power2.out', yoyo: true, repeat: 1 }, '<')
+          .add(function(){ bun.classList.remove('is-air'); })
+          .to({}, { duration: rest });
+      }
+      function hopOff(done){
+        if (!bun || !hasGsap || reduce){ gone(); return done(); }
+        bunTl = gsap.timeline({ onComplete: function(){ gone(); done(); } });
+        var x = gsap.getProperty(bun, 'x');
+        hop(bunTl, x + 62, .1); hop(bunTl, x + 124, 0);
+      }
+      function gone(){ if (bunTl) bunTl.kill(); bunTl = null; if (bun && bun.parentNode) bun.parentNode.removeChild(bun); bun = null; }
+
+      /* the rabbit hole: black, then digital rain takes the screen (mirrored half-width katakana, bright heads, fading
+         trails), it fades, Morpheus' two lines type in and two pixel pills wait. Blue = the eyelids blink open on the
+         page and the story ends. Red = the rain comes back and decodes how deep the hole goes: every side quest, found
+         ones by name, the rest as hints. Either pill logs the quest. Esc or "Wake up" leaves without choosing. */
+      var PILL = [
+        '...xxxxxxxxxx...',
+        '.xxwwwwxdxxxxxx.',
+        'xxwwxxxxdxxxxxxx',
+        'xxxxxxxxdxxxxxxx',
+        'xxxxxxxxdxxxxxss',
+        '.xxxxxxxdxxxsss.',
+        '...ssssssssss...'
+      ];
+      var GLY = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789Z:."=*+<>|';
+      function glyph(){ return GLY.charAt(Math.random() * GLY.length | 0); }
+      function rainOn(cv){
+        var ctx = cv.getContext('2d'), dpr = Math.min(window.devicePixelRatio || 1, 1.5), W, H, fs, cols = 0, y = [], sp = [], on = [], acc = [], raf = 0, last = 0;
+        var R = { live: 0, speed: 1, stop: stop, still: still };
+        function size(){
+          W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          fs = W < 600 ? 13 : 16; cols = Math.ceil(W / fs);
+          for (var i = 0; i < cols; i++) if (y[i] == null){ y[i] = -Math.random() * 24 | 0; sp[i] = .018 + Math.random() * .03; on[i] = false; acc[i] = 0; }
+          ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H); ctx.font = fs + 'px "MS Gothic","Osaka-Mono",monospace'; ctx.textBaseline = 'top';
+        }
+        function step(i){
+          var r = y[i], x = i * fs;
+          // the old head turns green, a new bright head lands below it
+          ctx.fillStyle = '#000'; ctx.fillRect(x, (r - 1) * fs, fs, fs);
+          ctx.fillStyle = '#00FF41'; ctx.fillText(glyph(), x, (r - 1) * fs);
+          ctx.fillStyle = '#D8FFE0'; ctx.fillText(glyph(), x, r * fs);
+          y[i]++;
+          if (y[i] * fs > H + fs && Math.random() > .96) y[i] = 0;
+        }
+        function frame(t){
+          raf = requestAnimationFrame(frame);
+          var dt = Math.min(50, t - (last || t)); last = t;
+          ctx.fillStyle = 'rgba(0,0,0,' + Math.min(.2, .042 * dt / 16.7) + ')'; ctx.fillRect(0, 0, W, H);
+          for (var i = 0; i < cols; i++){
+            if (!on[i]){ if (Math.random() < R.live * dt * .004) on[i] = true; else continue; }
+            acc[i] += dt * sp[i] * R.speed;
+            while (acc[i] >= 1){ acc[i] -= 1; step(i); }
+            // now and then a glyph in the trail flickers
+            if (Math.random() < .02){ var rr = (y[i] - 2 - Math.random() * 12) | 0; if (rr > 0){ ctx.fillStyle = '#000'; ctx.fillRect(i * fs, rr * fs, fs, fs); ctx.fillStyle = 'rgba(0,255,65,.7)'; ctx.fillText(glyph(), i * fs, rr * fs); } }
+          }
+        }
+        function stop(){ cancelAnimationFrame(raf); raf = 0; removeEventListener('resize', size); }
+        // Engines off: one settled frame, no motion
+        function still(){ for (var i = 0; i < cols; i++){ on[i] = true; y[i] = Math.random() * (H / fs) | 0; for (var j = 0; j < 14; j++){ ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.fillRect(i * fs, 0, fs, H); } for (var k = 0; k < 12; k++){ ctx.fillStyle = 'rgba(0,255,65,' + (k / 14).toFixed(2) + ')'; ctx.fillText(glyph(), i * fs, (y[i] - 12 + k) * fs); } } }
+        size(); addEventListener('resize', size);
+        if (!reduce) raf = requestAnimationFrame(frame); else still();
+        return R;
+      }
+      function decode(el, text, delay){
+        // each character spins through glyphs, then settles, left to right
+        if (reduce || !hasGsap){ el.textContent = text; return; }
+        var o = { p: 0 }, n = text.length;
+        el.textContent = '';
+        gsap.to(o, { p: 1, duration: Math.min(1.4, .35 + n * .012), delay: delay, ease: 'none', onUpdate: function(){
+          var k = Math.floor(o.p * n), s = text.slice(0, k);
+          for (var i = k; i < Math.min(n, k + 6); i++) s += text.charAt(i) === ' ' ? ' ' : glyph();
+          el.textContent = s;
+        }, onComplete: function(){ el.textContent = text; } });
+      }
+      function hole(onClose){
+        var root = document.documentElement, lenis = AB.lenis, prev = document.activeElement, tls = [];
+        var LINES = { blue: 'You take the blue pill—the story ends, you wake up in your bed and believe whatever you want to believe.', red: 'You take the red pill—you stay in Wonderland, and I show you how deep the rabbit hole goes.' };
+        var el = document.createElement('div'); el.className = 'ab_mx'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', 'The white rabbit'); el.tabIndex = -1;
+        el.innerHTML = '<canvas class="ab_mx_rain" aria-hidden="true"></canvas><div class="ab_mx_lids" aria-hidden="true"><i></i><i></i></div>' +
+          '<div class="ab_mx_stage" hidden><div class="ab_mx_say"><p data-p="blue"></p><p data-p="red"></p></div>' +
+          '<div class="ab_mx_pills"><button type="button" class="ab_mx_pill is-blue" data-p="blue">' + px(PILL, { x: '#2F6BFF', w: '#A9C4FF', d: '#1F4FD0', s: '#13328C' }, 'p') + '<span>Blue pill</span></button>' +
+          '<button type="button" class="ab_mx_pill is-red" data-p="red">' + px(PILL, { x: '#E8263A', w: '#FFA3AC', d: '#C01528', s: '#7E0D1B' }, 'p') + '<span>Red pill</span></button></div></div>' +
+          '<div class="ab_mx_deep" data-lenis-prevent hidden></div><button type="button" class="ab_mx_x">Esc · Wake up</button>';
+        document.body.appendChild(el);
+        if (lenis) lenis.stop(); root.style.overflow = 'hidden'; root.classList.add('ab-mx-on');
+        var cv = $('.ab_mx_rain', el), stage = $('.ab_mx_stage', el), deep = $('.ab_mx_deep', el), says = $$('.ab_mx_say p', el), pills = $$('.ab_mx_pill', el), rain = null, done = false, typing = null;
+        function T(){ var t = gsap.timeline(); tls.push(t); return t; }
+        function finish(){
+          if (done) return; done = true;
+          tls.forEach(function(t){ t.kill(); }); if (typing) clearInterval(typing); if (rain) rain.stop();
+          document.removeEventListener('keydown', onKey, true);
+          if (el.parentNode) el.parentNode.removeChild(el);
+          if (lenis) lenis.start(); root.style.overflow = ''; setTimeout(function(){ root.classList.remove('ab-mx-on'); }, 5200);
+          try { if (prev && prev.isConnected) prev.focus({ preventScroll: true }); } catch (e){}
+          onClose();
+        }
+        function leave(){ if (done) return; if (reduce || !hasGsap) return finish(); T().to(el, { opacity: 0, duration: .6, ease: 'power1.in', onComplete: finish }); }
+        function onKey(e){
+          if (e.key === 'Escape'){ e.preventDefault(); leave(); return; }
+          if (e.key === 'Tab'){ var f = $$('button:not([hidden])', el).filter(function(b){ return b.offsetParent; }); if (!f.length) return; var i = f.indexOf(document.activeElement); e.preventDefault(); f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus(); }
+        }
+        document.addEventListener('keydown', onKey, true);
+        $('.ab_mx_x', el).addEventListener('click', leave);
+        // the two lines type in, then the pills; a click while it types skips ahead
+        function speak(){
+          stage.hidden = false;
+          var queue = says.slice(), cur = null, txt = '', i = 0, talking = true;
+          function pillsIn(){ if (!talking) return; talking = false; if (typing) clearInterval(typing); typing = null; says.forEach(function(p){ p.textContent = LINES[p.getAttribute('data-p')]; }); el.classList.add('is-choose'); if (!reduce && hasGsap) T().from(pills, { scale: 0, duration: .45, ease: 'steps(5)', stagger: .15 }); pills[0].focus({ preventScroll: true }); }
+          stage.addEventListener('click', function(e){ if (talking && !e.target.closest('.ab_mx_pill')) pillsIn(); });
+          if (reduce){ pillsIn(); return; }
+          (function nextLine(){
+            if (!talking) return; cur = queue.shift(); if (!cur){ typing = null; pillsIn(); return; }
+            txt = LINES[cur.getAttribute('data-p')]; i = 0;
+            typing = setInterval(function(){ i++; cur.textContent = txt.slice(0, i); if (i >= txt.length){ clearInterval(typing); typing = 0; T().to({}, { duration: .5, onComplete: nextLine }); } }, 32);
+          })();
+        }
+        pills.forEach(function(b){
+          var k = b.getAttribute('data-p');
+          b.addEventListener('pointerenter', function(){ says.forEach(function(p){ p.classList.toggle('is-dim', p.getAttribute('data-p') !== k); }); });
+          b.addEventListener('pointerleave', function(){ says.forEach(function(p){ p.classList.remove('is-dim'); }); });
+          b.addEventListener('focus', function(){ says.forEach(function(p){ p.classList.toggle('is-dim', p.getAttribute('data-p') !== k); }); });
+          b.addEventListener('click', function(){ if (!el.classList.contains('is-choose')) return; el.classList.remove('is-choose'); if (AB.quest) AB.quest('rabbit'); (k === 'blue' ? wake : deeper)(); });
+        });
+        // blue: the story ends, you wake up in your bed: two eyelids blink open on the page
+        function wake(){
+          if (reduce || !hasGsap){ finish(); toast('You wake up in your bed. The story ends.'); return; }
+          var lids = $$('.ab_mx_lids i', el);
+          T().to(stage, { opacity: 0, duration: .5 })
+            .add(function(){ stage.hidden = true; if (rain) rain.stop(); cv.style.display = 'none'; el.classList.add('is-wake'); })
+            .to(lids, { scaleY: .55, duration: .5, ease: 'power2.inOut' }, '+=.5')
+            .to(lids, { scaleY: 1, duration: .22, ease: 'power2.in' })
+            .to(lids, { scaleY: .3, duration: .35, ease: 'power2.out' }, '+=.25')
+            .to(lids, { scaleY: 1, duration: .18, ease: 'power2.in' })
+            .to(lids, { scaleY: 0, duration: 1.1, ease: 'power3.out' }, '+=.3')
+            .add(function(){ finish(); toast('You wake up in your bed. The story ends.'); });
+        }
+        // red: the rain comes back hard, then decodes the rabbit hole: every side quest on the site
+        function deeper(){
+          var Q = AB.quest, list = Q ? Q.list : [], n = Q ? Q.count() : 0;
+          deep.innerHTML = '<p class="ab_mx_deep_h"></p><p class="ab_mx_deep_n"></p><ol>' + list.map(function(){ return '<li><i></i><span></span></li>'; }).join('') + '</ol><button type="button" class="ab_mx_out">Wake up</button>';
+          $('.ab_mx_out', deep).addEventListener('click', leave);
+          function show(){
+            stage.hidden = true; deep.hidden = false; el.classList.add('is-deep');
+            decode($('.ab_mx_deep_h', deep), 'How deep the rabbit hole goes', 0);
+            decode($('.ab_mx_deep_n', deep), n + ' of ' + list.length + ' side quests found · the rest are hints', .3);
+            $$('li', deep).forEach(function(li, i){
+              var q = list[i], got = Q.has(q[0]);
+              li.classList.toggle('is-got', got);
+              $('i', li).textContent = got ? '[✓]' : '[ ]';
+              decode($('span', li), got ? q[1] : q[2], .5 + i * .07);
+            });
+            $('.ab_mx_out', deep).focus({ preventScroll: true });
+          }
+          if (reduce || !hasGsap){ show(); return; }
+          T().to(stage, { opacity: 0, duration: .4 })
+            .add(function(){ cv.style.opacity = 0; cv.style.display = ''; if (!rain) rain = rainOn(cv); rain.live = 1; rain.speed = 2.4; })
+            .to(cv, { opacity: 1, duration: .5 })
+            .add(function(){ rain.speed = 1; }, '+=1.6')
+            .to(cv, { opacity: .22, duration: .8 })
+            .add(show, '-=.5');
+        }
+        // in: fade to black, the rain takes over, fades, then the lines
+        if (reduce || !hasGsap){ el.style.opacity = 1; rain = rainOn(cv); cv.style.opacity = .3; speak(); el.focus({ preventScroll: true }); return; }
+        el.focus({ preventScroll: true });
+        T().to(el, { opacity: 1, duration: .7, ease: 'power1.inOut' })
+          .add(function(){ rain = rainOn(cv); T().to(rain, { live: 1, duration: 1.1, ease: 'power2.in' }); })
+          .to(cv, { opacity: 0, duration: 1.4, ease: 'power1.inOut' }, '+=4.2')
+          .add(function(){ rain.stop(); rain = null; cv.style.display = 'none'; cv.style.opacity = ''; speak(); });
+      }
+      if (reduce){ scene(3).forEach(function(r){ r.style.visibility = 'visible'; }); rabbit(function(){}); return; }
       scene(0);
-      onView(v, function(x){ vis = x; if (x) run(); else { timers.forEach(clearTimeout); timers = []; running = false; } });
+      onView(v, function(x){ vis = x; if (held) return; if (x) run(); else { timers.forEach(clearTimeout); timers = []; running = false; gone(); } });
     },
     pipeline: function(v){
       // any source, one shape: each source's packet leaves in its own color and lands in Webflow blue
