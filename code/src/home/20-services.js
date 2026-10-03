@@ -566,7 +566,7 @@
         if (fetched || !window.fetch || !window.DOMParser) return; fetched = true;
         fetch('/observatory').then(function(r){ return r.ok ? r.text() : ''; }).then(function(h){
           if (!h) return; var d = new DOMParser().parseFromString(h, 'text/html');
-          var all = [].slice.call(d.querySelectorAll('[data-ks-card]')).map(function(a){ return { code: txt(a, '[data-field="code"]'), t: txt(a, '.ab_ks-card_h') || a.getAttribute('data-slug'), th: a.getAttribute('data-theme') || '' }; }).filter(function(n){ return n.code; });
+          var all = [].slice.call(d.querySelectorAll('[data-ks-grid] [data-ks-card]')).map(function(a){ return { code: txt(a, '[data-field="code"]'), t: txt(a, '.ab_ks-card_h') || a.getAttribute('data-slug'), th: a.getAttribute('data-theme') || '' }; }).filter(function(n){ return n.code; });
           // newest first: highest number, WB and BN interleaved by number
           all.sort(function(a, b){ return (parseInt(b.code.replace(/\D/g, ''), 10) || 0) - (parseInt(a.code.replace(/\D/g, ''), 10) || 0); });
           if (all.length){ notes = all; at = 0; paintLog(); }

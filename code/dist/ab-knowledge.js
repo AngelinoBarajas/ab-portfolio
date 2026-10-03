@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-knowledge v0.33.38 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-knowledge v0.33.39 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abKnowledgeInit) return;
@@ -211,7 +211,8 @@ window.Webflow.push(function(){
 
   /* ---------- /observatory: ask box, stats, theme + topic filters over the native cards ---------- */
   if (VIEW === 'library') (function(){
-    var gridEl = $('[data-ks-grid]'), cards = $$('[data-ks-card]'), items = cards.map(function(a){ return item(a); });
+    // only the log's own cards: the Featured reads component above it has its own copies
+    var gridEl = $('[data-ks-grid]'), cards = gridEl ? $$('[data-ks-card]', gridEl) : [], items = cards.map(function(a){ return item(a); });
     var ask = $('[data-ks-ask]'), ctrl = $('[data-ks-ctrl]'), empty = $('[data-ks-empty]'), stats = $('[data-ks-hstats]');
     if (!gridEl || !cards.length) return;
     // newest first: the CMS list arrives oldest first (Sort field), so flip it; the readout toggle flips it back.

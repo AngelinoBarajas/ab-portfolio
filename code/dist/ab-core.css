@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.33.36 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.33.39 · github.com/AngelinoBarajas/ab-portfolio */
 /* body font fallback sized to Geist (Arial measured against it: 102.47% wide), so text keeps its line breaks when Geist
    swaps in and the heroes don't jump (About CLS 0.24 on desktop). Re-declares the Webflow variable: if the body font is
    changed in the Designer, change it here too. Android (no Arial) falls through to plain sans-serif. */
@@ -1206,3 +1206,21 @@ div.abx-bad,fieldset.abx-bad{outline:1px dashed color-mix(in srgb,var(--_color--
 @media (prefers-reduced-motion:reduce){.abt-ring,.abt-beam,.abt-led,.abt-dish.is-lock .abt-lock{animation:none}}
 :where(html.ab-calm) .abt-ring,:where(html.ab-calm) .abt-beam,:where(html.ab-calm) .abt-led,:where(html.ab-calm) .abt-dish.is-lock .abt-lock{animation:none}
 
+
+/* ---------- Featured reads (component: section_ks-row.is-featured on Home, /observatory, About) ----------
+   Collection List filtered to Featured read = on, sorted by Featured order. Pick 01 is the big card, 02 + 03 stack beside it.
+   Base card styles come from ab-knowledge.css (loaded on every page that shows the component). */
+.section_ks-row.is-featured .ab_ks-grid{grid-template-columns:repeat(3,minmax(0,1fr));counter-reset:abpick}
+.section_ks-row.is-featured .ab_ks-item{counter-increment:abpick}
+.section_ks-row.is-featured .ab_ks-item:first-child{grid-column:span 2;grid-row:span 2}
+.section_ks-row.is-featured .ab_ks-item:not(:first-child) .ab_ks-card{min-height:0}
+.section_ks-row.is-featured .ab_ks-item:first-child .ab_ks-card{background:radial-gradient(90% 120% at 100% 0%,rgba(255,106,61,.18),transparent 60%),rgba(14,16,32,.86)}
+.section_ks-row.is-featured .ab_ks-item:first-child .ab_ks-card_h{font-size:clamp(28px,2.8vw,42px);font-weight:900;font-stretch:112%;text-transform:uppercase;line-height:.98;max-width:22ch}
+.section_ks-row.is-featured .ab_ks-item:first-child .ab_ks-card_p{font-size:17px;-webkit-line-clamp:6;max-width:62ch}
+.section_ks-row.is-featured .ab_ks-card_code::before{content:"\2605\00A0Pick " counter(abpick,decimal-leading-zero);margin-right:10px;color:var(--_color---brand--signal)}
+/* pick 01 reads like a poster: code row on top, title + answer anchored to the bottom */
+.section_ks-row.is-featured .ab_ks-item:first-child .ab_ks-card_h{margin-top:auto}
+/* on /observatory itself the "Open the observatory" button would point at the page you're on */
+.section_ks-hero[data-ks-view="library"] ~ .section_ks-row.is-featured .ab_ks-cta{display:none}
+@media (max-width:991px){.section_ks-row.is-featured .ab_ks-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.section_ks-row.is-featured .ab_ks-item:first-child{grid-row:auto}}
+@media (max-width:767px){.section_ks-row.is-featured .ab_ks-grid{grid-template-columns:1fr}.section_ks-row.is-featured .ab_ks-item:first-child{grid-column:auto}}
