@@ -33,6 +33,10 @@ Voice: first person, plain, US spelling, a little playful. No invented clients, 
 | 25 | Red pill, blue pill: every interface is a choice you design | Why before how | Webflow development, Branding |
 | 26 | The desert of the real: Baudrillard, The Matrix and websites that copy copies | Why before how | Branding, Design systems |
 | 27 | Bart sold his soul for five dollars: what The Simpsons taught me about building websites | Why before how | Webflow development, Branding, Motion |
+| 28 | How I cut my layout shift from 0.40 to 0.001 in Webflow | Build notes | Performance, Webflow development |
+| 29 | Ten thousand hours, give or take: Outliers and what practice looks like when nobody's teaching you | Why before how | Webflow development, Branding |
+| 30 | 1984 on the web: Newspeak, the memory hole and the interface that lies politely | Why before how | Webflow development, Branding |
+| 31 | Thirty seconds of fun: what Halo taught me about the smallest loop on a website | Why before how | Motion, Branding |
 
 Proposed library themes: **Build notes** (Webflow tutorials from real builds) and **Why before how** (philosophy meets science). Topic tags are suggestions for the shared vocabulary; the integration chat maps them to the real Topics collection.
 

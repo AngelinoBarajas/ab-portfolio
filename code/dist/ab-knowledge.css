@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-knowledge.css v0.33.36 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-knowledge.css v0.33.37 · github.com/AngelinoBarajas/ab-portfolio */
 /* =========================================================
    KNOWLEDGE SYSTEM · the Observatory (/observatory, /observatory/*, /topics, /topics/*) + rows on Mission,
    Service and Home. Webflow gives each ab_ks-* class a stub rule; the look lives here (approved prototype:
@@ -149,6 +149,9 @@
 /* the hero toys make these words inline-block after load; start them that way, or /topics "STAR CHART" painted on two
    lines and snapped to one (CLS 0.27 desktop, 0.13 phones) */
 .ab_dbh_title.is-ks .ab_dbh_word{display:inline-block}
+/* same on topic pages (title is .is-ks-topic, not .is-ks): two-word titles painted stacked and snapped to one line
+   (CLS 0.25–0.48 at 1024/1440, 0.10 on phones; measured 2026-10-03) */
+.ab_dbh_title.is-ks-topic .ab_dbh_word{display:inline-block}
 /* hero record line (dot · Observatory · 15 observations · 27 topics) is ~359px as one flex row: below 480 it squashed,
    broke mid-piece and ran off the column. Scale its type to the column (dot + gap = 24px fixed) and keep it one line. */
 /* theme tabs (All · Build notes · Why before how) need ~391px on one line: on a phone the third wrapped under the
