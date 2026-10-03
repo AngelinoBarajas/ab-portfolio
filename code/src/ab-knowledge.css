@@ -189,6 +189,11 @@
 .ab_ks-box_h b{color:var(--star);font-weight:500;font-variant-numeric:tabular-nums}
 .ab_ks-box_h a{color:var(--signal);text-decoration:none}
 .ab_ks-box_h.is-near{margin-bottom:18px}
+/* share this observation: plain links, 2 × 2 (the native Share… button spans the row on phones) */
+.ab_ks-share{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ab_ks-sh{display:flex;align-items:center;justify-content:center;min-height:36px;padding:8px 10px;border:1px solid var(--hair);background:transparent;color:var(--dust);font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:color .2s,border-color .2s,background-color .2s}
+.ab_ks-sh:hover,.ab_ks-sh:focus-visible{color:var(--star);border-color:var(--signal);background:rgba(255,106,61,.08)}
+.ab_ks-sh.is-native{grid-column:1 / -1;color:var(--star);border-color:var(--signal)}
 .ab_ks-toc{list-style:none;margin:0;padding:0}
 .ab_ks-toc a{position:relative;display:grid;grid-template-columns:28px minmax(0,1fr);gap:6px;padding:8px 0;font-size:14px;color:var(--dust);text-decoration:none;line-height:1.35;transition:color .2s}
 .ab_ks-toc a i{font-style:normal;font-family:var(--mono);font-size:10.5px;padding-top:2px}

@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-knowledge.css v0.33.37 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-knowledge.css v0.33.38 · github.com/AngelinoBarajas/ab-portfolio */
 /* =========================================================
    KNOWLEDGE SYSTEM · the Observatory (/observatory, /observatory/*, /topics, /topics/*) + rows on Mission,
    Service and Home. Webflow gives each ab_ks-* class a stub rule; the look lives here (approved prototype:
@@ -194,6 +194,11 @@
 .ab_ks-box_h b{color:var(--_color---text--primary);font-weight:500;font-variant-numeric:tabular-nums}
 .ab_ks-box_h a{color:var(--_color---brand--signal);text-decoration:none}
 .ab_ks-box_h.is-near{margin-bottom:18px}
+/* share this observation: plain links, 2 × 2 (the native Share… button spans the row on phones) */
+.ab_ks-share{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ab_ks-sh{display:flex;align-items:center;justify-content:center;min-height:36px;padding:8px 10px;border:1px solid var(--_color---neutral--hair);background:transparent;color:var(--_color---text--tertiary);font-family:var(--_typography---font--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:color .2s,border-color .2s,background-color .2s}
+.ab_ks-sh:hover,.ab_ks-sh:focus-visible{color:var(--_color---text--primary);border-color:var(--_color---brand--signal);background:rgba(255,106,61,.08)}
+.ab_ks-sh.is-native{grid-column:1 / -1;color:var(--_color---text--primary);border-color:var(--_color---brand--signal)}
 .ab_ks-toc{list-style:none;margin:0;padding:0}
 .ab_ks-toc a{position:relative;display:grid;grid-template-columns:28px minmax(0,1fr);gap:6px;padding:8px 0;font-size:14px;color:var(--_color---text--tertiary);text-decoration:none;line-height:1.35;transition:color .2s}
 .ab_ks-toc a i{font-style:normal;font-family:var(--_typography---font--mono);font-size:10.5px;padding-top:2px}

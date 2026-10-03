@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-knowledge v0.33.36 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-knowledge v0.33.38 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abKnowledgeInit) return;
@@ -437,6 +437,23 @@ window.Webflow.push(function(){
         (SVC.length ? '<div class="ab_ks-box"><div class="ab_ks-box_h"><span>Related services</span><b>' + pad2(SVC.length) + '</b></div><ul class="ab_ks-rel_s">' + SVC.map(function(s){ return '<li><a href="' + s.href + '">' + planet(s, PSEED++) + '<span class="ab_ks-rel_n">' + esc(s.t1 + ' ' + s.t2) + '</span><span class="ab_ks-rel_x">→</span></a></li>'; }).join('') + '</ul></div>' : '') +
         (cMis.length ? '<div class="ab_ks-box"><div class="ab_ks-box_h"><span>Shown in practice</span><b>' + pad2(cMis.length) + '</b></div><ul class="ab_ks-rel_s">' + cMis.map(function(m){ return '<li><a href="' + m.href + '">' + planet(m, PSEED++) + '<span class="ab_ks-rel_n">' + esc(m.name) + '</span><span class="ab_ks-rel_x">M-' + m.no + '</span></a></li>'; }).join('') + '</ul></div>' : '');
       buildPlanets(aside);
+      // share: plain links (no third-party widgets or trackers); phones also get the native share sheet
+      var shU = location.origin + location.pathname, shT = X.name || (h1 ? h1.textContent : document.title), eU = encodeURIComponent(shU), eT = encodeURIComponent(shT);
+      var native = !!navigator.share && AB.coarse;
+      var share = document.createElement('div'); share.className = 'ab_ks-box is-share';
+      share.innerHTML = '<div class="ab_ks-box_h"><span>Share this observation</span><b>↗</b></div><div class="ab_ks-share">' +
+        (native ? '<button type="button" class="ab_ks-sh is-native" data-sh="native">Share…</button>' : '') +
+        '<button type="button" class="ab_ks-sh" data-sh="copy">Copy link</button>' +
+        '<a class="ab_ks-sh" href="https://www.linkedin.com/sharing/share-offsite/?url=' + eU + '" target="_blank" rel="noopener">LinkedIn</a>' +
+        '<a class="ab_ks-sh" href="https://x.com/intent/post?url=' + eU + '&amp;text=' + eT + '" target="_blank" rel="noopener">X</a>' +
+        '<a class="ab_ks-sh" href="mailto:?subject=' + eT + '&amp;body=' + encodeURIComponent(shT + '\n\n' + shU) + '">Email</a></div>';
+      var tocBox = $('.ab_ks-box.is-toc', aside);
+      aside.insertBefore(share, tocBox ? tocBox.nextSibling : aside.firstChild);
+      share.addEventListener('click', function(e){
+        var b = e.target.closest('[data-sh]'); if (!b) return;
+        if (b.getAttribute('data-sh') === 'native') navigator.share({ title: shT, url: shU }).catch(function(){});
+        else AB.copyText(shU, 'Link copied ✓', function(){ AB.toast('Copy this link: ' + shU); });
+      });
     }
 
     // related reading: most shared topics, then same theme
