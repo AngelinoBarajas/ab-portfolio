@@ -116,7 +116,7 @@ A page that sits still while you read it doesn't get noticed. That's the point. 
 
 **Review notes**
 - All numbers from `docs/qa-report.md` (Re-check at v0.33.27, Follow-up diagnosis, Layout jumps site-wide v0.33.29/30) and a fresh measurement 2026-10-03 (Playwright, Chrome, 4× CPU, 2 runs; topic pages before vs after the `.is-ks-topic` rule injected into the live page). Fallback values copied from `code/src` (`Geist Fallback`, `JetBrains Mono Fallback`). Ask-box `min-height` 312px is the phone value; other steps 295/252/209/167.
-- ⚠️ **Cause 3's fix isn't live yet.** It's in `code/src/ab-knowledge.css`, uncommitted; ship it (ab-knowledge CSS on the Topics template head) before publishing this note, then re-measure and update the "0.017 or less" figure if it changes.
+- Cause 3 fix live 2026-10-03 as **v0.33.37** (ab-knowledge CSS on the Topics template head); re-measured live: topic pages 0.000–0.017 at 412/1024/1440.
 - P1 (conditional visibility) done and verified 2026-10-03.
 - Mission LCP 8.8 s: Lighthouse observed LCP 1.7–2.3 s, 8.5 s simulated (qa-report Follow-up).
 - Personal (Angelino, 2026-10-03): noticed it on mobile as backgrounds changing where a light and a dark section meet.

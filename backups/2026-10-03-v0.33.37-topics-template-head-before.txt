@@ -1,0 +1,3 @@
+<!-- AB Portfolio · ab-knowledge.css (source: code/src/ab-knowledge.css) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.33.29/code/dist/ab-knowledge.prod.css" integrity="sha384-RM7I2DkIVWCYcXE3yCipf21ef75llSuHH+nxmBdeoS/RV5ahlAXl9QEulrxkKu2y" crossorigin="anonymous">
+<meta property="og:image" content="https://cdn.prod.website-files.com/6ab5fe4a5ee75f9c981dc0be/6ab8149fe5d9f17124004a93_og-site.jpg">
