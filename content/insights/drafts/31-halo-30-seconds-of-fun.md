@@ -1,5 +1,5 @@
 ---
-status: draft
+status: approved
 title: Thirty seconds of fun: what Halo taught me about the smallest loop on a website
 slug: halo-30-seconds-of-fun-interaction-loop
 theme: Why before how

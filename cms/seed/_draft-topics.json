@@ -69,6 +69,10 @@
     "24": ["micro-interaction", "philosophy-at-work", "brand-identity"],
     "25": ["philosophy-at-work", "micro-interaction", "reduced-motion"],
     "26": ["philosophy-at-work", "brand-identity", "design-systems"],
-    "27": ["philosophy-at-work", "brand-identity", "versioned-deploys", "interactive-3d"]
+    "27": ["philosophy-at-work", "brand-identity", "versioned-deploys", "interactive-3d"],
+    "28": ["mobile-performance", "perceived-speed", "custom-code", "webflow-cms"],
+    "29": ["philosophy-at-work", "better-questions", "brand-identity"],
+    "30": ["philosophy-at-work", "micro-interaction", "search-ai-answers"],
+    "31": ["micro-interaction", "motion-scroll", "philosophy-at-work"]
   }
 }

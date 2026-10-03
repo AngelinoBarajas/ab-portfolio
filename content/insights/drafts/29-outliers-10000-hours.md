@@ -1,5 +1,5 @@
 ---
-status: draft
+status: approved
 title: Ten thousand hours, give or take: Outliers and what practice looks like when nobody's teaching you
 slug: outliers-10000-hours-self-taught-design
 theme: Why before how

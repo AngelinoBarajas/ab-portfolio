@@ -1,5 +1,5 @@
 ---
-status: draft
+status: approved
 title: How I cut my layout shift from 0.40 to 0.001 in Webflow
 slug: webflow-layout-shift-cls-fix
 theme: Build notes

@@ -1,5 +1,5 @@
 ---
-status: draft
+status: approved
 title: 1984 on the web: Newspeak, the memory hole and the interface that lies politely
 slug: orwell-1984-dark-patterns-plain-language
 theme: Why before how
@@ -55,8 +55,8 @@ And then, the rule I like most: break any of these rules before you say anything
 This site isn't a store, so the stakes are small. But it's a good place to practice:
 
 - **Buttons say what they do.** "Copy" copies the email. "Esc · Wake up" leaves the Matrix scene. The motion switch says "Engines off," and if your device already asked for reduced motion, it says "Engines off (device)," so you know why.
-- **What the site remembers about you stays with you.** The side quests you find and your Engines choice are saved in your own browser, not sent anywhere. Clear your browser data and they're gone. [Check before publishing: still true after launch analytics, if any are added.]
-- **Field notes say what they are.** Each one opens with a short answer, so you don't have to read 1,500 words to find out whether it's useful to you.
+- **What the site remembers about you stays with you.** The side quests you find and your Engines choice are saved in your own browser, not sent anywhere. Clear your browser data and they're gone.
+- **Field notes say what they are.** Each one opens with a short answer, so you don't have to read the whole thing to find out whether it's useful to you.
 - **When a choice matters, both options are spelled out first.** I wrote a whole note on that: [Red pill, blue pill](/observatory/red-pill-blue-pill-honest-interface-choices). It covers the classic tricks (pre-ticked boxes, guilt-trip "no thanks" links, sign-up in one click and cancel by phone). This note is about the quieter ones: the words.
 
 ## In practice
