@@ -313,7 +313,7 @@
     // mission patches on the back: what's launched or in orbit (Work page statuses, 2026-09-30); planets are the site's own
     var PATCHES = [
       { n: '510 Visuals', s: 'Live', k: 'live', shape: 'circle', c: '#0f1a1d,#1c2227,#37535a,#5a8a94,#b8c9cc', bg: '#1c2a2e', x: 0, y: 20, w: 74, h: 74, r: -8 },
-      { n: 'Topicweave', s: 'In orbit', k: 'orbit', shape: 'rect', c: '#0B1B2B,#2F5BEA,#139E8A,#F2A93B,#EF5B3F', bg: '#10223a', x: 25, y: 0, w: 84, h: 60, r: 6, peel: 1 },
+      { n: 'Topicweave', s: 'In orbit', k: 'orbit', shape: 'rect', t: 'woven', c: '#05060A,#9B87F5,#EF5B3F,#139E8A,#4F7BFF', bg: '#000000', x: 25, y: 0, w: 84, h: 60, r: 6, peel: 1 },
       { n: 'kip', s: 'In orbit', k: 'orbit', shape: 'circle', c: '#14204F,#FF7A45,#FFC94A,#FFF4E6,#5FD3A8', bg: '#14204F', x: 51, y: 34, w: 66, h: 66, r: -5 },
       { n: 'Knowledge System', s: 'In orbit', k: 'orbit', shape: 'shield', c: '#1d2350,#3f4fa8,#7c5cff,#c9bcff,#2a1d6b', bg: '#241d56', x: 74, y: 4, w: 70, h: 78, r: 9 },
       { n: 'AB Identity', s: 'Shipped', k: 'shipped', shape: 'mark', x: 60, y: 116, w: 86, h: 58, r: -7 }
@@ -331,7 +331,7 @@
           return;
         }
         html += '<div class="abst is-' + p.shape + ' is-' + p.k + (p.peel ? ' is-peel' : '') + '" style="' + st + ';--bg:' + p.bg + '" title="' + p.n + ' · ' + p.s + '">' +
-          '<span class="abst-pl"><span class="ab_planet" data-planet="gas" data-seed="' + (31 + i * 7) + '" data-colors="' + p.c + '" data-spin="80" aria-hidden="true"></span></span>' +
+          '<span class="abst-pl"><span class="ab_planet" data-planet="' + (p.t || 'gas') + '" data-seed="' + (31 + i * 7) + '" data-colors="' + p.c + '" data-spin="80" aria-hidden="true"></span></span>' +
           '<b>' + p.n + '</b><em>' + p.s + '</em></div>';
       });
       box.innerHTML = html;

@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.33.44 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.33.47 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -201,11 +201,32 @@ window.Webflow.push(function(){
   function fbm(x, y, px, s, oct){ var t = 0, amp = .5, f = 1, n = 0; for (var o = 0; o < oct; o++){ t += amp * vnoise(x * f, y * f, px * f, s + o); n += amp; amp *= .5; f *= 2; } return t / n; }
   var DEFAULTS = {
     gas: '#2b1d4f,#5a3f8e,#c68fbf,#3a2f6b,#f0b48a', rocky: '#6b6258,#9a8c7a,#433c35', ice: '#e3f2ff,#9cc3ee,#5a7fb8',
-    lava: '#140807,#3a1510,#ff6a3d,#ffd27a', terra: '#0e3a5c,#1e6e8c,#3f8f4a,#a88b5c,#f2f0ea'
+    lava: '#140807,#3a1510,#ff6a3d,#ffd27a', terra: '#0e3a5c,#1e6e8c,#3f8f4a,#a88b5c,#f2f0ea',
+    woven: '#05060a,#9b87f5,#ef5b3f,#139e8a,#4f7bff'
   };
   // drawTexture paints into any canvas, so the same code runs in the texture worker (OffscreenCanvas) or here
   function drawTexture(cv, type, cols, seed, W){
     var H = W / 2; cv.width = W; cv.height = H;
+    if (type === 'woven'){
+      // Topicweave (2026-10-04): the v3 site's basket-weave cloth (js/site.js sheetWeave) wrapped round the planet. Warp and
+      // weft in pairs; the thread on top at .85, the one underneath at .2; colors = base + 4 threads (lilac, coral, teal,
+      // cobalt). Whole cells around, so it wraps; a small planet gets a few broad bands so it still reads.
+      var wx = cv.getContext('2d'), th = cols.length > 4 ? cols.slice(1, 5) : [[155, 135, 245], [239, 91, 63], [19, 158, 138], [79, 123, 255]];
+      var n = W >= 1024 ? 40 : W >= 512 ? 32 : W >= 256 ? 20 : 8, gs = W / n, rows = Math.ceil(H / gs), r, cc;
+      wx.fillStyle = 'rgb(' + cols[0].map(Math.round).join(',') + ')'; wx.fillRect(0, 0, W, H);
+      wx.lineCap = 'round'; wx.lineWidth = gs * (n <= 8 ? .5 : .3);
+      [false, true].forEach(function(top){
+        for (r = 0; r < rows; r++) for (cc = 0; cc < n; cc++){
+          var vert = ((cc >> 1) + (r >> 1)) & 1, over = ((cc + r) & 1) === (vert ? 0 : 1); if (over !== top) continue;
+          var x0 = cc * gs + gs / 2, y0 = r * gs + gs / 2, half = gs * .4;
+          wx.globalAlpha = over ? .85 : .2; wx.strokeStyle = 'rgb(' + th[(vert ? cc : r) % 4].map(Math.round).join(',') + ')'; wx.beginPath();
+          if (vert){ wx.moveTo(x0, y0 - half); wx.lineTo(x0, y0 + half); } else { wx.moveTo(x0 - half, y0); wx.lineTo(x0 + half, y0); }
+          wx.stroke();
+        }
+      });
+      wx.globalAlpha = 1;
+      return cv;
+    }
     var ctx = cv.getContext('2d'), img = ctx.createImageData(W, H), d = img.data, P = 8;
     for (var y = 0; y < H; y++){
       var v = y / H, lat = Math.abs(v - .5) * 2;
@@ -567,7 +588,7 @@ window.Webflow.push(function(){
       if (ds.label && el.hasAttribute('data-drag')){ el.setAttribute('role', 'img'); el.setAttribute('aria-label', 'Draggable planet: ' + ds.label); el.tabIndex = 0; }
       else el.setAttribute('aria-hidden', 'true');
     }
-    var paint = function(){ var W = sz > 160 ? 512 : sz > 70 ? 256 : 128; if (type === 'crystal' || type === 'lava') W = sz > 110 ? 1024 : sz > 50 ? 512 : 256; /* sharp edges need ~2 texels per screen pixel */ textureURL(type, cols, seed, W, function(u){ tex.style.setProperty('--tex', 'url(' + u + ')'); requestAnimationFrame(function(){ tex.classList.add('on'); }); }); };
+    var paint = function(){ var W = sz > 160 ? 512 : sz > 70 ? 256 : 128; if (type === 'crystal' || type === 'lava') W = sz > 110 ? 1024 : sz > 50 ? 512 : 256; if (type === 'woven') W = sz > 160 ? 1024 : sz > 70 ? 512 : sz > 40 ? 256 : 128; /* sharp edges need ~2 texels per screen pixel */ textureURL(type, cols, seed, W, function(u){ tex.style.setProperty('--tex', 'url(' + u + ')'); requestAnimationFrame(function(){ tex.classList.add('on'); }); }); };
     paintNear(el, paint);
   }
   var planets = $$('.ab_planet[data-planet]');

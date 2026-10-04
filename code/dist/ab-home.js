@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.33.46 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.33.47 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -170,35 +170,77 @@ window.Webflow.push(function(){
       if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ seen = es[0].isIntersecting; sync(); }).observe(el); else { seen = true; sync(); }
       document.addEventListener('visibilitychange', sync);
     }
-    // CKS: the hero loom from cks-src/js/cks.js, scaled down (fewer threads, smaller wave), no pointer parting
-    function miniLoom(cv, host){
-      var TH = ['#F2A93B', '#EF5B3F', '#139E8A', '#2F5BEA', '#EDE6DA'], seed = 5, bands = [];
-      function rnd(){ seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
-      [[0, 5], [4, 3], [2, 6], [4, 2], [3, 5], [1, 3], [4, 2], [0, 4]].forEach(function(b){ for (var k = 0; k < b[1]; k++) bands.push({ col: TH[b[0]], j: rnd() * 2 - 1 }); });
-      var ctx = cv.getContext('2d'), w = 0, h = 0, t = 7.3, raf = 0, running = false, last = 0;
-      function size(){ var dpr = Math.min(window.devicePixelRatio || 1, 2); w = cv.clientWidth; h = cv.clientHeight; cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+    // Topicweave: the v3 hero loom's opening, scaled down (mission/24-tw-loom.js › mark, 2026-10-04). Short fibers in the four
+    // weave colors fly in from outside the card and weave the Topicweave mark (its bar geometry, over/under crossings
+    // included), then keep streaming slowly along the bars; a few bone fibers drift loose. Black card, black veils so the
+    // white title stays crisp. Runs only while the card is on screen; reduced motion gets the woven mark, still.
+    function twLoom(cv, host){
+      var TAU = Math.PI * 2, HP = Math.PI / 2, LIL = 0, COR = 1, TEA = 2, COB = 3, BONE = 4;
+      var COLS = ['#9b87f5', '#ef5b3f', '#139e8a', '#4f7bff', '#E9E6DF'];
+      var MARK = []; // 24-unit box: x0, y0, x1, y1, horizontal
+      MARK[COR] = [2.5, 6.53, 21.5, 10.75, true]; MARK[TEA] = [2.5, 13.25, 21.5, 17.47, true];
+      MARK[LIL] = [6.53, 2.5, 10.75, 21.5, false]; MARK[COB] = [13.25, 2.5, 17.47, 21.5, false];
+      // lilac over coral · coral over cobalt · teal over lilac · cobalt over teal
+      function under(c, gx, gy){
+        if (c === COR) return gx > 6.53 && gx < 10.75;
+        if (c === COB) return gy > 6.53 && gy < 10.75;
+        if (c === LIL) return gy > 13.25 && gy < 17.47;
+        if (c === TEA) return gx > 13.25 && gx < 17.47;
+        return false;
+      }
+      var N = 440, seed = 20260930, i;
+      function rnd(){ seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+      var F = [];
+      for (i = 0; i < N; i++){ var v = rnd(); F.push({ c: v < .12 ? BONE : Math.min(3, Math.floor((v - .12) / .22)), r1: rnd(), r2: rnd(), r3: rnd(), r4: rnd(), r5: rnd() }); }
+      var ctx = cv.getContext('2d'), w = 0, h = 0, dpr = 1, t = 0, raf = 0, running = false, last = 0, intro = reduce ? 9 : 0;
+      function size(){ dpr = Math.min(window.devicePixelRatio || 1, 2); w = cv.clientWidth; h = cv.clientHeight; cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+      function c01(x){ return x < 0 ? 0 : x > 1 ? 1 : x; }
       function draw(){
         if (!w || !h) return;
-        var n = bands.length, sp = 5.5, ww = 4, gap = 8, cx0 = w * .74, tilt = -.42, half = n * sp / 2, rows = Math.ceil(h / gap) + 2, X = [], r, i, y, col;
-        ctx.clearRect(0, 0, w, h);
-        for (r = 0; r < rows; r++){ y = r * gap; for (i = 0; i < n; i++) X[r * n + i] = cx0 + (i * sp - half) + (y - h * .3) * tilt + 24 * Math.sin(y * .011 + t * .32) + 5 * Math.sin(y * .034 - t * .55 + i * .045) + bands[i].j * .8; }
-        ctx.lineWidth = ww; var by = {};
-        for (i = 0; i < n; i++) (by[bands[i].col] = by[bands[i].col] || []).push(i);
-        for (col in by){ ctx.strokeStyle = col; ctx.beginPath(); by[col].forEach(function(i){ ctx.moveTo(X[i], -gap); for (var r = 0; r < rows; r++) ctx.lineTo(X[r * n + i], r * gap); }); ctx.stroke(); }
-        ctx.fillStyle = 'rgba(11,27,43,.16)';
-        for (r = 0; r < rows; r++) for (i = 0; i < n; i++) if (((i + r) & 3) >= 2) ctx.fillRect(X[r * n + i] - ww / 2, r * gap - 2, ww, 4);
-        ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(11,27,43,.26)'; ctx.beginPath();
-        for (r = 0; r < rows; r++){ y = r * gap + .5; var x = 0; for (i = 0; i < n; i++){ var xc = X[r * n + i]; if (((i + r) & 3) < 2){ var a = xc - ww / 2 - .5; if (a > x){ ctx.moveTo(x, y); ctx.lineTo(a, y); } x = xc + ww / 2 + .5; } } if (x < w){ ctx.moveTo(x, y); ctx.lineTo(w, y); } }
-        ctx.stroke();
-        ctx.fillStyle = 'rgba(255,255,255,.22)';
-        for (r = 0; r < rows; r++) for (i = 0; i < n; i++) if (((i + r) & 3) === 0) ctx.fillRect(X[r * n + i] - ww / 2 + .6, r * gap - gap * .5, 1.2, gap);
-        // veils in the paper color so the title and summary stay crisp: from the left, and up from the bottom
-        var g = ctx.createLinearGradient(0, 0, w, 0); g.addColorStop(0, 'rgba(247,245,240,1)'); g.addColorStop(.4, 'rgba(247,245,240,.9)'); g.addColorStop(.62, 'rgba(247,245,240,0)');
-        ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
-        var g2 = ctx.createLinearGradient(0, h * .32, 0, h); g2.addColorStop(0, 'rgba(247,245,240,0)'); g2.addColorStop(.45, 'rgba(247,245,240,.94)'); g2.addColorStop(1, 'rgba(247,245,240,1)');
-        ctx.fillStyle = g2; ctx.fillRect(0, h * .32, w, h * .68);
+        var deck = w / h < 1, CX = deck ? w * .5 : w * .74, CY = deck ? h * .3 : h * .37, RU = Math.min(w, h) * (deck ? .32 : .42), L = Math.max(7, RU * .11);
+        var buckets = {}, k, f, x, y, a, al, tw, tilt = Math.sin(t * .25) * .05, cs = Math.cos(tilt), sn = Math.sin(tilt);
+        for (i = 0; i < N; i++){
+          f = F[i];
+          if (f.c === BONE){
+            x = (f.r1 * 2 - 1) * 1.6 + Math.sin(t * .07 + f.r3 * 9) * .08; y = (f.r2 * 2 - 1) * 1.1 + Math.cos(t * .06 + f.r4 * 9) * .08;
+            a = f.r3 * Math.PI + t * .05 * (f.r5 - .5); al = .3 * (.5 + .5 * f.r5);
+          } else {
+            var b = MARK[f.c], along = (f.r1 + t * .035 * (f.c % 2 ? 1 : -1) * (.8 + f.r4 * .4)) % 1, wob = Math.sin(along * 9 + t * 1.1 + f.c) * .24, gx, gy;
+            if (along < 0) along += 1;
+            if (b[4]){ gx = b[0] + (b[2] - b[0]) * along; gy = b[1] + .35 + (b[3] - b[1] - .7) * f.r2 + wob; a = 0; }
+            else { gy = b[1] + (b[3] - b[1]) * along; gx = b[0] + .35 + (b[2] - b[0] - .7) * f.r2 + wob; a = HP; }
+            var ux = (gx - 12) / 11.2, uy = (gy - 12) / 11.2;
+            x = ux * cs - uy * sn; y = ux * sn + uy * cs; a += tilt + (f.r3 - .5) * .3; al = under(f.c, gx, gy) ? .2 : 1;
+          }
+          // the intro: each fiber flies in from outside the card at its own moment
+          var p = 1 - Math.pow(1 - c01((intro - .15 - f.r1 * 1.5) / 1.15), 3);
+          if (p < 1){
+            var th = f.r5 * TAU, far = 1.9 + f.r2 * 1.2, sx = Math.cos(th) * far * (w / RU) * .5, sy = Math.sin(th) * far * (h / RU) * .5, sw = Math.sin(p * Math.PI) * .25;
+            x = sx + (x - sx) * p + Math.sin(f.r2 * 30 + intro * 2) * sw; y = sy + (y - sy) * p + Math.cos(f.r4 * 30 + intro * 2) * sw;
+            a = f.r3 * Math.PI + (a - f.r3 * Math.PI) * p; al = .35 + (al - .35) * p;
+          }
+          var X = CX + x * RU, Y = CY + y * RU;
+          tw = reduce ? 1 : .8 + .2 * Math.sin(t * 1.7 + f.r5 * 30);
+          al *= tw * c01(Math.min(X, w - X, Y, h - Y) / 30);
+          if (al < .03) continue;
+          k = f.c + '|' + Math.max(1, Math.min(8, Math.round(al * 8)));
+          var hl = L * (.7 + f.r3 * .6) * .5;
+          (buckets[k] = buckets[k] || []).push(X, Y, Math.cos(a) * hl, Math.sin(a) * hl);
+        }
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+        ctx.lineCap = 'round'; ctx.lineWidth = Math.max(1.5, RU / 70);
+        for (k in buckets){
+          var s = k.split('|'), q = buckets[k]; ctx.strokeStyle = COLS[+s[0]]; ctx.globalAlpha = +s[1] / 8; ctx.beginPath();
+          for (var j = 0; j < q.length; j += 4){ ctx.moveTo(q[j] - q[j + 2], q[j + 1] - q[j + 3]); ctx.lineTo(q[j] + q[j + 2], q[j + 1] + q[j + 3]); }
+          ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+        // black veils under the title and summary: from the left (wide card), and up from the bottom
+        if (!deck){ var g = ctx.createLinearGradient(0, 0, w, 0); g.addColorStop(0, 'rgba(0,0,0,.85)'); g.addColorStop(.38, 'rgba(0,0,0,.55)'); g.addColorStop(.56, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, w, h); }
+        var g2 = ctx.createLinearGradient(0, h * .45, 0, h); g2.addColorStop(0, 'rgba(0,0,0,0)'); g2.addColorStop(.5, 'rgba(0,0,0,.88)'); g2.addColorStop(1, 'rgba(0,0,0,1)');
+        ctx.fillStyle = g2; ctx.fillRect(0, h * .45, w, h * .55);
       }
-      function tick(now){ if (!running) return; t += Math.min(64, now - last) / 1000; last = now; draw(); raf = requestAnimationFrame(tick); }
+      function tick(now){ if (!running) return; var dt = Math.min(64, now - last) / 1000; last = now; t += dt; intro += dt; draw(); raf = requestAnimationFrame(tick); }
       size(); draw();
       if (window.ResizeObserver) new ResizeObserver(function(){ size(); draw(); }).observe(cv);
       if (reduce) return;
@@ -245,7 +287,9 @@ window.Webflow.push(function(){
           inner.appendChild(mk);
         }
         else if (slug === 'topicweave' || slug === 'cks'){
-          // a small version of the Topicweave (was CKS; slug changed 2026-10-04, old one kept as a fallback) hero loom (cks-src/js/cks.js), drifting behind the title
+          // Topicweave (was CKS; slug changed 2026-10-04, old one kept as a fallback): the v3 site's black with white type,
+          // and its hero loom weaving the mark behind the title (twLoom)
+          inner.style.setProperty('--fbg', '#000000'); inner.style.setProperty('--ffg', '#FFFFFF'); f.__bg = '#000000';
           var lc = document.createElement('canvas'); lc.className = 'ab_board_loom'; lc.setAttribute('aria-hidden', 'true');
           lc.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none';
           inner.appendChild(lc); f.__loom = lc;
@@ -277,7 +321,7 @@ window.Webflow.push(function(){
         var sb = document.createElement('div'); sb.className = 'ab_board_fsub'; sb.textContent = f.getAttribute('data-summary') || ''; inner.appendChild(sb);
         f.appendChild(inner);
         if (f.__loom || f.__hop){ [t, sb, op].forEach(function(n){ n.style.position = n === op ? 'absolute' : 'relative'; n.style.zIndex = '1'; }); }
-        if (f.__loom) miniLoom(f.__loom, f);
+        if (f.__loom) twLoom(f.__loom, f);
         if (f.__hop) hop(f.__hop, f);
       }
       if (f.__sel) $('.sel-tag', f.__sel).textContent = 'Frame / ' + slug;
