@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.33.42 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.33.43 · github.com/AngelinoBarajas/ab-portfolio */
 /* body font fallback sized to Geist (Arial measured against it: 102.47% wide), so text keeps its line breaks when Geist
    swaps in and the heroes don't jump (About CLS 0.24 on desktop). Re-declares the Webflow variable: if the body font is
    changed in the Designer, change it here too. Android (no Arial) falls through to plain sans-serif. */
@@ -1075,6 +1075,16 @@ section:hover > .ab_frame-label{color:var(--_color---ui--select)}
 /* forms: shared success + failure (core/41-forms.js). The block keeps the form's height (min-height inline) and centers
    its copy; display:flex is set inline only while shown, never here (a class display beats Webflow's display:none). */
 .w-form-done.abx-sent{flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+/* "while you wait" links under every form's success message (core/41-forms); resets whatever display type the block uses */
+.abx-next{margin-top:28px;padding-top:18px;border-top:1px solid var(--_color---neutral--hair);font-family:var(--_typography---font--mono);font-size:11px;font-weight:500;font-stretch:100%;letter-spacing:.1em;line-height:1.4;text-transform:uppercase;text-align:left}
+.abx-next_l{display:block;margin-bottom:12px;color:var(--_color---text--tertiary)}
+.abx-next_row{display:flex;flex-wrap:wrap;gap:8px}
+.abx-next a{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--_color---neutral--hair-strong);color:var(--_color---text--primary);text-decoration:none;transition:border-color .2s,background-color .2s,color .2s}
+.abx-next a span{color:var(--_color---brand--signal);transition:transform .25s}
+.abx-next a:hover,.abx-next a:focus-visible{border-color:var(--_color---brand--signal);background:rgba(255,106,61,.08)}
+.abx-next a:hover span{transform:translateX(3px)}
+/* Process success read as one 38px shout; smaller, so the links underneath get a say */
+.ab_launch_form .w-form-done.abx-sent .ab_launch_sent{font-size:clamp(20px,1.9vw,28px);line-height:1.12;max-width:24ch}
 .abx-sig{position:relative;display:inline-block;width:12px;height:12px;margin:0 0 16px;vertical-align:middle}
 .abx-sig b{position:absolute;inset:3px;background:var(--_color---brand--signal)}
 .abx-sig i{position:absolute;inset:0;border:1px solid var(--_color---brand--signal);opacity:0}
