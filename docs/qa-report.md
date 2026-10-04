@@ -144,3 +144,32 @@ Desktop + CMS pages had jumps the phone-only Lighthouse pass missed. Causes and 
 
 Lighthouse mobile after (median of 3, live): Home **54** (48), About **66** (50), Services hub **70** (69), /topics **74** (69), topic page **72**, Observatory **69**; CLS 0.000–0.001 on all. Home TBT 876 → 604 ms. Starfield: the wormhole lens was re-measured every frame; v0.33.30 measures it only near the screen (live had ~190 reads/s after scrolling past it, now 0). Home's remaining ~350 ms forced reflow is charged to whichever code measures first after the load-time animations write; reducing it means fewer layout-affecting animations during load.
 
+## Live on barajasdsgn.com (Lighthouse 13.5, 2026-10-04, after v0.33.43)
+
+Mobile = median of 3 runs (all 3 in brackets), desktop = 1 run. SEO is 100 on every page now that the domain is indexable (staging read 63–66 because webflow.io is noindex).
+
+| Page | Perf (mobile, median of 3) | A11y | Best practices | SEO | LCP | TBT | CLS | Perf (desktop) |
+|---|---|---|---|---|---|---|---|---|
+| / | 47 (46/47/49) | 97 | 100 | 100 | 4.8 s | 1264 ms | 0.000 | 97 |
+| /about | 48 (47/48/49) | 95 | 100 | 100 | 5.2 s | 901 ms | 0.000 | 79 |
+| /contact | 73 (71/73/74) | 100 | 100 | 100 | 4.3 s | 187 ms | 0.000 | 98 |
+| /process | 55 (48/55/60) | 97 | 100 | 100 | 4.2 s | 847 ms | 0.000 | 94 |
+| /services | 73 (63/73/73) | 97 | 100 | 100 | 4.2 s | 191 ms | 0.000 | 97 |
+| /services/webgl-data | 51 (47/51/52) | 91 | 100 | 100 | 4.5 s | 1111 ms | 0.000 | 95 |
+| /work | 70 (68/70/71) | 97 | 100 | 100 | 5.1 s | 109 ms | 0.000 | 97 |
+| /work/cks | 59 (36/59/59) | 95 | 100 | 100 | 7.9 s | 0 ms | 0.000 | 82 |
+| /observatory | 66 (64/66/68) | 100 | 100 | 100 | 4.2 s | 413 ms | 0.000 | 97 |
+| /observatory/simpsons-bart-sells-his-soul-web-design | 71 (56/71/77) | 96 | 100 | 100 | 4.9 s | 125 ms | 0.000 | 97 |
+| /topics | 77 (68/77/78) | 100 | 100 | 100 | 4.3 s | 74 ms | 0.001 | 98 |
+| /topics/webflow-cms | 76 (70/76/79) | 100 | 100 | 100 | 4.2 s | 189 ms | 0.001 | 97 |
+
+/ a11y: color-contrast,label-content-name-mismatch
+/about a11y: color-contrast,heading-order,label-content-name-mismatch
+/process a11y: color-contrast,label-content-name-mismatch
+/services a11y: color-contrast,label-content-name-mismatch
+/services/webgl-data a11y: aria-required-children,color-contrast
+/work a11y: color-contrast
+/work/cks a11y: color-contrast,heading-order
+/observatory/simpsons-bart-sells-his-soul-web-design a11y: color-contrast
+
+Notes: vs 09-30 (staging), Home 54 → 47 and About 66 → 48 on mobile, both from TBT (Home 604 → 1264 ms, About ~600 → 901 ms). Candidates: ABIdleDeadline (2s deadline makes every requestIdleCallback run inside the measured window, incl. Turnstile on Home) and About now loading ab-knowledge JS + CSS for Featured reads. Mission LCP 7.9 s is Lighthouse's simulated estimate (observed ~2 s, see Follow-up diagnosis). A11y failures are pre-existing (contrast on dim mono labels, label/name mismatch on icon links, heading order on About + mission, aria-required-children on the webgl-data service).
