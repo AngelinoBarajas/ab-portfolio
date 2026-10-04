@@ -45,6 +45,8 @@ pages = {
                    "Brand identity", "CMS integrations", "Design systems", "Web performance"],
     "makesOffer": [{"@type": "Offer", "itemOffered": {"@id": D + "/services/" + s + "#service"}} for s in SERVICES],
     "email": "mailto:angelino@barajasdsgn.com",
+    "sameAs": ["https://www.linkedin.com/in/angelino-barajas/", "https://www.instagram.com/barajas_design/",
+               "https://github.com/AngelinoBarajas/"],
     "mainEntityOfPage": {"@id": D + "/about#page"}},
    {"@type": "WebPage", "@id": D + "/#page", "url": D + "/", "name": "Angelino Barajas · Webflow designer + developer",
     "isPartOf": SITE, "about": PERSON, "inLanguage": "en-US"}]},
