@@ -173,3 +173,24 @@ Mobile = median of 3 runs (all 3 in brackets), desktop = 1 run. SEO is 100 on ev
 /observatory/simpsons-bart-sells-his-soul-web-design a11y: color-contrast
 
 Notes: vs 09-30 (staging), Home 54 → 47 and About 66 → 48 on mobile, both from TBT (Home 604 → 1264 ms, About ~600 → 901 ms). Candidates: ABIdleDeadline (2s deadline makes every requestIdleCallback run inside the measured window, incl. Turnstile on Home) and About now loading ab-knowledge JS + CSS for Featured reads. Mission LCP 7.9 s is Lighthouse's simulated estimate (observed ~2 s, see Follow-up diagnosis). A11y failures are pre-existing (contrast on dim mono labels, label/name mismatch on icon links, heading order on About + mission, aria-required-children on the webgl-data service).
+
+## Mobile performance pass v0.33.44 (local A/B, 2026-10-04)
+
+Live barajasdsgn.com HTML served from localhost; only the AB bundles differ (base = v0.33.43 sources, new = v0.33.44; the mission bundle kept at base for both). Lighthouse 13.5 mobile. Local scores read lower than live (uncompressed local files), so compare the two columns, not against the live table above. Live re-check after publishing: pending Angelino's OK.
+
+| Page | Perf base → v0.33.44 | TBT base → v0.33.44 | Runs |
+|---|---|---|---|
+| / | 43 → **62** | 801 → 115 ms | 5 + 5 |
+| /about | 38 → **60** | 1043 → 72 ms | 5 + 5 |
+| /process | 42 → **66** | 1191 → 74 ms | 2 + 2 |
+| /services | 59 → 64 | 298 → 140 ms | 2 + 2 |
+| /services/webgl-data | 59 → 62 | 198 → 104 ms | 2 + 2 |
+| /work | 63 → 69 | 292 → 62 ms | 2 + 2 |
+| /work/cks | 56 → 56 | 0 → 0 ms | 2 + 2 |
+| /observatory | 55 → 59 | 378 → 244 ms | 2 + 2 |
+| /observatory/simpsons-… | 65 → 65 | 88 → 54 ms | 2 + 2 |
+| /topics | 64 → 65 | 100 → 85 ms | 2 + 2 |
+| /topics/webflow-cms | 63 → 65 | 168 → 44 ms | 2 + 2 |
+| /contact | 67 → 68 | 155 → 92 ms | 2 + 2 |
+
+CLS identical to base on every page. What changed and why: build notes › Mobile performance pass.
