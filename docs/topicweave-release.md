@@ -5,6 +5,7 @@ The CKS mission becomes **Topicweave** (renamed 2026-10-01, v3 site in `X:/Claud
 **Done in v0.33.46 (perf chat, 14:14 UTC):** Home card loom matches 'topicweave', About badge sticker says Topicweave.
 **v0.33.48 (2026-10-04, live):** signature planets on mission pages (`mission/35-signature.js`: Topicweave = v3 tiers thread globe, 510 Visuals = its dotted continent globe; hero, manifest card, next-mission card only; styles injected by the script), section seams removed, range stats (30–60, 10–15) on one line. CMS planet = `woven` (core v0.33.47) elsewhere. Stats replaced with Angelino's four picks.
 **v0.33.49 (live 15:10 UTC):** 510 globe see-through (dots + graticule, HQ pins, arcs as three thin rings), Topicweave inner globe only, signature planet also in the tools-in-orbit center.
+**v0.33.50 (live):** Topicweave planet gets four # rings (lilac/cobalt vertical, coral/teal horizontal, woven like the logo).
 **Still open:** ~~new planet~~ done (`after_pass` in release.json), live link once topicweave.com is deployed, Flight manual feature card `work.json mission-cks` still describes CKS.
 Release only after Angelino's OK and after the perf chat's release (v0.33.44 tagged 2026-10-04, commit 5d55fc7, not yet in Webflow). Ours: v0.33.45 (fetch tags first to confirm).
 
