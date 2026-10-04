@@ -1,0 +1,3 @@
+Before knowledge alignment (2026-10-04)
+Heads (ab-knowledge.prod.css): Home v0.25.5 (sha384-rzInPny7mBiDHEBtUtMdSduMaPsLJ1IIYUd5E1X/IFG+3L9ytRXIC9oKn4YX39iO); Topics + Observatory v0.33.29 (sha384-RM7I2DkIVWCYcXE3yCipf21ef75llSuHH+nxmBdeoS/RV5ahlAXl9QEulrxkKu2y); Topics template v0.33.37 (sha384-/uiKKwuHeGbC4Q98k3Jr7u9xg+8ju1buFqso1n9sAF5H1dFqtoaw6cydmNbJFcDE, + og:image meta); Services + Missions templates v0.25.5 (bound fields: Designer only).
+Scripts: Home abhome 0.33.47 + abknowledge 0.25.5; Topics abknowledge 0.30.0; Topics template 0.30.0; Services template abservices 0.30.9 + abknowledge 0.25.5; Missions template abmission 0.33.48 + abknowledge 0.25.5; Observatory template 0.33.38; Observatory 0.33.39.
