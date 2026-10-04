@@ -194,3 +194,24 @@ Live barajasdsgn.com HTML served from localhost; only the AB bundles differ (bas
 | /contact | 67 → 68 | 155 → 92 ms | 2 + 2 |
 
 CLS identical to base on every page. What changed and why: build notes › Mobile performance pass.
+
+## Live after v0.33.44 (barajasdsgn.com, Lighthouse 13.5, 2026-10-04, published 12:16 UTC)
+
+Mobile median of 3 (all 3 in brackets), desktop 1 run. Before = the 2026-10-04 table above.
+
+| Page | Mobile before → after | TBT before → after | CLS | Desktop before → after |
+|---|---|---|---|---|
+| / | 47 → **76** (75/76/77) | 1264 → 82 ms | 0.027 | 97 → 99 |
+| /about | 48 → **72** (63/72/72) | 901 → 66 ms | 0.003 | 79 → 96 |
+| /contact | 73 → 81 | 187 → 34 ms | 0.034 | 98 → 98 |
+| /process | 55 → 79 | 847 → 136 ms | 0.001 | 94 → 98 |
+| /services | 73 → 75 | 191 → 213 ms | 0.021 | 97 → 98 |
+| /services/webgl-data | 51 → 75 | 1111 → 240 ms | 0.003 | 95 → 98 |
+| /work | 70 → 81 | 109 → 62 ms | 0.001 | 97 → 98 |
+| /work/cks (now 301 → /work/topicweave) | 59 → 58 | 0 → 246 ms | **0.245** (1 of 3) | 82 → 97 |
+| /observatory | 66 → 77 | 413 → 176 ms | 0.001 | 97 → 98 |
+| /observatory/simpsons-… | 71 → 76 | 125 → 57 ms | 0.037 | 97 → 98 |
+| /topics | 77 → 80 | 74 → 86 ms | 0.001 | 98 → 98 |
+| /topics/webflow-cms | 76 → 81 | 189 → 49 ms | 0.001 | 97 → 98 |
+
+**Incident:** the site publish also shipped the Topicweave chat's CMS changes that were staged in Webflow at 12:14 (mission renamed, slug cks → topicweave, old URL 301s). The live mission page runs the old ab-mission bundle against the renamed item; its hero title/summary shift (0.245 in 1 of 3 runs). Handed to the Topicweave chat + Angelino. Small CLS on Home (0.027, hero bottom) and Contact (0.034, form row) are the init-after-first-paint race noted in the build notes.
