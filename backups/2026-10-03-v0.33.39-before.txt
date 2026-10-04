@@ -1,0 +1,6 @@
+site head: ab-core.prod.css v0.33.36 sha384-6/Kxh5EpgusqsKqZZr75pbI7v3OeEHswNf+MGnwaa1RfCUkHreBQi/Xo5+jqbPFp (plus preconnect + Archivo/Geist preloads, unchanged)
+Home scripts: abhome 0.33.36 footer, abknowledge 0.25.5 footer
+/observatory scripts: abknowledge 0.31.0 footer
+About scripts: ababout 0.33.25 footer
+About head: <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.33.25/code/dist/ab-about.prod.css" integrity="sha384-tQd1jMshHOAejr6PJTk+RJJ2m+gEHscAbXtfD+L/B9AazijkCJkm+NCCT3YN0mLO" crossorigin="anonymous">
+site head before v0.33.40: ab-core.prod.css v0.33.39 sha384-48TUA93gVhqVx9A9S3M48egI8hT4HnuCJwOYnX0D6CNWX0fmUgLapn2CMAuIu+p6
