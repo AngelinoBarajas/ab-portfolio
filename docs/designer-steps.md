@@ -89,7 +89,7 @@ Back up the current field first (paste into `webflow/backup/`). Insert each `[Fi
 
 **First:** reload the Designer. This session wrote page code and CMS through the API (Observatory head, Mission/Home/Knowledge scripts, CMS items), and a stale Page-settings Save would overwrite it.
 
-- [ ] **H1. Home statement planet** (`/`, `section_statement` › `.ab_planet.is-statement`, the teal ringed planet next to "Build the part people screenshot"). Tested by injection on staging at 320–1440, nothing overflows:
+- [x] **H1. Home statement planet** (done 2026-10-03, verified 320–1440, no overflow; desktop values live. Phone Right `-8vw` was set via API because the Designer field wouldn't take it, but ab-core's `.section_statement .ab_planet.is-wormhole{right:36px}` (v0.33.19, phones, the planet became the wormhole after this step was written) wins, so phones keep 36px from the edge; width 52vw + top 3% apply) (`/`, `section_statement` › `.ab_planet.is-statement`, the teal ringed planet next to "Build the part people screenshot"). Tested by injection on staging at 320–1440, nothing overflows:
   - **Desktop (base):** Width `clamp(150px, 27vw, 410px)` (was 24vw / 360px) · Right `calc(clamp(150px, 27vw, 410px) * 0.62)` (was × 0.7) · Top `14%` (was 8%). Result: ~12% bigger, lower, still clear of the headline.
   - **Mobile Landscape (applies down to phones):** Width `clamp(200px, 52vw, 330px)` · Right `-8vw` · Top `3%`. Result: bigger, bleeds off the top-right corner behind the heading, fills the empty space.
   - Verify: `/` at 1440 and 390 on staging; the headline must stay on top of the planet.
