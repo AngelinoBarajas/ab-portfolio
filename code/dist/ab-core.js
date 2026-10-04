@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.33.36 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.33.42 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -1102,28 +1102,30 @@ window.Webflow.push(function(){
       return { content: content, nav: nav };
     }
     function blocked(){ return document.hidden || tipCur || document.documentElement.classList.contains('menu-open'); }
-    function one(x, y, size, delay){
-      var s = document.createElement('span'); s.className = 'ab-twinkle'; s.setAttribute('aria-hidden', 'true'); s.textContent = '✦';
-      s.style.left = Math.round(Math.max(10, Math.min(innerWidth - 24, x))) + 'px'; s.style.top = Math.round(Math.max(10, Math.min(innerHeight - 24, y))) + 'px';
+    // page-anchored (absolute, page coords) so a sparkle scrolls with the thing it points at; nav ones stay fixed like the nav
+    function one(x, y, size, delay, fixed){
+      var s = document.createElement('span'); s.className = 'ab-twinkle' + (fixed ? ' is-fixed' : ''); s.setAttribute('aria-hidden', 'true'); s.textContent = '✦';
+      x = Math.max(10, Math.min(innerWidth - 24, x)); if (fixed) y = Math.max(10, Math.min(innerHeight - 24, y));
+      s.style.left = Math.round(x + (fixed ? 0 : scrollX)) + 'px'; s.style.top = Math.round(y + (fixed ? 0 : scrollY)) + 'px';
       s.style.fontSize = size + 'px'; s.style.animationDelay = delay + 's';
       document.body.appendChild(s); setTimeout(function(){ s.remove(); }, 1900 + delay * 1000);
     }
-    function burst(r){
+    function burst(r, fixed){
       var cx = Math.random() < .5 ? r.left : r.right, cy = Math.random() < .5 ? r.top : r.bottom;
       // corner of a tall/wide thing: pull it a little inside so it reads as belonging to it
       cx += (cx === r.left ? 1 : -1) * Math.min(14, r.width * .2); cy += (cy === r.top ? 1 : -1) * Math.min(12, r.height * .2);
-      one(cx, cy, 22, 0);
-      one(cx + (Math.random() < .5 ? -1 : 1) * (14 + Math.random() * 10), cy + (Math.random() < .5 ? -1 : 1) * (10 + Math.random() * 8), 11, .18);
-      one(cx + (Math.random() < .5 ? -1 : 1) * (8 + Math.random() * 14), cy + (Math.random() < .5 ? -1 : 1) * (14 + Math.random() * 8), 9, .34);
+      // subtle: one small star and a single tiny companion
+      one(cx, cy, 14, 0, fixed);
+      one(cx + (Math.random() < .5 ? -1 : 1) * (10 + Math.random() * 8), cy + (Math.random() < .5 ? -1 : 1) * (8 + Math.random() * 6), 8, .2, fixed);
     }
     function tick(){
       var t = targets(), pick = null;
       if (!blocked()){
         if (t.content.length) pick = t.content[Math.floor(Math.random() * t.content.length)];
         else if (t.nav.length && Math.random() < .3) pick = t.nav[Math.floor(Math.random() * t.nav.length)];
-        if (pick) burst(pick.r);
+        if (pick) burst(pick.r, inNav(pick.el));
       }
-      setTimeout(tick, (t.content.length ? 3000 : 6000) + Math.random() * 3000);
+      setTimeout(tick, (t.content.length ? 6000 : 9000) + Math.random() * 4000);
     }
     setTimeout(tick, 2500);
     // an aside in the page twinkles right away the first time it scrolls into view

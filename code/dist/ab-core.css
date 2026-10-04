@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.33.41 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.33.42 · github.com/AngelinoBarajas/ab-portfolio */
 /* body font fallback sized to Geist (Arial measured against it: 102.47% wide), so text keeps its line breaks when Geist
    swaps in and the heroes don't jump (About CLS 0.24 on desktop). Re-declares the Webflow variable: if the body font is
    changed in the Designer, change it here too. Android (no Arial) falls through to plain sans-serif. */
@@ -1058,9 +1058,11 @@ section:hover > .ab_frame-label{color:var(--_color---ui--select)}
 .ab_chip{transition:background-color .2s,border-color .2s,color .2s}
 .ab_chip[aria-pressed="true"]{border-color:var(--_color---text--primary);color:var(--_color---text--primary);background-color:rgba(255,255,255,.06)}
 .ab_chip:focus-visible{outline:2px solid var(--_color---ui--select);outline-offset:2px}
-/* aside twinkle: a gold ✦ (+ two small ones) that sparkles near an aside (core/23-tips); dark outline so it reads on light sections too */
-.ab-twinkle{position:fixed;z-index:60;margin:-.55em 0 0 -.45em;line-height:1;color:#ffd166;pointer-events:none;opacity:0;text-shadow:0 0 1px #0b0c14,0 0 2px #0b0c14,0 0 8px #ffb27a,0 0 18px rgba(255,106,61,.85);animation:ab-twinkle 1.6s ease-in-out forwards}
-@keyframes ab-twinkle{0%{opacity:0;transform:scale(.2) rotate(0)}30%{opacity:1;transform:scale(1.25) rotate(35deg)}55%{opacity:.9;transform:scale(.85) rotate(60deg)}75%{opacity:1;transform:scale(1.05) rotate(80deg)}100%{opacity:0;transform:scale(.3) rotate(130deg)}}
+/* aside twinkle: a small gold ✦ (+ one tiny one) near an aside (core/23-tips), anchored to the page so it scrolls with its target;
+   kept subtle (2026-10-04: smaller, softer glow, rarer); dark outline so it reads on light sections too */
+.ab-twinkle{position:absolute;z-index:60;margin:-.55em 0 0 -.45em;line-height:1;color:#ffd166;pointer-events:none;opacity:0;text-shadow:0 0 1px #0b0c14,0 0 2px #0b0c14,0 0 6px rgba(255,178,122,.55);animation:ab-twinkle 1.6s ease-in-out forwards}
+.ab-twinkle.is-fixed{position:fixed}
+@keyframes ab-twinkle{0%{opacity:0;transform:scale(.3) rotate(0)}35%{opacity:.8;transform:scale(1.05) rotate(30deg)}70%{opacity:.6;transform:scale(.9) rotate(60deg)}100%{opacity:0;transform:scale(.4) rotate(100deg)}}
 
 /* ---------- test flight: a proof of concept (Mission Type "Test flight"): dashed badge + a little rocket ---------- */
 .ab_tf-ico{width:12px;height:12px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round;margin-right:5px;vertical-align:-2px}
