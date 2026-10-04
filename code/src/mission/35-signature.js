@@ -20,9 +20,43 @@
       return function(R){
         // R = planet radius in px: only the globe (Angelino 2026-10-04: no bands or spokes around it)
         var small = R < 26, N = small ? 120 : R < 70 ? 300 : 700, rr = rnd(N * 3);
-        return { pad: 1.12, draw: function(ctx, cx, cy, t){
+        // four rings in the mark's # (Angelino 2026-10-04): two near-vertical (lilac left, cobalt right), two
+        // near-horizontal (coral top, teal bottom), each a thin ellipse of thread dashes drifting along it. They cross
+        // over and under exactly like the logo: at (col k, row j) the vertical ring is on top when k + j is even.
+        var RG = [{ v: 1, o: -1, c: '#9b87f5', k: 0 }, { v: 1, o: 1, c: '#4f7bff', k: 1 }, { v: 0, o: -1, c: '#ef5b3f', k: 0 }, { v: 0, o: 1, c: '#139e8a', k: 1 }];
+        var D = .36, RL = 1.28, NR = small ? 0 : R < 70 ? 46 : 90;
+        function rings(ctx, cx, cy, t, front, len, lw){
+          var open = .2 + Math.sin(t * .35) * .03, mn = RL * Math.sin(open);
+          ctx.lineWidth = lw * 1.15;
+          RG.forEach(function(g){
+            for (var i = 0; i < NR; i++){
+              var u = (i / NR) * Math.PI * 2 + t * .12 * (g.v ? 1 : -1), cu = Math.cos(u), su = Math.sin(u);
+              // front = the half facing us; the vertical rings lean right, the horizontal ones lean down
+              var isF = cu > 0; if (isF !== front) continue;
+              var x = g.v ? g.o * D + mn * cu : RL * su, y = g.v ? RL * su : g.o * D + mn * cu;
+              // the tangent, so each dash lies along its ring
+              var tx = g.v ? -mn * su : RL * cu, ty = g.v ? RL * cu : -mn * su, tl = Math.sqrt(tx * tx + ty * ty) || 1;
+              var al = front ? .92 : (x * x + y * y < 1 ? .1 : .3);
+              if (front){
+                // under at a crossing: a weave, not a stack
+                for (var j = 0; j < 4; j++){
+                  var h = RG[j]; if (h.v === g.v) continue;
+                  var kx = g.v ? g.k : h.k, ky = g.v ? h.k : g.k, vOver = (kx + ky) % 2 === 0;
+                  var near = g.v ? Math.abs(y - h.o * D) < mn + .08 : Math.abs(x - h.o * D) < mn + .08;
+                  if (near && (g.v ? !vOver : vOver)) al = .18;
+                }
+              }
+              var X = cx + x * R, Y = cy + y * R, hx = tx / tl * len * .75, hy = ty / tl * len * .75;
+              ctx.globalAlpha = al; ctx.strokeStyle = g.c; ctx.beginPath(); ctx.moveTo(X - hx, Y - hy); ctx.lineTo(X + hx, Y + hy); ctx.stroke();
+            }
+          });
+          ctx.globalAlpha = 1;
+        }
+        return { pad: NR ? 1.4 : 1.12, draw: function(ctx, cx, cy, t){
           var len = Math.max(2.2, R * (small ? .2 : R < 70 ? .09 : .07)), lw = Math.max(1, Math.min(1.6, R / 70));
-          ctx.lineCap = 'round'; ctx.lineWidth = lw;
+          ctx.lineCap = 'round';
+          if (NR) rings(ctx, cx, cy, t, false, len, lw);
+          ctx.lineWidth = lw;
           for (var i = 0; i < N; i++){
             var R1 = rr[i * 3], R2 = rr[i * 3 + 1], R3 = rr[i * 3 + 2];
             // a point on the sphere, turning, tilted toward us; the thread lies along its latitude, back threads faint
@@ -33,6 +67,7 @@
             var c = COL[Math.floor(R3 * COL.length)], hx = Math.cos(a) * len / 2, hy = Math.sin(a) * len / 2, X = cx + x * R, Y = cy + y * R;
             ctx.globalAlpha = z2 > 0 ? .2 : .95; ctx.strokeStyle = c; ctx.beginPath(); ctx.moveTo(X - hx, Y - hy); ctx.lineTo(X + hx, Y + hy); ctx.stroke();
           }
+          if (NR) rings(ctx, cx, cy, t, true, len, lw);
           ctx.globalAlpha = 1;
         } };
       };
