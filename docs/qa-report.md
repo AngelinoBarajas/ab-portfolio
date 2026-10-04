@@ -215,3 +215,24 @@ Mobile median of 3 (all 3 in brackets), desktop 1 run. Before = the 2026-10-04 t
 | /topics/webflow-cms | 76 → 81 | 189 → 49 ms | 0.001 | 97 → 98 |
 
 **Incident:** the site publish also shipped the Topicweave chat's CMS changes that were staged in Webflow at 12:14 (mission renamed, slug cks → topicweave, old URL 301s). The live mission page runs the old ab-mission bundle against the renamed item; its hero title/summary shift (0.245 in 1 of 3 runs). Handed to the Topicweave chat + Angelino. Small CLS on Home (0.027, hero bottom) and Contact (0.034, form row) are the init-after-first-paint race noted in the build notes.
+
+## Live re-check (barajasdsgn.com, Lighthouse 13.5, 2026-10-04 afternoon, after v0.33.51 + knowledge alignment)
+
+Mobile median of 3 (all 3 in brackets), desktop 1 run. Columns: morning before perf pass → right after v0.33.44 → now.
+
+| Page | Mobile | TBT now | CLS now | Desktop now |
+|---|---|---|---|---|
+| / | 47 → 76 → **72** (67/72/75) | 121 ms | 0.000 | 97 |
+| /about | 48 → 72 → **68** (64/68/72) | 101 ms | 0.000 | 96 |
+| /contact | 73 → 81 → **75** (68/75/78) | 56 ms | 0.000 | 98 |
+| /process | 55 → 79 → **76** (72/76/80) | 66 ms | 0.000 | 98 |
+| /services | 73 → 75 → **77** (63/77/77) | 74 ms | 0.000 | 98 |
+| /services/webgl-data | 51 → 75 → **74** (71/74/75) | 137 ms | 0.000 | 98 |
+| /work | 70 → 81 → **73** (71/73/80) | 45 ms | 0.001 | 97 |
+| /work/topicweave (was /work/cks) | 59 → 58 → **61** (45/61/61) | 0 ms | 0.000 | 96 |
+| /observatory | 66 → 77 → **76** (67/76/77) | 180 ms | 0.001 | 98 |
+| /observatory/simpsons-… | 71 → 76 → **74** (73/74/76) | 57 ms | 0.037 | 98 |
+| /topics | 77 → 80 → **77** (71/77/79) | 45 ms | 0.001 | 98 |
+| /topics/webflow-cms | 76 → 81 → **76** (75/76/78) | 68 ms | 0.000 | 98 |
+
+Within run-to-run noise of the post-pass table (spreads of 5–14 points inside one page's 3 runs); blocking time stays 45–180 ms everywhere (was up to 1,264 ms). CLS 0 on 10 of 12 pages, incl. Home and Contact (0.027 / 0.034 this morning). Topicweave's 7.0 s LCP with 0 ms TBT is Lighthouse's simulated estimate (same pattern as the old /work/cks). New a11y flag on Topicweave: `target-size` (from the mission chat's v0.33.49–51 work); otherwise the same pre-existing contrast / label flags.
