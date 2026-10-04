@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission v0.33.48 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission v0.33.49 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abMissionInit) return;
@@ -3493,10 +3493,10 @@ window.Webflow.push(function(){
   /* =========================================================
      SIGNATURE PLANETS (mission pages only)
      A few missions get a one-off planet drawn from their own project's visual language instead of the generated
-     surface: Topicweave = the v3 loom's globe of threads with its two bands and spokes (cks-v3 js/loom.js F.sphere +
-     tierPos), 510 Visuals = the site's dotted continent globe (vendor/510-globe.js LAND_DOTS + palette).
-     They replace that mission's planet where it shows on a mission page (hero, manifest status card, next-mission
-     card) and nowhere else: the Work board, Home and Services keep the CMS planet, and these never join the random
+     surface: Topicweave = the v3 loom's globe of threads (cks-v3 js/loom.js F.sphere), 510 Visuals = the site's dotted continent
+     globe, see-through, with its graticule, HQ pins and its arcs drawn as thin rings (vendor/510-globe.js).
+     They replace that mission's planet where it shows on a mission page (hero, manifest status card, tools-in-orbit
+     center, next-mission card) and nowhere else: the Work board, Home and Services keep the CMS planet, and these never join the random
      planet pool. The core planet is still built underneath (drag, magnet and hover keep working on .ab_planet);
      its sphere + rings are hidden and a canvas draws on top, animated only while on screen, one still frame under
      reduced motion.
@@ -3507,33 +3507,23 @@ window.Webflow.push(function(){
     /* ---- Topicweave: a globe of threads ---- */
     SIG.topicweave = (function(){
       var COL = ['#9b87f5', '#ef5b3f', '#139e8a', '#4f7bff', '#9b87f5', '#ef5b3f', '#139e8a', '#4f7bff', '#e9e6df'];
-      var TAU = Math.PI * 2, HP = Math.PI / 2;
+      var TAU = Math.PI * 2;
       function rnd(n){ var s = 7, a = []; for (var i = 0; i < n; i++){ s = (s * 16807) % 2147483647; a.push((s - 1) / 2147483646); } return a; }
       return function(R){
-        // R = planet radius in px; the threads scale with it, small planets get fewer and no spokes
-        var small = R < 26, N = small ? 140 : R < 70 ? 380 : 900, rr = rnd(N * 5);
-        var cB1 = [1.22, 1.52], cB2 = [1.72, 2.02];
-        return { pad: small ? 1.25 : 2.1, draw: function(ctx, cx, cy, t){
-          var len = Math.max(2.2, R * (small ? .2 : R < 70 ? .09 : .06)), lw = Math.max(1, Math.min(1.6, R / 70));
+        // R = planet radius in px: only the globe (Angelino 2026-10-04: no bands or spokes around it)
+        var small = R < 26, N = small ? 120 : R < 70 ? 300 : 700, rr = rnd(N * 3);
+        return { pad: 1.12, draw: function(ctx, cx, cy, t){
+          var len = Math.max(2.2, R * (small ? .2 : R < 70 ? .09 : .07)), lw = Math.max(1, Math.min(1.6, R / 70));
           ctx.lineCap = 'round'; ctx.lineWidth = lw;
           for (var i = 0; i < N; i++){
-            var R1 = rr[i * 5], R2 = rr[i * 5 + 1], R3 = rr[i * 5 + 2], R4 = rr[i * 5 + 3], g = i % 10, x, y, a, al;
-            if (small || g < 4){
-              // the globe: a point on the sphere, turning, tilted toward us; the thread lies along its latitude
-              var lat = Math.acos(2 * R1 - 1), lon = R2 * TAU + t * .12, sl = Math.sin(lat);
-              var px = sl * Math.cos(lon), py = Math.cos(lat), pz = sl * Math.sin(lon), tl = .42, ct = Math.cos(tl), st = Math.sin(tl);
-              var y2 = py * ct - pz * st, z2 = py * st + pz * ct, p = 1 / (1 + z2 * .3);
-              x = px * .95 * p; y = y2 * .95 * p; a = Math.atan2(-Math.cos(lon) * st, -Math.sin(lon)); al = z2 > 0 ? .2 : .95;
-            } else if (g === 9){
-              // spokes: threads flowing outward between the bands
-              var k = Math.floor(R4 * 14), th = (k / 14) * TAU + t * .03, r = 1.05 + ((R1 + t * .09) % 1) * (cB2[1] - 1.05);
-              x = Math.cos(th) * r; y = Math.sin(th) * r * .92; a = th; al = .2 + .55 * Math.sin(Math.min(1, (r - 1.05) / (cB2[1] - 1.05)) * Math.PI);
-            } else {
-              var b = g < 7 ? cB1 : cB2, spin = g < 7 ? t * .05 : -t * .035, th2 = R1 * TAU + spin, r2 = b[0] + R2 * (b[1] - b[0]);
-              x = Math.cos(th2) * r2; y = Math.sin(th2) * r2 * .92; a = th2 + HP; al = g < 7 ? .7 : .55;
-            }
+            var R1 = rr[i * 3], R2 = rr[i * 3 + 1], R3 = rr[i * 3 + 2];
+            // a point on the sphere, turning, tilted toward us; the thread lies along its latitude, back threads faint
+            var lat = Math.acos(2 * R1 - 1), lon = R2 * TAU + t * .12, sl = Math.sin(lat);
+            var px = sl * Math.cos(lon), py = Math.cos(lat), pz = sl * Math.sin(lon), tl = .42, ct = Math.cos(tl), st = Math.sin(tl);
+            var y2 = py * ct - pz * st, z2 = py * st + pz * ct, p = 1 / (1 + z2 * .3);
+            var x = px * .95 * p, y = y2 * .95 * p, a = Math.atan2(-Math.cos(lon) * st, -Math.sin(lon));
             var c = COL[Math.floor(R3 * COL.length)], hx = Math.cos(a) * len / 2, hy = Math.sin(a) * len / 2, X = cx + x * R, Y = cy + y * R;
-            ctx.globalAlpha = al; ctx.strokeStyle = c; ctx.beginPath(); ctx.moveTo(X - hx, Y - hy); ctx.lineTo(X + hx, Y + hy); ctx.stroke();
+            ctx.globalAlpha = z2 > 0 ? .2 : .95; ctx.strokeStyle = c; ctx.beginPath(); ctx.moveTo(X - hx, Y - hy); ctx.lineTo(X + hx, Y + hy); ctx.stroke();
           }
           ctx.globalAlpha = 1;
         } };
@@ -3552,24 +3542,48 @@ window.Webflow.push(function(){
         D.forEach(function(d){ var la = d[0] * Math.PI / 180, lo = d[1] * Math.PI / 180, r = Math.random(); d.push(Math.cos(la) * Math.cos(lo), Math.sin(la), Math.cos(la) * Math.sin(lo), r > .85 ? '#b8c9cc' : r > .6 ? '#5a8a94' : '#37535a'); });
         return D;
       }
+      // the site's three HQ pins (Brooklyn, Shenzhen, Brussels) and its arcs, turned into thin rings around the globe
+      var PINS = [[40.68, -73.94], [22.54, 114.06], [50.85, 4.35]];
+      var RINGS = [{ r: 1.22, inc: .42, node: .3, sp: .55 }, { r: 1.36, inc: -.62, node: 1.9, sp: -.4 }, { r: 1.5, inc: .78, node: 3.6, sp: .3 }];
+      function v3(lat, lng){ var la = lat * Math.PI / 180, lo = lng * Math.PI / 180; return [Math.cos(la) * Math.cos(lo), Math.sin(la), Math.cos(la) * Math.sin(lo)]; }
       return function(R){
         var list = dots(), small = R < 26;
-        return { pad: 1.35, draw: function(ctx, cx, cy, t){
-          // the ocean sphere, lit from the upper left, with the site's teal atmosphere
-          var g = ctx.createRadialGradient(cx - R * .35, cy - R * .4, R * .1, cx, cy, R);
-          g.addColorStop(0, '#1c2227'); g.addColorStop(1, '#0b1012');
-          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
-          var at = ctx.createRadialGradient(cx, cy, R * .92, cx, cy, R * 1.3);
-          at.addColorStop(0, 'rgba(94,234,212,.28)'); at.addColorStop(1, 'rgba(94,234,212,0)');
-          ctx.fillStyle = at; ctx.beginPath(); ctx.arc(cx, cy, R * 1.3, 0, Math.PI * 2); ctx.fill();
+        return { pad: small ? 1.3 : 1.62, draw: function(ctx, cx, cy, t){
           var rot = t * .16, cr = Math.cos(rot), sr = Math.sin(rot), tl = .38, ct = Math.cos(tl), st = Math.sin(tl);
-          var dr = Math.max(.55, R / (small ? 30 : 120)), skip = small ? 3 : R < 70 ? 2 : 1;
-          for (var i = 0; i < list.length; i += skip){
-            var d = list[i], x = d[2] * cr - d[4] * sr, z = d[2] * sr + d[4] * cr, y = d[3];
-            var y2 = y * ct - z * st, z2 = y * st + z * ct; if (z2 < 0) continue;
-            ctx.globalAlpha = .35 + .6 * z2; ctx.fillStyle = d[5];
-            ctx.fillRect(cx + x * R - dr, cy - y2 * R - dr, dr * 2, dr * 2);
+          // world → screen: spin about the axis, tilt toward the viewer; returns [x, y, depth]
+          function pr(x, y, z, spin){ var X = spin ? x * cr - z * sr : x, Z = spin ? x * sr + z * cr : z; return [X, y * ct - Z * st, y * st + Z * ct]; }
+          var i, k, q, a;
+          ctx.lineWidth = Math.max(.6, R / 260);
+          // graticule: lat every 30° (−60..60), lng every 30°, thin, the back half fainter (the globe is see-through)
+          if (!small){
+            ctx.strokeStyle = '#5a8a94';
+            for (var lat = -60; lat <= 60; lat += 30) for (var ln = -180; ln < 180; ln += 6){ seg(v3(lat, ln), v3(lat, ln + 6)); }
+            for (var lg = -180; lg < 180; lg += 30) for (var lt = -90; lt < 90; lt += 6){ seg(v3(lt, lg), v3(lt + 6, lg)); }
           }
+          function seg(p0, p1){ var A = pr(p0[0], p0[1], p0[2], true), B = pr(p1[0], p1[1], p1[2], true); ctx.globalAlpha = (A[2] + B[2]) > 0 ? .22 : .07; ctx.beginPath(); ctx.moveTo(cx + A[0] * R, cy - A[1] * R); ctx.lineTo(cx + B[0] * R, cy - B[1] * R); ctx.stroke(); }
+          // continent dots, front bright, back faint
+          var dr = Math.max(.55, R / (small ? 30 : 120)), skip = small ? 3 : R < 70 ? 2 : 1;
+          for (i = 0; i < list.length; i += skip){
+            var d = list[i]; q = pr(d[2], d[3], d[4], true);
+            ctx.globalAlpha = q[2] >= 0 ? .4 + .55 * q[2] : .1; ctx.fillStyle = d[5];
+            ctx.fillRect(cx + q[0] * R - dr, cy - q[1] * R - dr, dr * 2, dr * 2);
+          }
+          // pins on the front: a teal core with a glow
+          PINS.forEach(function(pn){ var v = v3(pn[0], pn[1]); q = pr(v[0], v[1], v[2], true); if (q[2] < .05) return; glow(cx + q[0] * R, cy - q[1] * R, Math.max(1.4, R / 70), .9); });
+          function glow(x, y, r, al){ var g = ctx.createRadialGradient(x, y, 0, x, y, r * 4); g.addColorStop(0, 'rgba(94,234,212,' + al + ')'); g.addColorStop(.3, 'rgba(45,212,191,' + al * .5 + ')'); g.addColorStop(1, 'rgba(45,212,191,0)'); ctx.globalAlpha = 1; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * 4, 0, Math.PI * 2); ctx.fill(); }
+          // the arcs as rings: tilted circles around the globe, each with a pin of light travelling along it;
+          // the part behind the globe is dimmer
+          RINGS.forEach(function(rg, ri){
+            var ci = Math.cos(rg.inc), si = Math.sin(rg.inc), cn = Math.cos(rg.node), sn = Math.sin(rg.node), prev = null, n = 96;
+            function pt(u){ var x = Math.cos(u) * rg.r, z = Math.sin(u) * rg.r, y = z * si; z = z * ci; var X = x * cn - z * sn, Z = x * sn + z * cn; return pr(X, y, Z, false); }
+            ctx.lineWidth = Math.max(.7, R / 200);
+            for (k = 0; k <= n; k++){
+              q = pt(k / n * Math.PI * 2);
+              if (prev){ var behind = (prev[2] + q[2]) < 0 && Math.hypot((prev[0] + q[0]) / 2, (prev[1] + q[1]) / 2) < 1; ctx.globalAlpha = behind ? .1 : .55; ctx.strokeStyle = ri ? '#2dd4bf' : '#5eead4'; ctx.beginPath(); ctx.moveTo(cx + prev[0] * R, cy - prev[1] * R); ctx.lineTo(cx + q[0] * R, cy - q[1] * R); ctx.stroke(); }
+              prev = q;
+            }
+            if (!small){ a = t * rg.sp + ri * 2.1; q = pt(a); var hid = q[2] < 0 && Math.hypot(q[0], q[1]) < 1; if (!hid) glow(cx + q[0] * R, cy - q[1] * R, Math.max(1.2, R / 90), .85); }
+          });
           ctx.globalAlpha = 1;
         } };
       };
@@ -3609,7 +3623,7 @@ window.Webflow.push(function(){
     // this page's own planet: the hero + the manifest status card
     if (SIG[SLUG]){
       var hp = $('#hero .ab_planet[data-slug]'); if (hp) mount(hp, SLUG);
-      $$('.ab_planet.is-mf').forEach(function(p){ mount(p, SLUG); });
+      $$('.ab_planet.is-mf, .ab_planet.is-orbit').forEach(function(p){ mount(p, SLUG); });
     }
     // the next-mission card, when the next mission has a signature planet
     if (NEXT && SIG[NEXT.slug]) $$('.ab_next-card .ab_planet').forEach(function(p){ mount(p, NEXT.slug); });
