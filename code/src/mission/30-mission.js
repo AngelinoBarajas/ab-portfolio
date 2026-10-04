@@ -265,6 +265,26 @@
         ScrollTrigger.create({ trigger: n, start: 'top 90%', once: true, onEnter: function(){ gsap.to(o, { v: target, duration: 1.6, ease: 'power3.out', onUpdate: function(){ n.innerHTML = Math.round(o.v) + unit; } }); } });
       }
     }
+    else if (suf && /^[–-]/.test(suf)){
+      // a range (30–60, 10–15): the full "30–60" must fit its column on one line, so it's set first, measured and shrunk
+      // to fit (AB.fitWide), then counted up here (core's counter would measure "0")
+      var rT = +v, full = rT + suf; n.removeAttribute('data-count'); n.style.whiteSpace = 'nowrap'; n.textContent = full;
+      // measured on the final text whenever the column has a width (load, fonts, resize, scrolling in)
+      var fit = function(){
+        var cur = n.textContent; n.textContent = full; n.style.fontSize = '';
+        var cw = n.clientWidth, sw = n.scrollWidth;
+        if (cw && sw > cw + 1) n.style.fontSize = Math.max(26, Math.floor(parseFloat(getComputedStyle(n).fontSize) * cw / sw * .97)) + 'px';
+        n.textContent = cur;
+      };
+      fit(); var rlw = innerWidth;
+      addEventListener('resize', function(){ if (innerWidth !== rlw){ rlw = innerWidth; fit(); } });
+      if (document.fonts) document.fonts.ready.then(fit);
+      if (window.ScrollTrigger) ScrollTrigger.create({ trigger: n, start: 'top bottom', once: true, onEnter: fit });
+      if (!reduce && hasGsap && window.ScrollTrigger){
+        var ro = { v: 0 }; n.textContent = '0' + suf;
+        ScrollTrigger.create({ trigger: n, start: 'top 90%', once: true, onEnter: function(){ fit(); gsap.to(ro, { v: rT, duration: 1.6, ease: 'power3.out', onUpdate: function(){ n.textContent = Math.round(ro.v) + suf; } }); } });
+      }
+    }
     else n.textContent = v + (suf || '');
   });
 

@@ -360,10 +360,11 @@
     ]
   },
   "after_pass": {
-    "_note": "New planet, after the perf pass (Angelino 2026-10-04). Needs a woven surface type in core/10-space.js (perf chat's file) or at least these colors.",
+    "_note": "New planet (Angelino 2026-10-04): woven surface type in core/10-space.js (perf chat). Needs a 'Woven' option added to Missions > Planet type first (API can't add options).",
     "missions": {
       "6ab97e398d094c64bb845956": {
-        "planet-colors": "#000000,#9B87F5,#4F7BFF,#139E8A",
+        "planet-type": "<Woven option id>",
+        "planet-colors": "#05060A,#9B87F5,#EF5B3F,#139E8A,#4F7BFF",
         "planet-ring": "#9B87F5,#EF5B3F,#139E8A,#4F7BFF",
         "planet-glow": "rgba(155,135,245,.38)"
       }

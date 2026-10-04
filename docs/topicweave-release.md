@@ -15,7 +15,7 @@ Release only after Angelino's OK and after the perf chat's release (v0.33.44 tag
   `tw-roadmap` (five phases beside real prototype screenshots, `code/vendor/topicweave/roadmap/`, 176 KB, loaded on first play).
 - `mission/10-mocks.js`: `MOCKS.topicweave` (Figma hero + phone in the v3 look); `MOCKS.cks` stays as an alias until the slug change is live.
 - `mission/40-monitor.js`: Topicweave channel changes knit the cloth from the pressed tab, then unravel onto the new channel.
-- `mission/45-tw-page.js`: a strip of cloth knits in at each top-level section boundary as it comes on screen (still under reduced motion).
+- (`mission/45-tw-page.js` section seams: removed in v0.33.48 at Angelino's ask.)
 - `mission/30-mission.js`: `tw-*` channel ids are their own kind; manifest tiles for `topicweave`/`cks` in black + lilac.
 - Removed `mission/22-cks.js` and the old CKS CSS (kept the `.cx-live*` rules the live-site feature uses). Styles: the TOPICWEAVE
   section at the end of `ab-mission.css`.
