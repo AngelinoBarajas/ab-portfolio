@@ -3,20 +3,20 @@
  "@graph": [
   {
    "@type": "WebSite",
-   "@id": "{{DOMAIN}}/#website",
-   "url": "{{DOMAIN}}/",
+   "@id": "https://barajasdsgn.com/#website",
+   "url": "https://barajasdsgn.com/",
    "name": "Angelino Barajas",
    "description": "Webflow designer and developer: interactive 3D, CMS-driven sites and motion.",
    "inLanguage": "en-US",
    "publisher": {
-    "@id": "{{DOMAIN}}/#person"
+    "@id": "https://barajasdsgn.com/#person"
    }
   },
   {
    "@type": "Person",
-   "@id": "{{DOMAIN}}/#person",
+   "@id": "https://barajasdsgn.com/#person",
    "name": "Angelino Barajas",
-   "url": "{{DOMAIN}}/",
+   "url": "https://barajasdsgn.com/",
    "jobTitle": "Webflow designer and developer",
    "description": "Self-taught designer and developer with a philosophy degree, building Webflow sites with interactive 3D, CMS-driven content and motion.",
    "knowsAbout": [
@@ -34,75 +34,75 @@
     {
      "@type": "Offer",
      "itemOffered": {
-      "@id": "{{DOMAIN}}/services/webflow-development#service"
+      "@id": "https://barajasdsgn.com/services/webflow-development#service"
      }
     },
     {
      "@type": "Offer",
      "itemOffered": {
-      "@id": "{{DOMAIN}}/services/webgl-data#service"
+      "@id": "https://barajasdsgn.com/services/webgl-data#service"
      }
     },
     {
      "@type": "Offer",
      "itemOffered": {
-      "@id": "{{DOMAIN}}/services/motion#service"
+      "@id": "https://barajasdsgn.com/services/motion#service"
      }
     },
     {
      "@type": "Offer",
      "itemOffered": {
-      "@id": "{{DOMAIN}}/services/branding#service"
+      "@id": "https://barajasdsgn.com/services/branding#service"
      }
     },
     {
      "@type": "Offer",
      "itemOffered": {
-      "@id": "{{DOMAIN}}/services/custom-deploys#service"
+      "@id": "https://barajasdsgn.com/services/custom-deploys#service"
      }
     },
     {
      "@type": "Offer",
      "itemOffered": {
-      "@id": "{{DOMAIN}}/services/cms-integrations#service"
+      "@id": "https://barajasdsgn.com/services/cms-integrations#service"
      }
     },
     {
      "@type": "Offer",
      "itemOffered": {
-      "@id": "{{DOMAIN}}/services/design-systems#service"
+      "@id": "https://barajasdsgn.com/services/design-systems#service"
      }
     },
     {
      "@type": "Offer",
      "itemOffered": {
-      "@id": "{{DOMAIN}}/services/performance#service"
+      "@id": "https://barajasdsgn.com/services/performance#service"
      }
     }
    ],
    "email": "mailto:angelino@barajasdsgn.com",
    "mainEntityOfPage": {
-    "@id": "{{DOMAIN}}/about#page"
+    "@id": "https://barajasdsgn.com/about#page"
    }
   },
   {
    "@type": "WebPage",
-   "@id": "{{DOMAIN}}/#page",
-   "url": "{{DOMAIN}}/",
+   "@id": "https://barajasdsgn.com/#page",
+   "url": "https://barajasdsgn.com/",
    "name": "Angelino Barajas · Webflow designer + developer",
    "isPartOf": {
-    "@id": "{{DOMAIN}}/#website"
+    "@id": "https://barajasdsgn.com/#website"
    },
    "about": {
-    "@id": "{{DOMAIN}}/#person"
+    "@id": "https://barajasdsgn.com/#person"
    },
    "inLanguage": "en-US"
   },
   {
    "@type": "FAQPage",
-   "@id": "{{DOMAIN}}/#faq",
+   "@id": "https://barajasdsgn.com/#faq",
    "isPartOf": {
-    "@id": "{{DOMAIN}}/#page"
+    "@id": "https://barajasdsgn.com/#page"
    },
    "mainEntity": [
     {

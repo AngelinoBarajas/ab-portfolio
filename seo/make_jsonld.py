@@ -44,6 +44,7 @@ pages = {
     "knowsAbout": ["Webflow development", "Interactive 3D", "WebGL", "Motion design", "GSAP",
                    "Brand identity", "CMS integrations", "Design systems", "Web performance"],
     "makesOffer": [{"@type": "Offer", "itemOffered": {"@id": D + "/services/" + s + "#service"}} for s in SERVICES],
+    "email": "mailto:angelino@barajasdsgn.com",
     "mainEntityOfPage": {"@id": D + "/about#page"}},
    {"@type": "WebPage", "@id": D + "/#page", "url": D + "/", "name": "Angelino Barajas · Webflow designer + developer",
     "isPartOf": SITE, "about": PERSON, "inLanguage": "en-US"}]},
@@ -63,6 +64,14 @@ pages = {
    "Questions, help with an existing site, collaborations, hiring or a call.",
    {"about": PERSON}, [("Contact", None)]),
 }
+# Home FAQ (Pre-flight checks) as FAQPage, from the FAQ seed (Homepage scope, CMS sort order). Any answer still holding a
+# [placeholder] keeps the whole block out, so a draft never ships as structured data.
+FAQ = sorted((f for f in json.loads((pathlib.Path(__file__).parent.parent / "cms" / "seed" / "faq.json").read_text(encoding="utf-8"))
+              if f.get("scope") == "Homepage"), key=lambda f: f.get("sort", 0))
+if FAQ and not any("[" in f["answer"] for f in FAQ):
+    pages["home"]["@graph"].append({"@type": "FAQPage", "@id": D + "/#faq", "isPartOf": {"@id": D + "/#page"},
+        "mainEntity": [{"@type": "Question", "name": f["name"], "acceptedAnswer": {"@type": "Answer", "text": f["answer"]}} for f in FAQ]})
+
 for k, v in pages.items():
     (OUT / (k + ".json")).write_text(json.dumps(v, indent=1, ensure_ascii=False), encoding="utf-8")
 

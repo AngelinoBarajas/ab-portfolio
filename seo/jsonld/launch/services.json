@@ -1,0 +1,65 @@
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "CollectionPage",
+   "@id": "https://barajasdsgn.com/services#page",
+   "url": "https://barajasdsgn.com/services",
+   "name": "Services · Launch control",
+   "description": "Eight services from one designer-developer: Webflow builds, interactive 3D + data, motion, brand identity, custom code, CMS integrations, design systems and performance.",
+   "isPartOf": {
+    "@id": "https://barajasdsgn.com/#website"
+   },
+   "inLanguage": "en-US",
+   "breadcrumb": {
+    "@id": "https://barajasdsgn.com/services#breadcrumb"
+   },
+   "provider": {
+    "@id": "https://barajasdsgn.com/#person"
+   },
+   "hasPart": [
+    {
+     "@id": "https://barajasdsgn.com/services/webflow-development#service"
+    },
+    {
+     "@id": "https://barajasdsgn.com/services/webgl-data#service"
+    },
+    {
+     "@id": "https://barajasdsgn.com/services/motion#service"
+    },
+    {
+     "@id": "https://barajasdsgn.com/services/branding#service"
+    },
+    {
+     "@id": "https://barajasdsgn.com/services/custom-deploys#service"
+    },
+    {
+     "@id": "https://barajasdsgn.com/services/cms-integrations#service"
+    },
+    {
+     "@id": "https://barajasdsgn.com/services/design-systems#service"
+    },
+    {
+     "@id": "https://barajasdsgn.com/services/performance#service"
+    }
+   ]
+  },
+  {
+   "@type": "BreadcrumbList",
+   "@id": "https://barajasdsgn.com/services#breadcrumb",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Home",
+     "item": "https://barajasdsgn.com/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Services"
+    }
+   ]
+  }
+ ]
+}

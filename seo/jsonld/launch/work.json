@@ -1,0 +1,39 @@
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "CollectionPage",
+   "@id": "https://barajasdsgn.com/work#page",
+   "url": "https://barajasdsgn.com/work",
+   "name": "Mission archive",
+   "description": "Webflow sites, brand identities and interactive 3D, each planned, designed in Figma and built from the ground up.",
+   "isPartOf": {
+    "@id": "https://barajasdsgn.com/#website"
+   },
+   "inLanguage": "en-US",
+   "breadcrumb": {
+    "@id": "https://barajasdsgn.com/work#breadcrumb"
+   },
+   "author": {
+    "@id": "https://barajasdsgn.com/#person"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "@id": "https://barajasdsgn.com/work#breadcrumb",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Home",
+     "item": "https://barajasdsgn.com/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Work"
+    }
+   ]
+  }
+ ]
+}
