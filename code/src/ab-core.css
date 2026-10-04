@@ -1185,3 +1185,6 @@ div.abx-bad,fieldset.abx-bad{outline:1px dashed color-mix(in srgb,var(--signal) 
 /* on /observatory itself the "Open the observatory" button would point at the page you're on */
 .section_ks-hero[data-ks-view="library"] ~ .section_ks-row.is-featured .ab_ks-cta{display:none}
 @media (max-width:991px){.section_ks-row.is-featured .ab_ks-grid{grid-template-columns:1fr}.section_ks-row.is-featured .ab_ks-card{min-height:0}}
+/* card arrow (→) sat ~2.5px low: JetBrains Mono's arrow rides below the line box's middle. Line-height 1 + a little bottom
+   padding centers the ink in the 34px square (measured from pixels at 2x) */
+.ab_ks-go{line-height:1;padding-bottom:5px}
