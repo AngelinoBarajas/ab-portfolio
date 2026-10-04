@@ -219,6 +219,8 @@
   /* ---------- random planets: a type + a color harmony (analogous / complementary / triad) per call ----------
      AB.planetLook(rnd?) -> { type, colors, ring, tilt, open, glow, seed }; AB.applyPlanetLook(el, look) writes the data
      attributes (call before buildPlanet, or clear __built to rebuild). Designer planets and service colors keep theirs. */
+  // never add 'woven' here: it is Topicweave's own surface (Angelino, 2026-10-04), not part of the random pool that
+  // drifters, About's far planet and Home's morph specimen draw from
   var TYPES = ['gas', 'gas', 'storm', 'storm', 'rocky', 'ice', 'lava', 'terra', 'desert', 'ocean', 'toxic', 'crystal'];
   // ring styles (data-ring-style, CSS .is-ring-*): classic bands, one thin bright band, a wide dusty sheet, two rings with a gap, many fine bands
   var RINGS = ['classic', 'classic', 'thin', 'wide', 'double', 'banded'];
