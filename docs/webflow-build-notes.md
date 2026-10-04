@@ -847,3 +847,5 @@ What each cost was and what changed (all site-wide helpers are on `AB`, `core/00
 
 Verified: section boxes before/after scrolling identical to base on all 12 pages at 412 + 1440 (incl. `/#launch` landing position), layout shifts while scrolling no worse than base, no new console errors, every planet textured after a scroll-through, badge back identical when flipped 300 ms after load, side-by-side screenshots of every changed piece.
 Known, not from this pass: Home's init runs in jQuery's ready timer *after* first paint, so the hero title fit / nav "Booking" text can register as a ~0.02 shift when a frame lands in between (seen in local Lighthouse runs, live measured 0).
+
+**v0.33.46 (2026-10-04, live):** after the Topicweave slug change (cks → topicweave, shipped by the Topicweave chat as v0.33.45) the Home work card lost its loom preview (`home/10-work.js` matched `slug === 'cks'`); it now matches `topicweave` with `cks` as fallback. About badge mission patch renamed CKS → Topicweave (fits the 84 px patch). Verified live at 1440 + 412.
