@@ -20,42 +20,31 @@
       return function(R){
         // R = planet radius in px: only the globe (Angelino 2026-10-04: no bands or spokes around it)
         var small = R < 26, N = small ? 120 : R < 70 ? 300 : 700, rr = rnd(N * 3);
-        // four rings in the mark's # (Angelino 2026-10-04): two near-vertical (lilac left, cobalt right), two
-        // near-horizontal (coral top, teal bottom), each a thin ellipse of thread dashes drifting along it. They cross
-        // over and under exactly like the logo: at (col k, row j) the vertical ring is on top when k + j is even.
-        var RG = [{ v: 1, o: -1, c: '#9b87f5', k: 0 }, { v: 1, o: 1, c: '#4f7bff', k: 1 }, { v: 0, o: -1, c: '#ef5b3f', k: 0 }, { v: 0, o: 1, c: '#139e8a', k: 1 }];
-        var D = .36, RL = 1.28, NR = small ? 0 : R < 70 ? 46 : 90;
-        function rings(ctx, cx, cy, t, front, len, lw){
-          var open = .2 + Math.sin(t * .35) * .03, mn = RL * Math.sin(open);
-          ctx.lineWidth = lw * 1.15;
-          RG.forEach(function(g){
-            for (var i = 0; i < NR; i++){
-              var u = (i / NR) * Math.PI * 2 + t * .12 * (g.v ? 1 : -1), cu = Math.cos(u), su = Math.sin(u);
-              // front = the half facing us; the vertical rings lean right, the horizontal ones lean down
-              var isF = cu > 0; if (isF !== front) continue;
-              var x = g.v ? g.o * D + mn * cu : RL * su, y = g.v ? RL * su : g.o * D + mn * cu;
-              // the tangent, so each dash lies along its ring
-              var tx = g.v ? -mn * su : RL * cu, ty = g.v ? RL * cu : -mn * su, tl = Math.sqrt(tx * tx + ty * ty) || 1;
-              var al = front ? .92 : (x * x + y * y < 1 ? .1 : .3);
-              if (front){
-                // under at a crossing: a weave, not a stack
-                for (var j = 0; j < 4; j++){
-                  var h = RG[j]; if (h.v === g.v) continue;
-                  var kx = g.v ? g.k : h.k, ky = g.v ? h.k : g.k, vOver = (kx + ky) % 2 === 0;
-                  var near = g.v ? Math.abs(y - h.o * D) < mn + .08 : Math.abs(x - h.o * D) < mn + .08;
-                  if (near && (g.v ? !vOver : vOver)) al = .18;
-                }
-              }
-              var X = cx + x * R, Y = cy + y * R, hx = tx / tl * len * .75, hy = ty / tl * len * .75;
-              ctx.globalAlpha = al; ctx.strokeStyle = g.c; ctx.beginPath(); ctx.moveTo(X - hx, Y - hy); ctx.lineTo(X + hx, Y + hy); ctx.stroke();
+        // four regular rings, one per weave color (Angelino 2026-10-04): concentric, one tilted plane, thread dashes
+        // drifting along each; the half behind the globe is drawn first and dimmer
+        var RG = ['#9b87f5', '#ef5b3f', '#139e8a', '#4f7bff'], RR = [1.24, 1.36, 1.48, 1.6], NR = small ? 0 : R < 70 ? 50 : 110;
+        function rings(ctx, cx, cy, t, front, len, lw, en){
+          var open = .24, tilt = -.24, ca = Math.cos(tilt), sa = Math.sin(tilt);
+          ctx.lineWidth = lw * (1.15 + .5 * en);
+          RG.forEach(function(col, k){
+            var r = RR[k], n = Math.round(NR * r / 1.4);
+            for (var i = 0; i < n; i++){
+              var u = (i / n) * Math.PI * 2 + t * (.05 + k * .015), cu = Math.cos(u), su = Math.sin(u);
+              if ((su > 0) !== front) continue;
+              var wv = en ? Math.sin(u * 9 - t * 4 + k) * .06 * en : 0, rw = r + wv, ex = rw * cu, ey = rw * Math.sin(open) * su, x = ex * ca - ey * sa, y = ex * sa + ey * ca;
+              var tx = -r * su, ty = r * Math.sin(open) * cu, dx = tx * ca - ty * sa, dy = tx * sa + ty * ca, tl = Math.sqrt(dx * dx + dy * dy) || 1;
+              ctx.globalAlpha = Math.min(1, (front ? .85 : (x * x + y * y < 1 ? .08 : .35)) + .25 * en);
+              var X = cx + x * R, Y = cy + y * R, hx = dx / tl * len * .75, hy = dy / tl * len * .75;
+              ctx.strokeStyle = col; ctx.beginPath(); ctx.moveTo(X - hx, Y - hy); ctx.lineTo(X + hx, Y + hy); ctx.stroke();
             }
           });
           ctx.globalAlpha = 1;
         }
-        return { pad: NR ? 1.4 : 1.12, draw: function(ctx, cx, cy, t){
+        return { pad: NR ? 1.7 : 1.12, pulse: '155,135,245', draw: function(ctx, cx, cy, t, en){
+          en = en || 0;
           var len = Math.max(2.2, R * (small ? .2 : R < 70 ? .09 : .07)), lw = Math.max(1, Math.min(1.6, R / 70));
           ctx.lineCap = 'round';
-          if (NR) rings(ctx, cx, cy, t, false, len, lw);
+          if (NR) rings(ctx, cx, cy, t, false, len, lw, en);
           ctx.lineWidth = lw;
           for (var i = 0; i < N; i++){
             var R1 = rr[i * 3], R2 = rr[i * 3 + 1], R3 = rr[i * 3 + 2];
@@ -63,11 +52,11 @@
             var lat = Math.acos(2 * R1 - 1), lon = R2 * TAU + t * .12, sl = Math.sin(lat);
             var px = sl * Math.cos(lon), py = Math.cos(lat), pz = sl * Math.sin(lon), tl = .42, ct = Math.cos(tl), st = Math.sin(tl);
             var y2 = py * ct - pz * st, z2 = py * st + pz * ct, p = 1 / (1 + z2 * .3);
-            var x = px * .95 * p, y = y2 * .95 * p, a = Math.atan2(-Math.cos(lon) * st, -Math.sin(lon));
+            var sw = en ? 1 + Math.sin(lat * 9 + t * 4 + R3 * 6) * .06 * en : 1, x = px * .95 * p * sw, y = y2 * .95 * p * sw, a = Math.atan2(-Math.cos(lon) * st, -Math.sin(lon));
             var c = COL[Math.floor(R3 * COL.length)], hx = Math.cos(a) * len / 2, hy = Math.sin(a) * len / 2, X = cx + x * R, Y = cy + y * R;
-            ctx.globalAlpha = z2 > 0 ? .2 : .95; ctx.strokeStyle = c; ctx.beginPath(); ctx.moveTo(X - hx, Y - hy); ctx.lineTo(X + hx, Y + hy); ctx.stroke();
+            ctx.globalAlpha = z2 > 0 ? .2 + .35 * en : .95; ctx.strokeStyle = c; ctx.lineWidth = lw * (1 + .6 * en); ctx.beginPath(); ctx.moveTo(X - hx, Y - hy); ctx.lineTo(X + hx, Y + hy); ctx.stroke();
           }
-          if (NR) rings(ctx, cx, cy, t, true, len, lw);
+          if (NR) rings(ctx, cx, cy, t, true, len, lw, en);
           ctx.globalAlpha = 1;
         } };
       };
@@ -91,7 +80,8 @@
       function v3(lat, lng){ var la = lat * Math.PI / 180, lo = lng * Math.PI / 180; return [Math.cos(la) * Math.cos(lo), Math.sin(la), Math.cos(la) * Math.sin(lo)]; }
       return function(R){
         var list = dots(), small = R < 26;
-        return { pad: small ? 1.3 : 1.62, draw: function(ctx, cx, cy, t){
+        return { pad: small ? 1.3 : 1.62, pulse: '94,234,212', draw: function(ctx, cx, cy, t, en){
+          en = en || 0;
           var rot = t * .16, cr = Math.cos(rot), sr = Math.sin(rot), tl = .38, ct = Math.cos(tl), st = Math.sin(tl);
           // world → screen: spin about the axis, tilt toward the viewer; returns [x, y, depth]
           function pr(x, y, z, spin){ var X = spin ? x * cr - z * sr : x, Z = spin ? x * sr + z * cr : z; return [X, y * ct - Z * st, y * st + Z * ct]; }
@@ -108,7 +98,7 @@
           var dr = Math.max(.55, R / (small ? 30 : 120)), skip = small ? 3 : R < 70 ? 2 : 1;
           for (i = 0; i < list.length; i += skip){
             var d = list[i]; q = pr(d[2], d[3], d[4], true);
-            ctx.globalAlpha = q[2] >= 0 ? .4 + .55 * q[2] : .1; ctx.fillStyle = d[5];
+            ctx.globalAlpha = q[2] >= 0 ? Math.min(1, .4 + .55 * q[2] + .3 * en) : .1 + .1 * en; ctx.fillStyle = en > .5 && d[5] === '#37535a' ? '#5a8a94' : d[5];
             ctx.fillRect(cx + q[0] * R - dr, cy - q[1] * R - dr, dr * 2, dr * 2);
           }
           // pins on the front: a teal core with a glow
@@ -122,7 +112,7 @@
             ctx.lineWidth = Math.max(.7, R / 200);
             for (k = 0; k <= n; k++){
               q = pt(k / n * Math.PI * 2);
-              if (prev){ var behind = (prev[2] + q[2]) < 0 && Math.hypot((prev[0] + q[0]) / 2, (prev[1] + q[1]) / 2) < 1; ctx.globalAlpha = behind ? .1 : .55; ctx.strokeStyle = ri ? '#2dd4bf' : '#5eead4'; ctx.beginPath(); ctx.moveTo(cx + prev[0] * R, cy - prev[1] * R); ctx.lineTo(cx + q[0] * R, cy - q[1] * R); ctx.stroke(); }
+              if (prev){ var behind = (prev[2] + q[2]) < 0 && Math.hypot((prev[0] + q[0]) / 2, (prev[1] + q[1]) / 2) < 1; ctx.globalAlpha = behind ? .1 : .55 + .4 * en; ctx.strokeStyle = ri ? '#2dd4bf' : '#5eead4'; ctx.beginPath(); ctx.moveTo(cx + prev[0] * R, cy - prev[1] * R); ctx.lineTo(cx + q[0] * R, cy - q[1] * R); ctx.stroke(); }
               prev = q;
             }
             if (!small){ a = t * rg.sp + ri * 2.1; q = pt(a); var hid = q[2] < 0 && Math.hypot(q[0], q[1]) < 1; if (!hid) glow(cx + q[0] * R, cy - q[1] * R, Math.max(1.2, R / 90), .85); }
@@ -141,7 +131,7 @@
       var make = SIG[slug]; if (!make || el.__sig) return; el.__sig = true;
       el.classList.add('is-sig', 'is-sig-' + slug);
       var cv = document.createElement('canvas'); cv.className = 'sig-cv'; cv.setAttribute('aria-hidden', 'true'); el.appendChild(cv);
-      var ctx = cv.getContext('2d'), P = null, W = 0, H = 0, raf = 0, on = false, t0 = 0;
+      var ctx = cv.getContext('2d'), P = null, W = 0, H = 0, raf = 0, on = false, last = 0, T = 6, EN = 0, until = 0, pulseT = -9, ptr = null;
       function size(){
         var r = el.getBoundingClientRect(), R = r.width / 2; if (!R) return false;
         P = make(R); var s = R * 2 * P.pad, dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -149,18 +139,42 @@
         W = H = s; cv.width = cv.height = Math.round(s * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         P.R = R; return true;
       }
+      // supercharge (the v3 site's hover "energize"): the threads speed up, brighten and undulate, one pulse runs out
       function frame(now){
-        if (!P) return; var t = reduce ? 6 : ((now || 0) - t0) / 1000 + 6;
-        ctx.clearRect(0, 0, W, H); P.draw(ctx, W / 2, H / 2, t);
-        raf = on && !reduce ? requestAnimationFrame(frame) : 0;
+        if (!P) return; now = now || 0;
+        var dt = last ? Math.min(.05, (now - last) / 1000) : .016; last = now;
+        // a resting pointer keeps it charged (also when the page scrolls the planet under a still pointer)
+        if (ptr && !reduce){ var br = el.getBoundingClientRect(), qx = ptr[0] - (br.left + br.width / 2), qy = ptr[1] - (br.top + br.height / 2), qr = br.width / 2 * 1.15; if (qx * qx + qy * qy < qr * qr){ if (now >= until) pulseT = now / 1000; until = now + 300; } }
+        var want = now < until ? 1 : 0; EN += (want - EN) * Math.min(1, dt * (want ? 4 : 2.5)); if (EN < .002) EN = 0;
+        if (!reduce) T += dt * (1 + 2.4 * EN);
+        ctx.clearRect(0, 0, W, H); P.draw(ctx, W / 2, H / 2, T, EN);
+        var pa = (now / 1000 - pulseT) / 1.1;
+        if (pa >= 0 && pa < 1){
+          var R = P.R; ctx.globalAlpha = (1 - pa) * .7; ctx.strokeStyle = 'rgb(' + P.pulse + ')'; ctx.lineWidth = Math.max(1, R / 60) * (1 - pa * .6);
+          ctx.beginPath(); ctx.arc(W / 2, H / 2, R * (1 + pa * (P.pad - 1) * .95), 0, Math.PI * 2); ctx.stroke(); ctx.globalAlpha = 1;
+        }
+        raf = (on && !reduce) || EN > 0 || pa < 1 ? requestAnimationFrame(frame) : 0;
+      }
+      function charge(ms){
+        if (reduce) return; var now = performance.now();
+        if (now >= until) pulseT = now / 1000;
+        until = now + (ms || 900); if (!raf){ last = 0; raf = requestAnimationFrame(frame); }
       }
       if (!size()) return;
-      t0 = window.performance ? performance.now() : 0;
-      frame(t0);
+      frame(performance.now());
       var lw = innerWidth; addEventListener('resize', function(){ if (innerWidth !== lw){ lw = innerWidth; if (size()) frame(performance.now()); } });
       if (window.IntersectionObserver) new IntersectionObserver(function(es){
-        on = es[0].isIntersecting; if (on && !raf && !reduce){ raf = requestAnimationFrame(frame); }
+        on = es[0].isIntersecting; if (on && !raf && !reduce){ last = 0; raf = requestAnimationFrame(frame); }
       }, { rootMargin: '100px' }).observe(el);
+      // mouse: charged while the pointer is over the planet (hit-tested by position, since the hero title sits on top
+      // of it); touch: a tap charges it for a moment
+      addEventListener('pointermove', function(e){
+        if (e.pointerType !== 'mouse' || !P || !on) return;
+        var r = el.getBoundingClientRect(), dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2), R = r.width / 2 * 1.15;
+        ptr = [e.clientX, e.clientY]; if (dx * dx + dy * dy < R * R) charge(700);
+      }, { passive: true });
+      document.addEventListener('pointerleave', function(){ ptr = null; });
+      el.addEventListener('pointerdown', function(e){ if (e.pointerType !== 'mouse') charge(1600); });
     }
 
     // this page's own planet: the hero + the manifest status card
