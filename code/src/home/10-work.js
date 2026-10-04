@@ -102,8 +102,8 @@
           mk.innerHTML = AB.markSVG({ grid: true });
           inner.appendChild(mk);
         }
-        else if (slug === 'cks'){
-          // a small version of the CKS hero loom (cks-src/js/cks.js), drifting behind the title
+        else if (slug === 'topicweave' || slug === 'cks'){
+          // a small version of the Topicweave (was CKS; slug changed 2026-10-04, old one kept as a fallback) hero loom (cks-src/js/cks.js), drifting behind the title
           var lc = document.createElement('canvas'); lc.className = 'ab_board_loom'; lc.setAttribute('aria-hidden', 'true');
           lc.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none';
           inner.appendChild(lc); f.__loom = lc;
