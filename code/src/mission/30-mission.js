@@ -43,8 +43,8 @@
     var it = $('[data-channel]', item) || item;
     var imgs = $$('img', it).filter(function(im){ return !im.classList.contains('w-dyn-bind-empty'); }).map(function(im){ return im.getAttribute('src') || ''; }).filter(function(s){ return s && !/placeholder/i.test(s); });
     var cid = it.getAttribute('data-id') || ('ch' + i);
-    // coded scenes are picked by channel id (the CMS Kind option can't gain values via the API); cks-* ids are their own kind
-    return { id: cid, kind: (/^cks-/.test(cid) ? cid : ({ sketch: 'sketch', vector: 'vector', graph: 'graph', library: 'library', voice: 'voice', setup: 'setup', video: 'video', schema: 'schema', portable: 'portable' })[cid]) || (it.getAttribute('data-kind') || 'img').toLowerCase(), mode: (it.getAttribute('data-mode') || '').toLowerCase(),
+    // coded scenes are picked by channel id (the CMS Kind option can't gain values via the API); tw-* ids are their own kind
+    return { id: cid, kind: (/^tw-/.test(cid) ? cid : ({ sketch: 'sketch', vector: 'vector', graph: 'graph', library: 'library', voice: 'voice', setup: 'setup', video: 'video', schema: 'schema', portable: 'portable' })[cid]) || (it.getAttribute('data-kind') || 'img').toLowerCase(), mode: (it.getAttribute('data-mode') || '').toLowerCase(),
       label: it.getAttribute('data-label') || ('Channel ' + (i + 1)), caption: it.getAttribute('data-caption') || '', src: imgs[0] || '', before: imgs[0] || '', after: imgs[1] || imgs[0] || '' };
   });
   // image channels whose loops live in the repo (MOCKS[slug].img: id → [loop, still], on jsDelivr, so Webflow can't flatten
@@ -114,7 +114,7 @@
       }
       unlink(a);
     });
-    var host = $('[data-mf="host"]'); if (host) host.textContent = M.live ? M.live.replace(/^https?:\/\//, '').replace(/\/$/, '') : isSystem ? 'Add-on · any Webflow site' : 'Self-initiated identity';
+    var host = $('[data-mf="host"]'); if (host) host.textContent = M.live ? M.live.replace(/^https?:\/\//, '').replace(/\/$/, '') : isSystem ? 'Add-on · any Webflow site' : M.mock && M.mock.tw ? 'Product site · in beta' : 'Self-initiated identity';
   })();
 
   /* ---------- palette (identity missions with a token set) ---------- */
@@ -331,10 +331,12 @@
     var TSTYLE = {
       '510-visuals': ['build', '#1c1e24', '#d0e0e3', '#5eead4', 'linear-gradient(135deg,#5a8a94,#1c2227)', '#4a5a60'],
       'daniel-aguirre-law': ['build', '#FCF6EC', '#1a2840', '#891E2D', 'linear-gradient(135deg,#A88B5C,#efe2c8)', '#c9bda8'],
-      'cks': ['woven', '#F7F5F0', '#0B1B2B', '#EF5B3F', 'linear-gradient(135deg,#2F5BEA,#139E8A)', '#C9CED4'],
+      // Topicweave (was CKS; the old slug stays keyed until the item's slug change is published)
+      'topicweave': ['woven', '#000000', '#FFFFFF', '#9B87F5', 'linear-gradient(135deg,#9B87F5,#4F7BFF)', '#3A3A3A'],
+      'cks': ['woven', '#000000', '#FFFFFF', '#9B87F5', 'linear-gradient(135deg,#9B87F5,#4F7BFF)', '#3A3A3A'],
       'kip': ['build', '#FFF4E6', '#1E1B2E', '#FF7A45', 'linear-gradient(135deg,#FFC94A,#5FD3A8)', '#E6D3BD']
     };
-    var TS = TSTYLE[SLUG] || ['blueprint'], THREADS = ['#F2A93B', '#EF5B3F', '#139E8A', '#2F5BEA'];
+    var TS = TSTYLE[SLUG] || ['blueprint'], THREADS = ['#9B87F5', '#EF5B3F', '#139E8A', '#4F7BFF'];
     function g(c, l, t, w, h){ return '<i class="' + c + '" style="left:' + l + '%;top:' + t + '%;width:' + w + '%;height:' + h + '%"></i>'; }
     function glyph(p){
       var s = g('m', 5, 8, 90, 7);

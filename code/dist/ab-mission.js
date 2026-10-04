@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission v0.33.36 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission v0.33.45 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abMissionInit) return;
@@ -179,86 +179,166 @@ window.Webflow.push(function(){
   MOCKS['ab-identity'] = { accent: '#FF6A3D', sketch: true, vector: true };
   // Knowledge System: seven coded scenes (21-knowledge.js), generic example content
   MOCKS['knowledge-system'] = { accent: '#a597ff', graph: true, library: true, voice: true, setup: true, video: true, schema: true, portable: true };
-  // CKS: the product site for the Knowledge System. Six coded scenes (22-cks.js, key `cks`, incl. its own woven site plan)
-  // plus figma + phone. `live`: once getcks.io answers (its favicon loads), the live channels show the real page.
+  // CKS: the product site for the Knowledge System. Renamed Topicweave (cks-v3): the coded scenes are 24-tw-*.js (key `tw`),
+  // plus this figma + phone spec in the v3 look (black, Fraunces + Inter Tight, lilac labels, one cobalt action, square corners).
+  // Nothing from v3 is deployed, so no `live` swap. Styles: the TOPICWEAVE section of ab-mission.css.
+  // The marks come from the Topicweave kit (23-tw-base.js loads after this file), so `els` and `mobile` are getters that
+  // build their markup the first time a scene reads them, and start the site's fonts (rebuilding that scene once they land).
   (function(){
-    // the hero loom, redrawn as SVG: warp lines plus eight bands of weft threads in the four thread colors
-    function loom(w, h, n){
-      var c = ['#F2A93B', '#EF5B3F', '#139E8A', '#2F5BEA'], g = w * .62 / n, s = '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;display:block" aria-hidden="true">', i, y;
-      for (y = 6; y < h; y += 10) s += '<path d="M0 ' + y + 'H' + w + '" stroke="rgba(11,27,43,.13)" stroke-width=".7"/>';
-      for (i = 0; i < n; i++){
-        var xt = w * .36 + i * g, xb = w * .02 + i * g;
-        s += '<path d="M' + xt.toFixed(1) + ' -6C' + (xt + w * .22).toFixed(1) + ' ' + (h * .38).toFixed(1) + ' ' + (xb - w * .12).toFixed(1) + ' ' + (h * .62).toFixed(1) + ' ' + xb.toFixed(1) + ' ' + (h + 6) + '" fill="none" stroke="' + c[Math.floor(i / (n / 8)) % 4] + '" stroke-width="' + (g * .62).toFixed(2) + '" stroke-dasharray="7 1.6"/>';
+    function kitTw(){ return typeof SCENE !== 'undefined' && SCENE && SCENE.kit ? SCENE.kit.tw : null; }
+    var WV = ['#9b87f5', '#ef5b3f', '#139e8a', '#4f7bff'];
+    var ARROW = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    var MOON = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M15.5 12.6A6.5 6.5 0 017.4 4.5a6.5 6.5 0 108.1 8.1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+    // the loom's threads, drawn as short fibers: each band scatters fibers along a segment (the woven mark = four bars),
+    // `loose` adds stray fibers around it. One path per color and strength keeps the DOM small.
+    function rng(seed){ var s = seed; return function(){ s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; }
+    function fibers(o){
+      var r = rng(o.seed || 7), P = {}, keys = [], sw = o.sw || .5, i, k;
+      function add(col, strong, x, y, a, l){
+        var key = col + (strong ? '|b' : '|d'); if (!P[key]){ P[key] = ''; keys.push(key); }
+        var ex = Math.cos(a) * l, ey = Math.sin(a) * l;
+        P[key] += 'M' + (x - ex / 2).toFixed(1) + ' ' + (y - ey / 2).toFixed(1) + 'l' + ex.toFixed(1) + ' ' + ey.toFixed(1);
+      }
+      (o.bands || []).forEach(function(b){
+        var dx = b[2] - b[0], dy = b[3] - b[1], L = Math.sqrt(dx * dx + dy * dy) || 1, ux = dx / L, uy = dy / L, base = Math.atan2(uy, ux);
+        for (i = 0; i < b[6]; i++){
+          var t = r(), off = (r() - .5) * b[4];
+          add(b[5], r() > .3, b[0] + dx * t - uy * off, b[1] + dy * t + ux * off, base + (r() - .5) * .32, (o.len || 3.2) * (.75 + r() * .6));
+        }
+      });
+      if (o.loose) for (i = 0; i < o.loose.n; i++){
+        var ang = r() * Math.PI * 2, rad = o.loose.r0 + r() * (o.loose.r1 - o.loose.r0);
+        add(o.loose.cols[Math.floor(r() * o.loose.cols.length)], false, o.loose.cx + Math.cos(ang) * rad, o.loose.cy + Math.sin(ang) * rad, r() * Math.PI, (o.len || 3.2) * (.6 + r() * .5));
+      }
+      var s = '<svg viewBox="' + o.vb + '" preserveAspectRatio="xMidYMid meet" aria-hidden="true">';
+      for (k = 0; k < keys.length; k++){
+        var c = keys[k].split('|');
+        s += '<path d="' + P[keys[k]] + '" fill="none" stroke="' + c[0] + '" stroke-width="' + sw + '" stroke-linecap="round" stroke-opacity="' + (c[1] === 'b' ? .92 : .38) + '"/>';
       }
       return s + '</svg>';
     }
-    var LOGO = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;display:block" aria-hidden="true"><rect x="2.5" y="6" width="19" height="5" rx="1.2" fill="#EF5B3F"/><rect x="2.5" y="13" width="19" height="5" rx="1.2" fill="#139E8A"/><rect x="6" y="2.5" width="5" height="19" rx="1.2" fill="#F2A93B" stroke="#fff" stroke-width="1.4"/><rect x="13" y="2.5" width="5" height="19" rx="1.2" fill="#2F5BEA" stroke="#fff" stroke-width="1.4"/><rect x="12.3" y="6" width="6.4" height="5" fill="#EF5B3F"/><path d="M12.3 6V11M18.7 6V11" stroke="#fff" stroke-width="1.4"/><rect x="5.3" y="13" width="6.4" height="5" fill="#139E8A"/><path d="M5.3 13V18M11.7 13V18" stroke="#fff" stroke-width="1.4"/></svg>';
-    // unquoted on purpose: these go inside style="..." attributes, where a double quote would end the attribute
-    var F = 'Schibsted Grotesk,Inter,sans-serif';
-    function chip(t, c){ return '<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:999px;border:1px solid rgba(11,27,43,.14);font:600 8px ' + F + '"><i style="width:6px;height:6px;border-radius:50%;background:' + c + '"></i>' + t + '</span>'; }
-    MOCKS.cks = {
-      accent: '#EF5B3F', cks: true,
-      live: { base: 'https://getcks.io/', probe: 'favicon.svg', pages: { 'cks-styles': 'styles.html', 'cks-sketch': 'sketch.html' } },
-      file: 'CKS — Product site', page: 'Home', frame: 'Desktop · Hero', url: 'getcks.io',
-      bg: '#F7F5F0', accent2: '#2F5BEA', hover: 'cta',
-      comment: { on: 'heading', by: 'Review', text: 'The headline fights the loom for attention.', reply: 'Faded the weave behind the copy and pushed the pattern right.' },
-      els: [
-        { id: 'loom', name: 'Canvas / loom', icon: 'img', type: 'Embed', x: 470, y: 0, w: 530, h: 625, wire: 'img',
+    // the hero shape: the woven mark in threads (left bar lilac, right bar cobalt, top coral, bottom teal), as on Home
+    function markSvg(n, seed){
+      var a = 21.5, b = 45.2, w = 13.5, e = 66.7;
+      return fibers({ vb: '-24 -24 114.7 114.7', seed: seed, sw: .55, len: 3.4,
+        bands: [[a, 0, a, e, w, WV[0], n], [b, 0, b, e, w, WV[3], n], [0, a, e, a, w, WV[1], n], [0, b, e, b, w, WV[2], n]],
+        loose: { n: Math.round(n * .45), cx: 33.4, cy: 33.4, r0: 40, r1: 56, cols: ['#8a8a8a', '#8a8a8a', WV[0], WV[3]] } });
+    }
+    // The problem: the same threads scattered loose
+    function scatterSvg(){
+      return fibers({ vb: '0 0 120 70', seed: 31, sw: .6, len: 3.6, loose: { n: 150, cx: 60, cy: 35, r0: 2, r1: 34, cols: WV } });
+    }
+    // How it works: a spine of terms with four things hanging off it
+    function spineSvg(){
+      return fibers({ vb: '0 0 120 80', seed: 53, sw: .6, len: 3.4,
+        bands: [[60, 4, 60, 76, 5, WV[0], 60], [60, 20, 22, 10, 4, WV[1], 26], [60, 34, 98, 24, 4, WV[2], 26], [60, 50, 24, 60, 4, WV[3], 26], [60, 64, 96, 72, 4, WV[1], 22]],
+        loose: { n: 30, cx: 60, cy: 40, r0: 30, r1: 48, cols: ['#8a8a8a'] } });
+    }
+
+    var cache = {}, MK;
+    // start the site's fonts and rebuild the figma/phone scene reading this spec once they arrive (layout is measured at build)
+    function kick(){
+      var T = kitTw(); if (!T) return;
+      T.fonts();
+      Array.prototype.forEach.call(document.querySelectorAll('.view[data-ch]'), function(v){
+        var sc = SCENE.get(v.getAttribute('data-ch'));
+        if (sc && sc.M && sc.M.mock === MK && (sc.kind === 'figma' || sc.kind === 'phone')) T.fonts(sc);
+      });
+    }
+    function logo(T){ return T ? T.LOGO : '<b class="tw-mk-word">Topicweave</b>'; }
+    function icon(T){ return T ? T.ICON : ''; }
+
+    function figmaEls(){
+      var T = kitTw(); kick();
+      if (cache.els) return cache.els;
+      var els = [
+        { id: 'nav', name: 'Nav / logo + links', icon: 'comp', type: 'Component', x: 88, y: 6, w: 824, h: 40, wire: 'nav',
+          props: { fill: '#000000', font: 'Inter Tight', weight: 'SemiBold', size: '14', ls: '2.5%' },
+          html: '<div class="tw-mk-nav"><span class="tw-mk-logo">' + logo(T) + '</span><span class="tw-mk-links"><span>How it works</span><span>The app</span><span>Voice Kit</span><span>Install</span><span>Pricing</span><span>Roadmap</span></span><span class="tw-mk-btn">Join the beta</span><span class="tw-mk-tile">' + MOON + '</span></div>' },
+        { id: 'label', name: 'Label / Be known for what you know', icon: 'text', type: 'Text', x: 89, y: 98, w: 260, h: 16, wire: 'lines:1',
+          props: { fill: '#9B87F5', font: 'Inter Tight', weight: 'SemiBold', size: '14', lh: '120%', ls: '2.5%' },
+          html: '<div class="tw-mk-eb">Be known for what you know</div>' },
+        { id: 'heading', name: 'H1 / Turn what you know', icon: 'text', type: 'Text', x: 89, y: 128, w: 360, h: 262, wire: 'lines:4:big',
+          props: { fill: '#FFFFFF', font: 'Fraunces', weight: 'Light 350', size: '94', lh: '98%', ls: '-3%' },
+          html: '<div class="tw-mk-h1">Turn what you know into a site people and AI can follow.</div>' },
+        { id: 'lede', name: 'Lede / one connected system', icon: 'text', type: 'Text', x: 89, y: 408, w: 360, h: 76, wire: 'lines:4',
+          props: { fill: '#FFFFFF', font: 'Inter Tight', weight: 'Regular', size: '18', lh: '150%' },
+          html: '<p class="tw-mk-lede">Topicweave builds your expertise into your website as one connected system: a vocabulary in your own words, every page tagged to it, and topic pages that build themselves. Then it shows you what’s working and lets you keep adding to it from anywhere.</p>' },
+        { id: 'cta', name: 'Buttons / Join the beta', icon: 'comp', type: 'Component', x: 89, y: 502, w: 280, h: 32, wire: 'btn',
+          props: { fill: '#2F5BEA', font: 'Inter Tight', weight: 'SemiBold', size: '14', ls: '2.5%' },
+          html: '<div class="tw-mk-acts"><span class="tw-mk-cta hv">Join the beta ' + ARROW + '</span><span class="tw-mk-ghost">See how it works ' + ARROW + '</span></div>' },
+        { id: 'loom', name: 'Canvas / loom · mark', icon: 'img', type: 'Embed', x: 520, y: 60, w: 470, h: 520, wire: 'img',
           props: { fill: 'Canvas · 2D' },
-          html: '<div style="position:absolute;inset:0;overflow:hidden">' + loom(530, 625, 40) + '<div style="position:absolute;inset:0;background:linear-gradient(90deg,#F7F5F0 0%,rgba(247,245,240,.6) 22%,rgba(247,245,240,0) 48%)"></div></div>' },
-        { id: 'nav', name: 'Nav / header', icon: 'comp', type: 'Component', x: 30, y: 14, w: 940, h: 40, wire: 'nav',
-          props: { fill: '#FFFFFF' },
-          html: '<div style="height:100%;border-radius:10px;background:rgba(255,255,255,.94);box-shadow:0 1px 0 rgba(11,27,43,.08);display:flex;align-items:center;gap:22px;padding:0 6px 0 14px;font:600 9.5px ' + F + ';color:#0B1B2B">' + LOGO + '<b style="font:800 13px ' + F + ';margin-left:-14px">CKS</b><span>Product ▾</span><span>Resources ▾</span><span>Pricing</span><span style="margin-left:auto;padding:6px 10px;border:1px solid rgba(11,27,43,.14);border-radius:999px;color:#5F6B78;font-weight:500">Search · Ctrl K</span><span style="background:#0B1B2B;color:#fff;padding:9px 13px;border-radius:999px">Book an install</span></div>' },
-        { id: 'heading', name: 'H1 / Turn what you know', icon: 'text', type: 'Text', x: 40, y: 104, w: 470, h: 250, wire: 'lines:4:big',
-          props: { fill: '#0B1B2B', font: 'Schibsted Grotesk', weight: 'ExtraBold', size: '76', lh: '102%', ls: '-3.5%' },
-          html: '<div style="font:800 51px/1.02 ' + F + ';letter-spacing:-.035em;color:#0B1B2B">Turn what you know into a site people and AI can follow.</div>' },
-        { id: 'lede', name: 'Lede / what CKS does', icon: 'text', type: 'Text', x: 40, y: 368, w: 420, h: 92, wire: 'lines:5',
-          props: { fill: '#3E4C5B', font: 'Schibsted Grotesk', weight: 'Regular', size: '18', lh: '155%' },
-          html: '<p style="margin:0;font:400 11.5px/1.55 ' + F + ';color:#3E4C5B">Your point of view lives in your head, your decks and your calls. CKS captures it on your website, where clients can <em style="font-family:Newsreader,Georgia,serif">find it, learn from it and trust it</em>, tied together by one shared vocabulary.</p>' },
-        { id: 'cta', name: 'Buttons / hero', icon: 'comp', type: 'Component', x: 40, y: 478, w: 320, h: 38, wire: 'btn',
-          props: { fill: '#0B1B2B', font: 'Schibsted Grotesk', weight: 'Bold', size: '15' },
-          html: '<div style="display:flex;gap:8px;height:100%"><span class="hv" style="flex:1;border-radius:999px;background:#0B1B2B;color:#fff;font:700 10px ' + F + ';display:flex;align-items:center;justify-content:center">See it match your site ›</span><span style="flex:1;border-radius:999px;border:1px solid rgba(11,27,43,.25);color:#0B1B2B;font:700 10px ' + F + ';display:flex;align-items:center;justify-content:center">Book an install ›</span></div>' },
-        { id: 'entry', name: 'Card / one entry, tagged once', icon: 'comp', type: 'Component', x: 612, y: 400, w: 350, h: 180, wire: 'row:4',
-          props: { fill: '#FFFFFF', font: 'Schibsted Grotesk', weight: 'Bold', size: '17' },
-          html: '<div style="height:100%;background:#fff;border-radius:12px;box-shadow:0 30px 60px -30px rgba(11,27,43,.45),0 0 0 1px rgba(11,27,43,.1);padding:12px 14px;display:flex;flex-direction:column;gap:9px;font-family:' + F + '"><div style="display:flex;gap:8px;align-items:center;font:600 8.5px ' + F + ';color:#5F6B78"><b style="color:#0B1B2B">New insight</b>by you<span style="margin-left:auto;color:#0B6F61;background:#E3F4F1;border-radius:999px;padding:3px 8px">● Published</span></div><b style="font:800 15px ' + F + ';color:#0B1B2B">Onboarding is a design problem</b><div style="display:flex;gap:5px;flex-wrap:wrap">' + chip('Client onboarding', '#F2A93B') + chip('Service design', '#EF5B3F') + chip('Journey mapping', '#139E8A') + '</div><div style="margin-top:auto;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(11,27,43,.1);padding-top:8px">' + [['3', 'topic pages'], ['2', 'projects'], ['1', 'service'], ['9', 'links built']].map(function(s){ return '<div><b style="font:800 14px ' + F + ';color:#0B1B2B">' + s[0] + '</b><div style="font:500 7px ' + F + ';color:#5F6B78">' + s[1] + '</div></div>'; }).join('') + '</div></div>' }
-      ],
-      mobile: {
-        bg: '#F7F5F0', statusFg: '#0B1B2B',
-        nav: '<div class="cxm-nav" style="position:absolute;left:10px;right:10px;top:42px;height:38px;border-radius:12px;background:rgba(255,255,255,.94);box-shadow:0 6px 18px rgba(11,27,43,.1);display:flex;align-items:center;gap:8px;padding:0 8px 0 12px;z-index:4;color:#0B1B2B;transition:background .5s,color .5s">' + LOGO + '<b style="font:800 12px ' + F + '">CKS</b><span style="margin-left:auto;display:flex;gap:6px;align-items:center"><span style="width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(11,27,43,.14)"><svg viewBox="0 0 20 20" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M12.6 12.6 17 17"/></svg></span><span class="m-theme" style="width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(11,27,43,.14)"><svg viewBox="0 0 20 20" style="width:12px;height:12px;fill:currentColor"><path d="M10 3a7 7 0 100 14 5.5 5.5 0 010-14z"/></svg></span><span class="m-burger"><i></i><i></i><i></i></span></span></div>',
-        menu: '<div style="position:absolute;inset:0;background:#F7F5F0;padding:100px 22px 0;color:#0B1B2B;font-family:' + F + '"><span class="m-close" style="position:absolute;right:16px;top:50px">&#10005;</span>' +
-          ['How it works', 'Styles', 'Voice Kit', 'Sketch your system', 'Pricing'].map(function(l){ return '<div style="font:800 22px/1 ' + F + ';letter-spacing:-.02em;padding:13px 0;border-bottom:1px solid rgba(11,27,43,.1)">' + l + '</div>'; }).join('') +
-          '<div style="margin-top:22px;background:#0B1B2B;color:#fff;font:700 11px ' + F + ';padding:14px;text-align:center;border-radius:999px">Book an install</div></div>',
-        html: '<div class="cxm" style="padding:88px 18px 40px">' +
-          '<div class="cxm-loom">' + loom(300, 150, 28) + '</div>' +
-          '<div style="font:800 29px/1.03 ' + F + ';letter-spacing:-.035em;margin-bottom:10px">Turn what you know into a site people and AI can follow.</div>' +
-          '<p style="font:400 10.5px/1.55 ' + F + ';color:var(--i2);margin:0 0 14px">Your point of view lives in your head, your decks and your calls. CKS captures it on your website, tied together by one shared vocabulary.</p>' +
-          '<div style="display:flex;gap:6px;margin-bottom:26px"><span style="flex:1;text-align:center;background:#0B1B2B;color:#fff;border-radius:999px;padding:11px 6px;font:700 9.5px ' + F + '">See it match your site</span><span style="flex:1;text-align:center;border:1px solid var(--l);border-radius:999px;padding:11px 6px;font:700 9.5px ' + F + '">Book an install</span></div>' +
-          '<div class="m-story" style="font:800 19px/1.08 ' + F + ';letter-spacing:-.02em;margin-bottom:10px">Most sites list what you do. Few show how it connects.</div>' +
-          '<div style="display:flex;gap:4px;margin-bottom:10px">' + ['Scattered', 'Name', 'Tag once', 'Connected'].map(function(s, i){ return '<span class="cxm-st s' + i + (i === 3 ? ' m-st3' : '') + '">' + s + '</span>'; }).join('') + '</div>' +
-          '<div class="cxm-b"><svg viewBox="0 0 262 190" preserveAspectRatio="none"><path d="M55 40Q90 60 131 78" stroke="#F2A93B"/><path d="M205 40Q170 60 131 78" stroke="#F2A93B"/><path d="M55 150Q90 120 131 78" stroke="#F2A93B"/><path d="M205 150Q170 125 131 78" stroke="#139E8A"/></svg>' +
-            '<span class="t" style="left:50%;top:41%;background:#F2A93B">Client onboarding</span>' +
-            [['Onboarding redesign', 8, 12, 9, 12, -5], ['Riverside Clinic', 150, 18, 159, 12, 4], ['Onboarding is a design problem', 30, 118, 9, 128, 3], ['The first 30 days', 144, 132, 159, 128, -6]].map(function(c, i){ return '<span class="c cc' + i + '" style="left:' + c[1] + 'px;top:' + c[2] + 'px;transform:rotate(' + c[5] + 'deg)">' + c[0] + '</span>'; }).join('') + '</div>' +
-          '<div class="m-map" style="font:800 19px/1.08 ' + F + ';letter-spacing:-.02em;margin:24px 0 10px">Follow the threads. Then add your own.</div>' +
-          [['Client onboarding', '#C7832A', '4 pieces'], ['Service design', '#EF5B3F', '5 pieces'], ['Journey mapping', '#139E8A', '4 pieces'], ['Client handoffs', '#2F5BEA', '4 pieces']].map(function(t){ return '<div class="cxm-card" style="display:flex;align-items:center;gap:8px;padding:9px 10px;margin-bottom:6px;font:700 10px ' + F + '"><i style="width:9px;height:9px;border-radius:50%;background:' + t[1] + '"></i>' + t[0] + '<span style="margin-left:auto;font:500 8.5px ' + F + ';color:var(--i2)">' + t[2] + ' ›</span></div>'; }).join('') +
-          '<div style="margin-top:22px;font:800 19px/1.08 ' + F + ';letter-spacing:-.02em;margin-bottom:10px">Three ways to install it.</div>' +
-          [['Foundation', '#F2A93B', '$4,000'], ['Library', '#EF5B3F', '$9,000'], ['Full System', '#2F5BEA', '$16,000']].map(function(p){ return '<div class="cxm-card" style="padding:10px 12px;margin-bottom:6px;border-top:3px solid ' + p[1] + ';display:flex;justify-content:space-between;font:800 11px ' + F + '">' + p[0] + '<span style="font-weight:600;color:var(--i2)">From ' + p[2] + '</span></div>'; }).join('') +
-          '</div>',
+          html: '<div class="tw-mk-loom">' + markSvg(150, 11) + '</div>' }
+      ];
+      if (T) cache.els = els;
+      return els;
+    }
+
+    function phone(){
+      var T = kitTw(); kick();
+      if (cache.mobile) return cache.mobile;
+      var LINKS = ['Home', 'How it works', 'The app', 'Voice Kit', 'Install', 'Pricing', 'Roadmap'];
+      var mm = {
+        bg: '#000', statusFg: '#fff',
+        nav: '<div class="tw-pn"><span class="tw-pn-brand"><span class="tw-pn-logo">' + logo(T) + '</span><span class="tw-pn-icon">' + icon(T) + '</span></span>' +
+          '<span class="tw-pn-end"><span class="tw-pn-t tw-pm-theme">' + MOON + '</span><span class="tw-pn-t tw-pm-menu"><span class="tw-burger"><i></i><i></i><i></i></span></span></span></div>' +
+          '<div class="tw-pm-cloth" aria-hidden="true"></div>',
+        menu: '<div class="tw-pmn"><div class="tw-pmn-weave"></div><div class="tw-pmn-top"><span class="tw-pn-t">' + icon(T) + '</span><span class="tw-pn-t"><span class="tw-burger is-x"><i></i><i></i><i></i></span></span></div>' +
+          '<ol class="tw-pmn-l">' + LINKS.map(function(l, i){ return '<li class="tw-pmn-i tw-pmn-i' + (i + 1) + '" style="transition-delay:' + (.08 + i * .04).toFixed(2) + 's"><small>0' + (i + 1) + '</small>' + l + '</li>'; }).join('') + '</ol>' +
+          '<span class="tw-pmn-cta">Join the beta ' + ARROW + '</span></div>',
+        html: '<div class="tw-pm">' +
+          '<div class="tw-pm-pg tw-pm-home">' +
+            '<p class="tw-pm-eb">Be known for what you know</p>' +
+            '<div class="tw-pm-h1">Turn what you know into a site people and AI can follow.</div>' +
+            '<div class="tw-pm-loom">' + markSvg(80, 5) + '</div>' +
+            '<p class="tw-pm-p">Topicweave builds your expertise into your website as one connected system: a vocabulary in your own words, every page tagged to it, and topic pages that build themselves.</p>' +
+            '<div class="tw-pm-acts"><span class="tw-pm-btn">Join the beta ' + ARROW + '</span><span class="tw-pm-ghost">See how it works ' + ARROW + '</span></div>' +
+            '<div class="tw-pm-sec tw-pm-prob"><p class="tw-pm-eb">The problem</p><div class="tw-pm-h2">AI answers reward sites that connect the dots. Most don’t.</div>' +
+              '<div class="tw-pm-shape">' + scatterSvg() + '</div>' +
+              '<p class="tw-pm-p">Search engines and AI assistants look for a clear source: named ideas, proof behind them, and pages that point to each other.</p></div>' +
+            '<div class="tw-pm-sec"><p class="tw-pm-eb">Step one</p><div class="tw-pm-h2">Name the ideas, in your words.</div>' +
+              '<dl class="tw-pm-terms">' + [['Who you help', 'Professional firms', 0], ['Services', 'Onboarding redesign', 1], ['How it works', 'Journey mapping', 2], ['What you watch for', 'Client handoffs', 3], ['Ideas', 'Client onboarding', 0]].map(function(r){ return '<div><dt><i style="background:' + WV[r[2]] + '"></i>' + r[0] + '</dt><dd>' + r[1] + '</dd></div>'; }).join('') + '</dl></div>' +
+          '</div>' +
+          '<div class="tw-pm-pg tw-pm-hiw">' +
+            '<p class="tw-pm-eb">How it works</p>' +
+            '<div class="tw-pm-h1">Five parts, one shared vocabulary.</div>' +
+            '<div class="tw-pm-loom tw-pm-spine">' + spineSvg() + '</div>' +
+            '<p class="tw-pm-p">Topicweave is a spine of terms in your own words, and four things that hang off it. Tag a piece of content once and it shows up everywhere it belongs.</p>' +
+            '<div class="tw-pm-acts"><span class="tw-pm-btn">Join the beta ' + ARROW + '</span></div>' +
+          '</div></div>',
         notes: [
-          { t: 'The loom rides above the headline', d: 'On a phone the weave becomes a band over the copy, so the headline never has to fight it.' },
-          { t: 'Light or dark, one token swap', d: 'Every color is a variable, so dark mode is a swap at the top of the stylesheet, not a second design.' },
-          { t: 'The story becomes step buttons', d: 'No pinned scroll on a small screen. Tap a step and the loose pages weave together.' },
-          { t: 'The map turns into a list', d: 'Under 700px the knowledge map shows the same topics as a list you can tap through.' }
+          { t: 'Three glass tiles, no bar', d: 'The mark, the theme switch and a menu button in the mark’s colors. At the top the mark tile opens to the full logo, and folds back to the icon once you scroll.' },
+          { t: 'Headline above the shape', d: 'On a phone each section’s label and headline sit above its thread shape and the copy follows below, so a shape never draws through the words.' },
+          { t: 'Dark by default, light on tap', d: 'Black is the default. The switch swaps to paper and ink, and the threads keep their four colors in both.' },
+          { t: 'Page changes knit a cloth', d: 'Pick a page from the menu and a cloth of threads knits across the screen from the link, then unravels on the next page.' }
         ],
         steps: [
-          { note: 0, hold: 1.8 },
-          { note: 1, hold: .3 }, { tap: '.m-theme', toggle: 'dark', hold: 1.9 }, { tap: '.m-theme', toggle: 'dark', hold: .5 },
-          { note: 2, scroll: '.m-story', off: 110, hold: .4 }, { tap: '.m-st3', add: 'woven', hold: 2.6 },
-          { note: 3, scroll: '.m-map', off: 120, hold: 2.2 },
-          { note: -1, scroll: 0, remove: 'woven', hold: .6 }
+          { note: 0, hold: 2.2 },
+          { note: 1, add: 'tw-sc', hold: 0 }, { scroll: '.tw-pm-prob', off: 74, hold: 2.2 },
+          { note: 2, hold: .3 }, { tap: '.tw-pm-theme', toggle: 'tw-light', hold: 2 }, { tap: '.tw-pm-theme', toggle: 'tw-light', hold: .5 },
+          { note: 3, tap: '.tw-pm-menu', toggle: 'menu', hold: 1.5 }, { tap: '.tw-pmn-i2', add: 'tw-pw', hold: .75 },
+          { remove: 'menu', hold: 0 }, { add: 'tw-hiw', hold: 0 }, { remove: 'tw-sc', hold: 0 }, { scroll: 0, hold: .05 },
+          { add: 'tw-pwo', hold: 2.8 },
+          { note: -1, hold: .3 }
         ]
-      }
+      };
+      if (T) cache.mobile = mm;
+      return mm;
+    }
+
+    MK = {
+      accent: '#9B87F5', tw: true,
+      file: 'Topicweave — Product site', page: 'Home', frame: 'Desktop · Hero', url: 'topicweave.com',
+      bg: '#000000', hover: 'cta',
+      comment: { on: 'heading', by: 'Review', text: 'The threads run into the headline when the window narrows.', reply: 'Threads now fade near text and the screen edges, so the mark keeps right and the headline stays clear.' },
+      get els(){ return figmaEls(); },
+      get mobile(){ return phone(); }
     };
+    MOCKS.topicweave = MK;
   })();
+  // Keyed under both slugs until the CMS slug change (cks → topicweave) is published.
+  MOCKS.cks = MOCKS.topicweave;
   // kip: a concept baby log (kip-site/kip). Figma frame = the home hero; phone = the Today screen and the shift handoff,
   // copy taken from the site's app screens. Image channels are recorded loops of the real site, served from this repo on
   // jsDelivr (`img`: channel id → [loop, still]); the loop plays unless reduced motion or Save-Data asks for the still.
@@ -1553,710 +1633,1221 @@ window.Webflow.push(function(){
       end(sc, R, t + 1.6, t - 1.5, PLAT.map(function(p, i){ return { t: p[0].replace(' CMS', ''), at: 'p' + i }; }));
     });
 
-    // shared with the CKS scenes (22-cks.js)
+    // shared with the Topicweave scenes (24-tw-*.js)
     K.ks = { pos: pos, run: run, end: end, type: type, count: count, path: path, hide: hide, draw: draw, curve: curve, click: click, move: move, cursor: cursor };
   })();
 
-  /* ===== mission/22-cks.js ===== */
+  /* ===== mission/23-tw-base.js ===== */
   /* =========================================================
-     CKS SCENES (mission cks; the channel id picks the scene)
-     cks-styles : five site personalities, one component set; the tokens swap live. Click a site to take over.
-     cks-story  : a scattered site gets woven, four states interpolated the way story.js does it. Steps + a draggable scroll rail.
-     cks-map    : the knowledge map (graph.js layout): search, grow the map, tag, settle. Hover, click, drag, type, grow your own.
-     cks-sketch : the sketch tool (sketch.js vocabularies + matching): pick a site, react to the vocabulary, see what connects.
-     cks-publish: one entry published updates the library, a topic page, a project and the JSON-LD.
-     The same demos run live on getcks.io; 40-monitor swaps the live ones in once the site answers.
-     Example content is the CKS site's own (yoursite.com, sample firms): no client facts.
+     TOPICWEAVE KIT (mission topicweave, renamed from CKS; the scenes are 24-tw-*.js)
+     The v3 site's own look: black, bone, Fraunces + Inter Tight, square corners, and the four weave colors
+     (lilac, coral, teal, cobalt). Marks are the site's real SVGs (cks-v3/build.py LOGO + ICON).
+     K.tw.weave is the site's thread cloth (cks-v3 js/site.js sheetWeave), ported to ES5:
+       radial: threads fly out from a point and knit a cover, then unravel (monitor channel changes)
+       band  : a strip of cloth knits in from one side with a slow wave running through it (section seams)
      ========================================================= */
   (function(){
-    var K = SCENE.kit, X = K.ks; if (!X) return;
-    var q = K.q, qa = K.qa, esc = K.esc, NS = 'http://www.w3.org/2000/svg';
-    var pos = X.pos, run = X.run, end = X.end, type = X.type, count = X.count, pth = X.path, hide = X.hide, draw = X.draw, click = X.click, move = X.move, cursor = X.cursor;
-    var SAF = '#F2A93B', COR = '#EF5B3F', TEA = '#139E8A', COB = '#2F5BEA', OCH = '#C7832A', INK = '#0B1B2B';
-    // the CKS mark, from the site's own header SVG
-    var LOGO = '<svg class="cx-logo" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="6" width="19" height="5" rx="1.2" fill="#EF5B3F"/><rect x="2.5" y="13" width="19" height="5" rx="1.2" fill="#139E8A"/><rect x="6" y="2.5" width="5" height="19" rx="1.2" fill="#F2A93B" stroke="#fff" stroke-width="1.4"/><rect x="13" y="2.5" width="5" height="19" rx="1.2" fill="#2F5BEA" stroke="#fff" stroke-width="1.4"/><rect x="12.3" y="6" width="6.4" height="5" fill="#EF5B3F"/><path d="M12.3 6V11M18.7 6V11" stroke="#fff" stroke-width="1.4"/><rect x="5.3" y="13" width="6.4" height="5" fill="#139E8A"/><path d="M5.3 13V18M11.7 13V18" stroke="#fff" stroke-width="1.4"/></svg>';
-    // the site's typefaces (and the five sample sites'), loaded once, only when a CKS scene is built.
-    // Scenes measure their layout, so one built before Schibsted Grotesk arrived rebuilds itself once it has.
+    var K = SCENE.kit; if (!K) return;
+    var q = K.q, esc = K.esc;
+    var C = { void: '#000', bone: '#fff', ash: '#9a9a9a', mist: '#bdbdbd', soft: '#e2e2e2', line: 'rgba(255,255,255,.12)',
+      lilac: '#9b87f5', lilacText: '#b9a6ff', coral: '#ef5b3f', teal: '#139e8a', cobalt: '#4f7bff', cobaltDeep: '#2f5bea', paper: '#f7f5f0', night: '#0b1b2b' };
+    var WEAVE = [C.lilac, C.coral, C.teal, C.cobalt];
+    var LOGO = '<svg viewBox="0 0 528.58 76.07" aria-hidden="true"><path fill="#9085bf" d="M28.98,1.78v31h-14.83V1.78c0-.98.8-1.78,1.78-1.78h11.27c.98,0,1.78.8,1.78,1.78Z"/><path fill="#9085bf" d="M14.15,56.54h14.83v8.41c0,.98-.8,1.78-1.78,1.78h-11.27c-.98,0-1.78-.8-1.78-1.78v-8.41Z"/><path fill="#f05b40" d="M1.78,14.15h7.41v14.83H1.78c-.98,0-1.78-.8-1.78-1.78v-11.27c0-.98.8-1.78,1.78-1.78Z"/><path fill="#0f9e8a" d="M32.78,37.74v14.83H1.78c-.98,0-1.78-.8-1.78-1.78v-11.27c0-.98.8-1.78,1.78-1.78h31Z"/><path fill="#0f9e8a" d="M66.73,39.52v11.27c0,.98-.8,1.78-1.78,1.78h-7.41v-14.83h7.41c.98,0,1.78.8,1.78,1.78Z"/><path fill="#4861ad" d="M52.57,1.78v7.41h-14.83V1.78c0-.98.8-1.78,1.78-1.78h11.27c.98,0,1.78.8,1.78,1.78Z"/><path fill="#4861ad" d="M37.74,33.95h14.83v31c0,.98-.8,1.78-1.78,1.78h-11.27c-.98,0-1.78-.8-1.78-1.78v-31Z"/><path fill="#f05b40" d="M66.73,15.94v11.27c0,.98-.8,1.78-1.78,1.78h-31v-14.83h31c.98,0,1.78.8,1.78,1.78Z"/><g fill="currentColor"><path d="M146.47,17.57c.27-.49.32-1.13.16-1.9l-2.68-12.83c-.27-1.04-.63-1.77-1.1-2.2C142.38.21,141.7,0,140.79,0c-.59,0-1.13.12-1.64.36-.51.24-1.08.49-1.72.74-.64.25-1.47.38-2.48.38h-27.9c-1.01,0-1.84-.13-2.48-.38-.64-.25-1.21-.5-1.72-.74C102.35.12,101.8,0,101.22,0c-.91,0-1.59.21-2.06.64-.47.43-.83,1.16-1.1,2.2l-2.68,12.83c-.16.77-.1,1.41.18,1.9.28.49.74.79,1.38.9.61.13,1.16.09,1.64-.14.48-.23.88-.69,1.2-1.38,1.38-3.09,2.57-5.44,3.56-7.04.99-1.6,1.98-2.69,2.98-3.28,1-.59,2.21-.88,3.62-.88h4.88v44.89c0,.61-.17,1.11-.52,1.48s-.84.65-1.48.84l-2.28.52c-1.15.35-1.72,1.04-1.72,2.08,0,.56.2,1.01.6,1.36.4.35,1.03.52,1.88.52h19.43c1.65,0,2.48-.63,2.48-1.88,0-1.04-.57-1.73-1.72-2.08l-2.28-.52c-.64-.19-1.13-.47-1.48-.84-.35-.37-.52-.87-.52-1.48V5.76h4.88c1.44,0,2.65.29,3.64.88s1.97,1.68,2.96,3.28,2.17,3.94,3.56,7.04c.32.69.72,1.15,1.2,1.38.48.23,1.03.27,1.64.14.67-.11,1.13-.41,1.4-.9Z"/><path d="M177.26,21.13c-3.13-1.69-6.76-2.54-10.89-2.54s-7.87.86-11.05,2.58c-3.18,1.72-5.68,4.07-7.47,7.05-1.8,2.99-2.7,6.38-2.7,10.19s.88,7.38,2.64,10.39,4.2,5.37,7.32,7.08,6.74,2.56,10.87,2.56,7.87-.87,11.05-2.6c3.18-1.73,5.68-4.1,7.47-7.1s2.7-6.38,2.7-10.13c0-3.97-.87-7.46-2.62-10.45-1.75-3-4.18-5.34-7.32-7.04ZM175.72,45.91c-.29,2.44-.99,4.35-2.1,5.74s-2.58,2.23-4.42,2.52c-1.87.32-3.6,0-5.2-.98s-2.99-2.57-4.18-4.8c-1.19-2.22-2.09-5.04-2.7-8.46-.61-3.44-.78-6.38-.5-8.81.28-2.44.97-4.35,2.08-5.74,1.11-1.39,2.58-2.22,4.42-2.52,1.86-.32,3.6,0,5.22.98,1.61.97,3,2.57,4.18,4.8,1.17,2.23,2.06,5.04,2.68,8.45.64,3.44.81,6.38.52,8.81Z"/><path d="M226.98,21.01c-2.49-1.61-5.31-2.42-8.45-2.42-3.38,0-6.46.93-9.23,2.8-1.3.87-2.52,1.91-3.68,3.1v-3.1c0-.77-.22-1.4-.66-1.88-.44-.48-1.13-.72-2.06-.72-.51,0-1.08.08-1.72.24-.64.16-1.45.44-2.44.84l-6.84,2.72c-.72.29-1.21.57-1.48.82-.27.25-.4.61-.4,1.06,0,.4.11.72.32.96.21.24.56.41,1.04.52l2.12.16c.45.08.79.27,1,.58.21.31.32.81.32,1.5v41.37c0,.85-.12,1.47-.36,1.86-.24.39-.6.66-1.08.82l-1.56.4c-.51.19-.88.42-1.12.7-.24.28-.36.63-.36,1.06,0,.51.18.91.54,1.22.36.31.93.46,1.7.46h16.35c.77,0,1.34-.15,1.7-.46.36-.31.54-.71.54-1.22,0-.43-.12-.79-.36-1.08-.24-.29-.63-.52-1.16-.68l-2.12-.44c-.48-.13-.84-.4-1.08-.8-.24-.4-.36-1.01-.36-1.84v-14.16c.38.28.76.54,1.16.79,2.48,1.5,5.32,2.26,8.51,2.26,3.6,0,6.85-.86,9.75-2.58s5.21-4.14,6.92-7.28c1.71-3.13,2.56-6.83,2.56-11.09,0-3.7-.71-6.98-2.14-9.81-1.43-2.84-3.38-5.06-5.88-6.68ZM222.01,47.25c-.83,2.24-1.96,3.89-3.4,4.96-1.44,1.07-3.06,1.6-4.88,1.6-1.92,0-3.7-.54-5.34-1.62-.8-.53-1.57-1.19-2.3-1.99v-21.94c.76-.86,1.56-1.58,2.38-2.15,1.69-1.17,3.51-1.76,5.46-1.76,1.79,0,3.38.52,4.78,1.56,1.4,1.04,2.5,2.62,3.32,4.74.81,2.12,1.22,4.8,1.22,8.05,0,3.46-.41,6.32-1.24,8.55Z"/><path d="M257.47,54l-1.48-.4c-.48-.16-.84-.44-1.08-.84-.24-.4-.36-1.01-.36-1.84v-29.54c0-.77-.22-1.4-.66-1.88-.44-.48-1.11-.72-2.02-.72-.45,0-1,.08-1.64.24-.64.16-1.49.44-2.56.84l-7.31,2.72c-.72.27-1.21.53-1.48.8-.27.27-.4.63-.4,1.08,0,.4.11.72.32.96s.56.41,1.04.52l2.12.16c.45.08.79.27,1,.58.21.31.32.81.32,1.5v22.75c0,.85-.12,1.47-.36,1.84-.24.37-.6.65-1.08.84l-1.56.4c-.51.19-.88.42-1.12.7-.24.28-.36.63-.36,1.06,0,.51.18.91.54,1.22.36.31.93.46,1.7.46h15.71c.77,0,1.35-.15,1.72-.46.37-.31.56-.71.56-1.22,0-.43-.13-.79-.38-1.08s-.65-.52-1.18-.68Z"/><path d="M242.86,10.99c1.29,1.09,3.02,1.64,5.18,1.64s3.89-.55,5.2-1.64c1.31-1.09,1.96-2.54,1.96-4.36s-.65-3.22-1.96-4.3-3.04-1.62-5.2-1.62-3.88.54-5.18,1.62c-1.29,1.08-1.94,2.51-1.94,4.3s.65,3.26,1.94,4.36Z"/><path d="M297.4,44.05c-.32,0-.62.09-.9.28-.28.19-.66.55-1.14,1.08-.99,1.68-2.33,2.98-4.04,3.9-1.71.92-3.69,1.38-5.96,1.38-2.56,0-4.84-.59-6.84-1.78-2-1.19-3.56-2.92-4.7-5.22-1.13-2.29-1.7-5.12-1.7-8.47,0-2.64.39-4.9,1.16-6.78.77-1.88,1.83-3.32,3.16-4.32,1.33-1,2.84-1.5,4.52-1.5,1.92,0,3.44.55,4.56,1.66,1.12,1.11,1.68,2.57,1.68,4.38v1.24c0,1.52.45,2.75,1.36,3.7.91.95,2.21,1.42,3.92,1.42s3.21-.52,4.28-1.56c1.07-1.04,1.6-2.3,1.6-3.8,0-2.03-.65-3.88-1.94-5.56-1.29-1.68-3.12-3.02-5.5-4.02-2.37-1-5.18-1.5-8.43-1.5-4.18,0-7.82.91-10.89,2.72-3.08,1.81-5.46,4.28-7.16,7.42-1.69,3.13-2.54,6.67-2.54,10.61s.85,7.19,2.56,10.05c1.71,2.87,4.05,5.09,7.04,6.68s6.41,2.38,10.27,2.38c3.22,0,6.08-.57,8.55-1.7,2.48-1.13,4.45-2.64,5.92-4.54,1.46-1.89,2.25-3.96,2.36-6.2.03-.56-.06-1.03-.26-1.4-.2-.37-.51-.56-.94-.56Z"/><path d="M366.21,19.97c-.39-.31-.93-.46-1.62-.46h-10.15c-.67,0-1.19.15-1.58.46-.39.31-.58.73-.58,1.26,0,.43.13.78.38,1.06.25.28.67.49,1.26.62l1.48.28c1.01.19,1.59.63,1.74,1.34s-.09,1.98-.7,3.82l-6.59,20.52-6.92-21.4c-.48-1.52-.66-2.59-.54-3.22.12-.62.51-.99,1.18-1.1l1.84-.28c.53-.08.92-.27,1.16-.56.24-.29.36-.65.36-1.08,0-1.15-.71-1.72-2.12-1.72h-16.43c-1.47,0-2.2.57-2.2,1.72,0,.43.11.78.32,1.06.21.28.57.5,1.08.66l1.32.36c.45.11.82.31,1.1.6.28.29.58.89.9,1.8l.84,2.47-7.24,20.66-6.99-21.14c-.56-1.71-.76-2.84-.6-3.4s.69-.93,1.6-1.12l1.48-.28c.61-.13,1.05-.34,1.3-.62.25-.28.38-.63.38-1.06,0-.53-.19-.95-.58-1.26-.39-.31-.91-.46-1.58-.46h-17.11c-.67,0-1.19.15-1.58.46-.39.31-.58.73-.58,1.26,0,.43.11.78.32,1.06.21.28.57.5,1.08.66l1.28.36c.43.11.79.33,1.1.66s.62.99.94,1.98l10.23,29.14c.35.99.83,1.68,1.44,2.08.61.4,1.33.6,2.16.6h3.96c.72,0,1.4-.17,2.04-.5s1.15-.97,1.52-1.9l7.59-20.84,7,20.6c.32.93.8,1.61,1.44,2.02s1.36.62,2.16.62h3.8c.72,0,1.41-.17,2.08-.5.67-.33,1.16-.97,1.48-1.9l9.43-27.74c.53-1.54.99-2.64,1.38-3.28.39-.64.82-1.03,1.3-1.16l1.24-.28c.64-.16,1.07-.38,1.28-.66.21-.28.32-.62.32-1.02,0-.53-.19-.95-.58-1.26Z"/><path d="M402.48,37.08c.83-.79,1.24-1.9,1.24-3.34,0-2.96-.67-5.58-2-7.85-1.33-2.28-3.26-4.06-5.8-5.36-2.53-1.29-5.58-1.94-9.15-1.94-4.18,0-7.79.89-10.81,2.66-3.03,1.77-5.35,4.21-6.98,7.32-1.63,3.1-2.44,6.7-2.44,10.77,0,3.84.85,7.19,2.56,10.05,1.71,2.87,4.06,5.09,7.05,6.68s6.43,2.38,10.29,2.38c3.3,0,6.23-.57,8.77-1.7,2.54-1.13,4.56-2.65,6.04-4.56,1.48-1.9,2.27-3.98,2.38-6.22.03-.56-.06-1.03-.26-1.42-.2-.39-.51-.58-.94-.58-.29,0-.59.09-.88.28-.29.19-.68.55-1.16,1.08-1.01,1.71-2.41,3.03-4.18,3.96s-3.83,1.4-6.18,1.4c-4,0-7.21-1.29-9.63-3.88-1.92-2.05-3.07-4.91-3.47-8.55h21.93c1.57,0,2.77-.39,3.6-1.18ZM390.29,35.14h-13.51c0-2.6.36-4.84,1.08-6.7.72-1.88,1.72-3.32,3-4.32,1.28-1,2.76-1.5,4.44-1.5,2.16,0,3.88.9,5.16,2.7s1.92,4.44,1.92,7.93c0,1.25-.69,1.88-2.08,1.88Z"/><path d="M447.94,50.77c-.24,0-.44.07-.6.2-.16.13-.32.29-.48.48-.21.27-.47.54-.76.82-.29.28-.73.42-1.32.42s-.99-.19-1.3-.56c-.31-.37-.46-.93-.46-1.68v-20.79c0-3.38-1.2-6.07-3.6-8.05s-6.05-2.98-10.95-2.98c-3.97,0-7.31.53-10.01,1.58-2.71,1.05-4.75,2.39-6.14,4.02-1.39,1.63-2.08,3.28-2.08,4.96,0,1.39.43,2.47,1.28,3.26s2.12,1.18,3.8,1.18c1.95,0,3.46-.43,4.54-1.3s1.62-2.11,1.62-3.74v-3.52c0-.96.43-1.78,1.28-2.46.85-.68,2.07-1.02,3.64-1.02,1.73,0,3.08.51,4.04,1.54.96,1.03,1.44,2.49,1.44,4.38v11.25c-.51-.15-1.04-.29-1.62-.41-1.4-.29-2.96-.44-4.7-.44-5.36,0-9.53,1.03-12.51,3.08-2.99,2.05-4.48,4.74-4.48,8.07,0,2.8,1.09,5.06,3.28,6.8,2.18,1.73,5.02,2.6,8.51,2.6,2.77,0,5.4-.57,7.87-1.7,1.76-.8,3.26-1.86,4.52-3.14.26,1.3.93,2.37,2.02,3.2,1.42,1.09,3.34,1.64,5.74,1.64,1.84,0,3.38-.34,4.64-1.02,1.25-.68,2.19-1.51,2.82-2.48.62-.97.94-1.91.94-2.82,0-.4-.08-.73-.24-.98-.16-.25-.4-.38-.72-.38ZM425.79,53.32c-1.68,0-3.05-.53-4.12-1.6s-1.6-2.58-1.6-4.56.63-3.56,1.88-4.7c1.25-1.13,2.98-1.7,5.2-1.7,1.09,0,2.11.12,3.06.36.56.14,1.11.33,1.66.54v9.39c-.58.49-1.22.91-1.92,1.26-1.33.67-2.72,1-4.16,1Z"/><path d="M491.07,19.97c-.39-.31-.93-.46-1.62-.46h-10.87c-.67,0-1.19.15-1.58.46-.39.31-.58.73-.58,1.26,0,.43.13.78.4,1.06.27.28.69.49,1.28.62l1.48.28c1.2.27,1.92.72,2.16,1.36s.05,1.77-.56,3.4l-8.17,21.61-8.38-21.61c-.61-1.62-.8-2.76-.56-3.4.24-.64.97-1.09,2.2-1.36l1.44-.28c.61-.13,1.04-.34,1.3-.62.25-.28.38-.63.38-1.06,0-1.15-.72-1.72-2.16-1.72h-17.91c-.67,0-1.19.15-1.58.46-.39.31-.58.73-.58,1.26,0,.43.11.78.32,1.06.21.28.57.5,1.08.66l1.28.36c.4.11.74.33,1.02.68.28.35.63,1.04,1.06,2.08l11.75,29.06c.37.91.86,1.57,1.46,2,.6.43,1.31.64,2.14.64h4.08c.75,0,1.43-.16,2.06-.48.62-.32,1.12-.96,1.5-1.92l11.03-27.74c.61-1.54,1.12-2.64,1.54-3.28.41-.64.86-1.03,1.34-1.16l1.24-.28c.64-.16,1.07-.38,1.28-.66.21-.28.32-.62.32-1.02,0-.53-.19-.95-.58-1.26Z"/><path d="M527.3,43.97c-.29,0-.59.09-.88.28-.29.19-.68.55-1.16,1.08-1.01,1.71-2.41,3.03-4.18,3.96s-3.83,1.4-6.18,1.4c-4,0-7.21-1.29-9.63-3.88-1.92-2.05-3.07-4.91-3.47-8.55h21.93c1.57,0,2.77-.39,3.6-1.18s1.24-1.9,1.24-3.34c0-2.96-.67-5.58-2-7.85-1.33-2.28-3.26-4.06-5.8-5.36-2.53-1.29-5.58-1.94-9.15-1.94-4.18,0-7.79.89-10.81,2.66-3.03,1.77-5.35,4.21-6.98,7.32-1.63,3.1-2.44,6.7-2.44,10.77,0,3.84.85,7.19,2.56,10.05,1.71,2.87,4.06,5.09,7.05,6.68s6.43,2.38,10.29,2.38c3.3,0,6.23-.57,8.77-1.7,2.54-1.13,4.56-2.65,6.04-4.56,1.48-1.9,2.27-3.98,2.38-6.22.03-.56-.06-1.03-.26-1.42-.2-.39-.51-.58-.94-.58ZM505.72,24.12c1.28-1,2.76-1.5,4.44-1.5,2.16,0,3.88.9,5.16,2.7s1.92,4.44,1.92,7.93c0,1.25-.69,1.88-2.08,1.88h-13.51c0-2.6.36-4.84,1.08-6.7.72-1.88,1.72-3.32,3-4.32Z"/></g></svg>';
+    var ICON = '<svg viewBox="0 0 66.73 66.73" aria-hidden="true"><path fill="#9085bf" d="M28.98,1.78v31h-14.83V1.78c0-.98.8-1.78,1.78-1.78h11.27c.98,0,1.78.8,1.78,1.78Z"/><path fill="#9085bf" d="M14.15,56.54h14.83v8.41c0,.98-.8,1.78-1.78,1.78h-11.27c-.98,0-1.78-.8-1.78-1.78v-8.41Z"/><path fill="#f05b40" d="M1.78,14.15h7.41v14.83H1.78c-.98,0-1.78-.8-1.78-1.78v-11.27c0-.98.8-1.78,1.78-1.78Z"/><path fill="#0f9e8a" d="M32.78,37.74v14.83H1.78c-.98,0-1.78-.8-1.78-1.78v-11.27c0-.98.8-1.78,1.78-1.78h31Z"/><path fill="#0f9e8a" d="M66.73,39.52v11.27c0,.98-.8,1.78-1.78,1.78h-7.41v-14.83h7.41c.98,0,1.78.8,1.78,1.78Z"/><path fill="#4861ad" d="M52.57,1.78v7.41h-14.83V1.78c0-.98.8-1.78,1.78-1.78h11.27c.98,0,1.78.8,1.78,1.78Z"/><path fill="#4861ad" d="M37.74,33.95h14.83v31c0,.98-.8,1.78-1.78,1.78h-11.27c-.98,0-1.78-.8-1.78-1.78v-31Z"/><path fill="#f05b40" d="M66.73,15.94v11.27c0,.98-.8,1.78-1.78,1.78h-31v-14.83h31c.98,0,1.78.8,1.78,1.78Z"/></svg>';
+    // the site's typefaces, loaded once, only when a Topicweave scene is built; a scene measured before Fraunces
+    // arrived rebuilds itself once (fonts.check() reports true while the stylesheet itself is still loading)
     var FP = null, FONTS_OK = false;
     function fonts(sc){
       if (!FP) FP = new Promise(function(done){
         function res(){ FONTS_OK = true; done(); }
-        var l = document.createElement('link'); l.id = 'cx-fonts'; l.rel = 'stylesheet';
-        l.href = 'https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Newsreader:ital@1&family=Lora:ital,wght@0,400;0,600;1,400&family=Space+Grotesk:wght@400;600&family=Fredoka:wght@500;700&family=Nunito+Sans:wght@400;700;800&family=Archivo+Narrow:wght@400;500&family=IBM+Plex+Mono&family=Caveat:wght@500;700&display=swap';
-        l.onload = function(){ (document.fonts ? document.fonts.load('700 12px "Schibsted Grotesk"') : Promise.resolve()).then(res, res); };
+        var l = document.createElement('link'); l.id = 'tw-fonts'; l.rel = 'stylesheet';
+        l.href = 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..500,0..100&family=Inter+Tight:wght@300;400;500;600&display=swap';
+        l.onload = function(){ (document.fonts ? Promise.all([document.fonts.load('350 24px "Fraunces"'), document.fonts.load('400 12px "Inter Tight"')]) : Promise.resolve()).then(res, res); };
         l.onerror = function(){ res(); };
         document.head.appendChild(l);
         setTimeout(res, 5000);
       });
-      // (fonts.check() can't tell: it reports true while the stylesheet itself is still loading)
-      if (sc && !sc._fw && !FONTS_OK){ sc._fw = true; FP.then(function(){ if (K.rebuild) K.rebuild(sc); }); }
+      if (sc && !sc._tf && !FONTS_OK){ sc._tf = true; FP.then(function(){ if (K.rebuild) K.rebuild(sc); }); }
     }
-    function bar(url){ return '<div class="cx-bar"><i></i><i></i><i></i><span>' + LOGO + esc(url) + '</span></div>'; }
+    // a browser bar in the site's look (black glass, the mark, the url)
+    function bar(url){ return '<div class="tw-bar"><i></i><i></i><i></i><span>' + ICON + esc(url) + '</span></div>'; }
+    // images shipped in this repo (code/vendor/topicweave/), same tag as the bundle
+    function asset(name){ return VENDOR + 'topicweave/' + name; }
     function c01(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
-    function tap(el, fn){ el.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); fn(e); }); }
-    // typing into a real <input>: the value tweens, so seeking the timeline replays it
-    function typeVal(R, inp, str, t, dur){
-      var o = { n: 0 }; dur = dur || Math.min(1.6, .045 * str.length + .2);
-      R.tl.fromTo(o, { n: 0 }, { n: str.length, duration: dur, ease: 'none', immediateRender: false, onUpdate: function(){ inp.value = str.slice(0, Math.round(o.n)); } }, t);
-      return t + dur;
-    }
+    function ease(v){ return 1 - Math.pow(1 - v, 3); }
 
-    /* ---------------- 1 · STYLE LAB: five sites, one component set ---------------- */
-    // content + the 21 tokens each personality sets (skins.json on the CKS site)
-    var TK = ['bg', 'surface', 'ink', 'muted', 'accent', 'accent-2', 'on-accent', 'line', 'font-h', 'font-b', 'font-l', 'h-w', 'h-track', 'l-case', 'l-style', 'r-lg', 'r-sm', 'pad', 'gap', 'bw', 'shadow'];
-    var SKINS = [
-      { n: 'Counsel', kind: 'Law firm', sw: ['#F4EDE1', '#7A1F2B'], site: 'harlowreyes.law/expertise/succession-planning', brand: 'Harlow & Reyes', tl: 'Practice area', tp: 'Business succession planning',
-        df: 'Deciding now who runs, owns and inherits the business later, in writing, while everyone still agrees.', mr: '3 related articles', mw: '5 matters', th: 'Owners & families · 6 min read',
-        ins: 'The handshake is not the plan', dk: 'Why the partner who “just knows” the deal is the biggest risk in a family company.', rm: 'Read the article', rl: 'Related reading',
-        rel: [['What a buy-sell agreement covers', 'Answer'], ['When to start succession talks', 'Video, 8 min'], ['Two owners, one exit', 'Article']],
-        fq: 'When should we start planning succession?', fa: 'Earlier than feels necessary, while every owner still agrees on what happens next.',
-        tk: ['#F4EDE1', 'rgba(255,252,246,0.72)', '#2A1A17', '#6E5A52', '#7A1F2B', '#C9A26B', '#FFF8EE', 'rgba(122,31,43,0.16)', "'Lora', Georgia, serif", "'Lora', Georgia, serif", "'Lora', Georgia, serif", '600', '-0.01em', 'none', 'italic', '14px', '999px', '22px', '14px', '1px', '0 1px 0 rgba(255,255,255,.8) inset, 0 12px 28px -18px rgba(74,20,28,.35)'] },
-      { n: 'Studio', kind: 'Installation studio', sw: ['#101214', '#1FE0CB'], site: 'lumenfield.studio/thinking/light-as-material', brand: 'LUMEN FIELD', tl: 'Known for', tp: 'Light as a material',
-        df: 'We specify light the way others specify steel: tested, engineered and built into the structure, never added at the end.', mr: '4 related essays', mw: '7 installs', th: 'Process · 9 min',
-        ins: 'Every install starts as a failure log', dk: 'What six weeks of broken prototypes teach you that a render never will.', rm: 'Read', rl: 'Related thinking',
-        rel: [['Commissioning at night', 'Essay'], ['Heat is the real enemy', 'Video, 12 min'], ['Designing for maintenance', 'Essay']],
-        fq: 'How long does a permanent install take?', fa: 'Most run twelve to twenty weeks from brief to opening night.',
-        tk: ['#0F1113', '#171A1D', '#ECEEEE', '#8C9496', '#1FE0CB', '#2A6DF4', '#04110F', 'rgba(236,238,238,0.12)', "'Space Grotesk', Arial, sans-serif", "'Space Grotesk', Arial, sans-serif", "'JetBrains Mono', monospace", '600', '-0.035em', 'uppercase', 'normal', '4px', '2px', '20px', '10px', '1px', '0 0 0 1px rgba(31,224,203,0.06), 0 20px 40px -24px rgba(0,0,0,.8)'] },
-      { n: 'Bakehouse', kind: 'Neighborhood bakery', sw: ['#FFE9A8', '#E0402B'], site: 'crumbandco.com/learn/slow-fermentation', brand: 'Crumb & Co.', tl: 'How we bake', tp: 'Slow fermentation',
-        df: 'Dough that rests for two days before it meets the oven. A longer rest means deeper flavor and a better crust.', mr: '3 related reads', mw: '6 loaves', th: 'Bread basics · 4 min read',
-        ins: 'Why our sourdough takes two days', dk: 'The short version: time does the work that extra yeast can’t.', rm: 'Keep reading', rl: 'More to read',
-        rel: [['Storing bread the right way', 'Guide'], ['Meet our miller', 'Video, 5 min'], ['What “heritage grain” means', 'Answer']],
-        fq: 'Can I order loaves for a party?', fa: 'Yes. Give us three days’ notice, since the dough needs two of them to rest.',
-        tk: ['#FFEFBF', '#FFF9E6', '#3B2313', '#7A5A3E', '#E0402B', '#F59E1B', '#FFF9E6', '#3B2313', "'Fredoka', 'Arial Rounded MT Bold', sans-serif", "'Nunito Sans', Arial, sans-serif", "'Fredoka', sans-serif", '700', '0em', 'none', 'normal', '22px', '999px', '20px', '14px', '2px', '4px 4px 0 #3B2313'] },
-      { n: 'Atelier', kind: 'Architecture office', sw: ['#FFFFFF', '#111111'], site: 'ateliervos.eu/positions/adaptive-reuse', brand: 'Atelier Vos', tl: 'Position 04', tp: 'Adaptive reuse',
-        df: 'The most sustainable building is usually the one already standing. We design the second life of existing structures.', mr: '05 texts', mw: '09 projects', th: 'Positions · 12 min',
-        ins: 'Demolition is a design decision', dk: 'Every building we keep is a drawing we don’t need to make from scratch.', rm: 'Open text', rl: 'Related texts',
-        rel: [['Measuring what’s already there', 'Text'], ['The grain store, one year on', 'Film, 14 min'], ['On keeping the stairs', 'Text']],
-        fq: 'Can a listed building change use?', fa: 'Often, yes. We begin with a measured survey and an early talk with the heritage officer.',
-        tk: ['#FFFFFF', '#FFFFFF', '#111111', '#6B6B6B', '#111111', '#D23C1E', '#FFFFFF', '#111111', "'Archivo Narrow', 'Arial Narrow', sans-serif", "'Archivo Narrow', 'Arial Narrow', sans-serif", "'IBM Plex Mono', monospace", '500', '-0.01em', 'uppercase', 'normal', '0px', '0px', '18px', '0px', '1px', 'none'] },
-      { n: 'Clinic', kind: 'Physio practice', sw: ['#E7F3F0', '#23867B'], site: 'northsidephysio.com/conditions/lower-back-pain', brand: 'Northside Physio', tl: 'Conditions we treat', tp: 'Lower back pain',
-        df: 'One of the most common reasons people come to see us. Most cases improve with the right kind of movement, rather than rest alone.', mr: '4 related guides', mw: '3 programs', th: 'Back & spine · 5 min read',
-        ins: 'Why rest is rarely the whole answer', dk: 'What gentle, planned movement does for a sore back, and when to see someone.', rm: 'Read the guide', rl: 'Related guides',
-        rel: [['Setting up a desk that helps', 'Guide'], ['Five-minute morning routine', 'Video, 6 min'], ['When to book a check-up', 'Answer']],
-        fq: 'Do I need a referral to book?', fa: 'No. You can book directly. Bring any scans or letters you already have.',
-        tk: ['#E9F4F1', '#FFFFFF', '#15373A', '#4F6D6E', '#23867B', '#8CC9BE', '#FFFFFF', 'rgba(21,55,58,0.12)', "'Nunito Sans', Arial, sans-serif", "'Nunito Sans', Arial, sans-serif", "'Nunito Sans', Arial, sans-serif", '750', '-0.015em', 'none', 'normal', '18px', '10px', '26px', '18px', '1px', '0 10px 30px -18px rgba(21,55,58,.35)'] }
-    ];
-    // the lines shown in the tokens panel: [token name, index into tk]
-    var TOKLINES = [['color.bg', 0], ['color.accent', 4], ['font.heading', 8], ['radius.lg', 15], ['border.width', 19], ['space.pad', 17]];
-    SCENE.add('cks-styles', function(sc){
-      fonts(sc);
-      var P = sc.portrait, st = sc.stg;
-      st.innerHTML = '<div class="cx-bg"></div>' + bar('getcks.io/styles.html') +
-        '<div class="cx-sty-l"><h4>Made to match any style.</h4><p>Same markup, same CMS fields. Only the site’s design variables change.</p>' +
-          '<div class="cx-tabs" role="tablist" aria-label="Site personality">' + SKINS.map(function(s, i){ return '<button type="button" class="cx-tab" role="tab" data-i="' + i + '" style="--a:' + s.sw[0] + ';--b:' + s.sw[1] + '"><span class="sw"></span><span><b>' + esc(s.n) + '</b><small>' + esc(s.kind) + '</small></span></button>'; }).join('') + '</div>' +
-          '<div class="cx-tok"><em>tokens.json</em>' + TOKLINES.map(function(l){ return '<div data-l="' + l[1] + '"><i>"' + l[0] + '"</i>: <b></b></div>'; }).join('') + '</div></div>' +
-        '<div class="cx-frame"><div class="cx-skin">' +
-          '<div class="cx-sbar"><span data-k="site"></span></div>' +
-          '<div class="cx-snav"><b data-k="brand"></b><span class="cx-links"><i></i><i></i><i></i></span><span class="cx-sbtn">Contact</span></div>' +
-          '<div class="cx-sgrid">' +
-            '<div class="cx-card cx-topic"><em class="cx-lab" data-k="tl"></em><h5 data-k="tp"></h5><p data-k="df"></p><div class="cx-meta"><span data-k="mr"></span><span data-k="mw"></span></div></div>' +
-            '<div class="cx-card cx-ins"><div class="cx-vis"><i></i><i></i><i></i></div><em class="cx-lab" data-k="th"></em><h6 data-k="ins"></h6><p data-k="dk"></p><span class="cx-more"><span data-k="rm"></span> →</span></div>' +
-            '<div class="cx-card cx-rel"><em class="cx-lab" data-k="rl"></em>' + [0, 1, 2].map(function(i){ return '<div class="cx-row"><b data-k="r' + i + '"></b><span data-k="k' + i + '"></span></div>'; }).join('') + '</div>' +
-            '<div class="cx-card cx-faq"><b data-k="fq"></b><p data-k="fa"></p></div>' +
-          '</div></div></div>' +
-        '<div class="cx-cap">Five examples. Yours will be the sixth.</div>' + cursor('a', 'You') + '<div class="fg-fade"></div>';
-      var skin = q(st, '.cx-skin'), tabs = qa(st, '.cx-tab'), lines = qa(st, '.cx-tok div'), cur = q(st, '.cur.a'), txts = qa(skin, '[data-k]'), shown = -1;
-      function apply(i, anim){
-        var s = SKINS[i], prev = shown; shown = i;
-        TK.forEach(function(k, j){ skin.style.setProperty('--sk-' + k, s.tk[j]); });
-        skin.style.setProperty('--sk-l-track', s.tk[13] === 'uppercase' ? '.07em' : '0em');
-        var map = { site: s.site, brand: s.brand, tl: s.tl, tp: s.tp, df: s.df, mr: s.mr, mw: s.mw, th: s.th, ins: s.ins, dk: s.dk, rm: s.rm, rl: s.rl, fq: s.fq, fa: s.fa };
-        s.rel.forEach(function(r, k){ map['r' + k] = r[0]; map['k' + k] = r[1]; });
-        txts.forEach(function(e){ e.textContent = map[e.getAttribute('data-k')]; });
-        tabs.forEach(function(b, k){ b.classList.toggle('on', k === i); b.setAttribute('aria-selected', k === i ? 'true' : 'false'); });
-        lines.forEach(function(l){
-          var j = +l.getAttribute('data-l'), v = s.tk[j];
-          q(l, 'b').textContent = '"' + (j === 8 ? v.split(',')[0].replace(/'/g, '') : v) + '"';
-          l.classList.toggle('hot', prev > -1 && SKINS[prev].tk[j] !== v);
-        });
-        if (anim && !K.reduce && window.gsap){
-          // the grid + nav wrappers, never the cards the timeline animates (overwrite would kill the loop's tweens)
-          gsap.fromTo([q(skin, '.cx-snav'), q(skin, '.cx-sgrid')], { opacity: .2 }, { opacity: 1, duration: .5, stagger: .06, ease: 'power2.out', overwrite: true });
-        }
-      }
-      // a visitor picks a site: the loop pauses and stays on their pick
-      tabs.forEach(function(b, i){ tap(b, function(){ if (sc.hold) sc.hold(); apply(i, true); }); });
-      apply(0, false);
-      var R = run(sc, function(){ apply(0, false); }), tl = R.tl;
-      tl.set(q(st, '.fg-fade'), { autoAlpha: 0 }, 0).set(cur, { autoAlpha: 0, x: P ? 320 : 170, y: sc.SH + 30 }, 0);
-      tl.fromTo(qa(st, '.cx-card'), { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: .5, stagger: .08, ease: 'power3.out', immediateRender: false }, .2);
-      tl.to(cur, { autoAlpha: 1, duration: .2 }, .9);
-      var t = 1.1;
-      [1, 2, 3, 4, 0].forEach(function(i){
-        move(R, cur, pos(st, tabs[i], P ? .5 : .3, .6), t, .7); click(R, tabs[i], t + .7);
-        (function(k){ R.at(t + .75, function(){ apply(k, true); }); })(i);
-        t += 3.1;
-      });
-      tl.to(cur, { autoAlpha: 0, duration: .3 }, t - 1.6);
-      end(sc, R, t + .6, t - 2.2);
-    });
-
-    /* ---------------- 2 · WOVEN ON SCROLL: the home story ---------------- */
-    // [kind, where it lived, title, topics, p0, p1, p2 (= p3)], positions in % of the board (story section markup)
-    var STOPICS = [['t1', 'Client onboarding', SAF, 50, 40], ['t2', 'Journey mapping', TEA, 24, 71], ['t3', 'Client handoffs', COB, 76, 71]];
-    var SCARDS = [
-      ['Service', 'Services page', 'Onboarding redesign', 't1', [15, 12, -6], [15, 12, 0], [16, 21, 0]],
-      ['Service', 'Services page', 'Client portal build', 't3', [33, 27, 5], [33, 27, 0], [50, 88, 0]],
-      ['Project', 'Portfolio', 'Riverside Clinic intake', 't1 t2', [78, 10, 5], [78, 10, 0], [17, 48, 0]],
-      ['Project', 'Portfolio', 'Hale & Partners', 't1 t3', [86, 31, -4], [86, 31, 0], [83, 48, 0]],
-      ['Insight', 'Blog · 2023', 'Onboarding is a design problem', 't1', [21, 70, 3], [21, 70, 0], [50, 10, 0]],
-      ['Insight', 'Blog · 2022', 'Why handoffs fail on Fridays', 't3', [45, 88, -5], [45, 88, 0], [83, 92, 0]],
-      ['News', 'Blog · March', 'March update', '', [62, 62, 6], [62, 62, 0], [50, 63, 0]],
-      ['Answer', 'FAQ page', 'How long does onboarding take?', 't1', [84, 80, -3], [84, 80, 0], [84, 21, 0]],
-      ['Video', 'YouTube only', 'The first 30 days, in 9 minutes', 't2', [54, 40, -8], [54, 40, 0], [17, 92, 0]]
-    ];
-    var SSTEPS = [['Scattered', 'A services page, a portfolio and a blog that never mention each other.'], ['Name the ideas', 'A shared vocabulary names what you know, in your own words.'],
-      ['Tag once', 'Each page gets tagged with the ideas it proves. One field, filled in once.'], ['Connected', 'Topic pages, related rows and structured data build themselves from those tags.']];
-    SCENE.add('cks-story', function(sc){
-      fonts(sc);
-      var P = sc.portrait, st = sc.stg;
-      var B = P ? { x: 22, y: 170, w: 584, h: 540 } : { x: 452, y: 70, w: 700, h: 566 };
-      var TC = { t1: SAF, t2: TEA, t3: COB };
-      st.innerHTML = '<div class="cx-bg"></div>' + bar('getcks.io/#story') +
-        '<div class="cx-st-copy"><h4>Most sites list what you do. Few show how it connects.</h4><ol class="cx-steps">' +
-          SSTEPS.map(function(s, i){ return '<li><button type="button" data-s="' + i + '"><i></i><b>' + esc(s[0]) + '</b><span>' + esc(s[1]) + '</span></button></li>'; }).join('') +
-          '</ol><p class="cx-hint">Scroll to weave it, or pick a step.</p></div>' +
-        '<div class="cx-board" style="left:' + B.x + 'px;top:' + B.y + 'px;width:' + B.w + 'px;height:' + B.h + 'px"><svg class="cx-thr" viewBox="0 0 ' + B.w + ' ' + B.h + '" aria-hidden="true"></svg>' +
-          STOPICS.map(function(t){ return '<div class="cx-sto" data-t="' + t[0] + '" style="--c:' + t[2] + '"><small>Topic</small>' + esc(t[1]) + '</div>'; }).join('') +
-          SCARDS.map(function(c, i){ return '<div class="cx-sc' + (c[3] ? '' : ' is-loose') + '" data-i="' + i + '" data-tags="' + c[3] + '"><small>' + esc(c[0]) + '<em>' + esc(c[1]) + '</em></small>' + esc(c[2]) + '<span class="cx-tg">' + (c[3] ? c[3].split(' ').map(function(k){ return '<i style="--c:' + TC[k] + '"></i>'; }).join('') : '') + '</span></div>'; }).join('') +
-        '</div>' +
-        '<div class="cx-st-meta" style="left:' + B.x + 'px;top:' + (B.y + B.h + 14) + 'px;width:' + B.w + 'px"><p><b class="cx-cnt">0</b> links built from one field on each page</p><p class="cx-schema"><code>{ }</code> Structured data, from the same tags</p></div>' +
-        '<div class="cx-rail" role="slider" tabindex="0" aria-label="Scroll the story" aria-valuemin="0" aria-valuemax="3"><i></i></div>' +
-        '<div class="fg-fade"></div>';
-      var board = q(st, '.cx-board'), svg = q(st, '.cx-thr'), cards = qa(st, '.cx-sc'), tops = qa(st, '.cx-sto'), stepB = qa(st, '.cx-steps button'), cnt = q(st, '.cx-cnt'), schema = q(st, '.cx-schema'), rail = q(st, '.cx-rail'), thumb = q(rail, 'i');
-      function px(p){ return { x: p[0] / 100 * B.w, y: p[1] / 100 * B.h }; }
-      var TP = {}; STOPICS.forEach(function(t){ TP[t[0]] = px([t[3], t[4]]); });
-      tops.forEach(function(e, i){ var p = TP[STOPICS[i][0]]; e.style.left = p.x + 'px'; e.style.top = p.y + 'px'; });
-      // threads: from each tagged card's final place to its topic, bowed gently
-      var TH = [];
-      SCARDS.forEach(function(c, i){ if (!c[3]) return; c[3].split(' ').forEach(function(k){
-        var a = px(c[6]), b = TP[k], mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2, nx = -(b.y - a.y) * .12, ny = (b.x - a.x) * .12;
-        var p = pth(svg, 'M' + a.x + ' ' + a.y + 'Q' + (mx + nx) + ' ' + (my + ny) + ' ' + b.x + ' ' + b.y, 'cx-ln');
-        p.style.stroke = TC[k]; p.setAttribute('data-t', k); p.setAttribute('data-i', i); TH.push(p);
-      }); });
-      var state = -1, F = 0;
-      // the story.js frame: every value at a (possibly fractional) state, so scrubbing interpolates
-      function frame(f){
-        F = f; var a = Math.floor(Math.min(f, 2.999)), k = f - a;
-        function lerp(p, qq){ return p + (qq - p) * k; }
-        cards.forEach(function(el, i){
-          var c = SCARDS[i], Ps = [c[4], c[5], c[6], c[6]], A = Ps[a], Bq = Ps[a + 1], loose = !c[3];
-          var o0 = a === 0 ? 1 : a === 1 ? .62 : 1, o1 = a + 1 === 1 ? .62 : (a + 1 === 3 && loose) ? .38 : 1;
-          if (a === 2 && loose) o0 = .7; if (a === 1 && loose) o1 = .7;
-          var p = px([lerp(A[0], Bq[0]), lerp(A[1], Bq[1])]);
-          el.style.left = p.x + 'px'; el.style.top = p.y + 'px';
-          el.style.transform = 'translate(-50%,-50%) rotate(' + lerp(A[2] || 0, Bq[2] || 0) + 'deg)';
-          el.style.opacity = lerp(o0, o1);
-          el.style.setProperty('--tag', loose ? 0 : c01((f - 1.55) / .45));
-          el.style.setProperty('--old', Math.max(0, 1 - f * 1.4));
-        });
-        var tin = c01((f - .45) / .55);
-        tops.forEach(function(e, i){ var d = c01(tin * 1.4 - i * .2); e.style.opacity = d; e.style.transform = 'translate(-50%,-50%) scale(' + (.7 + .3 * d) + ')'; });
-        var dk = c01((f - 2.15) / .8);
-        TH.forEach(function(p, i){ var kk = c01(dk * 1.5 - i * .05); p.style.strokeDashoffset = p._L * (1 - kk); });
-        cnt.textContent = Math.round(TH.length * dk);
-        schema.style.opacity = c01((f - 2.65) / .35);
-        thumb.style.top = (f / 3 * 100) + '%'; rail.setAttribute('aria-valuenow', Math.round(f));
-        var s = Math.min(3, Math.max(0, Math.round(f - .1)));
-        if (s !== state){ state = s; stepB.forEach(function(b, j){ b.classList.toggle('on', j === s); b.classList.toggle('done', j < s); b.setAttribute('aria-current', j === s ? 'step' : 'false'); }); }
-      }
-      // take over: step buttons ease to a state, the rail scrubs, a topic lights its threads
-      var drive = { f: 0 };
-      function goTo(f){ if (sc.hold) sc.hold(); drive.f = F; if (window.gsap && !K.reduce) gsap.to(drive, { f: f, duration: .8, ease: 'power2.inOut', overwrite: true, onUpdate: function(){ frame(drive.f); } }); else frame(f); }
-      stepB.forEach(function(b, i){ tap(b, function(){ goTo(i); }); });
-      var dragging = false;
-      function scrub(e){ var r = rail.getBoundingClientRect(); frame(c01((e.clientY - r.top) / r.height) * 3); }
-      rail.addEventListener('pointerdown', function(e){ dragging = true; if (sc.hold) sc.hold(); rail.setPointerCapture(e.pointerId); scrub(e); });
-      rail.addEventListener('pointermove', function(e){ if (dragging) scrub(e); });
-      rail.addEventListener('pointerup', function(){ dragging = false; });
-      rail.addEventListener('keydown', function(e){ var d = { ArrowDown: .25, ArrowRight: .25, ArrowUp: -.25, ArrowLeft: -.25 }[e.key]; if (d == null) return; e.preventDefault(); if (sc.hold) sc.hold(); frame(Math.max(0, Math.min(3, F + d))); });
-      function light(k){ board.classList.toggle('has-hl', !!k); cards.forEach(function(c){ c.classList.toggle('hl', !!k && (' ' + c.getAttribute('data-tags') + ' ').indexOf(' ' + k + ' ') > -1); }); TH.forEach(function(p){ p.classList.toggle('hl', p.getAttribute('data-t') === k); }); tops.forEach(function(t){ t.classList.toggle('hl', t.getAttribute('data-t') === k); }); }
-      tops.forEach(function(t){ t.addEventListener('pointerenter', function(){ light(t.getAttribute('data-t')); }); t.addEventListener('pointerleave', function(){ light(null); }); });
-      frame(0);
-      var o = { f: 0 }, R = run(sc, function(){ frame(0); }), tl = R.tl;
-      function fr(){ frame(o.f); }
-      tl.set(q(st, '.fg-fade'), { autoAlpha: 0 }, 0).set(o, { f: 0 }, 0);
-      tl.addLabel('s0', 0);
-      tl.to(o, { f: 1, duration: 1.4, ease: 'power1.inOut', onUpdate: fr }, 1.6).addLabel('s1', 1.6);
-      tl.to(o, { f: 2, duration: 1.4, ease: 'power1.inOut', onUpdate: fr }, 4.4).addLabel('s2', 4.4);
-      tl.to(o, { f: 3, duration: 1.9, ease: 'power1.inOut', onUpdate: fr }, 7.2).addLabel('s3', 7.2);
-      end(sc, R, 13.6, 12);
-    });
-
-    /* ---------------- 3 · GROW THE MAP: the knowledge map ---------------- */
-    // six topics (one per vocabulary category) and the pieces tagged with them: graph.js's whole "database"
-    var GT = { t1: ['Professional firms', SAF, 'Who you help', 'Accounting, legal and advisory firms of five to fifty people, where the partners still do the selling.'],
-      t2: ['Service design', COR, 'Services', 'Designing the whole experience of working with you, not just the screens a client happens to see.'],
-      t3: ['Journey mapping', TEA, 'How it works', 'Walking every step a client takes, with the people who serve them, before anything is redesigned.'],
-      t4: ['Client handoffs', COB, 'What you watch for', 'The moments work passes between people. Most client complaints start in one of them.'],
-      t5: ['Client onboarding', OCH, 'Ideas', 'The first month with a new client is a product. Design it on purpose, or it designs itself.'],
-      t6: ['Plain-language UX', INK, 'Known for', 'Forms, emails and portals that a tired person can understand the first time they read them.'] };
-    var GP = { a1: ['Insight', 'Onboarding is a design problem'], a2: ['Insight', 'The first 30 days decide the next three years'], a3: ['Insight', 'Why handoffs fail on Friday afternoons'],
-      a4: ['Video', 'What a journey map is really for'], q1: ['FAQ', 'How long does a redesign take?'], q2: ['FAQ', 'Do you work with small firms?'],
-      p1: ['Project', 'Riverside Clinic intake'], p2: ['Project', 'Hale & Partners onboarding'], p3: ['Project', 'Northgate client portal'],
-      s1: ['Service', 'Service design sprint'], s2: ['Service', 'Onboarding redesign'], s3: ['Service', 'Client portal build'] };
-    var GE0 = { t1: ['a2', 'q2', 'p2', 'p3', 's1'], t2: ['a1', 'a3', 'p1', 's1', 'q1'], t3: ['a1', 'a4', 'p1', 's1'], t4: ['a3', 'p2', 's3', 'q1'], t5: ['a1', 'a2', 'p1', 's2'], t6: ['a4', 'p3', 's3', 'q2'] };
-    var GICO = { Insight: '<svg viewBox="0 0 12 12"><path d="M2 2h8M2 5h8M2 8h5" stroke="currentColor" stroke-width="1.3" fill="none"/></svg>', Video: '<svg viewBox="0 0 12 12"><path d="M4 2.5v7l5.5-3.5z" fill="currentColor"/></svg>',
-      FAQ: '<svg viewBox="0 0 12 12"><path d="M4.2 4.4a1.9 1.9 0 1 1 2.6 1.8c-.5.2-.8.6-.8 1.1v.4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="6" cy="9.6" r=".8" fill="currentColor"/></svg>',
-      Project: '<svg viewBox="0 0 12 12"><rect x="2" y="2" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>', Service: '<svg viewBox="0 0 12 12"><circle cx="6" cy="6" r="3.5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>' };
-    var GROW = { id: 'g0', title: 'Every handoff needs an owner', tags: ['t4', 't2'] };
-    SCENE.add('cks-map', function(sc){
-      fonts(sc);
-      var P = sc.portrait, st = sc.stg, TOP = Object.keys(GT);
-      var MA = P ? { x: 0, y: 176, w: 640, h: 624, rx: 128, ry: 132, ox: 238, oy: 262 } : { x: 0, y: 112, w: 1200, h: 638, rx: 250, ry: 142, ox: 462, oy: 250 };
-      var CX = MA.w / 2, CY = MA.h / 2 + 4;
-      var E = {}; TOP.forEach(function(t){ E[t] = GE0[t].slice(); });
-      function node(id, cls, inner){ return '<button type="button" class="cx-gn ' + cls + '" data-id="' + id + '"' + inner + '</button>'; }
-      st.innerHTML = '<div class="cx-bg is-paper"></div>' + bar('getcks.io/#graph') +
-        '<div class="cx-gbar"><label class="cx-gs"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M12.6 12.6 17 17"/></svg><input type="search" placeholder="Find: handoff, portal, onboarding…" autocomplete="off" aria-label="Find a topic or page on the map"><em></em></label>' +
-          '<span class="cx-tally"><b>12</b> pages · <b>26</b> links</span><button type="button" class="cx-growb" aria-pressed="false">+ Grow the map</button></div>' +
-        '<form class="cx-grow" novalidate><label>New insight<input type="text" maxlength="60" autocomplete="off" placeholder="What’s the idea, in your words?"></label><fieldset><legend>Tag it with</legend>' +
-          TOP.map(function(t){ return '<button type="button" class="cx-tc" data-t="' + t + '" aria-pressed="false" style="--c:' + GT[t][1] + '">' + esc(GT[t][0]) + '</button>'; }).join('') +
-          '</fieldset><div class="cx-gogo"><button type="submit" class="cx-add">Add to the map</button><span class="cx-note" role="status" aria-live="polite">Adds to this monitor only. Nothing is saved.</span></div></form>' +
-        '<div class="cx-gx" style="left:' + MA.x + 'px;top:' + MA.y + 'px;width:' + MA.w + 'px;height:' + MA.h + 'px"><div class="cx-gin"><svg class="cx-gthr" viewBox="0 0 ' + MA.w + ' ' + MA.h + '" aria-hidden="true"></svg>' +
-          TOP.map(function(t){ return node(t, 'is-t', ' style="--c:' + GT[t][1] + '"><span class="k"></span>' + esc(GT[t][0])); }).join('') +
-          Object.keys(GP).map(function(id){ return node(id, '', ' data-kind="' + GP[id][0] + '"><span class="k">' + GICO[GP[id][0]] + '</span>' + esc(GP[id][1])); }).join('') +
-          node(GROW.id, 'is-new', ' data-kind="Insight"><span class="k">' + GICO.Insight + '</span>' + esc(GROW.title)) +
-        '</div><p class="cx-ghint">Drag to pan · hover to follow a thread</p></div>' +
-        '<div class="cx-ro"><em></em><b></b><p></p><div class="cx-ron"></div></div>' + cursor('a', 'You') + '<div class="fg-fade"></div>';
-      var gx = q(st, '.cx-gx'), gin = q(st, '.cx-gin'), svg = q(st, '.cx-gthr'), N = {}, POS = {}, PATHS = [];
-      qa(st, '.cx-gn').forEach(function(n){ N[n.getAttribute('data-id')] = n; });
-      var inp = q(st, '.cx-gs input'), found = q(st, '.cx-gs em'), tally = qa(st, '.cx-tally b'), growB = q(st, '.cx-growb'), form = q(st, '.cx-grow'), title = q(form, 'input'), chips = qa(form, '.cx-tc'), add = q(form, '.cx-add');
-      var ro = q(st, '.cx-ro'), cur = q(st, '.cur.a');
-      function isT(id){ return !!GT[id]; }
-      function topicsFor(id){ return isT(id) ? [id] : TOP.filter(function(t){ return E[t].indexOf(id) > -1; }); }
-      function nm(id){ return isT(id) ? GT[id][0] : GP[id] ? GP[id][1] : (N[id].textContent || '').trim(); }
-      function kind(id){ return N[id].getAttribute('data-kind') || 'Insight'; }
-      function links(){ return TOP.reduce(function(n, t){ return n + E[t].length; }, 0); }
-      /* layout: graph.js (topics on an inner ring, each piece at the circular mean of its topics, spread, then relaxed) */
-      function angleOf(t){ return (-90 + TOP.indexOf(t) * 60) * Math.PI / 180; }
-      function target(id){ var ts = topicsFor(id), vx = 0, vy = 0; ts.forEach(function(t){ vx += Math.cos(angleOf(t)); vy += Math.sin(angleOf(t)); }); return Math.sqrt(vx * vx + vy * vy) < .3 ? angleOf(ts[0]) + .35 : Math.atan2(vy, vx); }
-      function ring(a){ return { x: CX + Math.cos(a) * MA.ox, y: CY + Math.sin(a) * MA.oy }; }
-      function place(id){ if (isT(id)){ var a = angleOf(id); return { x: CX + Math.cos(a) * MA.rx, y: CY + Math.sin(a) * MA.ry }; } return ring(target(id)); }
-      function spread(ids){
-        var T = 2 * Math.PI, L = ids.map(function(id){ var a = target(id); return { id: id, a: (a % T + T) % T }; });
-        L.sort(function(p, r){ return p.a - r.a; });
-        var n = L.length, off = 0;
-        L.forEach(function(p, i){ var d = p.a - i * T / n; off += Math.atan2(Math.sin(d), Math.cos(d)); }); off /= n;
-        L.forEach(function(p, i){ var s = off + i * T / n, d = Math.atan2(Math.sin(s - p.a), Math.cos(s - p.a)); POS[p.id] = ring(p.a + d * .65); });
-      }
-      function relax(ids, fixed){
-        var R2 = ids.map(function(id){ return { id: id, x: POS[id].x, y: POS[id].y, w: N[id].offsetWidth + 14, h: N[id].offsetHeight + 12, fix: isT(id) || !!(fixed && fixed[id]) }; });
-        function clamp(r){ var nx = Math.max(r.w / 2 + 6, Math.min(MA.w - r.w / 2 - 6, r.x)), ny = Math.max(r.h / 2 + 6, Math.min(MA.h - r.h / 2 - 6, r.y)); r.ex = nx !== r.x; r.ey = ny !== r.y; r.x = nx; r.y = ny; }
-        for (var it = 0; it < 260; it++){
-          var moved = false;
-          for (var i = 0; i < R2.length; i++) for (var j = i + 1; j < R2.length; j++){
-            var a = R2[i], b = R2[j]; if (a.fix && b.fix) continue;
-            var ox = (a.w + b.w) / 2 - Math.abs(a.x - b.x), oy = (a.h + b.h) / 2 - Math.abs(a.y - b.y);
-            if (ox <= 0 || oy <= 0) continue;
-            moved = true;
-            var wa = a.fix ? 0 : (b.fix ? 1 : .5), wb = 1 - wa, useX = ox * .45 < oy;
-            if ((a.ex || b.ex) && useX) useX = false;
-            if ((a.ey || b.ey) && !useX && !(a.ex || b.ex)) useX = true;
-            if (useX){ var sx = (a.x < b.x || (a.x === b.x && i < j) ? -1 : 1) * (ox + .5); a.x += sx * wa; b.x -= sx * wb; }
-            else { var sy = (a.y < b.y || (a.y === b.y && i < j) ? -1 : 1) * (oy + .5); a.y += sy * wa; b.y -= sy * wb; }
-            clamp(a); clamp(b);
+    /* ---------- the thread cloth ---------- */
+    // weave(host, { mode: 'radial'|'band', cover: '#000', grid: 15, len: 11, durIn: .5, durOut: .75, from: 'left'|'right' })
+    // returns fn(open, [x, y]) + fn.destroy(); the canvas fills the host (position it with CSS: .tw-weave)
+    function weave(host, o){
+      o = o || {};
+      var cv = document.createElement('canvas'); cv.className = 'tw-weave' + (o.cls ? ' ' + o.cls : ''); cv.setAttribute('aria-hidden', 'true');
+      host.appendChild(cv);
+      var ctx = cv.getContext('2d'), radial = o.mode !== 'band', cells = [], w = 0, h = 0, dpr = 1, gsz = o.grid || 15, len = o.len || 11;
+      var P = 0, target = 0, raf = 0, last = 0, t0 = 0, ox = 0, oy = 0, PS = null, TILE = null, dead = false, onDone = null;
+      var cover = o.cover || C.void, durIn = o.durIn || .5, durOut = o.durOut || .75;
+      function size(){
+        w = cv.clientWidth; h = cv.clientHeight; if (!w || !h) return false;
+        dpr = Math.min(2, window.devicePixelRatio || 1);
+        cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+        cells = [];
+        for (var r = 0; r * gsz < h + gsz; r++) for (var c = 0; c * gsz < w + gsz; c++){
+          var vert = ((c >> 1) + (r >> 1)) & 1, x = c * gsz + gsz / 2, y = r * gsz + gsz / 2, j = ((c * 37 + r * 91) % 100) / 100, d, ux, uy;
+          if (radial){
+            var dx = x - ox, dy = y - oy, L = Math.sqrt(dx * dx + dy * dy) || 1, far = Math.sqrt(Math.pow(Math.max(ox, w - ox), 2) + Math.pow(Math.max(oy, h - oy), 2)) || 1;
+            d = (L / far) * .62 + ((c * 7 + r * 13) % 10) / 10 * .08; ux = dx / L; uy = dy / L;
+          } else {
+            var fx = o.from === 'right' ? 1 - x / Math.max(1, w) : x / Math.max(1, w);
+            d = fx * .55 + j * .25; ux = o.from === 'right' ? 1 : -1; uy = (j - .5) * .45;
           }
-          if (!moved) break;
+          cells.push({ x: x, y: y, c: c, r: r, vert: vert, col: WEAVE[(vert ? c : r) % 4], d: d, j: j, ux: ux, uy: uy, over: ((c + r) & 1) === (vert ? 0 : 1) });
         }
-        R2.forEach(function(r){ POS[r.id] = { x: r.x, y: r.y }; });
+        PS = new Float32Array(cells.length); TILE = null;
+        return true;
       }
-      // nodes are centered on their point by CSS (translate: -50% -50%), so a late web font can't shift them
-      function applyPos(id, p){ p = p || POS[id]; var n = N[id]; n.style.left = p.x.toFixed(1) + 'px'; n.style.top = p.y.toFixed(1) + 'px'; }
-      function curve(a, b){ var mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2, qx = mx + (CX - mx) * .18, qy = my + (CY - my) * .18; return 'M' + a.x.toFixed(1) + ' ' + a.y.toFixed(1) + 'Q' + qx.toFixed(1) + ' ' + qy.toFixed(1) + ' ' + b.x.toFixed(1) + ' ' + b.y.toFixed(1); }
-      function thread(t, id){ var p = pth(svg, curve(POS[t], POS[id]), 'cx-gl'); p.style.setProperty('--c', GT[t][1]); p.setAttribute('data-t', t); p.setAttribute('data-n', id); return p; }
-      var BASE = Object.keys(N).filter(function(id){ return id !== GROW.id; });
-      BASE.forEach(function(id){ POS[id] = place(id); });
-      spread(BASE.filter(function(id){ return !isT(id); }));
-      relax(BASE);
-      BASE.forEach(function(id){ applyPos(id); });
-      TOP.forEach(function(t){ E[t].forEach(function(id){ PATHS.push(thread(t, id)); }); });
-      // the autoplay's new piece: starts between its topics, settles where the layout puts it (everything else holds still)
-      var fixed = {}; BASE.forEach(function(id){ fixed[id] = 1; });
-      GROW.tags.forEach(function(t){ E[t].push(GROW.id); });
-      var gStart = { x: 0, y: 0 }; GROW.tags.forEach(function(t){ gStart.x += POS[t].x / GROW.tags.length; gStart.y += POS[t].y / GROW.tags.length; });
-      POS[GROW.id] = place(GROW.id); relax(Object.keys(N), fixed);
-      var gEnd = POS[GROW.id], gNode = N[GROW.id]; applyPos(GROW.id);
-      var gPaths = GROW.tags.map(function(t){ return thread(t, GROW.id); });
-      GROW.tags.forEach(function(t){ E[t].splice(E[t].indexOf(GROW.id), 1); });
-      var grownOn = false;
-      function setGrown(on){ grownOn = on; GROW.tags.forEach(function(t){ var k = E[t].indexOf(GROW.id); if (on && k < 0) E[t].push(GROW.id); if (!on && k > -1) E[t].splice(k, 1); }); }
-      /* focus + readout (graph.js) */
-      function kinds(t){ var c = { Insight: 0, Video: 0, Project: 0, Service: 0, FAQ: 0 }; E[t].forEach(function(x){ c[kind(x)]++; }); return c; }
-      function readout(id){
-        var ts = topicsFor(id); if (!ts.length) return;
-        var t0 = ts[0], c = kinds(t0);
-        q(ro, 'em').textContent = isT(id) ? 'Topic page · ' + GT[t0][2] : kind(id) + ' · tagged with ' + ts.length + ' topic' + (ts.length === 1 ? '' : 's');
-        q(ro, 'b').textContent = nm(id);
-        q(ro, 'p').textContent = isT(id) ? GT[t0][3] : 'Shows up on ' + ts.map(function(t){ return GT[t][0]; }).join(', ') + '.';
-        q(ro, '.cx-ron').innerHTML = [['insights', c.Insight + c.Video], ['projects', c.Project], ['services', c.Service], ['answers', c.FAQ]].map(function(r){ return '<span><b>' + r[1] + '</b>' + r[0] + '</span>'; }).join('');
-      }
-      function focus(id){
-        var ts = topicsFor(id), lit = {};
-        ts.forEach(function(t){ lit[t] = 1; E[t].forEach(function(n){ if (isT(id) || n === id) lit[n] = 1; }); });
-        gx.classList.toggle('has-focus', !!id);
-        Object.keys(N).forEach(function(k){ var n = N[k]; n.classList.toggle('lit', !!lit[k]); n.classList.toggle('src', k === id); if (!isT(k)) n.style.setProperty('--c', lit[k] && ts[0] ? GT[ts[0]][1] : ''); });
-        qa(svg, 'path').forEach(function(p){ var on = !!id && ts.indexOf(p.getAttribute('data-t')) > -1 && (isT(id) || p.getAttribute('data-n') === id); p.classList.toggle('on', on); if (on) svg.appendChild(p); });
-        if (id) readout(id);
-      }
-      function unfocus(){ gx.classList.remove('has-focus'); Object.keys(N).forEach(function(k){ N[k].classList.remove('lit', 'src'); if (!isT(k)) N[k].style.removeProperty('--c'); }); qa(svg, 'path').forEach(function(p){ p.classList.remove('on'); }); readout('t5'); }
-      function search(v){
-        v = (v || '').trim().toLowerCase();
-        if (v.length < 2){ found.textContent = ''; unfocus(); gx.classList.remove('is-search'); return; }
-        var hit = Object.keys(N).filter(function(k){ return (N[k].style.visibility !== 'hidden' && !(k === GROW.id && !grownOn)) && nm(k).toLowerCase().indexOf(v) > -1; });
-        gx.classList.add('is-search', 'has-focus');
-        Object.keys(N).forEach(function(k){ N[k].classList.toggle('lit', hit.indexOf(k) > -1); N[k].classList.remove('src'); });
-        qa(svg, 'path').forEach(function(p){ p.classList.toggle('on', hit.indexOf(p.getAttribute('data-t')) > -1 || hit.indexOf(p.getAttribute('data-n')) > -1); });
-        found.textContent = hit.length + ' found';
-        if (hit[0]) readout(hit[0]);
-      }
-      function setTally(p, l){ tally[0].textContent = p; tally[1].textContent = l; }
-      function openForm(on){ form.classList.toggle('on', on); growB.setAttribute('aria-pressed', on ? 'true' : 'false'); }
-      /* a visitor's own pieces (not part of the loop; the next loop clears them) */
-      var mine = [];
-      function growMine(){
-        var tags = chips.filter(function(c){ return c.getAttribute('aria-pressed') === 'true'; }).map(function(c){ return c.getAttribute('data-t'); });
-        var tt = (title.value || '').trim().slice(0, 60);
-        // missing bits: say which (both at once), flag the field, focus the first gap (the demo's own ink, not AB orange)
-        var note = q(form, '.cx-note'), fs = q(form, 'fieldset');
-        title.setAttribute('aria-invalid', tt ? 'false' : 'true'); fs.classList.toggle('is-err', !tags.length);
-        if (!tt || !tags.length){
-          note.textContent = !tt && !tags.length ? 'Give it a title and pick at least one topic.' : !tt ? 'Give it a title first.' : 'Pick at least one topic.';
-          note.classList.add('is-err'); (tt ? chips[0] : title).focus(); return;
+      // the settled cloth repeats every 4 cells: one tile, drawn once, filled across every settled cell in one call
+      function tile(){
+        var key = cover + gsz + dpr; if (TILE && TILE.k === key) return TILE.pat;
+        var tc = document.createElement('canvas'), T4 = gsz * 4; tc.width = tc.height = Math.round(T4 * dpr);
+        var tx = tc.getContext('2d'); tx.setTransform(dpr, 0, 0, dpr, 0, 0); tx.fillStyle = cover; tx.fillRect(0, 0, T4, T4); tx.lineCap = 'round'; tx.lineWidth = 1.4;
+        for (var r = 0; r < 4; r++) for (var c = 0; c < 4; c++){
+          var vert = ((c >> 1) + (r >> 1)) & 1, over = ((c + r) & 1) === (vert ? 0 : 1), x = Math.round(c * gsz + gsz / 2) + .5, y = Math.round(r * gsz + gsz / 2) + .5;
+          tx.globalAlpha = over ? .85 : .2; tx.strokeStyle = WEAVE[(vert ? c : r) % 4]; tx.beginPath();
+          if (vert){ tx.moveTo(x, y - len / 2); tx.lineTo(x, y + len / 2); } else { tx.moveTo(x - len / 2, y); tx.lineTo(x + len / 2, y); }
+          tx.stroke();
         }
-        note.classList.remove('is-err');
-        var id = 'm' + (mine.length + 1), b = document.createElement('button');
-        b.type = 'button'; b.className = 'cx-gn is-new is-mine'; b.setAttribute('data-id', id); b.setAttribute('data-kind', 'Insight');
-        b.innerHTML = '<span class="k">' + GICO.Insight + '</span>' + esc(tt); gin.appendChild(b); N[id] = b; bind(id);
-        tags.forEach(function(t){ E[t].push(id); });
-        var fx = {}; Object.keys(POS).forEach(function(k){ fx[k] = 1; });
-        var s0 = { x: 0, y: 0 }; tags.forEach(function(t){ s0.x += POS[t].x / tags.length; s0.y += POS[t].y / tags.length; });
-        POS[id] = place(id); relax(Object.keys(POS).concat(id), fx);
-        var e1 = POS[id], ps = tags.map(function(t){ return thread(t, id); });
-        applyPos(id, s0); mine.push({ id: id, tags: tags, paths: ps });
-        if (window.gsap && !K.reduce){
-          gsap.fromTo(b, { scale: .4, opacity: 0 }, { scale: 1, opacity: 1, duration: .5, ease: 'back.out(1.6)' });
-          gsap.to(b, { left: e1.x, top: e1.y, duration: .9, ease: 'power3.inOut', delay: .35 });
-          ps.forEach(function(p, i){ gsap.to(p, { strokeDashoffset: 0, duration: .6, delay: 1.1 + i * .12 }); });
-        } else { applyPos(id); ps.forEach(function(p){ p.style.strokeDashoffset = 0; }); }
-        setTally(12 + (grownOn ? 1 : 0) + mine.length, links());
-        title.value = ''; chips.forEach(function(c){ c.setAttribute('aria-pressed', 'false'); });
-        q(form, '.cx-note').textContent = 'Added. It found its place from its tags.'; openForm(false);
-        setTimeout(function(){ focus(id); }, 900);
+        var pat = ctx.createPattern(tc, 'repeat'); if (pat.setTransform && window.DOMMatrix) pat.setTransform(new DOMMatrix().scale(1 / dpr));
+        TILE = { k: key, pat: pat }; return pat;
       }
-      function clearMine(){ mine.forEach(function(m){ m.tags.forEach(function(t){ var k = E[t].indexOf(m.id); if (k > -1) E[t].splice(k, 1); }); m.paths.forEach(function(p){ p.remove(); }); N[m.id].remove(); delete N[m.id]; delete POS[m.id]; }); mine = []; }
-      function bind(id){
-        var n = N[id];
-        n.addEventListener('pointerenter', function(){ if (!gx.classList.contains('is-search')) focus(id); });
-        n.addEventListener('pointerleave', function(){ if (sc.paused || gx.classList.contains('is-search')) return; unfocus(); });
-        tap(n, function(){ if (sc.hold) sc.hold(); focus(id); });
+      function line(k, x, y, a, alpha){
+        var ex = Math.cos(a) * len / 2, ey = Math.sin(a) * len / 2;
+        ctx.globalAlpha = alpha; ctx.strokeStyle = k.col; ctx.beginPath(); ctx.moveTo(x - ex, y - ey); ctx.lineTo(x + ex, y + ey); ctx.stroke();
       }
-      Object.keys(N).forEach(bind);
-      inp.addEventListener('focus', function(){ if (sc.hold) sc.hold(); });
-      inp.addEventListener('input', function(){ search(inp.value); });
-      tap(growB, function(){ if (sc.hold) sc.hold(); openForm(!form.classList.contains('on')); if (form.classList.contains('on')) title.focus(); });
-      title.addEventListener('focus', function(){ if (sc.hold) sc.hold(); });
-      chips.forEach(function(c){ tap(c, function(){ if (sc.hold) sc.hold(); c.setAttribute('aria-pressed', c.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); q(form, 'fieldset').classList.remove('is-err'); }); });
-      title.addEventListener('input', function(){ if (title.value.trim()) title.setAttribute('aria-invalid', 'false'); });
-      form.addEventListener('submit', function(e){ e.preventDefault(); if (sc.hold) sc.hold(); growMine(); });
-      // drag to pan
-      var pan = { x: 0, y: 0 }, drag = null;
-      gx.addEventListener('pointerdown', function(e){ if (e.target.closest('.cx-gn')) return; drag = { x: e.clientX, y: e.clientY, px: pan.x, py: pan.y }; gx.setPointerCapture(e.pointerId); gx.classList.add('is-drag'); });
-      gx.addEventListener('pointermove', function(e){ if (!drag) return; var k = sc.k || 1; pan.x = drag.px + (e.clientX - drag.x) / k; pan.y = drag.py + (e.clientY - drag.y) / k; gin.style.transform = 'translate(' + pan.x + 'px,' + pan.y + 'px)'; if (sc.hold && (Math.abs(e.clientX - drag.x) > 4)) sc.hold(); });
-      gx.addEventListener('pointerup', function(){ drag = null; gx.classList.remove('is-drag'); });
-      /* the loop */
-      var nodesT = TOP.map(function(t){ return N[t]; }), nodesP = BASE.filter(function(id){ return !isT(id); }).map(function(id){ return N[id]; });
-      var R = run(sc, function(){
-        clearMine(); pan.x = pan.y = 0; gin.style.transform = '';
-        setGrown(false); inp.value = ''; title.value = ''; found.textContent = ''; gx.classList.remove('is-search'); openForm(false);
-        chips.forEach(function(c){ c.setAttribute('aria-pressed', 'false'); }); q(form, '.cx-note').textContent = 'Adds to this monitor only. Nothing is saved.';
-        q(form, '.cx-note').classList.remove('is-err'); q(form, 'fieldset').classList.remove('is-err'); title.setAttribute('aria-invalid', 'false');
-        unfocus(); setTally(12, 26);
-      });
-      var tl = R.tl;
-      tl.addLabel('map', 0);
-      PATHS.concat(gPaths).forEach(function(p){ hide(R, p); });
-      tl.set(q(st, '.fg-fade'), { autoAlpha: 0 }, 0).set(cur, { autoAlpha: 0, x: sc.SW * .5, y: sc.SH + 30 }, 0).set(gNode, { autoAlpha: 0, scale: .4, left: gStart.x, top: gStart.y }, 0);
-      tl.fromTo(nodesT, { autoAlpha: 0, scale: .5 }, { autoAlpha: 1, scale: 1, duration: .45, stagger: .08, ease: 'back.out(1.8)', immediateRender: false }, .2);
-      tl.fromTo(nodesP, { autoAlpha: 0 }, { autoAlpha: 1, duration: .4, stagger: .04, immediateRender: false }, .7);
-      PATHS.forEach(function(p, i){ draw(R, p, 1.1 + i * .035, .5); });
-      count(R, tally[0], 0, 12, .7, .9); count(R, tally[1], 0, 26, 1.1, 1.2);
-      var t = 3.2;
-      tl.addLabel('search', t);
-      tl.to(cur, { autoAlpha: 1, duration: .2 }, t);
-      move(R, cur, pos(st, inp, .3, .7), t, .7); click(R, q(st, '.cx-gs'), t + .7);
-      var te = typeVal(R, inp, 'hand', t + .9, .7);
-      R.at(te + .05, function(){ search('hand'); });
-      tl.set(inp, { value: '' }, 0);
-      R.at(te + 2.4, function(){ inp.value = ''; search(''); });
-      t = te + 2.8;
-      tl.addLabel('grow', t);
-      move(R, cur, pos(st, growB, .5, .6), t, .7); click(R, growB, t + .7);
-      R.at(t + .75, function(){ openForm(true); });
-      move(R, cur, pos(st, title, .3, .7), t + 1.1, .6);
-      tl.set(title, { value: '' }, 0);
-      t = typeVal(R, title, GROW.title, t + 1.8, 1.4);
-      GROW.tags.forEach(function(k, i){ var c = q(form, '[data-t="' + k + '"]'); move(R, cur, pos(st, c, .5, .7), t + .2 + i * .9, .55); click(R, c, t + .75 + i * .9); R.at(t + .8 + i * .9, function(){ c.setAttribute('aria-pressed', 'true'); }); });
-      t += .3 + GROW.tags.length * .9;
-      move(R, cur, pos(st, add, .5, .6), t, .55); click(R, add, t + .55);
-      R.at(t + .6, function(){ openForm(false); setGrown(true); });
-      tl.to(cur, { autoAlpha: 0, duration: .3 }, t + .8);
-      tl.to(gNode, { autoAlpha: 1, scale: 1, duration: .5, ease: 'back.out(1.6)' }, t + .7);
-      tl.to(gNode, { left: gEnd.x, top: gEnd.y, duration: 1, ease: 'power3.inOut' }, t + 1.2);
-      gPaths.forEach(function(p, i){ draw(R, p, t + 2 + i * .15, .6); });
-      count(R, tally[0], 12, 13, t + 2, .3, '', true); count(R, tally[1], 26, 28, t + 2, .6, '', true);
-      R.at(t + 2.3, function(){ focus(GROW.id); });
-      end(sc, R, t + 7.2, t + 4, [{ t: 'Map', at: 'map' }, { t: 'Search', at: 'search' }, { t: 'Grow', at: 'grow' }]);
-    });
-
-    /* ---------------- 4 · SKETCH YOUR SYSTEM: the sketch tool ---------------- */
-    // sketch.js: each term is [label, keywords]; keywords are matched against page titles (US spelling here)
-    var SKF = ['#F2A93B', '#EF5B3F', '#139E8A', '#2F5BEA', '#C7832A', '#0B1B2B'];
-    var SKV = {
-      law: [['Who you help', [['Family businesses', 'family business owner owners farm company'], ['Founders', 'founder founders cofounder'], ['Landlords', 'landlord landlords property'], ['Non-profits', 'nonprofit charity charities']]],
-        ['Practice areas', [['Succession planning', 'succession exit retire retirement generation'], ['Buy-sell agreements', 'buysell buyout agreement agreements'], ['Commercial leases', 'lease leases commercial tenant'], ['Wills and trusts', 'will wills trust trusts estate'], ['Employment law', 'employment employee employees contract contracts hire']]],
-        ['How you work', [['Fixed fees', 'fee fees fixed cost costs price'], ['Plain-language drafting', 'plain drafting language'], ['Kitchen-table meetings', 'meeting meetings kitchen consultation']]],
-        ['What you watch for', [['Family disputes', 'dispute disputes conflict'], ['Tax on exit', 'tax taxes'], ['Key-person risk', 'risk keyperson']]],
-        ['Ideas', [['The handshake is not the plan', 'handshake'], ['Start before you need to', 'start early when']]],
-        ['Known for', [['Succession planning', 'succession generation'], ['Plain-language drafting', 'plain']]]],
-      bakery: [['Who it’s for', [['Neighbors', 'neighbor neighbors neighbour neighbours neighborhood neighbourhood local community corner'], ['Cafés and restaurants', 'cafe cafes café cafés restaurant restaurants wholesale'], ['Weddings and parties', 'wedding weddings party parties celebration']]],
-        ['What we bake', [['Sourdough', 'sourdough bread breads loaf loaves'], ['Pastries', 'pastry pastries croissant croissants bun buns'], ['Celebration cakes', 'cake cakes birthday celebration'], ['Wholesale bread', 'wholesale']]],
-        ['How we make it', [['Long fermentation', 'ferment fermentation overnight'], ['Local flour', 'flour miller mill grain wheat'], ['Baked each morning', 'fresh daily']]],
-        ['What we care about', [['Less waste', 'waste yesterday leftover leftovers'], ['Allergies and labels', 'allergy allergies allergen gluten glutenfree label labels']]],
-        ['Ideas', [['Slow bread is better bread', 'slow'], ['Bread is a neighborhood thing', 'neighborhood neighbourhood']]],
-        ['Known for', [['Sourdough', 'sourdough'], ['Morning buns', 'bun buns']]]],
-      clinic: [['Who you help', [['Runners', 'runner runners running marathon'], ['Desk workers', 'desk office posture'], ['After surgery', 'surgery postop rehab']]],
-        ['Treatments', [['Sports physio', 'sport sports physiotherapy injury'], ['Back and neck pain', 'neck pain backache'], ['Knee rehab', 'knee acl'], ['Pelvic health', 'pelvic']]],
-        ['How it works', [['Movement assessment', 'assessment assess sessions'], ['Home exercise plans', 'exercise exercises stretch stretches home'], ['Online appointments', 'online video appointment appointments']]],
-        ['What we watch for', [['Injuries that come back', 'recurring return again'], ['Pain that isn’t improving', 'improving persistent chronic']]],
-        ['Ideas', [['Rest isn’t always the answer', 'rest'], ['Strength is the treatment', 'strength strong']]],
-        ['Known for', [['Knee rehab', 'knee acl'], ['Runners', 'marathon runner runners']]]]
-    };
-    var SKS = {
-      law: { n: 'Counsel', d: 'A law firm · 12 pages', sw: ['#F4EDE1', '#7A1F2B'], cut: 'Landlords', ren: ['Founders', 'Company founders'], pages: [
-        ['Service', 'Succession planning'], ['Service', 'Commercial leases'], ['Service', 'Wills and trusts'], ['Service', 'Employment law'],
-        ['Project', 'Passing the family farm to the next generation'], ['Project', 'A buyout between two founders'],
-        ['Article', 'What a buy-sell agreement covers'], ['Article', 'When should owners start succession talks?'],
-        ['Answer', 'How much does a will cost?'], ['Answer', 'Do you offer fixed fees?'],
-        ['News', 'Office closed for the holidays'], ['News', 'A new partner joins the firm']] },
-      bakery: { n: 'Bakehouse', d: 'A neighborhood bakery · 12 pages', sw: ['#FFF3D6', '#E0402B'], cut: 'Weddings and parties', ren: ['Neighbors', 'Regulars'], pages: [
-        ['Product', 'Our breads'], ['Product', 'Celebration cakes'], ['Product', 'Wholesale for cafés'],
-        ['Story', 'The corner café we’ve baked for since day one'],
-        ['Article', 'Why we ferment for 36 hours'], ['Article', 'Meet our miller'], ['Article', 'What happens to yesterday’s bread'],
-        ['Answer', 'Do you have gluten-free options?'], ['Answer', 'Can I order a cake for Saturday?'],
-        ['News', 'Holiday opening hours'], ['News', 'We’re hiring a morning baker'], ['Page', 'About us']] },
-      clinic: { n: 'Clinic', d: 'A physio practice · 12 pages', sw: ['#EAF5F2', '#23867B'], cut: 'Pain that isn’t improving', ren: ['Desk workers', 'Office workers'], pages: [
-        ['Service', 'Sports physiotherapy'], ['Service', 'Pelvic health'], ['Service', 'Online appointments'],
-        ['Story', 'Back to the marathon after ACL surgery'],
-        ['Article', 'Why rest isn’t always the answer for back pain'], ['Article', 'Five desk stretches that actually help'], ['Article', 'What happens at your first assessment'],
-        ['Answer', 'Do I need a referral?'], ['Answer', 'How many sessions will I need?'],
-        ['News', 'Our new clinic in Eastside'], ['Page', 'Meet the team'], ['Page', 'Prices']] }
-    };
-    var STOP = ' a an the and or of for to in on at is are do does you your we our it its what who how why when which with can should i me my be by from this that they them after before about into than then there their so if as not up out new meet one five day us all ';
-    function stem(w){ return w.toLowerCase().replace(/[’'.,!?:;()"“”]/g, '').replace(/-/g, '').replace(/(ies)$/, 'y').replace(/(ings|ing|es|s|ed)$/, ''); }
-    function words(t){ return (t.match(/[A-Za-zÀ-ÿ’'-]+/g) || []).map(function(w){ return w.toLowerCase(); }).filter(function(w){ return w.length > 2 && STOP.indexOf(' ' + w.replace(/[’']/g, '') + ' ') < 0; }).map(stem).filter(function(w){ return w.length > 2; }); }
-    function hit(a, b){ return a === b || (a.length >= 5 && b.length >= 5 && (a.indexOf(b) === 0 || b.indexOf(a) === 0)); }
-    var PRI = [1, 2, 0, 3, 4, 5];
-    // sketch.js connect(): merge the same label across categories, tag each page with up to three terms
-    function connect(key){
-      var s = SKS[key], byLabel = {}, merged = [];
-      SKV[key].forEach(function(f, fi){ f[1].forEach(function(t){
-        if (t[0] === s.cut) return;
-        var lab = t[0] === s.ren[0] ? s.ren[1] : t[0], k = lab.toLowerCase();
-        if (!byLabel[k]){ byLabel[k] = { label: lab, fs: [], kw: [] }; merged.push(byLabel[k]); }
-        var m = byLabel[k]; if (m.fs.indexOf(fi) < 0) m.fs.push(fi);
-        t[1].split(' ').map(stem).forEach(function(w){ if (m.kw.indexOf(w) < 0) m.kw.push(w); });
-      }); });
-      var links = [], pages = s.pages.map(function(p, pi){
-        var ws = words(p[1]), fd = [];
-        merged.forEach(function(m, mi){ if (m.kw.some(function(k){ return ws.some(function(w){ return hit(w, k); }); })) fd.push(mi); });
-        fd.sort(function(a, b){ return PRI.indexOf(merged[a].fs[0]) - PRI.indexOf(merged[b].fs[0]); });
-        fd = fd.slice(0, 3); fd.forEach(function(mi){ links.push([pi, mi]); });
-        return { type: p[0], title: p[1], terms: fd };
-      });
-      merged.forEach(function(m, mi){ m.n = links.filter(function(l){ return l[1] === mi; }).length; });
-      return { pages: pages, terms: merged, links: links };
+      function draw(now){
+        if (dead) return;
+        var dt = last ? Math.min(.05, (now - last) / 1000) : .016; last = now;
+        if (radial) P = target ? Math.min(1, P + Math.min(dt, .034) / durIn) : Math.max(0, P - Math.min(dt, .034) / durOut);
+        else { P += (target - P) * Math.min(1, dt * (target ? 2.6 : 6)); if (Math.abs(target - P) < .002) P = target; }
+        var T = (now - t0) / 1000, n, k, p;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h); ctx.lineCap = 'round'; ctx.lineWidth = 1.4;
+        if (radial){
+          // first the cover, one square per cell (solid once its threads are mostly in), then the threads on top
+          ctx.fillStyle = cover;
+          for (n = 0; n < cells.length; n++){
+            k = cells[n];
+            p = ease(c01(target ? (P * 1.6 - k.d) / .9 : (P * 1.6 - (.7 - k.d)) / .9)); PS[n] = p;
+            if (p <= 0 || p * 1.7 >= 1) continue;
+            ctx.globalAlpha = p * 1.7; ctx.fillRect(k.c * gsz - .5, k.r * gsz - .5, gsz + 1, gsz + 1);
+          }
+          ctx.globalAlpha = 1; ctx.beginPath();
+          for (n = 0; n < cells.length; n++){ if (PS[n] * 1.7 >= 1 && PS[n] < .999){ k = cells[n]; ctx.rect(k.c * gsz - .5, k.r * gsz - .5, gsz + 1, gsz + 1); } }
+          ctx.fillStyle = cover; ctx.fill();
+          ctx.beginPath();
+          for (n = 0; n < cells.length; n++){ if (PS[n] >= .999){ k = cells[n]; ctx.rect(k.c * gsz, k.r * gsz, gsz, gsz); } }
+          ctx.fillStyle = tile(); ctx.fill();
+          for (n = 0; n < cells.length; n++){
+            p = PS[n]; if (p <= 0 || p >= .999) continue; k = cells[n];
+            var fly = (1 - p) * (target ? -(40 + k.j * 50) : 70 + k.j * 90);
+            line(k, Math.round(k.x + k.ux * fly) + .5, Math.round(k.y + k.uy * fly) + .5, (k.vert ? Math.PI / 2 : 0) * (target ? p : 1), p * (k.over ? .85 : .2));
+          }
+        } else {
+          // a slow wave runs through the cloth and the thread on top brightens as it passes
+          for (n = 0; n < cells.length; n++){
+            k = cells[n]; p = ease(c01((P * 1.7 - k.d) / .7)); if (p <= 0) continue;
+            var wv = K.reduce ? 0 : Math.sin(k.c * .45 - k.r * .3 + T * 1.3);
+            var x = k.x + (k.vert ? wv * 1.2 : 0) - k.ux * (1 - p) * (90 + k.j * 140), y = k.y + (k.vert ? 0 : wv * 1.2) + (1 - p) * (k.j - .5) * 40;
+            line(k, x, y, (k.vert ? Math.PI / 2 : 0) * p, p * (k.over ? .8 + .2 * wv : .14));
+          }
+        }
+        ctx.globalAlpha = 1;
+        var settled = P === target;
+        raf = 0;
+        if (settled && onDone){ var f = onDone; onDone = null; f(); settled = P === target; if (raf) return; }
+        // a band keeps its wave running while woven and on screen; everything else stops once it settles
+        raf = !settled || (!radial && target && !K.reduce && o.live !== false && seen) ? requestAnimationFrame(draw) : 0;
+      }
+      var seen = true;
+      if (!radial && window.IntersectionObserver) new IntersectionObserver(function(es){
+        seen = es[0].isIntersecting; if (seen && target && !raf && !dead){ last = 0; raf = requestAnimationFrame(draw); }
+      }).observe(cv);
+      function fn(open, at, done){
+        if (dead) return;
+        target = open ? 1 : 0; onDone = done || null;
+        if (at){ ox = at[0]; oy = at[1]; }
+        if (open || !cells.length){ if (!size()) { if (done) done(); return; } }
+        if (!t0) t0 = window.performance ? performance.now() : Date.now();
+        if (!raf){ last = 0; raf = requestAnimationFrame(draw); }
+      }
+      // jump to a settled state (no motion), e.g. under reduced motion
+      fn.set = function(open){ if (dead) return; target = P = open ? 1 : 0; if (!cells.length && !size()) return; last = 0; if (!raf) raf = requestAnimationFrame(draw); };
+      fn.canvas = cv;
+      fn.destroy = function(){ dead = true; if (raf) cancelAnimationFrame(raf); if (cv.parentNode) cv.parentNode.removeChild(cv); };
+      return fn;
     }
-    SCENE.add('cks-sketch', function(sc){
-      fonts(sc);
-      var st = sc.stg;
-      if (!sc.skKey) sc.skKey = 'law';
-      render(sc.skKey);
-      function render(key){
-        var P = sc.portrait, s = SKS[key], G = connect(key), V = SKV[key];
-        var total = 0; V.forEach(function(f){ total += f[1].length; });
-        var usedAll = G.terms.map(function(t, i){ return i; }).filter(function(i){ return G.terms[i].n > 0; }).sort(function(a, b){ return G.terms[b].n - G.terms[a].n; }), used = usedAll.slice(0, P ? 8 : 10);
-        var conn = G.pages.filter(function(p){ return p.terms.length; }).length, empty = G.terms.filter(function(t){ return !t.n; }), strong = G.terms.filter(function(t){ return t.n >= 3; });
-        var types = []; s.pages.forEach(function(p){ if (types.indexOf(p[0]) < 0) types.push(p[0]); });
-        function chip(t, fi){ return '<span class="cx-vt" style="--c:' + SKF[fi] + '" data-l="' + esc(t[0]) + '"><b>' + esc(t[0]) + '</b></span>'; }
-        function pageCard(p, pi){ return '<div class="cx-skp' + (p.terms.length ? '' : ' is-orphan') + '" data-p="' + pi + '"><small>' + esc(p.type) + '</small><b>' + esc(p.title) + '</b></div>'; }
-        var Lc = [], Rc = []; G.pages.forEach(function(p, pi){ (pi % 2 ? Rc : Lc).push(pageCard(p, pi)); });
-        st.innerHTML = '<div class="cx-bg is-paper"></div>' + bar('getcks.io/sketch.html') +
-          '<div class="cx-sk-top"><ol class="cx-sks">' + [['Your site', 'Pick a sample'], ['Your vocabulary', 'Keep, cut or rename'], ['How it connects', 'Your pages, woven']].map(function(x, i){ return '<li><button type="button" data-go="' + i + '"><i>' + (i + 1) + '</i><span><b>' + x[0] + '</b><small>' + x[1] + '</small></span></button></li>'; }).join('') + '</ol>' +
-            '<div class="cx-skpick"><em>Sample</em>' + Object.keys(SKS).map(function(k){ return '<button type="button" data-k="' + k + '" class="' + (k === key ? 'on' : '') + '" style="--a:' + SKS[k].sw[0] + ';--b:' + SKS[k].sw[1] + '"><span class="sw"></span>' + esc(SKS[k].n) + '</button>'; }).join('') + '</div></div>' +
-          /* step 1 */
-          '<div class="cx-skpan" data-pan="0"><h4>Start with a site.</h4><div class="cx-samples">' + Object.keys(SKS).map(function(k){ return '<div class="cx-sam' + (k === key ? ' is-me' : '') + '" style="--a:' + SKS[k].sw[0] + ';--b:' + SKS[k].sw[1] + '"><span class="sw"></span><span><b>' + esc(SKS[k].n) + '</b><small>' + esc(SKS[k].d) + '</small></span></div>'; }).join('') + '</div>' +
-            '<p class="cx-sklab">Your site today <span>· nothing points anywhere else</span></p><div class="cx-silos">' + types.slice(0, P ? 4 : 5).map(function(ty){ return '<div class="cx-silo"><em>' + esc(ty) + '</em>' + s.pages.filter(function(p){ return p[0] === ty; }).map(function(p){ return '<span>' + esc(p[1]) + '</span>'; }).join('') + '</div>'; }).join('') + '</div>' +
-            '<span class="cx-skbtn" data-b="0">Draft my vocabulary →</span></div>' +
-          /* step 2 */
-          '<div class="cx-skpan" data-pan="1"><h4>React to a strawman.</h4><p class="cx-skcnt"><b class="k">' + total + '</b> terms kept · <span class="c">0</span> cut · <span class="r">0</span> renamed</p><div class="cx-facets">' +
-            V.map(function(f, fi){ return '<div class="cx-facet" style="--c:' + SKF[fi] + '"><em>' + esc(f[0]) + '</em><div>' + f[1].map(function(t){ return chip(t, fi); }).join('') + '</div></div>'; }).join('') +
-            '</div><span class="cx-skbtn" data-b="1">Connect my pages →</span></div>' +
-          /* step 3 */
-          '<div class="cx-skpan" data-pan="2"><div class="cx-skstats">' +
-            [[conn + '<small>/' + G.pages.length + '</small>', 'pages connect to your vocabulary'], [G.links.length, 'links built from tags alone'], [usedAll.length + '<small>/' + G.terms.length + '</small>', 'terms with a page behind them'], [G.pages.length - conn, 'page' + (G.pages.length - conn === 1 ? '' : 's') + ' with no match yet']].map(function(x){ return '<div><b>' + x[0] + '</b><span>' + x[1] + '</span></div>'; }).join('') + '</div>' +
-            '<div class="cx-skmap"><svg class="cx-skthr" aria-hidden="true"></svg><div class="cx-skc l">' + Lc.join('') + '</div><div class="cx-skc t">' +
-              used.map(function(ti){ var t = G.terms[ti]; return '<div class="cx-skt" data-t="' + ti + '" style="--c:' + SKF[t.fs[0]] + '"><span>' + t.fs.map(function(f){ return '<i style="--c:' + SKF[f] + '"></i>'; }).join('') + '</span>' + esc(t.label) + '<b>' + t.n + '</b></div>'; }).join('') +
-            '</div><div class="cx-skc r">' + Rc.join('') + '</div></div>' +
-            '<div class="cx-gaps">' +
-              '<div><em>Not connected yet</em><p>' + G.pages.filter(function(p){ return !p.terms.length; }).map(function(p){ return esc(p.title); }).join(' · ') + '</p></div>' +
-              '<div class="w"><em>Nothing behind these yet</em><p>' + empty.slice(0, 6).map(function(t){ return '<span style="--c:' + SKF[t.fs[0]] + '">' + esc(t.label) + '</span>'; }).join('') + '</p></div>' +
-              '<div class="k"><em>Connects everywhere</em><p>' + (strong.length ? strong.map(function(t){ return '<span style="--c:' + SKF[t.fs[0]] + '">' + esc(t.label) + ' · ' + t.n + '</span>'; }).join('') : '<small>Nothing yet with three or more pages</small>') + '</p></div>' +
-            '</div></div>' +
-          cursor('a', 'You') + '<div class="fg-fade"></div>';
-        var pans = qa(st, '.cx-skpan'), goB = qa(st, '.cx-sks button'), cur = q(st, '.cur.a'), me = q(st, '.cx-sam.is-me'), silos = qa(st, '.cx-silo'), btn = qa(st, '.cx-skbtn');
-        var cutEl = q(st, '.cx-vt[data-l="' + s.cut + '"]'), renEl = q(st, '.cx-vt[data-l="' + s.ren[0] + '"]'), kept = q(st, '.cx-skcnt .k'), cutN = q(st, '.cx-skcnt .c'), renN = q(st, '.cx-skcnt .r');
-        var facets = qa(st, '.cx-facet'), stats = qa(st, '.cx-skstats div'), map = q(st, '.cx-skmap'), svg = q(st, '.cx-skthr'), pcs = qa(st, '.cx-skp'), tms = qa(st, '.cx-skt'), gaps = qa(st, '.cx-gaps > div');
-        // threads: page edge → term edge (drawn once the step-3 layout exists)
-        svg.setAttribute('viewBox', '0 0 ' + map.offsetWidth + ' ' + map.offsetHeight);
-        var TH = [];
-        G.links.forEach(function(l){
-          var pe = q(map, '.cx-skp[data-p="' + l[0] + '"]'), te = q(map, '.cx-skt[data-t="' + l[1] + '"]'); if (!pe || !te) return;
-          var left = l[0] % 2 === 0, a = pos(map, pe, left ? 1 : 0, .5), b = pos(map, te, left ? 0 : 1, .5);
-          var p = pth(svg, X.curve(a, b), 'cx-skl'); p.style.stroke = te.style.getPropertyValue('--c'); TH.push(p);
-        });
-        function show(i){ pans.forEach(function(p, k){ p.classList.toggle('on', k === i); }); goB.forEach(function(b, k){ b.classList.toggle('on', k === i); b.classList.toggle('done', k < i); }); }
-        var R = run(sc, function(){ show(0); if (cutEl) cutEl.classList.remove('cut'); if (renEl){ renEl.classList.remove('ed'); q(renEl, 'b').textContent = s.ren[0]; } kept.textContent = total; cutN.textContent = '0'; renN.textContent = '0'; if (me) me.classList.remove('on'); }), tl = R.tl;
-        tl.set(q(st, '.fg-fade'), { autoAlpha: 0 }, 0).set(cur, { autoAlpha: 0, x: sc.SW * .5, y: sc.SH + 30 }, 0);
-        tl.addLabel('site', 0);
-        tl.set(silos, { autoAlpha: 0 }, 0);
-        tl.to(cur, { autoAlpha: 1, duration: .2 }, .5);
-        move(R, cur, pos(st, me, .5, .6), .5, .8); click(R, me, 1.3);
-        R.at(1.35, function(){ me.classList.add('on'); });
-        tl.fromTo(silos, { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: .4, stagger: .12, immediateRender: false }, 1.5);
-        move(R, cur, pos(st, btn[0], .5, .6), 3, .7); click(R, btn[0], 3.7);
-        var t = 3.9;
-        tl.addLabel('vocab', t);
-        R.at(t, function(){ show(1); });
-        tl.fromTo(facets, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: .4, stagger: .08, immediateRender: false }, t + .1);
-        if (cutEl){ move(R, cur, pos(st, cutEl, .5, .6), t + .9, .7); click(R, cutEl, t + 1.6); R.at(t + 1.65, function(){ cutEl.classList.add('cut'); kept.textContent = total - 1; cutN.textContent = '1'; }); }
-        if (renEl){
-          move(R, cur, pos(st, renEl, .5, .6), t + 2.4, .7); click(R, renEl, t + 3.1); click(R, renEl, t + 3.3);
-          var rb = q(renEl, 'b'), o = { n: 0 };
-          R.at(t + 3.4, function(){ renEl.classList.add('ed'); });
-          tl.fromTo(o, { n: 0 }, { n: s.ren[1].length, duration: 1, ease: 'none', immediateRender: false, onUpdate: function(){ rb.textContent = s.ren[1].slice(0, Math.round(o.n)) || '|'; } }, t + 3.5);
-          R.at(t + 4.6, function(){ renEl.classList.remove('ed'); rb.textContent = s.ren[1]; renN.textContent = '1'; });
-        }
-        move(R, cur, pos(st, btn[1], .5, .6), t + 5, .7); click(R, btn[1], t + 5.7);
-        t += 5.9;
-        tl.addLabel('connect', t);
-        R.at(t, function(){ show(2); });
-        tl.to(cur, { autoAlpha: 0, duration: .3 }, t);
-        tl.fromTo(stats, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .35, stagger: .1, immediateRender: false }, t + .1);
-        tl.fromTo(pcs, { autoAlpha: 0 }, { autoAlpha: 1, duration: .3, stagger: .04, immediateRender: false }, t + .4);
-        tl.fromTo(tms, { autoAlpha: 0, scale: .8 }, { autoAlpha: 1, scale: 1, duration: .3, stagger: .06, ease: 'back.out(2)', immediateRender: false }, t + .8);
-        TH.forEach(function(p, i){ hide(R, p); draw(R, p, t + 1.2 + i * .06, .5); });
-        tl.fromTo(gaps, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .4, stagger: .2, immediateRender: false }, t + 1.6 + TH.length * .06);
-        end(sc, R, t + 8, t + 5.5);
-        // interactive: step buttons jump, a sample reloads the sketch for that site
-        // (each lands on the moment that step is complete)
-        goB.forEach(function(b, i){ tap(b, function(){ if (sc.hold) sc.hold(); tl.seek(tl.labels[['site', 'vocab', 'connect'][i]] + [2.8, 4.8, 4][i]); if (sc.onSeek) sc.onSeek(); }); });
-        show(0);
-        qa(st, '.cx-skpick button').forEach(function(b){ tap(b, function(){
-          var k = b.getAttribute('data-k'); sc.skKey = k;
-          if (sc.tl) sc.tl.kill(); qa(sc.view, '.scn-ctl').forEach(function(n){ n.remove(); });
-          render(k); sc.paused = false; sc.started = true; sc.tl.restart();
-        }); });
-      }
-    });
 
-    /* ---------------- 5 · PUBLISH ONCE: one entry, the site does the rest ---------------- */
-    var PT = [['Client onboarding', SAF], ['Service design', COR], ['Journey mapping', TEA], ['Client handoffs', COB], ['Plain-language UX', INK], ['Professional firms', OCH]];
-    var PUB = { title: 'Onboarding is a design problem', theme: 'How we work', tags: [0, 1, 2], slug: 'onboarding-is-a-design-problem' };
-    SCENE.add('cks-publish', function(sc){
-      fonts(sc);
+    K.tw = { C: C, WEAVE: WEAVE, LOGO: LOGO, ICON: ICON, fonts: fonts, bar: bar, asset: asset, weave: weave, c01: c01, ease: ease };
+  })();
+
+  /* ===== mission/24-tw-app.js ===== */
+  /* =========================================================
+     TOPICWEAVE · THE APP (channel tw-app): the dashboard prototype (cks-v3/app/index.html) as a coded scene
+       Overview : the site's numbers count up, the topic list fills in
+       Topics   : one topic opens in the drawer with the pages tied to it
+       Map      : the knowledge map's nodes and threads draw in; a topic lights its threads
+       Health   : a suggestion card for a topic with nothing behind it yet
+     Hover or tap a topic (Overview list, Topics table, map node) to light it: that holds the loop, the play
+     button hands it back. The nav items switch views too. Landscape: sidebar; portrait: top bar + nav strip.
+     Sample data is the prototype's own (app/data.js, app/data-more.js) and the interface says so.
+     ========================================================= */
+  (function(){
+    var K = SCENE.kit; if (!K || !K.tw || !K.ks) return;
+    var T = K.tw, X = K.ks, q = K.q, qa = K.qa, esc = K.esc, NS = 'http://www.w3.org/2000/svg';
+
+    var IC = {
+      overview: '<path d="M3 13h4v4H3zM8 8h4v9H8zM13 3h4v14h-4z"/>',
+      topics: '<circle cx="10" cy="10" r="2.5"/><circle cx="4" cy="5" r="1.6"/><circle cx="16" cy="5" r="1.6"/><circle cx="4" cy="15" r="1.6"/><circle cx="16" cy="15" r="1.6"/><path d="M5.3 6l3 2.6M14.7 6l-3 2.6M5.3 14l3-2.6M14.7 14l-3-2.6"/>',
+      health: '<path d="M10 17s-6-3.6-6-8.3A3.4 3.4 0 0 1 10 6.6a3.4 3.4 0 0 1 6 2.1C16 13.4 10 17 10 17z"/>',
+      ideas: '<path d="M7 16h6M8 18.5h4M10 2.5a5.5 5.5 0 0 0-3.2 10c.5.4.7 1 .7 1.5h5c0-.5.2-1.1.7-1.5A5.5 5.5 0 0 0 10 2.5z"/>',
+      ai: '<path d="M10 2.5l1.8 4.7 4.7 1.8-4.7 1.8L10 15.5l-1.8-4.7L3.5 9l4.7-1.8z"/>',
+      review: '<rect x="3" y="3" width="14" height="14" rx="3"/><path d="M6.5 10l2.3 2.3L13.5 7.6"/>',
+      changes: '<path d="M4 7h9M10 4l3 3-3 3M16 13H7M10 10l-3 3 3 3"/>',
+      inbox: '<path d="M3 11l2.2-6.5h9.6L17 11v5H3z"/><path d="M3 11h4l1 2h4l1-2h4"/>',
+      map: '<circle cx="5" cy="6" r="2"/><circle cx="15" cy="5" r="2"/><circle cx="10" cy="15" r="2"/><path d="M6.8 6.6l6.4-1.2M6 7.8l3 5.4M14 6.8l-3 6.4"/>',
+      machine: '<rect x="3" y="4" width="14" height="12" rx="2"/><path d="M7 8l-2 2 2 2M13 8l2 2-2 2M11 7.5l-2 5"/>',
+      reports: '<path d="M5 2.5h7l3 3v12H5z"/><path d="M8 10h4M8 13h4M8 7h2"/>',
+      conn: '<path d="M8 12l4-4M6.5 9.5l-2 2a2.8 2.8 0 0 0 4 4l2-2M13.5 10.5l2-2a2.8 2.8 0 0 0-4-4l-2 2"/>'
+    };
+    function icon(k){ return '<svg viewBox="0 0 20 20" aria-hidden="true">' + IC[k] + '</svg>'; }
+    // [route or '', label, icon, count, shown in the portrait strip]; a label with no icon is a group heading
+    var NAV = [['overview', 'Overview', 'overview', '', 1], ['topics', 'Topics', 'topics', '', 1], ['health', 'Link health', 'health', '7', 1], ['', 'Search ideas', 'ideas', '5', 1], ['', 'AI visibility', 'ai'],
+      ['', 'Content'], ['', 'Review queue', 'review', '2'], ['', 'Changes', 'changes'], ['', 'Capture inbox', 'inbox', '5'],
+      ['', 'Publish'], ['map', 'Knowledge map', 'map', '', 1], ['', 'For machines', 'machine'],
+      ['', 'Setup'], ['', 'Reports', 'reports'], ['', 'Connections', 'conn']];
+
+    /* sample data: app/data.js + app/data-more.js (every number there is made up for the demo) */
+    var KPI = [['Search impressions', 'Search Console', 14750, '', '+27%', 'vs the 28 days before'], ['Search clicks', 'Search Console', 568, '', '+19%', 'vs the 28 days before'],
+      ['Visits from AI assistants', 'Topicweave pixel', 61, '', '+41%', 'ChatGPT, Perplexity, Claude, Gemini'], ['Assistant mentions', 'Assistant checks', 4, ' of 12', '+2 since August', 'questions where you were named'],
+      ['Link health', 'Topicweave', 82, '', '+6 this month', 'out of 100']];
+    var TOP = [
+      { n: 'Client onboarding', cat: 'Ideas', c: '#9B87F5', pg: 7, pr: 2, ai: 2, imp: [420, 510, 640, 780, 930, 1240], st: 'ok', stt: 'Healthy',
+        pc: ['Onboarding is a design problem', 'The first 30 days decide the next three years', 'Riverside Clinic intake (project)', 'Hale & Partners onboarding (project)'] },
+      { n: 'Journey mapping', cat: 'How it works', c: '#139E8A', pg: 5, pr: 3, ai: 1, imp: [380, 400, 450, 520, 610, 780], st: 'ok', stt: 'Healthy',
+        pc: ['What a journey map is really for (video)', 'Riverside Clinic intake (project)', 'Northgate client portal (project)'] },
+      { n: 'Client handoffs', cat: 'What you watch for', c: '#EF5B3F', pg: 3, pr: 0, ai: 0, imp: [120, 150, 190, 260, 380, 610], st: 'gap', stt: 'No project proves it',
+        pc: ['Why handoffs fail on Friday afternoons', 'Every complaint starts at a handoff'] },
+      { n: 'Service design', cat: 'Services · Known for', c: '#4F7BFF', pg: 6, pr: 3, ai: 1, imp: [510, 520, 560, 570, 600, 620], st: 'ok', stt: 'Healthy',
+        pc: ['Service design sprint (service)', 'Northgate client portal (project)'] },
+      { n: 'Professional firms', cat: 'Who you help', c: '#B18CFF', pg: 4, pr: 2, ai: 0, imp: [200, 230, 250, 270, 300, 330], st: 'ok', stt: 'Healthy',
+        pc: ['Hale & Partners onboarding (project)'] },
+      { n: 'Plain-language UX', cat: 'Known for', c: '#9AA3AD', pg: 2, pr: 1, ai: 0, imp: [260, 250, 240, 235, 225, 215], st: 'gap', stt: 'Going quiet',
+        pc: ['The form we rewrote eleven times'] },
+      { n: 'Accessibility', cat: 'What you watch for', c: '#36C28F', pg: 1, pr: 0, ai: 0, imp: [40, 45, 60, 55, 70, 80], st: 'bad', stt: 'No definition', pc: [] }
+    ];
+    var INS = [['#EF5B3F', 'Client handoffs is your fastest-growing topic (+64%), but no project proves it yet.', 'Riverside Clinic intake mentions handoffs three times. Tag it?', 'Review tag'],
+      ['#9B87F5', 'Claude named you for “Who designs client onboarding for professional firms?”', 'First mention for this question. Quote saved to the assistant log.', 'See the answer'],
+      ['#4F7BFF', '5 searches bring people to your site that no topic covers yet.', 'Top one: “what is a service blueprint”, 260 impressions.', 'See ideas']];
+    // knowledge map (mapNodes): the first six topics, and pieces with the topics they're tagged with
+    var MP = [['Onboarding is a design problem', [0, 3]], ['The first 30 days', [0]], ['What a journey map is for', [1]], ['Riverside Clinic intake', [0, 1, 2]], ['Hale & Partners', [0, 4]],
+      ['Northgate client portal', [3, 1]], ['Why handoffs fail', [2]], ['The form we rewrote', [5, 0]], ['Service design sprint', [3]], ['Do you work with small firms?', [4]]];
+    var MW = 720, MH = 440, MT = 6, MONTHS = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'];
+    var FOCUS = 0, OPEN = 0; // the loop opens and lights Client onboarding (most pages tied to it)
+
+    function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+    function delta(a){ return Math.round((a[a.length - 1] / a[a.length - 2] - 1) * 100); }
+    function pct(n){ return (n > 0 ? '+' : n < 0 ? '−' : '') + Math.abs(n) + '%'; }
+    function spark(v, c){
+      var w = 84, h = 24, mx = Math.max.apply(null, v), mn = Math.min.apply(null, v);
+      var d = v.map(function(x, i){ return (i ? 'L' : 'M') + (i / (v.length - 1) * w).toFixed(1) + ' ' + (h - 3 - (x - mn) / (mx - mn || 1) * (h - 6)).toFixed(1); }).join(' ');
+      return '<svg class="tw-a-spark" viewBox="0 0 ' + w + ' ' + h + '" aria-hidden="true"><path d="' + d + '" stroke="' + c + '"/></svg>';
+    }
+    function lineD(v, w, h, max){
+      return v.map(function(x, i){ return (i ? 'L' : 'M') + (8 + i / (v.length - 1) * (w - 16)).toFixed(1) + ' ' + (h - 18 - x / max * (h - 30)).toFixed(1); }).join(' ');
+    }
+    function tPos(k){ var a = -Math.PI / 2 + k / MT * Math.PI * 2; return [MW / 2 + Math.cos(a) * 120, MH / 2 + Math.sin(a) * 110]; }
+    function pPos(k){ var a = -Math.PI / 2 + (k + .5) / MP.length * Math.PI * 2; return [MW / 2 + Math.cos(a) * 290, MH / 2 + Math.sin(a) * 190]; }
+    function tiedTo(t){ return MP.filter(function(p){ return p[1].indexOf(t) > -1; }).length; }
+
+    SCENE.add('tw-app', function(sc){
+      T.fonts(sc);
       var P = sc.portrait, st = sc.stg;
-      var json = [
-        ['{', ''], ['  "@context": "https://schema.org",', ''], ['  "@graph": [{', ''], ['    "@type": "Article",', ''],
-        ['    "headline": "' + PUB.title + '",', 'hot'], ['    "articleSection": "' + PUB.theme + '",', ''],
-        ['    "about": [' + PUB.tags.map(function(i){ return '"' + PT[i][0] + '"'; }).join(', ') + '],', 'hot'],
-        ['    "url": "https://yoursite.com/insights/' + PUB.slug + '"', ''], ['  },', '']
-      ].concat(PUB.tags.map(function(i, k){ return ['  { "@type": "DefinedTerm", "name": "' + PT[i][0] + '" }' + (k < PUB.tags.length - 1 ? ',' : ''), 'hot']; })).concat([[']}', '']]);
-      st.innerHTML = '<div class="cx-bg is-paper"></div>' + bar('getcks.io/#update') +
-        '<div class="cx-ed"><div class="cx-edh"><span>Collections / <b>Insights</b> / New item</span><em class="cx-pill">Draft</em></div>' +
-          '<label class="cx-f"><span>Title <i>Required</i></span><div class="cx-in cx-ti"><b></b><u></u></div></label>' +
-          '<label class="cx-f cx-thm"><span>Theme</span><div class="cx-in cx-sel"><b>' + PUB.theme + '</b><i>▾</i></div></label>' +
-          '<div class="cx-f"><span>Topics <i>Pick one or more</i></span><div class="cx-tps">' + PT.map(function(t, i){ return '<button type="button" class="cx-tp" data-i="' + i + '" aria-pressed="false" style="--c:' + t[1] + '">' + esc(t[0]) + '</button>'; }).join('') + '</div></div>' +
-          '<div class="cx-f cx-vid"><span>Video URL <i>Optional</i></span><div class="cx-in"><b class="cx-ph">https://youtube.com/…</b></div></div>' +
-          '<div class="cx-pubr"><button type="button" class="cx-pub">Publish</button><span class="cx-stl">Nothing is live until you publish.</span></div></div>' +
-        '<div class="cx-pv cx-lib"><div class="cx-url">yoursite.com/insights</div><div class="cx-pvh"><b>The library</b><span><i>7</i> places</span></div><div class="cx-lcs">' +
-          '<div class="cx-lc is-new"><em>How we work</em><b>' + PUB.title + '</b><span>Just now</span></div>' +
-          [['How we work', 'What a journey map is really for', TEA], ['What you watch for', 'Why handoffs fail on Friday afternoons', COB], ['Ideas', 'The first 30 days decide the next three years', COR]].map(function(c){ return '<div class="cx-lc" style="--c:' + c[2] + '"><em>' + c[0] + '</em><b>' + c[1] + '</b><span>Read →</span></div>'; }).join('') +
+      function head(h, s, tools){ return '<header class="tw-a-top"><div><h1>' + h + '</h1><p>' + s + '</p></div><div class="tw-a-tools">' + (tools || '') + '<span class="tw-a-note">Sample data</span></div></header>'; }
+      var seg = '<span class="tw-a-seg"><i>7 days</i><i class="on">28 days</i><i>6 months</i></span>';
+
+      var side = '<aside class="tw-a-side"><div class="tw-a-brand">' + T.LOGO + '<span>App</span></div>' +
+        '<div class="tw-a-site"><i></i><span><b>Example Studio</b><small>yoursite.com · Webflow</small></span></div><nav class="tw-a-nav">' +
+        NAV.map(function(n){
+          if (!n[2]) return '<p class="tw-a-grp">' + esc(n[1]) + '</p>';
+          return '<button type="button" class="tw-a-ni' + (n[0] ? ' is-r' : '') + (n[4] ? ' is-p' : '') + '"' + (n[0] ? ' data-r="' + n[0] + '"' : ' tabindex="-1"') + '>' + icon(n[2]) + '<span>' + esc(n[1]) + '</span>' + (n[3] ? '<em>' + n[3] + '</em>' : '') + '</button>';
+        }).join('') + '</nav><div class="tw-a-foot">Prototype · sample data</div></aside>';
+
+      var vOv = '<section class="tw-a-v" data-v="overview">' + head('Good morning. Here’s what moved.', 'yoursite.com · Last 28 days. Every number is grouped by your own vocabulary.', seg) +
+        '<div class="tw-a-kpis">' + KPI.map(function(k){ return '<div class="tw-a-card tw-a-kpi"><div class="tw-a-kl">' + esc(k[0]) + '<small>' + esc(k[1]) + '</small></div><b data-to="' + k[2] + '" data-suf="' + k[3] + '">' + fmt(k[2]) + k[3] + '</b><div class="tw-a-up">' + esc(k[4]) + '<span> · ' + esc(k[5]) + '</span></div></div>'; }).join('') + '</div>' +
+        '<div class="tw-a-row2"><div class="tw-a-card tw-a-tlist"><div class="tw-a-ch"><h2>Your topics</h2><small>Impressions by topic · Search Console</small></div>' +
+          TOP.map(function(t, i){ var d = delta(t.imp); return '<div class="tw-a-trow" data-i="' + i + '" style="--c:' + t.c + '"><i></i><span><b>' + esc(t.n) + '</b><small>' + esc(t.cat) + '</small></span>' + spark(t.imp, t.c) + '<span class="tw-a-num">' + fmt(t.imp[5]) + '</span><span class="' + (d < 0 ? 'tw-a-dn' : 'tw-a-up') + '">' + pct(d) + '</span></div>'; }).join('') +
+        '</div><div class="tw-a-card tw-a-ins"><div class="tw-a-ch"><h2>What changed</h2><small>Written for you, not a chart</small></div>' +
+          INS.map(function(n){ return '<div class="tw-a-in"><i style="background:' + n[0] + '"></i><div><p>' + esc(n[1]) + '</p><small>' + esc(n[2]) + '</small><em>' + esc(n[3]) + ' →</em></div></div>'; }).join('') +
+        '</div></div></section>';
+
+      var vTp = '<section class="tw-a-v" data-v="topics">' + head('Topics', 'Your vocabulary, with the proof and the traffic behind each term. Click a topic for its pages.', seg) +
+        '<div class="tw-a-card tw-a-tbl"><div class="tw-a-th"><span>Topic</span><span class="tw-a-cat">Category</span><span class="tw-a-num">Pieces</span><span class="tw-a-num tw-a-pr">Projects</span><span class="tw-a-num">Impressions</span><span>6 months</span><span class="tw-a-stc">Status</span></div>' +
+          TOP.map(function(t, i){ return '<div class="tw-a-tr" data-i="' + i + '" style="--c:' + t.c + '"><span class="tw-a-tn"><i></i>' + esc(t.n) + '</span><span class="tw-a-cat">' + esc(t.cat) + '</span><span class="tw-a-num">' + t.pg + '</span><span class="tw-a-num tw-a-pr' + (t.pr ? '' : ' tw-a-dn') + '">' + t.pr + '</span><span class="tw-a-num">' + fmt(t.imp[5]) + '</span>' + spark(t.imp, t.c) + '<span class="tw-a-stc"><em class="tw-a-pill is-' + t.st + '">' + esc(t.stt) + '</em></span></div>'; }).join('') +
+        '</div><aside class="tw-a-drawer"><p class="tw-a-lab"></p><h3></h3><p class="tw-a-meta"></p>' +
+          '<svg class="tw-a-dchart" viewBox="0 0 360 120" preserveAspectRatio="xMinYMid meet" aria-hidden="true"><path class="tw-a-grid" d="M8 30H352M8 66H352M8 102H352"/><path class="tw-a-dl" pathLength="1" d=""/>' + MONTHS.map(function(m, i){ return '<text x="' + (8 + i / 5 * 344) + '" y="117" text-anchor="' + (i ? i === 5 ? 'end' : 'middle' : 'start') + '">' + m + '</text>'; }).join('') + '</svg>' +
+          '<p class="tw-a-lab">Pages tied to it</p><ul class="tw-a-pcs"><li></li><li></li><li></li><li></li></ul><p class="tw-a-none">Nothing tagged yet.</p>' +
+          '<div class="tw-a-dact"><em class="tw-a-pill"></em><button type="button" class="tw-a-tomap">Show on the map →</button></div></aside></section>';
+
+      var lines = '', nodes = '';
+      MP.forEach(function(p, k){ var a = pPos(k); nodes += '<g class="tw-a-mn is-pc" data-p="' + k + '" tabindex="-1"><circle cx="' + a[0] + '" cy="' + a[1] + '" r="6"/><text x="' + a[0] + '" y="' + (a[1] + (a[1] > MH / 2 ? 21 : -13)) + '" text-anchor="middle">' + esc(p[0]) + '</text></g>'; });
+      TOP.slice(0, MT).forEach(function(t, k){ var a = tPos(k); nodes += '<g class="tw-a-mn is-t" data-t="' + k + '" tabindex="-1"><circle cx="' + a[0] + '" cy="' + a[1] + '" r="14" fill="' + t.c + '"/><circle class="tw-a-halo" cx="' + a[0] + '" cy="' + a[1] + '" r="22" stroke="' + t.c + '"/><text x="' + a[0] + '" y="' + (a[1] + 32) + '" text-anchor="middle">' + esc(t.n) + '</text></g>'; });
+      var vMap = '<section class="tw-a-v" data-v="map">' + head('Knowledge map', 'An explorable map of your topics and the work that proves them, for your own site’s hub page. It updates itself on publish.') +
+        '<div class="tw-a-row2 tw-a-mrow"><div class="tw-a-card tw-a-mcard"><div class="tw-a-ch"><h2>Preview</h2><small>Hover a topic to follow its threads</small></div>' +
+          '<div class="tw-a-mapw"><svg class="tw-a-map" viewBox="0 0 ' + MW + ' ' + MH + '" aria-label="Knowledge map preview, sample data"><g class="tw-a-mls"></g>' + nodes + '</svg></div><p class="tw-a-ro"></p></div>' +
+        '<div class="tw-a-card tw-a-emb"><div class="tw-a-ch"><h2>Embed it</h2><small>One line, or a CMS component</small></div><pre>&lt;div data-topicweave-map="yoursite"&gt;&lt;/div&gt;</pre>' +
+          '<div class="tw-a-li"><b>Where it shows</b><small>The hub page (/topics) and, smaller, on each topic page</small></div><div class="tw-a-li"><b>What visitors can do</b><small>Hover a topic to light up its proof; click to open the page</small></div>' +
+          '<div class="tw-a-li"><b>Links stay real</b><small>The map is decoration on top of the CMS links, never a replacement for them</small></div></div></div></section>';
+
+      var RC = 2 * Math.PI * 64;
+      var vHl = '<section class="tw-a-v" data-v="health">' + head('Link health', 'What Topicweave checks every night: proof, tags, links, definitions and structured data. Fixes are suggestions; you confirm each one.') +
+        '<div class="tw-a-hrow"><div class="tw-a-card tw-a-score"><div class="tw-a-ring"><svg viewBox="0 0 150 150" aria-hidden="true"><circle cx="75" cy="75" r="64"/><circle class="tw-a-arc" cx="75" cy="75" r="64" style="stroke-dasharray:' + RC.toFixed(1) + '"/></svg><b>82</b><small>of 100</small></div>' +
+          '<div><h2>Up 6 this month.</h2><p>Tagging two pieces and linking two orphan pages would take it past 90.</p></div></div>' +
+        '<div class="tw-a-card tw-a-how"><div class="tw-a-ch"><h2>How the score works</h2><small>Weights, so it’s never a mystery</small></div>' +
+          '<div class="tw-a-in"><i style="background:#36C28F"></i><div><p>Proof, 35%</p><small>Every topic has at least one project and one piece of writing.</small></div></div>' +
+          '<div class="tw-a-in"><i style="background:#4F7BFF"></i><div><p>Connections, 35%</p><small>Every piece is tagged; every page is linked from somewhere.</small></div></div>' +
+          '<div class="tw-a-in"><i style="background:#9B87F5"></i><div><p>Machine-readable, 30%</p><small>Definitions filled in and structured data valid on every template.</small></div></div></div></div>' +
+        '<div class="tw-a-card tw-a-sug"><div class="tw-a-sl"><span class="tw-a-lab">Suggestion</span><em class="tw-a-pill is-bad">Topics with no proof · 2</em></div>' +
+          '<h2>Accessibility is a topic with nothing behind it yet.</h2><p>No project mentions it, and its topic page has no definition. The definition is the page: without it the topic page stays hidden.</p>' +
+          '<div class="tw-a-sact"><button type="button" class="tw-a-go">Draft definition</button><button type="button" class="tw-a-ghost">Not now</button><small>Drafted from your Voice Kit. You approve it before anything publishes.</small></div></div></section>';
+
+      st.innerHTML = '<div class="tw-a-bg"></div><div class="tw-a-bar"><i></i><i></i><i></i><span class="tw-a-url">' + T.ICON + '<b>topicweave.com/app/#overview</b></span><span class="tw-a-proto">Prototype · sample data</span></div>' + side +
+        '<main class="tw-a-main">' + vOv + vTp + vMap + vHl + '<div class="tw-a-toast" role="status"></div></main>' + X.cursor('a tw-a-cur', 'You') + '<div class="fg-fade"></div>';
+
+      var views = qa(st, '.tw-a-v'), navs = qa(st, '.tw-a-ni.is-r'), url = q(st, '.tw-a-url b'), cur = q(st, '.tw-a-cur'), toast = q(st, '.tw-a-toast');
+      var kpis = qa(st, '.tw-a-kpi'), kNums = qa(st, '.tw-a-kpi b'), tRows = qa(st, '.tw-a-trow'), ins = qa(q(st, '.tw-a-ins'), '.tw-a-in');
+      var trs = qa(st, '.tw-a-tr'), drawer = q(st, '.tw-a-drawer'), dLine = q(drawer, '.tw-a-dl'), dLis = qa(drawer, '.tw-a-pcs li');
+      var mapW = q(st, '.tw-a-mapw'), mapSvg = q(st, '.tw-a-map'), mls = q(st, '.tw-a-mls'), ro = q(st, '.tw-a-ro');
+      var mT = qa(st, '.tw-a-mn.is-t'), mPc = qa(st, '.tw-a-mn.is-pc'), arc = q(st, '.tw-a-arc'), score = q(st, '.tw-a-ring b');
+      var sug = q(st, '.tw-a-sug'), goB = q(st, '.tw-a-go');
+      var ML = [];
+      MP.forEach(function(p, k){ var a = pPos(k); p[1].forEach(function(t){ var b = tPos(t), l = X.path(mls, 'M' + a[0].toFixed(1) + ' ' + a[1].toFixed(1) + 'L' + b[0].toFixed(1) + ' ' + b[1].toFixed(1), 'tw-a-ml'); l.setAttribute('stroke', TOP[t].c); l.setAttribute('data-t', t); l.setAttribute('data-p', k); ML.push(l); }); });
+
+      /* state */
+      function show(r){
+        views.forEach(function(v){ v.classList.toggle('on', v.getAttribute('data-v') === r); });
+        navs.forEach(function(n){ n.classList.toggle('on', n.getAttribute('data-r') === r); });
+        url.textContent = 'topicweave.com/app/#' + r;
+      }
+      function fill(i){
+        var t = TOP[i], max = Math.max.apply(null, t.imp) * 1.1;
+        var ps = qa(drawer, 'p.tw-a-lab'); ps[0].textContent = t.cat;
+        q(drawer, 'h3').textContent = t.n;
+        q(drawer, '.tw-a-meta').textContent = t.pg + ' pieces · ' + t.pr + ' projects · ' + fmt(t.imp[5]) + ' impressions this month · ' + t.ai + ' of 4 assistants';
+        dLine.setAttribute('d', lineD(t.imp, 360, 120, max)); dLine.style.stroke = t.c;
+        dLis.forEach(function(li, k){ li.textContent = t.pc[k] || ''; li.classList.toggle('is-x', !t.pc[k]); });
+        q(drawer, '.tw-a-none').classList.toggle('on', !t.pc.length);
+        var pill = q(drawer, '.tw-a-dact .tw-a-pill'); pill.className = 'tw-a-pill is-' + t.st; pill.textContent = t.stt;
+        drawer.setAttribute('data-i', i);
+        trs.forEach(function(r, k){ r.classList.toggle('on', k === i); });
+      }
+      function openD(on){ drawer.classList.toggle('on', on); if (!on) trs.forEach(function(r){ r.classList.remove('on'); }); }
+      function rowLit(i){ tRows.forEach(function(r, k){ r.classList.toggle('on', k === i); }); }
+      // light a topic (t) or a piece (p) on the map; -1 clears
+      function focus(t, p){
+        var on = t > -1 || p > -1;
+        mapSvg.classList.toggle('is-focus', on);
+        ML.forEach(function(l){ var hit = t > -1 ? +l.getAttribute('data-t') === t : +l.getAttribute('data-p') === p; l.classList.toggle('on', on && hit); if (on && hit) mls.appendChild(l); });
+        mT.forEach(function(n, k){ n.classList.toggle('on', t > -1 ? k === t : p > -1 && MP[p][1].indexOf(k) > -1); });
+        mPc.forEach(function(n, k){ n.classList.toggle('on', p > -1 ? k === p : t > -1 && MP[k][1].indexOf(t) > -1); });
+        if (t > -1){ var c = tiedTo(t); ro.innerHTML = '<i style="background:' + TOP[t].c + '"></i><b>' + esc(TOP[t].n) + '</b> · ' + c + ' page' + (c === 1 ? '' : 's') + ' tied to it on the map'; }
+        else if (p > -1) ro.innerHTML = '<i></i><b>' + esc(MP[p][0]) + '</b> · tagged with ' + MP[p][1].map(function(k){ return TOP[k].n; }).join(', ');
+        else ro.innerHTML = '<i></i>Hover a topic to follow its threads';
+      }
+      // a topic with no node yet (Accessibility): the map says so instead of lighting anything
+      function focusTopic(i){ if (i < MT) focus(i, -1); else { focus(-1, -1); ro.innerHTML = '<i style="background:' + TOP[i].c + '"></i><b>' + esc(TOP[i].n) + '</b> · nothing tied to it on the map yet'; } }
+      function say(s){ toast.textContent = s; toast.classList.toggle('on', !!s); }
+      function suggestDone(on){ goB.textContent = on ? 'Sent to review ✓' : 'Draft definition'; goB.classList.toggle('is-done', on); }
+
+      /* interaction: hover/tap a topic lights it and holds the loop; play hands it back (state replays to the playhead) */
+      var dirty = false;
+      function hold(){ dirty = true; if (sc.hold) sc.hold(); }
+      function touch(e){ return e && e.pointerType === 'touch'; }
+      // a real pointer move (not content sliding under a resting pointer, which fires enter events) takes over
+      function hover(el, fn){
+        var inside = false;
+        el.addEventListener('pointerleave', function(){ inside = false; });
+        el.addEventListener('pointermove', function(e){ if (inside || touch(e)) return; inside = true; hold(); fn(); });
+      }
+      function tap(el, fn){ el.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); fn(e); }); }
+      tRows.forEach(function(r, i){
+        hover(r, function(){ rowLit(i); });
+        tap(r, function(){ hold(); rowLit(i); show('map'); focusTopic(i); });
+      });
+      trs.forEach(function(r, i){
+        hover(r, function(){ fill(i); openD(true); });
+        tap(r, function(){ hold(); fill(i); openD(true); });
+      });
+      tap(q(drawer, '.tw-a-tomap'), function(){ hold(); var i = +drawer.getAttribute('data-i'); openD(false); show('map'); focusTopic(i); });
+      mT.forEach(function(n, k){
+        hover(n, function(){ focus(k, -1); });
+        tap(n, function(){ hold(); focus(k, -1); });
+      });
+      mPc.forEach(function(n, k){
+        hover(n, function(){ focus(-1, k); });
+        tap(n, function(){ hold(); focus(-1, k); });
+      });
+      navs.forEach(function(n){ tap(n, function(){ hold(); openD(false); show(n.getAttribute('data-r')); }); });
+      tap(goB, function(){ hold(); suggestDone(true); say('Draft written from your Voice Kit and sent to Review'); });
+      tap(q(st, '.tw-a-ghost'), function(){ hold(); say('Kept for later. It stays on the Link health list.'); });
+
+      /* positions (unscaled stage) */
+      var pos = X.pos;
+      function navAt(r){ return pos(st, q(st, '.tw-a-ni[data-r="' + r + '"]'), P ? .5 : .3, .6); }
+      function mapAt(k){ var o = pos(st, mapW, 0, 0), s = mapW.offsetWidth / MW, a = tPos(k); return { x: o.x + a[0] * s + 10, y: o.y + a[1] * s - 21 }; }
+
+      /* the loop */
+      var R = X.run(sc, function(){ dirty = false; show('overview'); openD(false); fill(OPEN); rowLit(-1); focus(-1, -1); say(''); suggestDone(false); });
+      var tl = R.tl, fade = q(st, '.fg-fade');
+      function countTo(el, to, suf, t, d){
+        var o = { v: 0 };
+        tl.set(el, { textContent: '0' + suf }, 0);
+        tl.fromTo(o, { v: 0 }, { v: to, duration: d, ease: 'power2.out', immediateRender: false, onUpdate: function(){ el.textContent = fmt(Math.round(o.v)) + suf; } }, t);
+      }
+      tl.set(fade, { autoAlpha: 0 }, 0).set(cur, { autoAlpha: 0, x: sc.SW * .62, y: sc.SH + 30 }, 0);
+      ML.forEach(function(l){ X.hide(R, l); });
+      // everything that staggers in starts hidden (a fromTo only takes its from-state when it begins)
+      tl.set([kpis, tRows, ins, trs, mT, mPc, dLis, sug], { autoAlpha: 0 }, 0);
+      tl.set(dLine, { strokeDasharray: 1, strokeDashoffset: 1 }, 0).set(arc, { strokeDashoffset: RC }, 0);
+
+      // 1 · Overview
+      tl.addLabel('ov', 0);
+      tl.fromTo(kpis, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .45, stagger: .08, immediateRender: false }, .3);
+      kNums.forEach(function(b, i){ countTo(b, +b.getAttribute('data-to'), b.getAttribute('data-suf'), .5 + i * .08, 1.3); });
+      tl.fromTo(tRows, { autoAlpha: 0, x: -10 }, { autoAlpha: 1, x: 0, duration: .4, stagger: .1, immediateRender: false }, 1.3);
+      tl.fromTo(ins, { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: .4, stagger: .15, immediateRender: false }, 2.1);
+      R.at(3.4, function(){ rowLit(OPEN); });
+      R.at(4.4, function(){ rowLit(-1); });
+
+      // 2 · Topics: open one topic
+      var t = 4.6;
+      tl.addLabel('tp', t);
+      tl.to(cur, { autoAlpha: 1, duration: .2 }, t);
+      X.move(R, cur, navAt('topics'), t, .6); X.click(R, q(st, '.tw-a-ni[data-r="topics"]'), t + .6);
+      R.at(t + .65, function(){ show('topics'); });
+      tl.fromTo(trs, { autoAlpha: 0 }, { autoAlpha: 1, duration: .3, stagger: .06, immediateRender: false }, t + .8);
+      X.move(R, cur, pos(st, trs[OPEN], P ? .3 : .16, .55), t + 1.3, .6); X.click(R, trs[OPEN], t + 1.95);
+      R.at(t + 2, function(){ fill(OPEN); openD(true); });
+      tl.to(dLine, { strokeDashoffset: 0, duration: .9, ease: 'power2.inOut' }, t + 2.4);
+      tl.fromTo(dLis, { autoAlpha: 0, x: 10 }, { autoAlpha: 1, x: 0, duration: .35, stagger: .12, immediateRender: false }, t + 2.6);
+      R.at(t + 5.4, function(){ openD(false); });
+
+      // 3 · Knowledge map: nodes, threads, one topic lit
+      t += 5.7;
+      tl.addLabel('map', t);
+      X.move(R, cur, navAt('map'), t, .6); X.click(R, q(st, '.tw-a-ni[data-r="map"]'), t + .6);
+      R.at(t + .65, function(){ show('map'); });
+      tl.fromTo(mT, { autoAlpha: 0, scale: .4, transformOrigin: '50% 50%' }, { autoAlpha: 1, scale: 1, duration: .45, stagger: .08, ease: 'back.out(1.8)', immediateRender: false }, t + .9);
+      tl.fromTo(mPc, { autoAlpha: 0 }, { autoAlpha: 1, duration: .35, stagger: .05, immediateRender: false }, t + 1.3);
+      ML.forEach(function(l, i){ X.draw(R, l, t + 1.6 + i * .05, .55); });
+      X.move(R, cur, mapAt(FOCUS), t + 2.9, .8);
+      R.at(t + 3.7, function(){ focus(FOCUS, -1); });
+      var rest = t + 4.6;
+      R.at(t + 5.9, function(){ focus(-1, -1); });
+
+      // 4 · Link health: the suggestion card
+      t += 6.1;
+      tl.addLabel('hl', t);
+      X.move(R, cur, navAt('health'), t, .6); X.click(R, q(st, '.tw-a-ni[data-r="health"]'), t + .6);
+      R.at(t + .65, function(){ show('health'); });
+      tl.to(arc, { strokeDashoffset: RC * (1 - .82), duration: 1.2, ease: 'power2.out' }, t + .9);
+      countTo(score, 82, '', t + .9, 1.2);
+      tl.fromTo(sug, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: .5, immediateRender: false }, t + 2);
+      X.move(R, cur, pos(st, goB, .5, .6), t + 2.9, .7); X.click(R, goB, t + 3.65);
+      R.at(t + 3.7, function(){ suggestDone(true); say('Draft written from your Voice Kit and sent to Review'); });
+      tl.to(cur, { autoAlpha: 0, duration: .3 }, t + 4.4);
+      R.at(t + 5.6, function(){ say(''); });
+
+      X.end(sc, R, t + 6.4, rest, [{ t: 'Overview', at: 'ov' }, { t: 'Topics', at: 'tp' }, { t: 'Map', at: 'map' }, { t: 'Health', at: 'hl' }]);
+      // after a hold, the play button resumes: put the scene back where the playhead is (chips need their own onUpdate, so chain it)
+      var mark = tl.eventCallback('onUpdate');
+      tl.eventCallback('onUpdate', function(){
+        if (dirty && !tl.paused()){ dirty = false; setTimeout(function(){ if (sc.onSeek) sc.onSeek(); }, 0); }
+        if (mark) mark.apply(this, arguments);
+      });
+    });
+  })();
+
+  /* ===== mission/24-tw-capture.js ===== */
+  /* =========================================================
+     TOPICWEAVE · VOICE KIT (channel tw-capture)
+     A coded replica of the Capture phone prototype (cks-v3 app/mobile.html) in its phone frame, with the
+     Voice Kit idea beside it ("Capture, not homework."):
+       Record : tap the mic, a live waveform and timer, the transcript types in
+       Review : it comes back as a draft in the speaker's words, topic tags arrive one by one
+       Publish: Approve, then Publish; the draft card lands on the topic page beside the phone, a thread between
+     The mic/stop and Approve buttons are live: they jump to that phase and hold the loop.
+     Content is the prototype's own example data (app/mobile.html, app/data.js): "Prototype · sample data".
+     ========================================================= */
+  (function(){
+    var K = SCENE.kit; if (!K || !K.tw || !K.ks) return;
+    var T = K.tw, X = K.ks, C = T.C, q = K.q, qa = K.qa, esc = K.esc, NS = 'http://www.w3.org/2000/svg';
+    var run = X.run, end = X.end, type = X.type;
+    function tap(el, fn){ el.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); fn(e); }); }
+    // offset of el inside root, in root's own (unscaled) pixels
+    function rel(el, root){ var x = 0, y = 0, n = el; while (n && n !== root){ x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; } return { x: x, y: y, w: el.offsetWidth, h: el.offsetHeight }; }
+
+    var MIC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>';
+    var TABS = '<nav class="tw-cap-tabs" aria-hidden="true">' +
+      '<span class="on">' + MIC + 'Capture</span>' +
+      '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 13l2.6-8h12.8L21 13v6H3z"/><path d="M3 13h5l1 2h6l1-2h5"/></svg>Inbox</span>' +
+      '<span><i>2</i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8 12l3 3 5-6"/></svg>Review</span>' +
+      '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg>Pulse</span></nav>';
+    // the prototype's own example: the Friday handoff memo, its draft and its tags (colors from app/data.js)
+    var SAY = '“…the partner closes on Thursday, and the invoice goes out Friday from someone the client has never heard of. That’s where it starts to go wrong…”';
+    var TITLE = 'Every complaint starts at a handoff';
+    var TAGS = [['Client handoffs', '#EF5B3F', 1], ['Client onboarding', '#9B87F5', 1], ['Professional firms', '#B18CFF', 0], ['Journey mapping', '#139E8A', 0]];
+    var NOTES = [['01', 'Talk', 'A memo after a call. Two minutes is plenty.'], ['02', 'In your words', 'The draft starts from your own sentences, tagged from your vocabulary.'], ['03', 'You approve', 'Nothing publishes until you say so. That’s the rule, not a setting.']];
+    var WCOL = ['#9B87F5', '#EF5B3F', '#139E8A', '#4F7BFF'];
+
+    SCENE.add('tw-capture', function(sc){
+      T.fonts(sc);
+      var P = sc.portrait, st = sc.stg;
+      // phone at the prototype's native size (390×800), scaled into place
+      var ph = P ? { k: .72, x: (640 - 390 * .72) / 2, y: 10 } : { k: .86, x: (1200 - 390 * .86) / 2, y: (750 - 800 * .86) / 2 };
+      var cd = P ? { x: 40, y: 618, w: 560, h: 124 } : { x: 836, y: 196, w: 330, h: 360 };
+      st.innerHTML =
+        '<div class="tw-cap-bg"></div>' +
+        '<svg class="tw-cap-thr" viewBox="0 0 ' + sc.SW + ' ' + sc.SH + '" aria-hidden="true"></svg>' +
+        (P ? '' : '<div class="tw-cap-notes"><p class="tw-cap-eye">Voice Kit · Topicweave Capture</p><h3>Capture, not homework.</h3><ol>' +
+          NOTES.map(function(n, i){ return '<li data-i="' + i + '"><b>' + n[0] + '</b><strong>' + esc(n[1]) + '</strong><span>' + esc(n[2]) + '</span></li>'; }).join('') + '</ol></div>') +
+        '<div class="tw-cap-phone" style="left:' + ph.x + 'px;top:' + ph.y + 'px;transform:scale(' + ph.k + ')"><div class="tw-cap-screen">' +
+          '<div class="tw-cap-island"></div><div class="tw-cap-status"><span>9:41</span><span>●●● ⌁ ▮</span></div>' +
+          // home
+          '<section class="tw-cap-sc" data-sc="home"><p class="tw-cap-sub">Good morning</p><h2>What’s on your mind?</h2>' +
+            '<button type="button" class="tw-cap-mic" aria-label="Record a voice memo (jumps to Record)">' + MIC + '</button>' +
+            '<p class="tw-cap-q">Tap and talk. Two minutes is plenty.</p>' +
+            '<div class="tw-cap-mini"><b>2</b><p>drafts waiting for your review</p></div></section>' +
+          // recording
+          '<section class="tw-cap-sc" data-sc="rec"><p class="tw-cap-sub">Recording · simulated</p><h2>“What do new clients get wrong?”</h2>' +
+            '<canvas class="tw-cap-wave" aria-hidden="true"></canvas><div class="tw-cap-timer">1:14</div>' +
+            '<div class="tw-cap-field tw-cap-live"><p class="tw-cap-lab"><i></i>Live transcript</p><p class="tw-cap-say"></p></div>' +
+            '<button type="button" class="tw-cap-stop" aria-label="Record again (jumps to Record)"></button></section>' +
+          // matching
+          '<section class="tw-cap-sc" data-sc="work"><div class="tw-cap-spin"><svg viewBox="0 0 120 120" aria-hidden="true"><line x1="20" y1="40" x2="100" y2="40" stroke="#EF5B3F"/><line x1="20" y1="80" x2="100" y2="80" stroke="#139E8A"/><line x1="40" y1="20" x2="40" y2="100" stroke="#9B87F5"/><line x1="80" y1="20" x2="80" y2="100" stroke="#2F5BEA"/></svg><p>Transcribing and matching<br>to your vocabulary…</p></div></section>' +
+          // the draft, in the speaker's words
+          '<section class="tw-cap-sc" data-sc="draft"><p class="tw-cap-sub">Draft · from your voice memo · 2:14</p><h2>' + esc(TITLE) + '</h2>' +
+            '<div class="tw-cap-read"><p>We’ve read a lot of client complaints over the years. Almost every one of them started at a handoff, the moment work passed from one person to another.</p>' +
+            '<p>The partner closes the deal. Then someone new sends the first invoice, and nobody has told the client who that person is.</p></div>' +
+            '<div class="tw-cap-field"><p class="tw-cap-lab">Suggested tags · from your vocabulary</p><div class="tw-cap-tags">' +
+              TAGS.map(function(t){ return '<span class="tw-cap-tag' + (t[2] ? ' on' : '') + '" style="--c:' + t[1] + '"><i></i>' + esc(t[0]) + '</span>'; }).join('') + '</div></div>' +
+            '<div class="tw-cap-cta"><button type="button" class="tw-cap-ok">Approve</button></div></section>' +
+          // published
+          '<section class="tw-cap-sc" data-sc="done"><div class="tw-cap-done"><div class="tw-cap-tick">✓</div><h2>Published.</h2><p>The library, two topic pages and their related rows updated.</p></div></section>' +
+          TABS + '<div class="tw-cap-toast"></div><div class="tw-cap-touch"></div>' +
         '</div></div>' +
-        '<div class="cx-pv cx-top"><div class="cx-url">yoursite.com/topics/client-onboarding</div><b class="cx-pvt">Client onboarding</b><p>The first month with a new client is a product.</p><em>Reading list</em><div class="cx-rl"><div class="is-new">' + PUB.title + '<span>New</span></div><div>The first 30 days decide the next three years</div></div></div>' +
-        '<div class="cx-pv cx-prj"><div class="cx-url">yoursite.com/work/riverside-clinic</div><b class="cx-pvt">Riverside Clinic intake</b><em>This project demonstrates</em><div class="cx-dem"><span style="--c:' + TEA + '">Journey mapping</span><span class="is-new" style="--c:' + SAF + '">Client onboarding</span><span class="is-new" style="--c:' + COR + '">Service design</span></div><em>Related reading</em><div class="cx-rl"><div class="is-new">' + PUB.title + '</div></div></div>' +
-        '<div class="cx-code"><div class="cx-codeh"><span>JSON-LD · generated from the same fields</span><i></i></div><pre>' + json.map(function(l){ return '<span class="' + l[1] + '">' + esc(l[0]) + '</span>'; }).join('\n') + '</pre></div>' +
-        '<div class="fg-toast"><i></i><span></span></div>' + cursor('a', 'You') + '<div class="fg-fade"></div>';
-      var ti = q(st, '.cx-ti b'), tiCur = q(st, '.cx-ti u'), tps = qa(st, '.cx-tp'), pub = q(st, '.cx-pub'), pill = q(st, '.cx-pill'), stl = q(st, '.cx-stl'), sel = q(st, '.cx-sel');
-      var libN = q(st, '.cx-lib .cx-pvh i'), newEls = qa(st, '.is-new'), lines = qa(st, '.cx-code pre span'), toast = q(st, '.fg-toast'), cur = q(st, '.cur.a'), pvs = qa(st, '.cx-pv, .cx-code');
-      function setPub(on){ pill.textContent = on ? 'Published' : 'Draft'; pill.classList.toggle('live', on); stl.textContent = on ? 'Published · the library, a topic page and a project updated.' : 'Nothing is live until you publish.'; libN.textContent = on ? 8 : 7; }
-      var R = run(sc, function(){ setPub(false); tps.forEach(function(b){ b.setAttribute('aria-pressed', 'false'); }); tiCur.style.display = ''; sel.classList.remove('on'); toast.classList.remove('ok'); q(toast, 'span').textContent = ''; }), tl = R.tl;
-      tl.addLabel('write', 0);
-      tl.set(q(st, '.fg-fade'), { autoAlpha: 0 }, 0).set(cur, { autoAlpha: 0, x: P ? 300 : 200, y: sc.SH + 30 }, 0).set(newEls, { autoAlpha: 0 }, 0).set(lines, { autoAlpha: 0 }, 0).set(toast, { autoAlpha: 0, xPercent: -50 }, 0);
-      tl.fromTo(pvs, { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: .45, stagger: .08, immediateRender: false }, .2);
-      tl.to(cur, { autoAlpha: 1, duration: .2 }, .6);
-      move(R, cur, pos(st, q(st, '.cx-ti'), .2, .6), .6, .7); click(R, q(st, '.cx-ti'), 1.3);
-      var t = type(R, ti, PUB.title, 1.4, 1.5);
-      move(R, cur, pos(st, sel, .5, .6), t + .2, .6); click(R, sel, t + .8); R.at(t + .85, function(){ sel.classList.add('on'); });
-      t += 1.3;
+        // the topic page on the site
+        '<div class="tw-cap-site' + (P ? ' is-p' : '') + '" style="left:' + cd.x + 'px;top:' + cd.y + 'px;width:' + cd.w + 'px;height:' + cd.h + 'px">' + T.bar('yoursite.com/topics/client-handoffs') +
+          '<div class="tw-cap-pg"><div class="tw-cap-pgh"><p class="tw-cap-eye"><i style="background:#EF5B3F"></i>Topic · What you watch for</p><h4>Client handoffs</h4><em class="tw-cap-pill">Draft in review</em></div>' +
+          '<div class="tw-cap-pgl"><p class="tw-cap-lab">Reading list</p><div class="tw-cap-row tw-cap-new"><b>' + esc(TITLE) + '</b><span>New</span></div>' +
+          (P ? '' : '<div class="tw-cap-row"><b>Why handoffs fail on Friday afternoons</b></div><p class="tw-cap-lab">Related topics</p><div class="tw-cap-rel"><span style="--c:#9B87F5"><i></i>Client onboarding</span><span style="--c:#B18CFF"><i></i>Professional firms</span></div>') + '</div></div></div>' +
+        '<div class="tw-cap-fly"><b>' + esc(TITLE) + '</b><span><i style="background:#EF5B3F"></i>Client handoffs <i style="background:#9B87F5"></i>Client onboarding</span></div>' +
+        '<p class="tw-cap-proto">Prototype · sample data</p>' +
+        '<div class="fg-fade"></div>';
+
+      var phone = q(st, '.tw-cap-phone'), scr = q(st, '.tw-cap-screen'), scs = qa(st, '.tw-cap-sc'), mic = q(st, '.tw-cap-mic'), stop = q(st, '.tw-cap-stop');
+      var cv = q(st, '.tw-cap-wave'), timer = q(st, '.tw-cap-timer'), say = q(st, '.tw-cap-say'), reads = qa(st, '.tw-cap-read p'), tags = qa(st, '.tw-cap-tag'), okB = q(st, '.tw-cap-ok');
+      var cta = q(st, '.tw-cap-cta'), toast = q(st, '.tw-cap-toast'), touch = q(st, '.tw-cap-touch'), site = q(st, '.tw-cap-site'), pill = q(st, '.tw-cap-pill'), nrow = q(st, '.tw-cap-new');
+      var fly = q(st, '.tw-cap-fly'), notes = qa(st, '.tw-cap-notes li'), svg = q(st, '.tw-cap-thr'), fade = q(st, '.fg-fade'), lab = q(st, '.tw-cap-live .tw-cap-lab'), nkids = qa(nrow, 'b, span');
+
+      function show(id){ scs.forEach(function(s){ s.classList.toggle('on', s.getAttribute('data-sc') === id); }); }
+      function note(i){ notes.forEach(function(n, k){ n.classList.toggle('on', k === i); }); }
+      function msg(s){ toast.textContent = s || ''; toast.classList.toggle('on', !!s); }
+      function setPub(on){ site.classList.toggle('live', on); nrow.classList.toggle('wait', !on); pill.textContent = on ? 'Published' : 'Draft in review'; }
+
+      // the waveform, drawn from the timeline (no loop of its own)
+      var cx = cv.getContext('2d'), dpr = Math.min(2, window.devicePixelRatio || 1), CW = 350, CH = 120;
+      cv.width = CW * dpr; cv.height = CH * dpr;
+      function wave(s, amp){
+        cx.setTransform(dpr, 0, 0, dpr, 0, 0); cx.clearRect(0, 0, CW, CH); cx.lineWidth = 3; cx.lineCap = 'round';
+        for (var i = 0, n = 46; i < n; i++){
+          var x = (i + .5) * (CW / n), env = Math.sin(i / (n - 1) * Math.PI);
+          var a = Math.max(1.5, env * (.2 + .8 * Math.abs(Math.sin(i * .5 + s * 5) * Math.sin(i * .17 - s * 3))) * CH * .45 * amp);
+          cx.strokeStyle = WCOL[i % 4]; cx.beginPath(); cx.moveTo(x, CH / 2 - a); cx.lineTo(x, CH / 2 + a); cx.stroke();
+        }
+      }
+      function clock(s){ s = Math.floor(s); return Math.floor(s / 60) + ':' + (s % 60 < 10 ? '0' : '') + (s % 60); }
+
+      // stage geometry: phone-local points → stage
+      function sp(el, fx, fy){ var r = rel(el, phone); return { x: ph.x + (r.x + r.w * fx) * ph.k, y: ph.y + (r.y + r.h * fy) * ph.k }; }
+      function stp(el, fx, fy){ var r = rel(el, st); return { x: r.x + r.w * fx, y: r.y + r.h * fy }; }
+      var h2d = q(st, '[data-sc="done"] h2');
+      var a = P ? { x: ph.x + 195 * ph.k, y: ph.y + 800 * ph.k - 4 } : { x: ph.x + 390 * ph.k - 4, y: sp(h2d, 1, .5).y };
+      var b = P ? stp(nrow, .3, 0) : stp(nrow, 0, .5);
+      var thr = document.createElementNS(NS, 'path');
+      thr.setAttribute('d', P ? X.curve(a, { x: b.x, y: b.y - 2 }, true) : X.curve(a, { x: b.x - 2, y: b.y }));
+      thr.setAttribute('class', 'tw-cap-ln'); svg.appendChild(thr);
+      var L = (thr.getTotalLength ? thr.getTotalLength() : 400) + 2; thr.style.strokeDasharray = L; thr.style.strokeDashoffset = L;
+      var dots = [a, b].map(function(p){ var c = document.createElementNS(NS, 'circle'); c.setAttribute('cx', p.x); c.setAttribute('cy', p.y); c.setAttribute('r', 4); c.setAttribute('class', 'tw-cap-dot'); svg.appendChild(c); return c; });
+      var fs = sp(h2d, 0, 0), fw = 300 * ph.k; fs.x += 22 * ph.k;   // the card lifts off the draft's headline, then lands in the reading list
+      var fe = stp(nrow, 0, 0);
+
+      // a fingertip on the glass
+      function press(R, el, t){
+        var r = rel(el, scr);
+        R.tl.set(touch, { x: r.x + r.w / 2 - 22, y: r.y + r.h / 2 - 22 }, t - .01)
+          .fromTo(touch, { autoAlpha: 0, scale: 1.5 }, { autoAlpha: 1, scale: 1, duration: .18, immediateRender: false }, t)
+          .to(touch, { autoAlpha: 0, scale: .8, duration: .25 }, t + .3);
+        X.click(R, el, t + .12);
+      }
+
+      var R = run(sc, function(){
+        show('home'); note(0); msg(''); setPub(false); okB.textContent = 'Approve'; timer.textContent = '1:14'; wave(0, .15);
+        lab.classList.remove('on');
+      }), tl = R.tl;
+      tl.set(fade, { autoAlpha: 0 }, 0).set(touch, { autoAlpha: 0 }, 0).set(fly, { autoAlpha: 0, x: fs.x, y: fs.y, width: fw, scale: 1 }, 0)
+        .set(thr, { strokeDashoffset: L }, 0).set(dots, { autoAlpha: 0 }, 0).set(nkids, { autoAlpha: 0 }, 0)
+        .set(reads, { autoAlpha: 0 }, 0).set(tags, { autoAlpha: 0 }, 0).set(cta, { autoAlpha: 0 }, 0);
+
+      /* 1 · Record */
+      tl.addLabel('record', 0);
+      tl.fromTo(phone, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .5, immediateRender: false }, .05);
+      press(R, mic, 1.7);
+      R.at(1.95, function(){ show('rec'); lab.classList.add('on'); });
+      var w = { s: 0, a: .15 };
+      tl.fromTo(w, { s: 0, a: .15 }, { s: 5, a: 1, duration: 5, ease: 'none', immediateRender: false, onUpdate: function(){ wave(w.s, Math.min(1, w.a * 3)); timer.textContent = clock(74 + w.s * 1.6); } }, 2);
+      type(R, say, SAY, 2.5, 4);
+      press(R, stop, 7.1);
+      R.at(7.3, function(){ show('work'); lab.classList.remove('on'); });
+
+      /* 2 · Review */
+      tl.addLabel('review', 8.1);
+      R.at(8.1, function(){ show('draft'); note(1); });
+      tl.fromTo(reads, { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: .45, stagger: .3, immediateRender: false }, 8.4);
+      tags.forEach(function(g, i){ tl.fromTo(g, { autoAlpha: 0, y: 6, scale: .92 }, { autoAlpha: 1, y: 0, scale: 1, duration: .35, ease: 'back.out(2)', immediateRender: false }, 9.5 + i * .5); });
+      tl.fromTo(cta, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .35, immediateRender: false }, 11.6);
+      var restAt = 12.5;
+
+      /* 3 · Publish */
+      tl.addLabel('publish', 13.1);
+      R.at(13.1, function(){ note(2); });
+      press(R, okB, 13.5);
+      R.at(13.7, function(){ okB.textContent = 'Publish'; msg('Approved. Publish is unlocked.'); });
+      press(R, okB, 14.7);
+      R.at(14.9, function(){ msg(''); show('done'); setPub(true); });
+      tl.fromTo(fly, { autoAlpha: 0, x: fs.x, y: fs.y, scale: 1 }, { autoAlpha: 1, y: fs.y - 10, duration: .3, immediateRender: false }, 14.9)
+        .to(fly, { x: fe.x, y: fe.y, width: nrow.offsetWidth, duration: .9, ease: 'power2.inOut' }, 15.25)
+        .to(fly, { autoAlpha: 0, duration: .2 }, 16.15)
+        .fromTo(nkids, { autoAlpha: 0, y: -4 }, { autoAlpha: 1, y: 0, duration: .3, immediateRender: false }, 16.05)
+        .to(dots[0], { autoAlpha: 1, duration: .2 }, 15.2)
+        .to(thr, { strokeDashoffset: 0, duration: .9, ease: 'power2.inOut' }, 15.25)
+        .to(dots[1], { autoAlpha: 1, duration: .2 }, 16.1);
+      end(sc, R, 20.2, restAt, [{ t: 'Record', at: 'record' }, { t: 'Review', at: 'review' }, { t: 'Publish', at: 'publish' }]);
+
+      // interactive: the mic/stop and Approve jump to their phase, play it through, then hold
+      var hop = null;
+      function jump(label, to){
+        if (hop) hop.kill();
+        if (sc.hold) sc.hold();
+        tl.seek(tl.labels[label]); if (sc.onSeek) sc.onSeek();
+        hop = tl.tweenTo(to, { ease: 'none' });
+      }
+      tap(mic, function(){ jump('record', 7); });
+      tap(stop, function(){ jump('record', 7); });
+      tap(okB, function(){ jump('publish', 17.7); });
+      // the play button or a phase chip takes the loop back
+      sc.capHop = function(){ if (hop){ hop.kill(); hop = null; } };
+      if (!sc.capL){ sc.capL = true; sc.view.addEventListener('click', function(e){ var t = e.target; if (sc.capHop && t.closest && t.closest('.scn-ctl')) sc.capHop(); }, true); }
+    });
+  })();
+
+  /* ===== mission/24-tw-cms.js ===== */
+  /* =========================================================
+     TOPICWEAVE · TAG ONCE (channel tw-cms)
+     A coded replica of the CMS panel prototype (cks-v3 app/cms.html): a generic CMS editor with the Topicweave
+     panel beside it, joined to "Five parts, one shared vocabulary" (src/how-it-works.html): tag once and the
+     entry shows up everywhere it belongs.
+       Entry     : the cursor types a title, the panel reads the draft and suggests topics from the vocabulary
+       Tag       : two suggestions accepted, thread-colored chips land in the Related topics field
+       Publish   : threads draw from the entry to a topic page, a related-reading list and the JSON-LD,
+                   which fills in (Article + about DefinedTerms built from the picked tags)
+       Topic page: the topic page's piece count ticks up
+     Live: a suggested topic toggles (holds the loop, the JSON-LD and the pages update); Publish replays.
+     Content is the prototype's own example data (app/cms.html, app/data.js): "Prototype · sample data".
+     ========================================================= */
+  (function(){
+    var K = SCENE.kit; if (!K || !K.tw || !K.ks) return;
+    var T = K.tw, X = K.ks, C = T.C, q = K.q, qa = K.qa, esc = K.esc;
+    var run = X.run, end = X.end, type = X.type, pos = X.pos, move = X.move, click = X.click;
+    function tap(el, fn){ el.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); fn(e); }); }
+
+    var TITLE = 'Every complaint starts at a handoff', SLUG = 'every-complaint-starts-at-a-handoff';
+    // the prototype's three suggestions (app/cms.html), counts and pieces from app/data.js
+    var TOP = [
+      { n: 'Client handoffs', c: C.coral, cat: 'What you watch for', m: 'strong match', pages: 3, slug: 'client-handoffs',
+        list: ['Why handoffs fail on Friday afternoons'], rel: ['Why handoffs fail on Friday afternoons', 'insights/why-handoffs-fail', 'The first 30 days decide the next three years'],
+        links: [['Topic page: Client handoffs', '+1 piece'], ['Related reading on 2 insights', 'auto']] },
+      { n: 'Client onboarding', c: C.lilac, cat: 'Ideas', m: 'strong match', pages: 7, slug: 'client-onboarding',
+        list: ['Onboarding is a design problem', 'The first 30 days decide the next three years'], rel: ['The first 30 days decide the next three years', 'insights/the-first-30-days', 'Onboarding is a design problem'],
+        links: [['Topic page: Client onboarding', '+1 piece'], ['Riverside Clinic · related reading', 'auto'], ['Library · For new clients', 'auto']] },
+      { n: 'Professional firms', c: C.teal, cat: 'Who you help', m: 'possible', pages: 4, slug: 'professional-firms',
+        list: ['Hale & Partners onboarding'], rel: ['Hale & Partners onboarding', 'work/hale-partners-onboarding', 'Onboarding is a design problem'],
+        links: [['Topic page: Professional firms', '+1 piece']] }
+    ];
+    var PICK = [0, 1];
+    // JSON-LD syntax colors: keys lilac, strings teal (the prototype's pre)
+    function hl(s){
+      var out = '', last = 0, re = /"[^"]*"/g, m;
+      while ((m = re.exec(s))){ var key = /^\s*:/.test(s.slice(re.lastIndex)); out += esc(s.slice(last, m.index)) + '<span class="' + (key ? 'k' : 's') + '">' + esc(m[0]) + '</span>'; last = re.lastIndex; }
+      return out + esc(s.slice(last));
+    }
+
+    SCENE.add('tw-cms', function(sc){
+      T.fonts(sc);
+      var P = sc.portrait, st = sc.stg;
+      var ED = P ? { x: 20, y: 44, w: 600, h: 384, f: 330 } : { x: 28, y: 52, w: 640, h: 648, f: 360 };
+      var RC = P ? { top: [20, 466, 290, 164], rel: [20, 644, 290, 136], ld: [330, 466, 290, 314] }
+                 : { top: [756, 52, 420, 196], rel: [756, 262, 420, 128], ld: [756, 404, 420, 296] };
+      function box(r){ return 'left:' + r[0] + 'px;top:' + r[1] + 'px;width:' + r[2] + 'px;height:' + r[3] + 'px'; }
+      function fld(lab, inner, cls){ return '<div class="tw-cm-f' + (cls ? ' ' + cls : '') + '"><label>' + lab + '</label>' + inner + '</div>'; }
+
+      st.innerHTML = '<div class="tw-cm-bg"></div>' +
+        '<div class="tw-cm-lab"><b>Topicweave inside your CMS</b><span>Prototype · sample data</span></div>' +
+        '<svg class="tw-cm-svg" width="' + sc.SW + '" height="' + sc.SH + '" viewBox="0 0 ' + sc.SW + ' ' + sc.SH + '" aria-hidden="true"></svg>' +
+        '<div class="tw-cm-ed" style="left:' + ED.x + 'px;top:' + ED.y + 'px;width:' + ED.w + 'px;height:' + ED.h + 'px;grid-template-columns:' + ED.f + 'px 1fr">' +
+          '<div class="tw-cm-bar"><span class="tw-cm-dots"><i></i><i></i><i></i></span><b>Insights</b><span class="tw-cm-path">/ New item</span><em class="tw-cm-pill">Draft</em><button type="button" class="tw-cm-pub">Publish</button></div>' +
+          '<div class="tw-cm-form">' +
+            fld('Name', '<div class="tw-cm-in tw-cm-ti"><b></b><u></u></div>') +
+            fld('Slug', '<div class="tw-cm-in tw-cm-sl"><b></b></div>') +
+            fld('Related topics <span>· multi-reference</span>', '<div class="tw-cm-ref"></div>') +
+            (P ? '' : fld('Short summary', '<div class="tw-cm-in tw-cm-ml">Almost every client complaint starts when work passes from one person to another.</div>')) +
+            fld('Body', '<div class="tw-cm-rt"><p>We’ve read a lot of client complaints over the years. Every single one we can remember started at a <span>handoff</span>, the moment work passed from one person to another.</p>' +
+              (P ? '' : '<p>The fix is rarely a new system. It’s one <span>short email on day two</span>: here’s who you’ll hear from next, and why. We send it for every client now.</p>') + '</div>', 'tw-cm-body') +
+          '</div>' +
+          '<aside class="tw-cm-pn" aria-label="Topicweave panel"><div class="tw-cm-ph">' + T.ICON + '<b>Topicweave</b><span>Example Studio</span></div>' +
+            '<div class="tw-cm-blk tw-cm-sugs"><h3>Suggested topics<span>from your vocabulary</span></h3><p class="tw-cm-wait">Suggestions appear as you write.</p>' +
+              TOP.map(function(t, i){ return '<div class="tw-cm-sug" style="--c:' + t.c + '"><i></i><span>' + esc(t.n) + '<small>' + t.m + '</small></span><button type="button" data-i="' + i + '" aria-pressed="false">Add</button></div>'; }).join('') + '</div>' +
+            '<div class="tw-cm-blk"><h3 class="tw-cm-ch">Once published, it connects to</h3><div class="tw-cm-conn"></div></div>' +
+            (P ? '' : '<div class="tw-cm-blk"><h3>Before you publish</h3><div class="tw-cm-ok">Title is a sentence in your voice</div><div class="tw-cm-ok">No words from your never list</div><div class="tw-cm-warn tw-cm-chk">No topic tagged yet</div></div>') +
+          '</aside></div>' +
+        '<div class="tw-cm-card tw-cm-top" style="' + box(RC.top) + '"><div class="tw-cm-url"></div><div class="tw-cm-th1"><div><em class="tw-cm-cat"></em><b class="tw-cm-tn"></b></div><div class="tw-cm-cnt"><b>3</b><span>pieces</span><i>+1</i></div></div>' +
+          '<div class="tw-cm-rl"><div class="tw-cm-new"><span>' + esc(TITLE) + '</span><em>New</em></div><div class="tw-cm-base"></div></div><div class="tw-cm-also"></div></div>' +
+        '<div class="tw-cm-card tw-cm-rel" style="' + box(RC.rel) + '"><div class="tw-cm-url"></div><b class="tw-cm-rt2"></b><em class="tw-cm-sub">Related reading</em>' +
+          '<div class="tw-cm-rl"><div class="tw-cm-new"><span>' + esc(TITLE) + '</span><em>New</em></div></div></div>' +
+        '<div class="tw-cm-card tw-cm-ld" style="' + box(RC.ld) + '"><div class="tw-cm-ldh"><span>JSON-LD · built from your tags</span><i></i></div><p class="tw-cm-ldw">Fills in when you publish.</p><pre></pre></div>' +
+        X.cursor('a', 'You') + '<div class="fg-fade"></div>';
+
+      var svg = q(st, '.tw-cm-svg'), ed = q(st, '.tw-cm-ed'), ti = q(st, '.tw-cm-ti b'), sl = q(st, '.tw-cm-sl b'), refBox = q(st, '.tw-cm-ref');
+      var pill = q(st, '.tw-cm-pill'), pub = q(st, '.tw-cm-pub'), wait = q(st, '.tw-cm-wait'), sugs = qa(st, '.tw-cm-sug'), sugB = qa(st, '.tw-cm-sug button');
+      var conn = q(st, '.tw-cm-conn'), connH = q(st, '.tw-cm-ch'), chk = q(st, '.tw-cm-chk');
+      var top = q(st, '.tw-cm-top'), rel = q(st, '.tw-cm-rel'), ldc = q(st, '.tw-cm-ld'), pre = q(ldc, 'pre'), ldw = q(ldc, '.tw-cm-ldw');
+      var cnt = q(top, '.tw-cm-cnt b'), plus = q(top, '.tw-cm-cnt i'), news = qa(st, '.tw-cm-new'), cur = q(st, '.cur.a'), cards = qa(st, '.tw-cm-card');
+
+      // state: which topics are tagged, published yet, counted yet
+      var sel = [false, false, false], was = [false, false, false], published = false, counted = false;
+      function picked(){ var a = []; sel.forEach(function(s, i){ if (s) a.push(i); }); return a; }
+      function ld(){
+        var pk = picked(), L = [['{']];
+        if (!P) L.push(['  "@context": "https://schema.org",']);
+        L.push(['  "@type": "Article",'], ['  "headline": "' + TITLE + '",'], ['  "about": [' + (pk.length ? '' : ']')]);
+        pk.forEach(function(i, n){
+          var t = TOP[i], last = n === pk.length - 1;
+          if (P) L.push(['    { "@type": "DefinedTerm",', t.c], ['      "name": "' + t.n + '",', t.c], ['      "url": "/topics/' + t.slug + '" }' + (last ? '' : ','), t.c]);
+          else L.push(['    { "@type": "DefinedTerm", "name": "' + t.n + '",', t.c], ['      "url": "/topics/' + t.slug + '" }' + (last ? '' : ','), t.c]);
+        });
+        if (pk.length) L.push(['  ]']);
+        L.push(['}']);
+        return L.map(function(l){ return '<span' + (l[1] ? ' class="hot" style="--c:' + l[1] + '"' : '') + '>' + hl(l[0]) + '</span>'; }).join('\n');
+      }
+      function base(){ var pk = picked(); return pk.length ? TOP[pk[0]].pages : 0; }
+      function render(){
+        var pk = picked();
+        st.className = st.className.replace(/\s*tw-s\d/g, '') + pk.map(function(i){ return ' tw-s' + i; }).join('');
+        sugB.forEach(function(b, i){ b.textContent = sel[i] ? 'Added' : 'Add'; b.classList.toggle('on', sel[i]); b.setAttribute('aria-pressed', sel[i] ? 'true' : 'false'); });
+        refBox.innerHTML = pk.length ? pk.map(function(i){ return '<span class="tw-cm-chip' + (was[i] ? '' : ' is-in') + '" style="--c:' + TOP[i].c + '">' + esc(TOP[i].n) + '</span>'; }).join('')
+          : '<span class="tw-cm-emp">No topics yet. Accept a suggestion from Topicweave →</span>';
+        was = sel.slice();
+        connH.textContent = published ? 'Connected to' : 'Once published, it connects to';
+        conn.innerHTML = pk.length ? pk.map(function(i){ return TOP[i].links.map(function(l){ return '<div style="--c:' + TOP[i].c + '"><i></i>' + esc(l[0]) + '<span>' + (published ? (l[1] === 'auto' ? 'linked' : 'added') : l[1]) + '</span></div>'; }).join(''); }).join('')
+          : '<div class="tw-cm-none">Nothing yet<span>add a topic</span></div>';
+        if (chk){ chk.className = pk.length ? 'tw-cm-ok tw-cm-chk' : 'tw-cm-warn tw-cm-chk'; chk.textContent = pk.length ? pk.length + ' topic' + (pk.length > 1 ? 's' : '') + ' tagged' : 'No topic tagged yet'; }
+        pill.textContent = published ? 'Published' : 'Draft'; pill.classList.toggle('on', published);
+        // the topic page and related reading follow the first tagged topic
+        var t = pk.length ? TOP[pk[0]] : null;
+        top.classList.toggle('is-none', !t); rel.classList.toggle('is-none', !t);
+        q(top, '.tw-cm-url').textContent = 'yoursite.com/topics/' + (t ? t.slug : '…');
+        q(top, '.tw-cm-cat').textContent = t ? 'Topic page · ' + t.cat : 'Topic page';
+        q(top, '.tw-cm-tn').textContent = t ? t.n : 'Tag a topic to give it a home';
+        top.style.setProperty('--c', t ? t.c : C.ash); rel.style.setProperty('--c', t ? t.c : C.ash);
+        cnt.textContent = t ? base() + (counted ? 1 : 0) : '0';
+        q(top, '.tw-cm-base').innerHTML = t ? t.list.slice(0, 1).map(function(x){ return '<div><span>' + esc(x) + '</span></div>'; }).join('') : '';
+        var also = pk.slice(1).map(function(i){ return TOP[i].n + ' (' + (TOP[i].pages + (counted ? 1 : 0)) + ')'; });
+        q(top, '.tw-cm-also').textContent = published && also.length ? 'Also updated: ' + also.join(', ') : '';
+        q(rel, '.tw-cm-url').textContent = 'yoursite.com/' + (t ? t.rel[1] : '…');
+        q(rel, '.tw-cm-rt2').textContent = t ? t.rel[0] : 'No related pages yet';
+        pre.innerHTML = ld();
+      }
+
+      // threads: one strand per topic to each of the three places, shown only for tagged topics
+      var ths = [], knots = [];
+      var eb = ED.y + ED.h, er = ED.x + ED.w, by = ED.y + 18;
+      [top, rel, ldc].forEach(function(card, j){
+        var r = j === 0 ? RC.top : j === 1 ? RC.rel : RC.ld, kx, ky;
+        TOP.forEach(function(t, k){
+          var o = (k - 1) * 6, a, b, d;
+          if (P){
+            if (j === 1){ var gx = 320 + o, gy = r[1] + r[3] / 2 + o; d = 'M' + gx + ' ' + eb + 'L' + gx + ' ' + (gy - 18) + 'Q' + gx + ' ' + gy + ' ' + (r[0] + r[2] + 2) + ' ' + gy; kx = r[0] + r[2]; ky = r[1] + r[3] / 2; }
+            else { a = { x: r[0] + r[2] / 2 + o * 1.4, y: eb }; b = { x: a.x, y: r[1] - 2 }; d = X.curve(a, b, true); kx = r[0] + r[2] / 2; ky = r[1]; }
+          } else {
+            a = { x: er, y: by + o }; b = { x: r[0] - 2, y: (j === 2 ? r[1] + 40 : r[1] + r[3] / 2) + o }; d = X.curve(a, b, false); kx = r[0]; ky = b.y - o;
+          }
+          var p = X.path(svg, d, 'tw-cm-th k' + k); p.style.stroke = t.c; ths.push({ p: p, j: j, k: k });
+        });
+        var kn = K.mk('div', 'tw-cm-knot'); kn.style.left = kx + 'px'; kn.style.top = ky + 'px'; st.appendChild(kn); knots.push(kn);
+      });
+
+      var R = run(sc, function(){
+        sel = [false, false, false]; was = sel.slice(); published = false; counted = false;
+        st.classList.add('is-typing'); wait.textContent = 'Suggestions appear as you write.'; wait.classList.remove('is-busy');
+        render();
+      }), tl = R.tl;
+
+      // 1 · entry
+      tl.addLabel('entry', 0);
+      tl.set(q(st, '.fg-fade'), { autoAlpha: 0 }, 0).set(cur, { autoAlpha: 0, x: P ? 420 : 300, y: sc.SH + 30 }, 0)
+        .set(sugs, { autoAlpha: 0, y: 6 }, 0).set(wait, { autoAlpha: 1 }, 0).set(news, { autoAlpha: 0, height: 0 }, 0)
+        .set(pre, { '--f': 0 }, 0).set(ldw, { autoAlpha: 1 }, 0).set(plus, { autoAlpha: 0 }, 0).set(knots, { autoAlpha: 0, scale: .4 }, 0);
+      ths.forEach(function(o){ X.hide(R, o.p); });
+      tl.fromTo([ed].concat(cards), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .45, stagger: .08, immediateRender: false }, .1);
+      tl.to(cur, { autoAlpha: 1, duration: .2 }, .45);
+      move(R, cur, pos(st, q(st, '.tw-cm-ti'), .25, .6), .45, .65); click(R, q(st, '.tw-cm-ti'), 1.12);
+      var t = type(R, ti, TITLE, 1.2);
+      type(R, sl, SLUG, 1.2, t - 1.2);
+      R.at(t + .1, function(){ wait.textContent = 'Reading the draft…'; wait.classList.add('is-busy'); });
+      tl.to(wait, { autoAlpha: 0, duration: .2 }, t + .6);
+      tl.to(sugs, { autoAlpha: 1, y: 0, duration: .35, stagger: .14 }, t + .7);
+      t += 1.5;
+
+      // 2 · tag
       tl.addLabel('tag', t);
-      PUB.tags.forEach(function(k, i){ var b = tps[k]; move(R, cur, pos(st, b, .5, .6), t + i * .85, .55); click(R, b, t + .55 + i * .85); R.at(t + .6 + i * .85, function(){ b.setAttribute('aria-pressed', 'true'); }); });
-      t += PUB.tags.length * .85 + .3;
+      R.at(t, function(){ st.classList.remove('is-typing'); });
+      PICK.forEach(function(k, i){
+        var b = sugB[k], tt = t + i * .95;
+        move(R, cur, pos(st, b, .5, .6), tt, .55); click(R, b, tt + .58);
+        R.at(tt + .62, function(){ sel[k] = true; render(); });
+      });
+      t += PICK.length * .95 + .35;
+
+      // 3 · publish
       tl.addLabel('publish', t);
-      move(R, cur, pos(st, pub, .5, .6), t, .6); click(R, pub, t + .6);
-      R.at(t + .65, function(){ setPub(true); tiCur.style.display = 'none'; toast.classList.add('ok'); q(toast, 'span').textContent = 'Published · 4 places updated'; });
-      tl.fromTo(toast, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .3, immediateRender: false }, t + .7).to(toast, { autoAlpha: 0, duration: .3 }, t + 3.2);
-      tl.fromTo(newEls, { autoAlpha: 0, y: -8, scale: .95 }, { autoAlpha: 1, y: 0, scale: 1, duration: .45, stagger: .22, ease: 'back.out(1.8)', immediateRender: false }, t + .9);
-      tl.fromTo(lines, { autoAlpha: 0, x: -6 }, { autoAlpha: 1, x: 0, duration: .15, stagger: .09, immediateRender: false }, t + 1.2);
-      tl.to(cur, { autoAlpha: 0, duration: .3 }, t + 1.1);
-      end(sc, R, t + 7, t + 4, [{ t: 'Write', at: 'write' }, { t: 'Tag', at: 'tag' }, { t: 'Publish', at: 'publish' }]);
-      // interactive: topics toggle, Publish replays the publish (from wherever you are)
-      tps.forEach(function(b){ tap(b, function(){ if (sc.hold) sc.hold(); b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); }); });
+      move(R, cur, pos(st, pub, .5, .6), t, .6); click(R, pub, t + .62);
+      R.at(t + .66, function(){ published = true; render(); });
+      tl.to(cur, { autoAlpha: 0, duration: .3 }, t + 1);
+      ths.forEach(function(o){ X.draw(R, o.p, t + .75 + o.j * .28 + o.k * .07, .75); });
+      knots.forEach(function(kn, j){ tl.to(kn, { autoAlpha: 1, scale: 1, duration: .3, ease: 'back.out(2)' }, t + 1.45 + j * .28); });
+      tl.to(news, { autoAlpha: 1, height: 'auto', duration: .4, stagger: .28, ease: 'power2.out' }, t + 1.5);
+      tl.to(ldw, { autoAlpha: 0, duration: .2 }, t + 1.85);
+      tl.to(pre, { '--f': 1, duration: 1.3, ease: 'steps(16)' }, t + 1.95);
+      t += 3.6;
+
+      // 4 · the topic page counts the new piece
+      tl.addLabel('count', t);
+      tl.fromTo(top, { boxShadow: '0 0 0 1px rgba(155,135,245,0)' }, { boxShadow: '0 0 0 1px rgba(155,135,245,.9), 0 0 40px rgba(155,135,245,.35)', duration: .35, yoyo: true, repeat: 1, immediateRender: false }, t);
+      var o = { v: 0 };
+      tl.fromTo(o, { v: 0 }, { v: 1, duration: .6, ease: 'power1.out', immediateRender: false, onUpdate: function(){ if (picked().length) cnt.textContent = base() + Math.round(o.v); } }, t + .1);
+      tl.fromTo(plus, { autoAlpha: 0, y: 6 }, { autoAlpha: 1, y: 0, duration: .3, ease: 'back.out(2)', immediateRender: false }, t + .3);
+      R.at(t + .72, function(){ counted = true; render(); });
+
+      end(sc, R, t + 5, t + 1.6, [{ t: 'Entry', at: 'entry' }, { t: 'Tag', at: 'tag' }, { t: 'Publish', at: 'publish' }, { t: 'Topic page', at: 'count' }]);
+      var done = tl.labels.count + 1;
+
+      // live: a suggestion toggles the tag (jumping to the published state first), the JSON-LD and pages follow
+      sugB.forEach(function(b, i){ tap(b, function(){
+        if (sc.hold) sc.hold();
+        if (!counted){ tl.seek(done); if (sc.onSeek) sc.onSeek(); }
+        sel[i] = !sel[i]; render();
+        ldc.classList.remove('is-flash'); void ldc.offsetWidth; ldc.classList.add('is-flash');
+      }); });
       tap(pub, function(){ tl.seek(tl.labels.publish + .5); if (sc.onSeek) sc.onSeek(); if (sc.resume) sc.resume(); });
     });
+  })();
 
-    /* ---------------- 6 · SITE PLAN: a FigJam board on CKS paper, four threads woven through every decision ---------------- */
-    // lanes of stickies (Plan / Design / Build); each thread is an idea that runs through one sticky per lane
-    var PL = [
-      ['Plan', 'ideation: what the site has to do', '#FFE68A', [['One link that sells the install', 'Proposals get a single URL that explains, demos and prices it.'], ['A six-category vocabulary', 'Reused by the story, the map and the sketch tool.'], ['Show it, don’t claim it', 'Every promise becomes a demo you can touch.'], ['No fake numbers', 'No logos, reviews or rankings. One real stat or none.']]],
-      ['Design', 'wireframes, then the look', '#FFC9BB', [['The loom = connecting what you know', 'A woven hero instead of another gradient blob.'], ['Four thread colors, four ideas', 'Saffron, coral, teal, cobalt: the mark, the loom and the map share them.'], ['Five personalities, one set', 'The same components wear a law firm, a bakery, a studio…'], ['Every demo says it’s a demo', 'Simulations are labeled in the interface, not a footnote.']]],
-      ['Build', 'coded by hand from the wireframes', '#BFEBDF', [['Plain HTML, CSS, JS', 'No framework. GitHub Actions ships it to Hostinger.'], ['Each demo loads on its own page', 'Small scripts, nothing shared that isn’t needed.'], ['⌘K search that never drifts', 'The index reads every page’s sections.'], ['The demo form says so', 'It sends nothing, and tells you before you type.']]]
+  /* ===== mission/24-tw-loom.js ===== */
+  /* =========================================================
+     TOPICWEAVE · THE LOOM (channel tw-loom)
+     A compact port of the v3 site's signature (cks-v3 js/loom.js): short thread fibers in the four weave
+     colors fly in and weave the Topicweave mark (the loom's MARK bar geometry, over/under included) beside
+     the Home hero, then re-weave through the shapes Home uses per section, each with that section's line:
+       scatter (The problem) → threads (Tag once) → graph (Connected) → weave (Your CMS) → night sky
+     Positions are a pure function of the timeline time (so phase chips seek cleanly); drawing happens in a
+     tween's onUpdate, i.e. only while the scene plays. Click/tap sends a burst + ripple through the threads
+     (CKSLoom.burst), a fine pointer parts them gently; both kick a short rAF only while the timeline is paused.
+     ========================================================= */
+  (function(){
+    var K = SCENE.kit; if (!K || !K.tw || !K.ks) return;
+    var T = K.tw, X = K.ks, q = K.q, qa = K.qa, esc = K.esc;
+    var TAU = Math.PI * 2, PI = Math.PI, HP = Math.PI / 2;
+    var LIL = 0, COR = 1, TEA = 2, COB = 3, BONE = 4, WHITE = 5;
+    var COLS = [T.C.lilac, T.C.coral, T.C.teal, T.C.cobalt, '#E9E6DF', '#f3f1ff'];
+    var LEVELS = 8;
+    function clamp(v, a, b){ return v < a ? a : v > b ? b : v; }
+    function smooth(t){ return t * t * (3 - 2 * t); }
+    function lerp(a, b, t){ return a + (b - a) * t; }
+    function fract(v){ return v - Math.floor(v); }
+    function ease3(v){ return 1 - Math.pow(1 - v, 3); }
+    function angleLerp(a, b, t){ var d = (b - a) % PI; if (d > HP) d -= PI; else if (d < -HP) d += PI; return a + d * t; }
+
+    // ---- the loom's MARK (24-unit box, the 2026-10-02 logo) — x0, y0, x1, y1, horizontal ----
+    var MARK = [];
+    MARK[COR] = [2.5, 6.53, 21.5, 10.75, true];
+    MARK[TEA] = [2.5, 13.25, 21.5, 17.47, true];
+    MARK[LIL] = [6.53, 2.5, 10.75, 21.5, false];
+    MARK[COB] = [13.25, 2.5, 17.47, 21.5, false];
+    // lilac over coral · coral over cobalt · teal over lilac · cobalt over teal
+    function under(c, gx, gy){
+      if (c === COR) return gx > 6.53 && gx < 10.75;
+      if (c === COB) return gy > 6.53 && gy < 10.75;
+      if (c === LIL) return gy > 13.25 && gy < 17.47;
+      if (c === TEA) return gx > 13.25 && gx < 17.47;
+      return false;
+    }
+    // ---- Home's example content (cks-v3 loom.js label sets) ----
+    var ISLES = [[-0.95, -0.72], [0.75, -0.9], [1.05, 0.45], [-0.55, 0.78], [0.1, -0.05]];
+    var ISLE_N = ['Services page', 'Portfolio', 'Blog', 'FAQ', 'YouTube'];
+    var PAGES = ['Services page', 'Riverside Clinic', 'Hale & Partners', 'Blog · 2023', 'FAQ', 'YouTube'];
+    var TOPICS = ['Client onboarding', 'Journey mapping', 'Client handoffs'];
+    var TLINKS = [[0, 0], [0, 1], [1, 0], [1, 1], [2, 2], [3, 0], [3, 2], [4, 0], [5, 1], [5, 2]];
+    function py(k){ return -0.85 + (k / 5) * 1.7; }
+    function ty(j){ return -0.6 + j * 0.6; }
+    var HUBS = ['Professional firms', 'Service design', 'Journey mapping', 'Client handoffs', 'Client onboarding', 'Plain-language UX'];
+    var EDGES = [];
+    (function(){ for (var p = 0; p < 12; p++){ var a = Math.floor(p / 2); EDGES.push([p, a], [p, (a + 1) % 6]); if (p === 0 || p === 6) EDGES.push([p, (a + 3) % 6]); } })();
+    function hubXY(k){ var a = -HP + (k / 6) * TAU; return [Math.cos(a) * 0.42, Math.sin(a) * 0.42]; }
+    function pieceXY(p){ var a = -HP + ((p + 0.5) / 12) * TAU; return [Math.cos(a) * 0.98, Math.sin(a) * 0.98]; }
+    var MOON = [0, -0.12, 0.3], BITE = [0.14, -0.2, 0.26];
+
+    // ---- the story: one formation per phase, with Home's section line ----
+    var PH = [
+      { f: 'mark', chip: 'Mark', eb: 'Be known for what you know', h: 'Turn what you know into a site people and AI can follow.', hero: true },
+      { f: 'scatter', chip: 'Scattered', eb: 'The problem', h: 'AI answers reward sites that connect the dots. Most don’t.' },
+      { f: 'threads', chip: 'Tag once', eb: 'Step two', h: 'Tag once. Get real links.' },
+      { f: 'graph', chip: 'Connected', eb: 'Step three', h: 'Then it connects itself.' },
+      { f: 'weave', chip: 'Woven', eb: 'No lock-in', h: 'Built into your CMS. Works with your tools.', tags: [['Webflow CMS', LIL], ['WordPress', COB], ['Sanity', TEA], ['Markdown', COR]] },
+      { f: 'sky', chip: 'Night', eb: 'While you get on with your day', h: 'It works while you don’t.', clock: '2:00 am' }
     ];
-    // [name, color, sticky column per lane]
-    var TH = [['One link', COB, [0, 0, 0]], ['Vocabulary', SAF, [1, 1, 2]], ['Show, don’t claim', COR, [2, 2, 1]], ['Honesty', TEA, [3, 3, 3]]];
-    SCENE.add('cks-plan', function(sc){
-      fonts(sc);
+    var START = [0, 5.2, 10, 15, 19.8, 24.6], TR = 1.7, LOOP = 29.6, REST = 4.2;
+
+    SCENE.add('tw-loom', function(sc){
+      T.fonts(sc);
+      var P = sc.portrait, st = sc.stg, SW = sc.SW, SH = sc.SH;
+      var CX = P ? 320 : 820, CY = P ? 505 : 378, RU = P ? 176 : 245; // the shape's stage: center + unit radius
+      var N = P ? 340 : 600, reduce = K.reduce;
+      var fine = !!(window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches);
+
+      // ---- DOM: night backdrop, canvas, brand, captions, chip labels, hint ----
+      function chip(txt, col){ return '<span class="tw-lm-chip"><i style="background:' + COLS[col] + '"></i>' + esc(txt) + '</span>'; }
+      function lab(ux, uy, txt, col, al){ return '<div class="tw-lm-lab tw-lm-' + al + '" style="left:' + Math.round(CX + ux * RU) + 'px;top:' + Math.round(CY + uy * RU) + 'px">' + chip(txt, col) + '</div>'; }
+      var labs = ['', '', '', '', '', ''];
+      labs[1] = ISLE_N.map(function(s, k){ return lab(ISLES[k][0], ISLES[k][1] + 0.34, s, k % 4, 'c'); }).join('');
+      labs[2] = PAGES.map(function(s, k){ return lab(-0.9, py(k), s, k % 4, 'r'); }).join('') + TOPICS.map(function(s, j){ return lab(0.93, ty(j), s, [LIL, COR, TEA][j], 'l'); }).join('');
+      labs[3] = HUBS.map(function(s, k){ var h = hubXY(k), d = Math.sqrt(h[0] * h[0] + h[1] * h[1]) || 1; return lab(h[0] + h[0] / d * 0.2, h[1] + h[1] / d * 0.16, s, (k + 1) % 4, 'c'); }).join('');
+      st.innerHTML =
+        '<div class="tw-lm-sky"></div><canvas class="tw-lm-cv" aria-hidden="true"></canvas>' +
+        '<div class="tw-lm-brand">' + T.LOGO + '</div>' +
+        (reduce ? '' : '<div class="tw-lm-hint">' + (fine ? 'Click the threads' : 'Tap the threads') + '</div>') +
+        '<div class="tw-lm-copy">' + PH.map(function(p, i){
+          return '<div class="tw-lm-cap' + (p.hero ? ' is-hero' : '') + '" data-p="' + i + '"><p class="tw-lm-eb">' + esc(p.eb) + '</p>' +
+            (p.hero ? '<h3 class="tw-lm-h1">' : '<h3 class="tw-lm-h2">') + esc(p.h) + '</h3>' +
+            (p.tags ? '<div class="tw-lm-tags">' + p.tags.map(function(g){ return chip(g[0], g[1]); }).join('') + '</div>' : '') +
+            (p.clock ? '<p class="tw-lm-clock">' + esc(p.clock) + '</p>' : '') + '</div>';
+        }).join('') + '</div>' +
+        labs.map(function(s, i){ return s ? '<div class="tw-lm-labs" data-p="' + i + '">' + s + '</div>' : ''; }).join('') +
+        '<div class="fg-fade"></div>';
+      var cv = q(st, '.tw-lm-cv'), ctx = cv.getContext('2d'), caps = qa(st, '.tw-lm-cap'), lsets = qa(st, '.tw-lm-labs'), sky = q(st, '.tw-lm-sky'), hint = q(st, '.tw-lm-hint');
+      var DS = Math.min(2, Math.max(1, (sc.k || 1) * (window.devicePixelRatio || 1)));
+      cv.width = Math.round(SW * DS); cv.height = Math.round(SH * DS);
+
+      // ---- threads ----
+      var seed = 20260930;
+      function rnd(){ seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+      function F32(){ return new Float32Array(N); }
+      var R1 = F32(), R2 = F32(), R3 = F32(), R4 = F32(), R5 = F32(), SX = F32(), SY = F32(), SA = F32(), OX = F32(), OY = F32(), DX = F32(), DY = F32(), MX = F32(), MY = F32();
+      var C = new Uint8Array(N), BK = new Int16Array(N), ORDER = new Int32Array(N), NB = COLS.length * LEVELS, CNT = new Int32Array(NB + 1), FILL = new Int32Array(NB + 1);
+      var EXA = F32(), EYA = F32();
+      var i, s3 = 104729;
+      function r3(){ s3 = (s3 * 16807) % 2147483647; return s3 / 2147483647; }
+      for (i = 0; i < N; i++){
+        var v = rnd();
+        C[i] = v < 0.1 ? BONE : Math.min(3, Math.floor((v - 0.1) / 0.225));
+        R1[i] = rnd(); R2[i] = rnd(); R3[i] = rnd(); R4[i] = rnd(); R5[i] = rnd();
+        // the intro: each fiber flies in from outside the stage
+        var th = R5[i] * TAU, far = 1.9 + R2[i] * 1.2;
+        SX[i] = Math.cos(th) * far * (SW / RU) * 0.5; SY[i] = Math.sin(th) * far * (SH / RU) * 0.5; SA[i] = R3[i] * PI;
+        // the moon: a disc with a bite out of it
+        var mx = 0, my = 0;
+        for (var n = 0; n < 40; n++){ var a = r3() * TAU, rr = Math.sqrt(r3()) * MOON[2]; mx = MOON[0] + Math.cos(a) * rr; my = MOON[1] + Math.sin(a) * rr; if (Math.sqrt(Math.pow(mx - BITE[0], 2) + Math.pow(my - BITE[1], 2)) > BITE[2]) break; }
+        MX[i] = mx; MY[i] = my;
+      }
+
+      // ---- formations (unit space, y down), ported from loom.js ----
+      var o = [0, 0, 0, 0, 1], Pt = { x: 0, y: 0, a: 0 };
+      function set(x, y, a, al, ln){ o[0] = x; o[1] = y; o[2] = a; o[3] = al; o[4] = ln == null ? 1 : ln; }
+      function cubic(p0, p1, p2, p3, s){
+        var m = 1 - s;
+        Pt.x = m * m * m * p0[0] + 3 * m * m * s * p1[0] + 3 * m * s * s * p2[0] + s * s * s * p3[0];
+        Pt.y = m * m * m * p0[1] + 3 * m * m * s * p1[1] + 3 * m * s * s * p2[1] + s * s * s * p3[1];
+        var dx = 3 * m * m * (p1[0] - p0[0]) + 6 * m * s * (p2[0] - p1[0]) + 3 * s * s * (p3[0] - p2[0]);
+        var dy = 3 * m * m * (p1[1] - p0[1]) + 6 * m * s * (p2[1] - p1[1]) + 3 * s * s * (p3[1] - p2[1]);
+        Pt.a = Math.atan2(dy, dx);
+      }
+      function knot(i, cx, cy, rad, t, al){ var th = R1[i] * TAU + t * (R5[i] - 0.5) * 0.8, rr = rad * Math.sqrt(R2[i]); set(cx + Math.cos(th) * rr, cy + Math.sin(th) * rr, th + HP, al); }
+      function drift(i, t, spread, al){
+        set((R1[i] * 2 - 1) * spread + Math.sin(t * 0.07 + R3[i] * 9) * 0.08, (R2[i] * 2 - 1) * spread * 0.62 + Math.cos(t * 0.06 + R4[i] * 9) * 0.08,
+          R3[i] * PI + t * 0.05 * (R5[i] - 0.5), al * (0.5 + 0.5 * R5[i]));
+      }
+      var F = {
+        mark: function(i, t){
+          var c = C[i]; if (c === BONE) return drift(i, t, P ? 1.7 : 2.4, 0.3);
+          var b = MARK[c], along = fract(R1[i] + t * 0.035 * (c % 2 ? 1 : -1) * (0.8 + R4[i] * 0.4)), across = R2[i];
+          var wob = Math.sin(along * 9 + t * 1.1 + c) * 0.24, gx, gy, a;
+          if (b[4]){ gx = b[0] + (b[2] - b[0]) * along; gy = b[1] + 0.35 + (b[3] - b[1] - 0.7) * across + wob; a = 0; }
+          else { gy = b[1] + (b[3] - b[1]) * along; gx = b[0] + 0.35 + (b[2] - b[0] - 0.7) * across + wob; a = HP; }
+          var tilt = Math.sin(t * 0.25) * 0.05, x = (gx - 12) / 11.2, y = (gy - 12) / 11.2, cs = Math.cos(tilt), sn = Math.sin(tilt);
+          set(x * cs - y * sn, x * sn + y * cs, a + tilt + (R3[i] - 0.5) * 0.3, under(c, gx, gy) ? 0.14 : 0.95, 1.2);
+        },
+        scatter: function(i, t){
+          if (R4[i] < 0.34) return drift(i, t, P ? 1.7 : 2.3, 0.4);
+          var k = i % 5, c = ISLES[k], th = R1[i] * TAU + t * 0.04 * (k % 2 ? 1 : -1), rr = 0.26 * Math.sqrt(R2[i]);
+          set(c[0] + Math.cos(th) * rr, c[1] + Math.sin(th) * rr * 0.8, R3[i] * PI + t * 0.1, 0.75);
+        },
+        threads: function(i, t){
+          if (R4[i] < 0.2){ var left = R3[i] < 0.62, k = left ? i % 6 : i % 3; return knot(i, left ? -0.8 : 0.8, left ? py(k) : ty(k), left ? 0.05 : 0.09, t, 0.9); }
+          var e = TLINKS[i % TLINKS.length], y0 = py(e[0]), y1 = ty(e[1]);
+          cubic([-0.8, y0], [-0.15, y0], [0.15, y1], [0.8, y1], fract(R1[i] + t * 0.05));
+          var sp = (R2[i] - 0.5) * 0.035;
+          set(Pt.x - Math.sin(Pt.a) * sp, Pt.y + Math.cos(Pt.a) * sp, Pt.a, 0.85);
+        },
+        graph: function(i, t){
+          var r = R4[i], h, a, b;
+          if (r < 0.2){ h = hubXY(i % 6); return knot(i, h[0], h[1], 0.1, t, 0.95); }
+          if (r < 0.32){ h = pieceXY(i % 12); return knot(i, h[0], h[1], 0.045, t, 0.8); }
+          var e = EDGES[i % EDGES.length]; a = pieceXY(e[0]); b = hubXY(e[1]);
+          var mx = (a[0] + b[0]) / 2 * 0.9, my = (a[1] + b[1]) / 2 * 0.9;
+          cubic(a, [mx, my], [mx, my], b, fract(R1[i] + t * 0.04 * (R5[i] < 0.5 ? 1 : -1)));
+          set(Pt.x, Pt.y, Pt.a, 0.62);
+        },
+        weave: function(i, t){
+          var c = C[i]; if (c === BONE) return drift(i, t, P ? 1.7 : 2.3, 0.3);
+          var n = 9, vert = c === LIL || c === COB, j = i % n, lane = -0.88 + (j / (n - 1)) * 1.76, along = -0.95 + R1[i] * 1.9;
+          var wave = Math.sin(along * 3 + t * 0.7 + j) * 0.03, x = vert ? lane + wave : along, y = vert ? along : lane + wave;
+          var gx = Math.round((x + 0.88) / 0.22), gy = Math.round((y + 0.88) / 0.22);
+          var near = Math.abs(x - (-0.88 + gx * 0.22)) < 0.06 && Math.abs(y - (-0.88 + gy * 0.22)) < 0.06, top = (gx + gy) % 2 === 0 ? vert : !vert;
+          var yaw = Math.sin(t * 0.18) * 0.35, z = x * Math.sin(yaw), persp = 1 / (1 + z * 0.35);
+          set(x * Math.cos(yaw) * persp, y * persp, vert ? HP : 0, near && !top ? 0.12 : 0.9);
+        },
+        sky: function(i, t){
+          var g = i % 20;
+          if (g < 8){ var nx = MX[i] + Math.sin(t * 0.6 + R3[i] * 9) * 0.004; return set(nx, MY[i], Math.atan2(MY[i] - MOON[1], nx - MOON[0]) + HP, 1, 1.05); }
+          var x = (-CX + R3[i] * SW) / RU, y = (-CY + R5[i] * SH) / RU;
+          var near = Math.sqrt(Math.pow(x - MOON[0], 2) + Math.pow(y - MOON[1], 2)) < MOON[2] + 0.1;
+          if (g === 15){ // a shooting star every few seconds: a bright head with a fading tail
+            var per = 4, k = Math.floor(t / per), ph = t - k * per, dur = 0.9, pr = clamp(ph / dur, 0, 1);
+            var hs1 = fract(Math.sin(k * 12.9898 + 78.233) * 43758.5453), dir = hs1 < 0.5 ? -1 : 1, ang = 0.45 + hs1 * 0.2;
+            var head = smooth(pr) * 0.9, d = Math.max(0, head - R1[i] * 0.32 * Math.min(1, pr * 3)), x0 = dir * 0.62, y0 = -0.75;
+            return set(x0 + Math.cos(ang) * dir * d, y0 + Math.sin(ang) * d, Math.atan2(Math.sin(ang), Math.cos(ang) * dir), ph < dur ? (1 - R1[i]) * Math.sin(pr * PI) * 1.1 : 0, 0.9);
+          }
+          set(x, y, R2[i] * PI, near ? 0 : 0.3 + 0.6 * (0.5 + 0.5 * Math.sin(t * 1.3 + R1[i] * 40)), 0.4);
+        }
+      };
+
+      // ---- interaction state ----
+      var mxp = -9999, myp = -9999, bAt = -1, bx = 0, by = 0, lastNow = 0, raf = 0;
+      function toStage(e){ var r = cv.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * SW, (e.clientY - r.top) / r.height * SH]; }
+      function idle(){ return !sc.tl || sc.tl.paused(); }
+      // while the timeline is paused, a click or pointer still animates: a short rAF that stops once the threads settle
+      function kick(){
+        if (raf || !idle()) return;
+        lastNow = 0;
+        raf = requestAnimationFrame(function step(){
+          raf = 0; if (!cv.isConnected || !idle()) return;
+          var busy = render();
+          if (busy) raf = requestAnimationFrame(step);
+        });
+      }
+      if (!reduce){
+        cv.addEventListener('pointerdown', function(e){
+          var p = toStage(e); bx = p[0]; by = p[1]; bAt = performance.now();
+          for (var i = 0; i < N; i++){
+            var dx = DX[i] - bx, dy = DY[i] - by, d = Math.sqrt(dx * dx + dy * dy) || 1, f = 34 * (0.35 + R3[i]) * (1 - smooth(clamp(d / 620, 0, 1)));
+            OX[i] += dx / d * f; OY[i] += dy / d * f;
+          }
+          if (hint) hint.classList.add('is-used');
+          kick();
+        });
+        if (fine){
+          cv.addEventListener('pointermove', function(e){ var p = toStage(e); mxp = p[0]; myp = p[1]; kick(); });
+          cv.addEventListener('pointerleave', function(){ mxp = myp = -9999; });
+        }
+      }
+
+      // ---- one frame at the timeline's current time ----
+      var tl;
+      function render(){
+        if (!tl || !cv.isConnected) return false;
+        var t = tl.time(), now = performance.now(), dt = lastNow ? clamp((now - lastNow) / 1000, 0, 0.05) : 0.016, FR = dt * 60;
+        lastNow = now;
+        var ph = 0; for (var k = 1; k < START.length; k++) if (t >= START[k]) ph = k;
+        var loc = t - START[ph], fa = F[PH[ph].f], fb = null, bt = 1;
+        if (ph > 0 && loc < TR){ fb = fa; fa = F[PH[ph - 1].f]; bt = loc / TR; }
+        var nightA = PH[ph].f === 'sky', nightB = ph > 0 && PH[ph - 1].f === 'sky';
+        var el = bAt > 0 ? (now - bAt) / 1000 : 9, ripOn = el < 1.6, busy = ripOn;
+        var baseLen = P ? 11 : 12, copyEdge = P ? 300 : (ph === 0 ? 560 : 500);
+        var i, ux, uy, ang, al, ln, ti;
+        for (i = 0; i < N; i++){
+          fa(i, t); ux = o[0]; uy = o[1]; ang = o[2]; al = o[3]; ln = o[4];
+          var col = C[i];
+          if (ph === 0){ // the intro: fly in from outside and settle into the mark, each fiber at its own moment
+            var pi = ease3(clamp((t - 0.15 - R1[i] * 1.5) / 1.15, 0, 1));
+            if (pi < 1){
+              var sw = Math.sin(pi * PI) * 0.25;
+              ux = lerp(SX[i], ux, pi) + Math.sin(R2[i] * 30 + t * 2) * sw; uy = lerp(SY[i], uy, pi) + Math.cos(R4[i] * 30 + t * 2) * sw;
+              ang = angleLerp(SA[i], ang, pi); al = lerp(0.35, al, pi); ln = lerp(1.6, ln, pi);
+            }
+          } else if (fb){
+            fb(i, t); ti = smooth(clamp(bt * 1.6 - R4[i] * 0.6, 0, 1));
+            ux = lerp(ux, o[0], ti); uy = lerp(uy, o[1], ti); ang = angleLerp(ang, o[2], ti); al = lerp(al, o[3], ti); ln = lerp(ln, o[4], ti);
+            var loose = Math.sin(ti * PI) * 0.18; ux += Math.sin(R1[i] * 40 + t) * loose; uy += Math.cos(R2[i] * 40 + t) * loose;
+            if (nightA && ti > 0.5) col = WHITE;
+          }
+          if (nightA && !fb) col = WHITE;
+          if (nightB && fb && ti < 0.5) col = WHITE;
+          var x = CX + ux * RU, y = CY + uy * RU;
+          // pointer: fibers part around the cursor; burst offsets ease back
+          if (mxp > -999){
+            var dx = x + OX[i] - mxp, dy = y + OY[i] - myp, d2 = dx * dx + dy * dy;
+            if (d2 < 8100){ var dd = Math.sqrt(d2) || 1, f = (1 - dd / 90) * 4.2; OX[i] += dx / dd * f * FR; OY[i] += dy / dd * f * FR; busy = true; }
+          }
+          var dk = Math.pow(0.92, FR); OX[i] *= dk; OY[i] *= dk;
+          if (OX[i] > 0.3 || OX[i] < -0.3 || OY[i] > 0.3 || OY[i] < -0.3) busy = true;
+          x += OX[i]; y += OY[i]; DX[i] = x; DY[i] = y;
+          // fade near the copy and the stage edges (loom.js mask(), simplified)
+          var m = P ? clamp((y - copyEdge) / 80, 0.15, 1) : clamp((x - copyEdge) / 110, 0.15, 1);
+          if (nightA && !fb) m = Math.max(m, 0.55);
+          m *= clamp(Math.min(x, SW - x, y, SH - y) / 50, 0, 1);
+          var tw = reduce ? 1 : 0.8 + 0.2 * Math.sin(t * 1.7 + R5[i] * 30), rip = 0;
+          if (ripOn){ var rd = Math.sqrt((x - bx) * (x - bx) + (y - by) * (y - by)), fr = el * 620, q2 = (rd - fr) / 55; rip = Math.exp(-q2 * q2) * (1 - el / 1.6); }
+          var alpha = Math.min(1, al * m * tw + rip * m);
+          if (alpha < 0.03){ BK[i] = -1; continue; }
+          BK[i] = col * LEVELS + clamp(Math.round(alpha * LEVELS), 1, LEVELS) - 1;
+          var hl = baseLen * ln * (1 + rip * 1.5) * (0.7 + R3[i] * 0.6) * 0.5;
+          EXA[i] = Math.cos(ang) * hl; EYA[i] = Math.sin(ang) * hl;
+        }
+        // draw: one stroke per color × opacity step
+        ctx.setTransform(DS, 0, 0, DS, 0, 0); ctx.clearRect(0, 0, SW, SH);
+        ctx.lineCap = 'round'; ctx.lineWidth = P ? 1.7 : 1.6;
+        var b;
+        for (b = 0; b <= NB; b++) CNT[b] = 0;
+        for (i = 0; i < N; i++) if (BK[i] >= 0) CNT[BK[i] + 1]++;
+        for (b = 0; b < NB; b++) CNT[b + 1] += CNT[b];
+        for (b = 0; b <= NB; b++) FILL[b] = CNT[b];
+        for (i = 0; i < N; i++) if (BK[i] >= 0) ORDER[FILL[BK[i]]++] = i;
+        for (b = 0; b < NB; b++){
+          if (CNT[b] === CNT[b + 1]) continue;
+          ctx.strokeStyle = COLS[Math.floor(b / LEVELS)]; ctx.globalAlpha = ((b % LEVELS) + 1) / LEVELS; ctx.beginPath();
+          for (var j = CNT[b]; j < CNT[b + 1]; j++){ i = ORDER[j]; ctx.moveTo(DX[i] - EXA[i], DY[i] - EYA[i]); ctx.lineTo(DX[i] + EXA[i], DY[i] + EYA[i]); }
+          ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+        return busy;
+      }
+
+      // ---- the timeline ----
+      var R = X.run(sc, function(){ lastNow = 0; });
+      tl = R.tl;
+      tl.set(caps.concat(lsets), { autoAlpha: 0 }, 0).set(sky, { autoAlpha: 0 }, 0).set(q(st, '.fg-fade'), { autoAlpha: 0 }, 0);
+      var drv = { v: 0 };
+      tl.to(drv, { v: 1, duration: LOOP + 0.5, ease: 'none', onUpdate: render }, 0);
+      PH.forEach(function(p, n){
+        var s = START[n], e = n < PH.length - 1 ? START[n + 1] : LOOP;
+        tl.addLabel('p' + n, s);
+        var c = caps[n], inner = qa(c, '.tw-lm-eb,h3,.tw-lm-tags,.tw-lm-clock'), at = n === 0 ? 1.2 : s + 0.55;
+        tl.fromTo(c, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3, immediateRender: false }, at);
+        tl.fromTo(inner, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.12, ease: 'power2.out', immediateRender: false }, at);
+        if (n < PH.length - 1) tl.to(c, { autoAlpha: 0, y: -10, duration: 0.4, ease: 'power1.in' }, e - 0.35).set(c, { y: 0 }, e + 0.1);
+        var ls = q(st, '.tw-lm-labs[data-p="' + n + '"]');
+        if (ls){
+          tl.fromTo(qa(ls, '.tw-lm-lab'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.35, stagger: 0.06, immediateRender: false }, s + 1.3);
+          tl.fromTo(ls, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01, immediateRender: false }, s + 1.29);
+          tl.to(ls, { autoAlpha: 0, duration: 0.3 }, e - 0.3);
+        }
+      });
+      // night: the navy sky comes up behind the threads (the site's day-to-night section, at 2 am)
+      tl.fromTo(sky, { autoAlpha: 0 }, { autoAlpha: 1, duration: TR, ease: 'power1.inOut', immediateRender: false }, START[5]);
+      X.end(sc, R, LOOP, REST, PH.map(function(p, n){ return { t: p.chip, at: 'p' + n }; }));
+      // seek() suppresses the driver's onUpdate: redraw after every chip / reduced-motion seek
+      var os = sc.onSeek; sc.onSeek = function(){ os(); lastNow = 0; render(); };
+      render();
+    });
+  })();
+
+  /* ===== mission/24-tw-plan.js ===== */
+  /* =========================================================
+     TOPICWEAVE · SITE PLAN (channel tw-plan)
+     The ideation board on a dark FigJam canvas: three lanes (Plan / Design / Build) of stickies typed in by a
+     cursor, then four threads woven through one sticky per lane. Every sticky is a real v3 decision
+     (cks-v3/docs/handoff.md + qa-log.md). Hover a thread in the legend (or a sticky) to trace it; click a sticky
+     to bring it forward.
+     ========================================================= */
+  (function(){
+    var K = SCENE.kit; if (!K || !K.tw || !K.ks) return;
+    var T = K.tw, X = K.ks, q = K.q, qa = K.qa, esc = K.esc;
+    var pth = X.path, hide = X.hide, draw = X.draw, type = X.type, move = X.move, run = X.run, end = X.end, cursor = X.cursor;
+    function tap(el, fn){ el.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); fn(e); }); }
+
+    // lanes of stickies: [name, subtitle, [[title (≤ 6 words), one line of detail]]]
+    var PL = [
+      ['Plan', 'what the site has to do', [
+        ['Rename CKS to Topicweave', 'A free name: USPTO clear, topicweave.com and .io registered.'],
+        ['Be known for what you know', 'Everything you know, connected, in your own words.'],
+        ['Every round checked on a phone', 'Notes from my phone and laptop; every fix checked at 390 and 1440.'],
+        ['Join the beta, pricing TBD', 'Installs by hand at a beta price, for honest feedback.']]],
+      ['Design', 'the look, locked Oct 1', [
+        ['The loom is the signature', 'About 1,700 threads re-weave into a shape per section.'],
+        ['Lilac replaces saffron', 'No more mustard: the mark’s bar and one thread go #9B87F5.'],
+        ['Sample data, labeled on screen', 'Every prototype screen says Example data. No fake numbers.'],
+        ['Glass tiles for the phone nav', 'The mark, the theme switch and a three-bar branded menu.']]],
+      ['Build', 'coded by hand, no framework', [
+        ['Plain HTML, CSS and JS', 'Coded by hand from the wireframes. No framework.'],
+        ['Prototypes before the app', 'Four clickable prototypes get approved before Phase 0.'],
+        ['Page-change cloth on phones only', 'Desktop gets a plain fade; the full cloth was too much on big screens.'],
+        ['One cloth, site to prototypes', 'The prototypes reuse the site’s own weave code.']]]
+    ];
+    // four ideas that run through the decisions: [name, color, sticky column per lane]
+    var TH = [['The weave', T.WEAVE[0], [1, 0, 3]], ['One identity', T.WEAVE[1], [0, 1, 0]], ['Show, don’t promise', T.WEAVE[2], [3, 2, 1]], ['Phones first', T.WEAVE[3], [2, 3, 2]]];
+
+    SCENE.add('tw-plan', function(sc){
+      T.fonts(sc);
       var P = sc.portrait, st = sc.stg;
-      var L = P ? { x: 16, w: 608, top: 96, h: 222, gap: 12, sw: 138, sh: 150, sx: 10, sy: 48, step: 148 } : { x: 36, w: 1128, top: 62, h: 198, gap: 18, sw: 214, sh: 132, sx: 64, sy: 52, step: 272 };
+      var L = P ? { x: 16, w: 608, top: 84, h: 200, gap: 10, sw: 138, sh: 138, sx: 10, sy: 48, step: 148 }
+                : { x: 36, w: 1128, top: 62, h: 198, gap: 18, sw: 214, sh: 136, sx: 64, sy: 50, step: 272 };
       function laneY(i){ return L.top + i * (L.h + L.gap); }
       function stick(li, ci){ return { x: L.x + L.sx + ci * L.step, y: laneY(li) + L.sy }; }
       // threads run down each note's left edge, so a stitch over the note never crosses its text
       function center(li, ci){ var p = stick(li, ci); return { x: p.x + 11, y: p.y + L.sh / 2 }; }
-      var html = '<div class="cx-bg is-paper"></div><div class="cx-fj-file"><b>#</b> CKS — Site plan <em>FigJam</em></div>' +
-        '<div class="cx-fj-tools"><i class="on"></i><i></i><i></i><i></i><i></i></div>' +
-        '<svg class="cx-fj-thr" viewBox="0 0 ' + sc.SW + ' ' + sc.SH + '" aria-hidden="true"></svg>';
+      var html = '<div class="tw-pl-bg"></div><div class="tw-pl-file">' + T.ICON + '<b>Topicweave — Site plan</b><em>FigJam</em></div>' +
+        '<div class="tw-pl-tools"><i class="on"></i><i></i><i></i><i></i><i></i></div>' +
+        '<div class="tw-pl-cap">Four threads run through every decision.</div>' +
+        '<svg class="tw-pl-thr" viewBox="0 0 ' + sc.SW + ' ' + sc.SH + '" aria-hidden="true"></svg>';
       PL.forEach(function(ln, li){
-        html += '<div class="cx-fj-lane" style="left:' + L.x + 'px;top:' + laneY(li) + 'px;width:' + L.w + 'px;height:' + L.h + 'px;--c:' + ln[2] + '"><span><b>0' + (li + 1) + ' · ' + ln[0] + '</b> ' + esc(ln[1]) + '</span></div>';
-        ln[3].forEach(function(n, ci){
-          var p = stick(li, ci), th = TH.filter(function(t){ return t[2][li] === ci; }).map(function(t){ return TH.indexOf(t); });
-          html += '<div class="cx-fj-st" data-l="' + li + '" data-th="' + th.join(' ') + '" style="left:' + p.x + 'px;top:' + p.y + 'px;width:' + L.sw + 'px;height:' + L.sh + 'px;--c:' + ln[2] + ';--r:' + ((li * 4 + ci) % 3 - 1) * 1.4 + 'deg"><b data-t="' + esc(n[0]) + '"></b><p>' + esc(n[1]) + '</p><em>Angelino</em></div>';
+        html += '<div class="tw-pl-lane" style="left:' + L.x + 'px;top:' + laneY(li) + 'px;width:' + L.w + 'px;height:' + L.h + 'px"><span><b>0' + (li + 1) + ' · ' + ln[0] + '</b>' + esc(ln[1]) + '</span></div>';
+        ln[2].forEach(function(n, ci){
+          var p = stick(li, ci), th = [];
+          TH.forEach(function(t, k){ if (t[2][li] === ci) th.push(k); });
+          html += '<div class="tw-pl-st" data-l="' + li + '" data-th="' + th.join(' ') + '" style="left:' + p.x + 'px;top:' + p.y + 'px;width:' + L.sw + 'px;height:' + L.sh + 'px;--c:' + TH[th[0]][1] + ';--r:' + ((li * 4 + ci) % 3 - 1) * 1.1 + 'deg"><b data-t="' + esc(n[0]) + '"></b><p>' + esc(n[1]) + '</p><em>Angelino</em></div>';
         });
       });
-      html += '<svg class="cx-fj-over" viewBox="0 0 ' + sc.SW + ' ' + sc.SH + '" aria-hidden="true"></svg>' +
-        '<div class="cx-fj-leg">' + TH.map(function(t, i){ return '<button type="button" data-th="' + i + '" style="--c:' + t[1] + '"><i></i>' + esc(t[0]) + '</button>'; }).join('') + '</div>' +
-        '<div class="cx-fj-cap">Four threads run through every decision.</div>' + cursor('a', 'Angelino') + '<div class="fg-fade"></div>';
+      html += '<svg class="tw-pl-over" viewBox="0 0 ' + sc.SW + ' ' + sc.SH + '" aria-hidden="true"></svg>' +
+        '<div class="tw-pl-leg">' + TH.map(function(t, i){ return '<button type="button" data-th="' + i + '" style="--c:' + t[1] + '"><i></i>' + esc(t[0]) + '</button>'; }).join('') + '</div>' +
+        cursor('a', 'Angelino') + '<div class="fg-fade"></div>';
       st.innerHTML = html;
-      var svg = q(st, '.cx-fj-thr'), over = q(st, '.cx-fj-over'), lanes = qa(st, '.cx-fj-lane'), sts = qa(st, '.cx-fj-st'), leg = qa(st, '.cx-fj-leg button'), cap = q(st, '.cx-fj-cap'), cur = q(st, '.cur.a');
+      var svg = q(st, '.tw-pl-thr'), over = q(st, '.tw-pl-over'), lanes = qa(st, '.tw-pl-lane'), sts = qa(st, '.tw-pl-st'), leg = qa(st, '.tw-pl-leg button'), cap = q(st, '.tw-pl-cap'), cur = q(st, '.cur.a');
       // each thread: in from the top, through its three stickies (swaying as it goes), out at the bottom
       var paths = [], stitches = [];
       TH.forEach(function(t, ti){
@@ -2264,13 +2855,14 @@ window.Webflow.push(function(){
         var last = pts[pts.length - 1]; pts.push({ x: last.x + (ti % 2 ? -26 : 26), y: laneY(2) + L.h + 12 });
         var d = 'M' + pts[0].x + ' ' + pts[0].y;
         for (var k = 1; k < pts.length; k++){ var a = pts[k - 1], b = pts[k], my = (a.y + b.y) / 2, sw = (k % 2 ? 1 : -1) * (ti % 2 ? 22 : -22); d += 'C' + (a.x + sw) + ' ' + my + ' ' + (b.x - sw) + ' ' + my + ' ' + b.x + ' ' + b.y; }
-        var p = pth(svg, d, 'cx-fj-t'); p.style.stroke = t[1]; p.setAttribute('data-th', ti); paths.push(p);
+        var p = pth(svg, d, 'tw-pl-t'); p.style.stroke = t[1]; p.setAttribute('data-th', ti); paths.push(p);
         // over / under: on alternate stickies the thread is stitched across the face of the note
-        t[2].forEach(function(c, li){ if ((li + ti) % 2) return; var m = center(li, c), s = pth(over, 'M' + m.x + ' ' + (m.y - L.sh / 2 - 8) + 'L' + m.x + ' ' + (m.y + L.sh / 2 + 8), 'cx-fj-t is-over'); s.style.stroke = t[1]; s.setAttribute('data-th', ti); stitches.push(s); });
+        t[2].forEach(function(c, li){ if ((li + ti) % 2) return; var m = center(li, c), s = pth(over, 'M' + m.x + ' ' + (m.y - L.sh / 2 - 8) + 'L' + m.x + ' ' + (m.y + L.sh / 2 + 8), 'tw-pl-t is-over'); s.style.stroke = t[1]; s.setAttribute('data-th', ti); stitches.push(s); });
       });
+      var marks = qa(st, '[data-th]');
       function light(k){
-        st.classList.toggle('fj-hl', k != null);
-        qa(st, '[data-th]').forEach(function(e){ var ks = (e.getAttribute('data-th') || '').split(' '); e.classList.toggle('hl', k != null && ks.indexOf(String(k)) > -1); });
+        st.classList.toggle('pl-hl', k != null);
+        marks.forEach(function(e){ var ks = (e.getAttribute('data-th') || '').split(' '); e.classList.toggle('hl', k != null && ks.indexOf(String(k)) > -1); });
       }
       leg.forEach(function(b){
         b.addEventListener('pointerenter', function(){ light(+b.getAttribute('data-th')); });
@@ -2313,6 +2905,98 @@ window.Webflow.push(function(){
       [0, 1, 2, 3].forEach(function(k, i){ R.at(t + .8 + i * 1.1, function(){ light(k); }); });
       R.at(t + 5.2, function(){ light(null); });
       end(sc, R, t + 6.4, t + .6, [{ t: 'Plan', at: 'plan' }, { t: 'Design', at: 'design' }, { t: 'Build', at: 'build' }, { t: 'Weave', at: 'weave' }]);
+    });
+  })();
+
+  /* ===== mission/24-tw-roadmap.js ===== */
+  /* =========================================================
+     TOPICWEAVE · ROADMAP (channel tw-roadmap)
+     The v3 Roadmap page (cks-v3/src/roadmap.html): five build phases on a rail, a thread advancing knot to
+     knot; each phase's real prototype screen slides into a glass frame with its title and one line from the page.
+     Screens are the page's own dark screenshots (code/vendor/topicweave/roadmap/), loaded on first play.
+     Click a phase on the rail to jump to it and hold.
+     ========================================================= */
+  (function(){
+    var K = SCENE.kit; if (!K || !K.tw || !K.ks) return;
+    var T = K.tw, X = K.ks, q = K.q, qa = K.qa, esc = K.esc;
+    var pth = X.path, hide = X.hide, draw = X.draw, run = X.run, end = X.end;
+    function tap(el, fn){ el.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); fn(e); }); }
+
+    // [label, title, one line from the page, screenshot, what it delivers (handoff build plan), short chip]
+    var PH = [
+      ['Phase 0 · Now', 'The groundwork.', 'Sign-in, a workspace for each site, and the connections everything else stands on: your CMS and Google Search Console.', 'connections-dark.webp', ['Sign-in', 'Workspaces', 'CMS + Search Console'], 'Groundwork'],
+      ['Phase 1 · With the first beta sites', 'Prove it works.', 'Your vocabulary imported from the site, link health checked every night, Search Console grouped by your topics, and a plain-language email on the 1st.', 'topics-dark.webp', ['Vocabulary import', 'Link health', 'Topic report', 'Monthly email'], 'Prove it'],
+      ['Phase 2', 'Keep the library growing.', 'A review queue with a before and after and one-click undo, drafts in your voice from the Voice Kit, search ideas, and capture by email.', 'review-dark.webp', ['Review queue', 'Voice Kit drafts', 'Search ideas', 'Email capture'], 'Grow'],
+      ['Phase 3', 'See what assistants see.', 'A cookieless counter for visits sent by ChatGPT, Perplexity, Claude and Gemini, a monthly assistant sample, and Topicweave Capture on your phone.', 'ai-dark.webp', ['AI visit counter', 'Assistant sample', 'Capture on a phone'], 'Measure'],
+      ['Phase 4', 'Beyond one site.', 'The panel inside your CMS editor, a WordPress connector, and one login for agencies running Topicweave for their own clients.', 'cms-dark.webp', ['CMS panel', 'WordPress', 'Agency login'], 'Widen']
+    ];
+
+    SCENE.add('tw-roadmap', function(sc){
+      T.fonts(sc);
+      var P = sc.portrait, st = sc.stg, N = PH.length;
+      // rail: vertical on the left (landscape), horizontal under the frame (portrait)
+      var F = P ? { x: 20, y: 112, w: 600, ih: 360 } : { x: 420, y: 104, w: 740, ih: 448 };
+      var knots = PH.map(function(p, i){ return P ? { x: 60 + i * 130, y: 628 } : { x: 62, y: 196 + i * 110 }; });
+      var html = '<div class="tw-rm-bg"></div>' +
+        '<div class="tw-rm-head"><span>Roadmap</span><h3>Where Topicweave is headed.</h3></div>' +
+        '<svg class="tw-rm-svg" viewBox="0 0 ' + sc.SW + ' ' + sc.SH + '" aria-hidden="true"></svg>' +
+        '<div class="tw-rm-rail">' + PH.map(function(p, i){
+          var k = knots[i];
+          return '<button type="button" class="tw-rm-k" data-i="' + i + '" style="left:' + k.x + 'px;top:' + k.y + 'px" aria-label="' + esc(p[0] + ': ' + p[1]) + '"><i></i><span>' + esc(P ? 'Phase ' + i : p[0]) + '</span><b>' + esc(p[1]) + '</b></button>';
+        }).join('') + '</div>' +
+        '<div class="tw-rm-frame" style="left:' + F.x + 'px;top:' + F.y + 'px;width:' + F.w + 'px">' +
+          '<div class="tw-rm-shots" style="height:' + F.ih + 'px">' + PH.map(function(p, i){
+            return '<div class="tw-rm-shot" data-i="' + i + '"><img alt="" data-src="' + esc(p[3]) + '" decoding="async">' + (i === 3 ? '<img class="tw-rm-phone" alt="" data-src="phone-dark.webp" decoding="async">' : '') + '</div>';
+          }).join('') + '<em class="tw-rm-tag">Prototype · sample data</em></div>' +
+          '<div class="tw-rm-caps">' + PH.map(function(p, i){
+            return '<div class="tw-rm-cap" data-i="' + i + '"><span>' + esc(p[0]) + '</span><b>' + esc(p[1]) + '</b><p>' + esc(p[2]) + '</p><div class="tw-rm-chips">' + p[4].map(function(c){ return '<i>' + esc(c) + '</i>'; }).join('') + '</div></div>';
+          }).join('') + '</div>' +
+        '</div><div class="fg-fade"></div>';
+      st.innerHTML = html;
+      var svg = q(st, '.tw-rm-svg'), ks = qa(st, '.tw-rm-k'), shots = qa(st, '.tw-rm-shot'), caps = qa(st, '.tw-rm-cap'), imgs = qa(st, '.tw-rm-shot img'), head = q(st, '.tw-rm-head');
+      // the base track (a faint hairline) and the thread, one segment per step, swaying between knots
+      var segs = [], base = '';
+      for (var i = 1; i < N; i++){
+        var a = knots[i - 1], b = knots[i], sw = (i % 2 ? 1 : -1) * 12, d;
+        if (P){ var mx = (a.x + b.x) / 2; d = 'M' + a.x + ' ' + a.y + 'C' + mx + ' ' + (a.y + sw) + ' ' + mx + ' ' + (b.y - sw) + ' ' + b.x + ' ' + b.y; }
+        else { var my = (a.y + b.y) / 2; d = 'M' + a.x + ' ' + a.y + 'C' + (a.x + sw) + ' ' + my + ' ' + (b.x - sw) + ' ' + my + ' ' + b.x + ' ' + b.y; }
+        base += d;
+        segs.push(d);
+      }
+      var tr = document.createElementNS('http://www.w3.org/2000/svg', 'path'); tr.setAttribute('d', base); tr.setAttribute('class', 'tw-rm-track'); svg.appendChild(tr);
+      // the thread comes in from above / the left before the first knot
+      var k0 = knots[0], lead = pth(svg, P ? 'M' + (k0.x - 44) + ' ' + (k0.y - 18) + 'C' + (k0.x - 24) + ' ' + (k0.y - 18) + ' ' + (k0.x - 20) + ' ' + k0.y + ' ' + k0.x + ' ' + k0.y : 'M' + (k0.x - 18) + ' ' + (k0.y - 50) + 'C' + (k0.x - 18) + ' ' + (k0.y - 26) + ' ' + k0.x + ' ' + (k0.y - 24) + ' ' + k0.x + ' ' + k0.y, 'tw-rm-thr');
+      var thr = segs.map(function(d, i){ var p = pth(svg, d, 'tw-rm-thr'); p.style.stroke = T.WEAVE[(i + 1) % 4]; return p; });
+      lead.style.stroke = T.WEAVE[0];
+      // images load the first time the scene plays (never at build)
+      function load(){ imgs.forEach(function(im){ if (!im.getAttribute('src')) im.setAttribute('src', T.asset('roadmap/' + im.getAttribute('data-src'))); }); }
+      function mark(n){ ks.forEach(function(k, i){ k.classList.toggle('done', i < n); k.classList.toggle('on', i === n); k.setAttribute('aria-current', i === n ? 'step' : 'false'); }); }
+      var R = run(sc, function(){ mark(-1); }), tl = R.tl;
+      R.at(.01, load);
+      tl.set(q(st, '.fg-fade'), { autoAlpha: 0 }, 0).set(shots.concat(caps), { autoAlpha: 0 }, 0);
+      [lead].concat(thr).forEach(function(p){ hide(R, p); });
+      tl.fromTo(head, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .5, immediateRender: false }, .1);
+      tl.fromTo(ks, { autoAlpha: 0 }, { autoAlpha: 1, duration: .35, stagger: .08, immediateRender: false }, .25);
+      tl.fromTo(q(st, '.tw-rm-frame'), { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: .5, immediateRender: false }, .3);
+      var t = .8, HOLD = 4.2, phases = [];
+      PH.forEach(function(p, i){
+        tl.addLabel('p' + i, t);
+        phases.push({ t: P ? 'P' + i : p[5], at: 'p' + i });
+        draw(R, i ? thr[i - 1] : lead, t, .8);
+        (function(n){ R.at(t + .75, function(){ mark(n); }); })(i);
+        if (i) {
+          tl.to(shots[i - 1], { autoAlpha: 0, x: -40, duration: .45, ease: 'power2.in' }, t + .3);
+          tl.to(caps[i - 1], { autoAlpha: 0, y: -8, duration: .3 }, t + .3);
+        }
+        tl.fromTo(shots[i], { autoAlpha: 0, x: 60, scale: 1.02 }, { autoAlpha: 1, x: 0, scale: 1, duration: .7, ease: 'power3.out', immediateRender: false }, t + .7);
+        tl.fromTo(caps[i], { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .45, immediateRender: false }, t + .9);
+        tl.fromTo(qa(caps[i], '.tw-rm-chips i'), { autoAlpha: 0, y: 6 }, { autoAlpha: 1, y: 0, duration: .3, stagger: .1, immediateRender: false }, t + 1.2);
+        if (i === 3) tl.fromTo(q(shots[i], '.tw-rm-phone'), { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: .6, ease: 'power3.out', immediateRender: false }, t + 1.5);
+        t += HOLD;
+      });
+      end(sc, R, t + .4, tl.labels.p0 + 2.6, phases);
+      // interactive: a phase on the rail jumps there (its screen in place) and holds
+      ks.forEach(function(k, i){ tap(k, function(){ if (sc.hold) sc.hold(); load(); tl.seek(tl.labels['p' + i] + 2.4); if (sc.onSeek) sc.onSeek(); }); });
     });
   })();
 
@@ -2362,8 +3046,8 @@ window.Webflow.push(function(){
     var it = $('[data-channel]', item) || item;
     var imgs = $$('img', it).filter(function(im){ return !im.classList.contains('w-dyn-bind-empty'); }).map(function(im){ return im.getAttribute('src') || ''; }).filter(function(s){ return s && !/placeholder/i.test(s); });
     var cid = it.getAttribute('data-id') || ('ch' + i);
-    // coded scenes are picked by channel id (the CMS Kind option can't gain values via the API); cks-* ids are their own kind
-    return { id: cid, kind: (/^cks-/.test(cid) ? cid : ({ sketch: 'sketch', vector: 'vector', graph: 'graph', library: 'library', voice: 'voice', setup: 'setup', video: 'video', schema: 'schema', portable: 'portable' })[cid]) || (it.getAttribute('data-kind') || 'img').toLowerCase(), mode: (it.getAttribute('data-mode') || '').toLowerCase(),
+    // coded scenes are picked by channel id (the CMS Kind option can't gain values via the API); tw-* ids are their own kind
+    return { id: cid, kind: (/^tw-/.test(cid) ? cid : ({ sketch: 'sketch', vector: 'vector', graph: 'graph', library: 'library', voice: 'voice', setup: 'setup', video: 'video', schema: 'schema', portable: 'portable' })[cid]) || (it.getAttribute('data-kind') || 'img').toLowerCase(), mode: (it.getAttribute('data-mode') || '').toLowerCase(),
       label: it.getAttribute('data-label') || ('Channel ' + (i + 1)), caption: it.getAttribute('data-caption') || '', src: imgs[0] || '', before: imgs[0] || '', after: imgs[1] || imgs[0] || '' };
   });
   // image channels whose loops live in the repo (MOCKS[slug].img: id → [loop, still], on jsDelivr, so Webflow can't flatten
@@ -2433,7 +3117,7 @@ window.Webflow.push(function(){
       }
       unlink(a);
     });
-    var host = $('[data-mf="host"]'); if (host) host.textContent = M.live ? M.live.replace(/^https?:\/\//, '').replace(/\/$/, '') : isSystem ? 'Add-on · any Webflow site' : 'Self-initiated identity';
+    var host = $('[data-mf="host"]'); if (host) host.textContent = M.live ? M.live.replace(/^https?:\/\//, '').replace(/\/$/, '') : isSystem ? 'Add-on · any Webflow site' : M.mock && M.mock.tw ? 'Product site · in beta' : 'Self-initiated identity';
   })();
 
   /* ---------- palette (identity missions with a token set) ---------- */
@@ -2650,10 +3334,12 @@ window.Webflow.push(function(){
     var TSTYLE = {
       '510-visuals': ['build', '#1c1e24', '#d0e0e3', '#5eead4', 'linear-gradient(135deg,#5a8a94,#1c2227)', '#4a5a60'],
       'daniel-aguirre-law': ['build', '#FCF6EC', '#1a2840', '#891E2D', 'linear-gradient(135deg,#A88B5C,#efe2c8)', '#c9bda8'],
-      'cks': ['woven', '#F7F5F0', '#0B1B2B', '#EF5B3F', 'linear-gradient(135deg,#2F5BEA,#139E8A)', '#C9CED4'],
+      // Topicweave (was CKS; the old slug stays keyed until the item's slug change is published)
+      'topicweave': ['woven', '#000000', '#FFFFFF', '#9B87F5', 'linear-gradient(135deg,#9B87F5,#4F7BFF)', '#3A3A3A'],
+      'cks': ['woven', '#000000', '#FFFFFF', '#9B87F5', 'linear-gradient(135deg,#9B87F5,#4F7BFF)', '#3A3A3A'],
       'kip': ['build', '#FFF4E6', '#1E1B2E', '#FF7A45', 'linear-gradient(135deg,#FFC94A,#5FD3A8)', '#E6D3BD']
     };
-    var TS = TSTYLE[SLUG] || ['blueprint'], THREADS = ['#F2A93B', '#EF5B3F', '#139E8A', '#2F5BEA'];
+    var TS = TSTYLE[SLUG] || ['blueprint'], THREADS = ['#9B87F5', '#EF5B3F', '#139E8A', '#4F7BFF'];
     function g(c, l, t, w, h){ return '<i class="' + c + '" style="left:' + l + '%;top:' + t + '%;width:' + w + '%;height:' + h + '%"></i>'; }
     function glyph(p){
       var s = g('m', 5, 8, 90, 7);
@@ -2808,9 +3494,9 @@ window.Webflow.push(function(){
       return v + '</div>';
     }
     var TYPE = { 'live-globe': 'Live', 'live-map': 'Live', 'wipe': 'Compare', 'mobile': 'Phone', 'img': 'Still', 'logo': 'Vector', 'apps': 'Mockups', 'figma': 'Build', 'phone': 'Phone', 'flow': 'Plan', 'exploded': 'Layers', 'cms': 'CMS', 'sketch': 'Sketch', 'vector': 'Vector', 'graph': 'Graph', 'library': 'Library', 'voice': 'AI + you', 'setup': 'CMS', 'video': 'Video', 'schema': 'Schema', 'portable': 'Model',
-      'cks-styles': 'Try it', 'cks-story': 'Scroll', 'cks-map': 'Explore', 'cks-sketch': 'Try it', 'cks-publish': 'Demo', 'cks-plan': 'Plan' };
+      'tw-loom': 'Play', 'tw-plan': 'Plan', 'tw-app': 'Explore', 'tw-capture': 'Phone', 'tw-cms': 'Try it', 'tw-roadmap': 'Phases' };
     var KIND = { 'live-globe': 'LIVE · three.js r128', 'live-map': 'LIVE · d3 v7', 'wipe': 'COMPARE · figma ↔ webflow', 'figma': 'MOCKUP · figma → webflow', 'phone': 'MOCKUP · mobile', 'flow': 'MOCKUP · figjam → build', 'exploded': 'BREAKDOWN · layers', 'cms': 'MOCKUP · cms → site', 'mobile': 'STILL · mobile', 'img': 'STILL', 'logo': 'VECTOR · svg', 'apps': 'MOCKUPS', 'sketch': 'SKETCH · pen + paper', 'vector': 'MOCKUP · illustrator', 'graph': 'MOCKUP · knowledge graph', 'library': 'MOCKUP · insights library', 'voice': 'MOCKUP · voice kit → review', 'setup': 'MOCKUP · cms → site', 'video': 'MOCKUP · video + chapters', 'schema': 'MOCKUP · json-ld → search + ai', 'portable': 'MOCKUP · content model',
-      'cks-styles': 'DEMO · design tokens, live', 'cks-story': 'DEMO · scroll story', 'cks-map': 'DEMO · knowledge map', 'cks-sketch': 'DEMO · sketch tool', 'cks-publish': 'DEMO · cms → site + json-ld', 'cks-plan': 'FIGJAM · ideation → wireframes → build' };
+      'tw-loom': 'DEMO · the loom, canvas', 'tw-plan': 'FIGJAM · ideation → wireframes → build', 'tw-app': 'DEMO · dashboard prototype', 'tw-capture': 'DEMO · voice kit, phone app', 'tw-cms': 'DEMO · cms → site + json-ld', 'tw-roadmap': 'ROADMAP · five phases' };
     screen.innerHTML = CH.map(channelView).join('') + '<div class="scan"></div><div class="roll"></div><div class="vig"></div><canvas class="noise" id="noise" width="160" height="100"></canvas>' +
       '<i class="brk tl"></i><i class="brk tr"></i><i class="brk bl"></i><i class="brk br"></i><div class="osd" id="osd">CH 1</div>';
     // a recorded loop of the real site (MOCKS[slug].img) is labeled as a recording, not a still
@@ -2821,7 +3507,7 @@ window.Webflow.push(function(){
     var views = $$('.view', screen), chBtns = $$('button', chans), osd = $('#osd'), monLabel = $('#monLabel'), monCap = $('#monCap'), monKind = $('#monKind');
     // coded scenes need this mission's mockup spec for that kind; one broken scene never stops the monitor
     var NEED = { figma: 'els', phone: 'mobile', flow: 'flow', exploded: 'explode', cms: 'cms', sketch: 'sketch', vector: 'vector', graph: 'graph', library: 'library', voice: 'voice', setup: 'setup', video: 'video', schema: 'schema', portable: 'portable',
-      'cks-styles': 'cks', 'cks-story': 'cks', 'cks-map': 'cks', 'cks-sketch': 'cks', 'cks-publish': 'cks', 'cks-plan': 'cks' };
+      'tw-loom': 'tw', 'tw-plan': 'tw', 'tw-app': 'tw', 'tw-capture': 'tw', 'tw-cms': 'tw', 'tw-roadmap': 'tw' };
     views.forEach(function(v, k){
       var c = CH[k], key = NEED[c.kind]; if (!key) return;
       if (!(M.mock && M.mock[key])){ v.innerHTML = '<div class="boot">Mockup coming soon</div>'; return; }
@@ -2836,17 +3522,25 @@ window.Webflow.push(function(){
       gsap.fromTo(screen, { filter: 'brightness(2) saturate(0)' }, { filter: 'brightness(1) saturate(1)', duration: .45, ease: 'power2.out', clearProps: 'filter' });
     }
     var seenCh = {};
+    // the cloth for Topicweave channel changes (23-tw-base.js), on its own layer above the views
+    var TWV = null, lastPt = null;
+    if (M.mock && M.mock.tw && SCENE.kit.tw && !reduce){ var twl = document.createElement('div'); twl.className = 'tw-sw'; twl.setAttribute('aria-hidden', 'true'); screen.appendChild(twl); TWV = SCENE.kit.tw.weave(twl, { mode: 'radial', durIn: .42, durOut: .6, grid: 14 }); }
+    chans.addEventListener('pointerdown', function(e){ lastPt = { x: e.clientX, y: e.clientY, t: Date.now() }; });
     function setCh(i, silent){
       i = (i + CH.length) % CH.length; var c = CH[i]; curCh = i;
       seenCh[i] = true; if (CH.length > 1 && Object.keys(seenCh).length >= CH.length && AB.quest) AB.quest('channels');
-      views.forEach(function(v, k){ v.classList.toggle('on', k === i); });
+      // Topicweave: the site's thread cloth knits over the screen from the tab you pressed, then unravels onto the new channel
+      var woven = !silent && TWV && !reduce;
+      function show(){ views.forEach(function(v, k){ v.classList.toggle('on', k === i); }); }
+      if (woven){ var sr = screen.getBoundingClientRect(), pt = lastPt && lastPt.t > Date.now() - 800 ? [lastPt.x - sr.left, lastPt.y - sr.top] : [sr.width / 2, sr.height / 2]; TWV(true, pt, function(){ if (curCh === i) show(); TWV(false); }); }
+      else show();
       chBtns.forEach(function(b, k){ b.setAttribute('aria-selected', k === i ? 'true' : 'false'); });
       monLabel.textContent = c.label; monCap.textContent = c.caption; monKind.textContent = KIND[tk(c)] || '';
       $('#tCh').textContent = (i + 1) + ' / ' + CH.length;
-      $('#tSrc').textContent = c.kind.indexOf('live') === 0 ? 'Live code' : liveOn(c) ? 'Live site' : c.loop ? 'Recording' : /^cks-/.test(c.kind) ? 'Coded demo' : c.kind === 'wipe' ? 'Figma + site' : /^(figma|phone|flow|exploded|cms|sketch|vector|graph|library|voice|setup|video|schema|portable)$/.test(c.kind) ? 'Mockup' : c.kind === 'logo' || c.kind === 'apps' ? 'Vector' : 'Screenshot';
+      $('#tSrc').textContent = c.kind.indexOf('live') === 0 ? 'Live code' : liveOn(c) ? 'Live site' : c.loop ? 'Recording' : /^tw-/.test(c.kind) ? 'Coded demo' : c.kind === 'wipe' ? 'Figma + site' : /^(figma|phone|flow|exploded|cms|sketch|vector|graph|library|voice|setup|video|schema|portable)$/.test(c.kind) ? 'Mockup' : c.kind === 'logo' || c.kind === 'apps' ? 'Vector' : 'Screenshot';
       if (liveOn(c)){ monKind.textContent = 'LIVE · ' + LIVE.host; chBtns[i].querySelector('.t').textContent = 'Live'; }
       osd.textContent = 'CH ' + (i + 1) + ' · ' + c.label;
-      if (!silent){ staticBurst(); if (!reduce && hasGsap) gsap.fromTo(osd, { opacity: 0 }, { opacity: 1, duration: .1, repeat: 3, yoyo: true }); }
+      if (!silent){ if (!woven) staticBurst(); if (!reduce && hasGsap) gsap.fromTo(osd, { opacity: 0 }, { opacity: 1, duration: .1, repeat: 3, yoyo: true }); }
       boot(c, views[i]);
       if (c.kind === 'logo') logoAnim(views[i], c.mode);
       SCENE.activate(c.id);
@@ -2961,6 +3655,28 @@ window.Webflow.push(function(){
       setCh(curCh, true);
     });
     setCh(0, true);
+  })();
+
+  /* ===== mission/45-tw-page.js ===== */
+  /* =========================================================
+     TOPICWEAVE PAGE SEAMS (mission topicweave only)
+     The v3 site ties its sections together with threads; here every section boundary gets a strip of the site's
+     cloth (K.tw.weave, band mode) that knits in from alternating sides as it reaches the screen and unravels
+     once it has left the screen. The wave only runs while a strip is on screen; reduced motion: woven, still.
+     ========================================================= */
+  (function(){
+    var T = SCENE.kit && SCENE.kit.tw; if (!T || !(M.mock && M.mock.tw) || !window.IntersectionObserver) return;
+    // the page's top-level sections (each carries data-frame), not the hero and not sections nested inside them
+    var secs = $$('section[data-frame]').filter(function(s){ return s.id !== 'hero' && !s.parentNode.closest('section'); });
+    secs.forEach(function(sec, i){
+      if (sec.offsetHeight < 80) return;
+      var seam = document.createElement('div'); seam.className = 'tw-seam'; seam.setAttribute('aria-hidden', 'true');
+      sec.classList.add('tw-seam-host'); sec.insertBefore(seam, sec.firstChild);
+      var cloth = T.weave(seam, { mode: 'band', from: i % 2 ? 'right' : 'left', grid: 14, len: 10 });
+      if (reduce){ cloth.set(true); return; }
+      // knits as it comes on screen (a little inside the edge, so it's seen), unravels once it's gone
+      new IntersectionObserver(function(es){ cloth(es[0].isIntersecting); }, { rootMargin: '-8% 0px -8% 0px' }).observe(seam);
+    });
   })();
 
 });

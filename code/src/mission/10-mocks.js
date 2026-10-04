@@ -155,86 +155,166 @@
   MOCKS['ab-identity'] = { accent: '#FF6A3D', sketch: true, vector: true };
   // Knowledge System: seven coded scenes (21-knowledge.js), generic example content
   MOCKS['knowledge-system'] = { accent: '#a597ff', graph: true, library: true, voice: true, setup: true, video: true, schema: true, portable: true };
-  // CKS: the product site for the Knowledge System. Six coded scenes (22-cks.js, key `cks`, incl. its own woven site plan)
-  // plus figma + phone. `live`: once getcks.io answers (its favicon loads), the live channels show the real page.
+  // CKS: the product site for the Knowledge System. Renamed Topicweave (cks-v3): the coded scenes are 24-tw-*.js (key `tw`),
+  // plus this figma + phone spec in the v3 look (black, Fraunces + Inter Tight, lilac labels, one cobalt action, square corners).
+  // Nothing from v3 is deployed, so no `live` swap. Styles: the TOPICWEAVE section of ab-mission.css.
+  // The marks come from the Topicweave kit (23-tw-base.js loads after this file), so `els` and `mobile` are getters that
+  // build their markup the first time a scene reads them, and start the site's fonts (rebuilding that scene once they land).
   (function(){
-    // the hero loom, redrawn as SVG: warp lines plus eight bands of weft threads in the four thread colors
-    function loom(w, h, n){
-      var c = ['#F2A93B', '#EF5B3F', '#139E8A', '#2F5BEA'], g = w * .62 / n, s = '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;display:block" aria-hidden="true">', i, y;
-      for (y = 6; y < h; y += 10) s += '<path d="M0 ' + y + 'H' + w + '" stroke="rgba(11,27,43,.13)" stroke-width=".7"/>';
-      for (i = 0; i < n; i++){
-        var xt = w * .36 + i * g, xb = w * .02 + i * g;
-        s += '<path d="M' + xt.toFixed(1) + ' -6C' + (xt + w * .22).toFixed(1) + ' ' + (h * .38).toFixed(1) + ' ' + (xb - w * .12).toFixed(1) + ' ' + (h * .62).toFixed(1) + ' ' + xb.toFixed(1) + ' ' + (h + 6) + '" fill="none" stroke="' + c[Math.floor(i / (n / 8)) % 4] + '" stroke-width="' + (g * .62).toFixed(2) + '" stroke-dasharray="7 1.6"/>';
+    function kitTw(){ return typeof SCENE !== 'undefined' && SCENE && SCENE.kit ? SCENE.kit.tw : null; }
+    var WV = ['#9b87f5', '#ef5b3f', '#139e8a', '#4f7bff'];
+    var ARROW = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    var MOON = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M15.5 12.6A6.5 6.5 0 017.4 4.5a6.5 6.5 0 108.1 8.1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+    // the loom's threads, drawn as short fibers: each band scatters fibers along a segment (the woven mark = four bars),
+    // `loose` adds stray fibers around it. One path per color and strength keeps the DOM small.
+    function rng(seed){ var s = seed; return function(){ s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; }
+    function fibers(o){
+      var r = rng(o.seed || 7), P = {}, keys = [], sw = o.sw || .5, i, k;
+      function add(col, strong, x, y, a, l){
+        var key = col + (strong ? '|b' : '|d'); if (!P[key]){ P[key] = ''; keys.push(key); }
+        var ex = Math.cos(a) * l, ey = Math.sin(a) * l;
+        P[key] += 'M' + (x - ex / 2).toFixed(1) + ' ' + (y - ey / 2).toFixed(1) + 'l' + ex.toFixed(1) + ' ' + ey.toFixed(1);
+      }
+      (o.bands || []).forEach(function(b){
+        var dx = b[2] - b[0], dy = b[3] - b[1], L = Math.sqrt(dx * dx + dy * dy) || 1, ux = dx / L, uy = dy / L, base = Math.atan2(uy, ux);
+        for (i = 0; i < b[6]; i++){
+          var t = r(), off = (r() - .5) * b[4];
+          add(b[5], r() > .3, b[0] + dx * t - uy * off, b[1] + dy * t + ux * off, base + (r() - .5) * .32, (o.len || 3.2) * (.75 + r() * .6));
+        }
+      });
+      if (o.loose) for (i = 0; i < o.loose.n; i++){
+        var ang = r() * Math.PI * 2, rad = o.loose.r0 + r() * (o.loose.r1 - o.loose.r0);
+        add(o.loose.cols[Math.floor(r() * o.loose.cols.length)], false, o.loose.cx + Math.cos(ang) * rad, o.loose.cy + Math.sin(ang) * rad, r() * Math.PI, (o.len || 3.2) * (.6 + r() * .5));
+      }
+      var s = '<svg viewBox="' + o.vb + '" preserveAspectRatio="xMidYMid meet" aria-hidden="true">';
+      for (k = 0; k < keys.length; k++){
+        var c = keys[k].split('|');
+        s += '<path d="' + P[keys[k]] + '" fill="none" stroke="' + c[0] + '" stroke-width="' + sw + '" stroke-linecap="round" stroke-opacity="' + (c[1] === 'b' ? .92 : .38) + '"/>';
       }
       return s + '</svg>';
     }
-    var LOGO = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;display:block" aria-hidden="true"><rect x="2.5" y="6" width="19" height="5" rx="1.2" fill="#EF5B3F"/><rect x="2.5" y="13" width="19" height="5" rx="1.2" fill="#139E8A"/><rect x="6" y="2.5" width="5" height="19" rx="1.2" fill="#F2A93B" stroke="#fff" stroke-width="1.4"/><rect x="13" y="2.5" width="5" height="19" rx="1.2" fill="#2F5BEA" stroke="#fff" stroke-width="1.4"/><rect x="12.3" y="6" width="6.4" height="5" fill="#EF5B3F"/><path d="M12.3 6V11M18.7 6V11" stroke="#fff" stroke-width="1.4"/><rect x="5.3" y="13" width="6.4" height="5" fill="#139E8A"/><path d="M5.3 13V18M11.7 13V18" stroke="#fff" stroke-width="1.4"/></svg>';
-    // unquoted on purpose: these go inside style="..." attributes, where a double quote would end the attribute
-    var F = 'Schibsted Grotesk,Inter,sans-serif';
-    function chip(t, c){ return '<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:999px;border:1px solid rgba(11,27,43,.14);font:600 8px ' + F + '"><i style="width:6px;height:6px;border-radius:50%;background:' + c + '"></i>' + t + '</span>'; }
-    MOCKS.cks = {
-      accent: '#EF5B3F', cks: true,
-      live: { base: 'https://getcks.io/', probe: 'favicon.svg', pages: { 'cks-styles': 'styles.html', 'cks-sketch': 'sketch.html' } },
-      file: 'CKS — Product site', page: 'Home', frame: 'Desktop · Hero', url: 'getcks.io',
-      bg: '#F7F5F0', accent2: '#2F5BEA', hover: 'cta',
-      comment: { on: 'heading', by: 'Review', text: 'The headline fights the loom for attention.', reply: 'Faded the weave behind the copy and pushed the pattern right.' },
-      els: [
-        { id: 'loom', name: 'Canvas / loom', icon: 'img', type: 'Embed', x: 470, y: 0, w: 530, h: 625, wire: 'img',
+    // the hero shape: the woven mark in threads (left bar lilac, right bar cobalt, top coral, bottom teal), as on Home
+    function markSvg(n, seed){
+      var a = 21.5, b = 45.2, w = 13.5, e = 66.7;
+      return fibers({ vb: '-24 -24 114.7 114.7', seed: seed, sw: .55, len: 3.4,
+        bands: [[a, 0, a, e, w, WV[0], n], [b, 0, b, e, w, WV[3], n], [0, a, e, a, w, WV[1], n], [0, b, e, b, w, WV[2], n]],
+        loose: { n: Math.round(n * .45), cx: 33.4, cy: 33.4, r0: 40, r1: 56, cols: ['#8a8a8a', '#8a8a8a', WV[0], WV[3]] } });
+    }
+    // The problem: the same threads scattered loose
+    function scatterSvg(){
+      return fibers({ vb: '0 0 120 70', seed: 31, sw: .6, len: 3.6, loose: { n: 150, cx: 60, cy: 35, r0: 2, r1: 34, cols: WV } });
+    }
+    // How it works: a spine of terms with four things hanging off it
+    function spineSvg(){
+      return fibers({ vb: '0 0 120 80', seed: 53, sw: .6, len: 3.4,
+        bands: [[60, 4, 60, 76, 5, WV[0], 60], [60, 20, 22, 10, 4, WV[1], 26], [60, 34, 98, 24, 4, WV[2], 26], [60, 50, 24, 60, 4, WV[3], 26], [60, 64, 96, 72, 4, WV[1], 22]],
+        loose: { n: 30, cx: 60, cy: 40, r0: 30, r1: 48, cols: ['#8a8a8a'] } });
+    }
+
+    var cache = {}, MK;
+    // start the site's fonts and rebuild the figma/phone scene reading this spec once they arrive (layout is measured at build)
+    function kick(){
+      var T = kitTw(); if (!T) return;
+      T.fonts();
+      Array.prototype.forEach.call(document.querySelectorAll('.view[data-ch]'), function(v){
+        var sc = SCENE.get(v.getAttribute('data-ch'));
+        if (sc && sc.M && sc.M.mock === MK && (sc.kind === 'figma' || sc.kind === 'phone')) T.fonts(sc);
+      });
+    }
+    function logo(T){ return T ? T.LOGO : '<b class="tw-mk-word">Topicweave</b>'; }
+    function icon(T){ return T ? T.ICON : ''; }
+
+    function figmaEls(){
+      var T = kitTw(); kick();
+      if (cache.els) return cache.els;
+      var els = [
+        { id: 'nav', name: 'Nav / logo + links', icon: 'comp', type: 'Component', x: 88, y: 6, w: 824, h: 40, wire: 'nav',
+          props: { fill: '#000000', font: 'Inter Tight', weight: 'SemiBold', size: '14', ls: '2.5%' },
+          html: '<div class="tw-mk-nav"><span class="tw-mk-logo">' + logo(T) + '</span><span class="tw-mk-links"><span>How it works</span><span>The app</span><span>Voice Kit</span><span>Install</span><span>Pricing</span><span>Roadmap</span></span><span class="tw-mk-btn">Join the beta</span><span class="tw-mk-tile">' + MOON + '</span></div>' },
+        { id: 'label', name: 'Label / Be known for what you know', icon: 'text', type: 'Text', x: 89, y: 98, w: 260, h: 16, wire: 'lines:1',
+          props: { fill: '#9B87F5', font: 'Inter Tight', weight: 'SemiBold', size: '14', lh: '120%', ls: '2.5%' },
+          html: '<div class="tw-mk-eb">Be known for what you know</div>' },
+        { id: 'heading', name: 'H1 / Turn what you know', icon: 'text', type: 'Text', x: 89, y: 128, w: 360, h: 262, wire: 'lines:4:big',
+          props: { fill: '#FFFFFF', font: 'Fraunces', weight: 'Light 350', size: '94', lh: '98%', ls: '-3%' },
+          html: '<div class="tw-mk-h1">Turn what you know into a site people and AI can follow.</div>' },
+        { id: 'lede', name: 'Lede / one connected system', icon: 'text', type: 'Text', x: 89, y: 408, w: 360, h: 76, wire: 'lines:4',
+          props: { fill: '#FFFFFF', font: 'Inter Tight', weight: 'Regular', size: '18', lh: '150%' },
+          html: '<p class="tw-mk-lede">Topicweave builds your expertise into your website as one connected system: a vocabulary in your own words, every page tagged to it, and topic pages that build themselves. Then it shows you what’s working and lets you keep adding to it from anywhere.</p>' },
+        { id: 'cta', name: 'Buttons / Join the beta', icon: 'comp', type: 'Component', x: 89, y: 502, w: 280, h: 32, wire: 'btn',
+          props: { fill: '#2F5BEA', font: 'Inter Tight', weight: 'SemiBold', size: '14', ls: '2.5%' },
+          html: '<div class="tw-mk-acts"><span class="tw-mk-cta hv">Join the beta ' + ARROW + '</span><span class="tw-mk-ghost">See how it works ' + ARROW + '</span></div>' },
+        { id: 'loom', name: 'Canvas / loom · mark', icon: 'img', type: 'Embed', x: 520, y: 60, w: 470, h: 520, wire: 'img',
           props: { fill: 'Canvas · 2D' },
-          html: '<div style="position:absolute;inset:0;overflow:hidden">' + loom(530, 625, 40) + '<div style="position:absolute;inset:0;background:linear-gradient(90deg,#F7F5F0 0%,rgba(247,245,240,.6) 22%,rgba(247,245,240,0) 48%)"></div></div>' },
-        { id: 'nav', name: 'Nav / header', icon: 'comp', type: 'Component', x: 30, y: 14, w: 940, h: 40, wire: 'nav',
-          props: { fill: '#FFFFFF' },
-          html: '<div style="height:100%;border-radius:10px;background:rgba(255,255,255,.94);box-shadow:0 1px 0 rgba(11,27,43,.08);display:flex;align-items:center;gap:22px;padding:0 6px 0 14px;font:600 9.5px ' + F + ';color:#0B1B2B">' + LOGO + '<b style="font:800 13px ' + F + ';margin-left:-14px">CKS</b><span>Product ▾</span><span>Resources ▾</span><span>Pricing</span><span style="margin-left:auto;padding:6px 10px;border:1px solid rgba(11,27,43,.14);border-radius:999px;color:#5F6B78;font-weight:500">Search · Ctrl K</span><span style="background:#0B1B2B;color:#fff;padding:9px 13px;border-radius:999px">Book an install</span></div>' },
-        { id: 'heading', name: 'H1 / Turn what you know', icon: 'text', type: 'Text', x: 40, y: 104, w: 470, h: 250, wire: 'lines:4:big',
-          props: { fill: '#0B1B2B', font: 'Schibsted Grotesk', weight: 'ExtraBold', size: '76', lh: '102%', ls: '-3.5%' },
-          html: '<div style="font:800 51px/1.02 ' + F + ';letter-spacing:-.035em;color:#0B1B2B">Turn what you know into a site people and AI can follow.</div>' },
-        { id: 'lede', name: 'Lede / what CKS does', icon: 'text', type: 'Text', x: 40, y: 368, w: 420, h: 92, wire: 'lines:5',
-          props: { fill: '#3E4C5B', font: 'Schibsted Grotesk', weight: 'Regular', size: '18', lh: '155%' },
-          html: '<p style="margin:0;font:400 11.5px/1.55 ' + F + ';color:#3E4C5B">Your point of view lives in your head, your decks and your calls. CKS captures it on your website, where clients can <em style="font-family:Newsreader,Georgia,serif">find it, learn from it and trust it</em>, tied together by one shared vocabulary.</p>' },
-        { id: 'cta', name: 'Buttons / hero', icon: 'comp', type: 'Component', x: 40, y: 478, w: 320, h: 38, wire: 'btn',
-          props: { fill: '#0B1B2B', font: 'Schibsted Grotesk', weight: 'Bold', size: '15' },
-          html: '<div style="display:flex;gap:8px;height:100%"><span class="hv" style="flex:1;border-radius:999px;background:#0B1B2B;color:#fff;font:700 10px ' + F + ';display:flex;align-items:center;justify-content:center">See it match your site ›</span><span style="flex:1;border-radius:999px;border:1px solid rgba(11,27,43,.25);color:#0B1B2B;font:700 10px ' + F + ';display:flex;align-items:center;justify-content:center">Book an install ›</span></div>' },
-        { id: 'entry', name: 'Card / one entry, tagged once', icon: 'comp', type: 'Component', x: 612, y: 400, w: 350, h: 180, wire: 'row:4',
-          props: { fill: '#FFFFFF', font: 'Schibsted Grotesk', weight: 'Bold', size: '17' },
-          html: '<div style="height:100%;background:#fff;border-radius:12px;box-shadow:0 30px 60px -30px rgba(11,27,43,.45),0 0 0 1px rgba(11,27,43,.1);padding:12px 14px;display:flex;flex-direction:column;gap:9px;font-family:' + F + '"><div style="display:flex;gap:8px;align-items:center;font:600 8.5px ' + F + ';color:#5F6B78"><b style="color:#0B1B2B">New insight</b>by you<span style="margin-left:auto;color:#0B6F61;background:#E3F4F1;border-radius:999px;padding:3px 8px">● Published</span></div><b style="font:800 15px ' + F + ';color:#0B1B2B">Onboarding is a design problem</b><div style="display:flex;gap:5px;flex-wrap:wrap">' + chip('Client onboarding', '#F2A93B') + chip('Service design', '#EF5B3F') + chip('Journey mapping', '#139E8A') + '</div><div style="margin-top:auto;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(11,27,43,.1);padding-top:8px">' + [['3', 'topic pages'], ['2', 'projects'], ['1', 'service'], ['9', 'links built']].map(function(s){ return '<div><b style="font:800 14px ' + F + ';color:#0B1B2B">' + s[0] + '</b><div style="font:500 7px ' + F + ';color:#5F6B78">' + s[1] + '</div></div>'; }).join('') + '</div></div>' }
-      ],
-      mobile: {
-        bg: '#F7F5F0', statusFg: '#0B1B2B',
-        nav: '<div class="cxm-nav" style="position:absolute;left:10px;right:10px;top:42px;height:38px;border-radius:12px;background:rgba(255,255,255,.94);box-shadow:0 6px 18px rgba(11,27,43,.1);display:flex;align-items:center;gap:8px;padding:0 8px 0 12px;z-index:4;color:#0B1B2B;transition:background .5s,color .5s">' + LOGO + '<b style="font:800 12px ' + F + '">CKS</b><span style="margin-left:auto;display:flex;gap:6px;align-items:center"><span style="width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(11,27,43,.14)"><svg viewBox="0 0 20 20" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M12.6 12.6 17 17"/></svg></span><span class="m-theme" style="width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(11,27,43,.14)"><svg viewBox="0 0 20 20" style="width:12px;height:12px;fill:currentColor"><path d="M10 3a7 7 0 100 14 5.5 5.5 0 010-14z"/></svg></span><span class="m-burger"><i></i><i></i><i></i></span></span></div>',
-        menu: '<div style="position:absolute;inset:0;background:#F7F5F0;padding:100px 22px 0;color:#0B1B2B;font-family:' + F + '"><span class="m-close" style="position:absolute;right:16px;top:50px">&#10005;</span>' +
-          ['How it works', 'Styles', 'Voice Kit', 'Sketch your system', 'Pricing'].map(function(l){ return '<div style="font:800 22px/1 ' + F + ';letter-spacing:-.02em;padding:13px 0;border-bottom:1px solid rgba(11,27,43,.1)">' + l + '</div>'; }).join('') +
-          '<div style="margin-top:22px;background:#0B1B2B;color:#fff;font:700 11px ' + F + ';padding:14px;text-align:center;border-radius:999px">Book an install</div></div>',
-        html: '<div class="cxm" style="padding:88px 18px 40px">' +
-          '<div class="cxm-loom">' + loom(300, 150, 28) + '</div>' +
-          '<div style="font:800 29px/1.03 ' + F + ';letter-spacing:-.035em;margin-bottom:10px">Turn what you know into a site people and AI can follow.</div>' +
-          '<p style="font:400 10.5px/1.55 ' + F + ';color:var(--i2);margin:0 0 14px">Your point of view lives in your head, your decks and your calls. CKS captures it on your website, tied together by one shared vocabulary.</p>' +
-          '<div style="display:flex;gap:6px;margin-bottom:26px"><span style="flex:1;text-align:center;background:#0B1B2B;color:#fff;border-radius:999px;padding:11px 6px;font:700 9.5px ' + F + '">See it match your site</span><span style="flex:1;text-align:center;border:1px solid var(--l);border-radius:999px;padding:11px 6px;font:700 9.5px ' + F + '">Book an install</span></div>' +
-          '<div class="m-story" style="font:800 19px/1.08 ' + F + ';letter-spacing:-.02em;margin-bottom:10px">Most sites list what you do. Few show how it connects.</div>' +
-          '<div style="display:flex;gap:4px;margin-bottom:10px">' + ['Scattered', 'Name', 'Tag once', 'Connected'].map(function(s, i){ return '<span class="cxm-st s' + i + (i === 3 ? ' m-st3' : '') + '">' + s + '</span>'; }).join('') + '</div>' +
-          '<div class="cxm-b"><svg viewBox="0 0 262 190" preserveAspectRatio="none"><path d="M55 40Q90 60 131 78" stroke="#F2A93B"/><path d="M205 40Q170 60 131 78" stroke="#F2A93B"/><path d="M55 150Q90 120 131 78" stroke="#F2A93B"/><path d="M205 150Q170 125 131 78" stroke="#139E8A"/></svg>' +
-            '<span class="t" style="left:50%;top:41%;background:#F2A93B">Client onboarding</span>' +
-            [['Onboarding redesign', 8, 12, 9, 12, -5], ['Riverside Clinic', 150, 18, 159, 12, 4], ['Onboarding is a design problem', 30, 118, 9, 128, 3], ['The first 30 days', 144, 132, 159, 128, -6]].map(function(c, i){ return '<span class="c cc' + i + '" style="left:' + c[1] + 'px;top:' + c[2] + 'px;transform:rotate(' + c[5] + 'deg)">' + c[0] + '</span>'; }).join('') + '</div>' +
-          '<div class="m-map" style="font:800 19px/1.08 ' + F + ';letter-spacing:-.02em;margin:24px 0 10px">Follow the threads. Then add your own.</div>' +
-          [['Client onboarding', '#C7832A', '4 pieces'], ['Service design', '#EF5B3F', '5 pieces'], ['Journey mapping', '#139E8A', '4 pieces'], ['Client handoffs', '#2F5BEA', '4 pieces']].map(function(t){ return '<div class="cxm-card" style="display:flex;align-items:center;gap:8px;padding:9px 10px;margin-bottom:6px;font:700 10px ' + F + '"><i style="width:9px;height:9px;border-radius:50%;background:' + t[1] + '"></i>' + t[0] + '<span style="margin-left:auto;font:500 8.5px ' + F + ';color:var(--i2)">' + t[2] + ' ›</span></div>'; }).join('') +
-          '<div style="margin-top:22px;font:800 19px/1.08 ' + F + ';letter-spacing:-.02em;margin-bottom:10px">Three ways to install it.</div>' +
-          [['Foundation', '#F2A93B', '$4,000'], ['Library', '#EF5B3F', '$9,000'], ['Full System', '#2F5BEA', '$16,000']].map(function(p){ return '<div class="cxm-card" style="padding:10px 12px;margin-bottom:6px;border-top:3px solid ' + p[1] + ';display:flex;justify-content:space-between;font:800 11px ' + F + '">' + p[0] + '<span style="font-weight:600;color:var(--i2)">From ' + p[2] + '</span></div>'; }).join('') +
-          '</div>',
+          html: '<div class="tw-mk-loom">' + markSvg(150, 11) + '</div>' }
+      ];
+      if (T) cache.els = els;
+      return els;
+    }
+
+    function phone(){
+      var T = kitTw(); kick();
+      if (cache.mobile) return cache.mobile;
+      var LINKS = ['Home', 'How it works', 'The app', 'Voice Kit', 'Install', 'Pricing', 'Roadmap'];
+      var mm = {
+        bg: '#000', statusFg: '#fff',
+        nav: '<div class="tw-pn"><span class="tw-pn-brand"><span class="tw-pn-logo">' + logo(T) + '</span><span class="tw-pn-icon">' + icon(T) + '</span></span>' +
+          '<span class="tw-pn-end"><span class="tw-pn-t tw-pm-theme">' + MOON + '</span><span class="tw-pn-t tw-pm-menu"><span class="tw-burger"><i></i><i></i><i></i></span></span></span></div>' +
+          '<div class="tw-pm-cloth" aria-hidden="true"></div>',
+        menu: '<div class="tw-pmn"><div class="tw-pmn-weave"></div><div class="tw-pmn-top"><span class="tw-pn-t">' + icon(T) + '</span><span class="tw-pn-t"><span class="tw-burger is-x"><i></i><i></i><i></i></span></span></div>' +
+          '<ol class="tw-pmn-l">' + LINKS.map(function(l, i){ return '<li class="tw-pmn-i tw-pmn-i' + (i + 1) + '" style="transition-delay:' + (.08 + i * .04).toFixed(2) + 's"><small>0' + (i + 1) + '</small>' + l + '</li>'; }).join('') + '</ol>' +
+          '<span class="tw-pmn-cta">Join the beta ' + ARROW + '</span></div>',
+        html: '<div class="tw-pm">' +
+          '<div class="tw-pm-pg tw-pm-home">' +
+            '<p class="tw-pm-eb">Be known for what you know</p>' +
+            '<div class="tw-pm-h1">Turn what you know into a site people and AI can follow.</div>' +
+            '<div class="tw-pm-loom">' + markSvg(80, 5) + '</div>' +
+            '<p class="tw-pm-p">Topicweave builds your expertise into your website as one connected system: a vocabulary in your own words, every page tagged to it, and topic pages that build themselves.</p>' +
+            '<div class="tw-pm-acts"><span class="tw-pm-btn">Join the beta ' + ARROW + '</span><span class="tw-pm-ghost">See how it works ' + ARROW + '</span></div>' +
+            '<div class="tw-pm-sec tw-pm-prob"><p class="tw-pm-eb">The problem</p><div class="tw-pm-h2">AI answers reward sites that connect the dots. Most don’t.</div>' +
+              '<div class="tw-pm-shape">' + scatterSvg() + '</div>' +
+              '<p class="tw-pm-p">Search engines and AI assistants look for a clear source: named ideas, proof behind them, and pages that point to each other.</p></div>' +
+            '<div class="tw-pm-sec"><p class="tw-pm-eb">Step one</p><div class="tw-pm-h2">Name the ideas, in your words.</div>' +
+              '<dl class="tw-pm-terms">' + [['Who you help', 'Professional firms', 0], ['Services', 'Onboarding redesign', 1], ['How it works', 'Journey mapping', 2], ['What you watch for', 'Client handoffs', 3], ['Ideas', 'Client onboarding', 0]].map(function(r){ return '<div><dt><i style="background:' + WV[r[2]] + '"></i>' + r[0] + '</dt><dd>' + r[1] + '</dd></div>'; }).join('') + '</dl></div>' +
+          '</div>' +
+          '<div class="tw-pm-pg tw-pm-hiw">' +
+            '<p class="tw-pm-eb">How it works</p>' +
+            '<div class="tw-pm-h1">Five parts, one shared vocabulary.</div>' +
+            '<div class="tw-pm-loom tw-pm-spine">' + spineSvg() + '</div>' +
+            '<p class="tw-pm-p">Topicweave is a spine of terms in your own words, and four things that hang off it. Tag a piece of content once and it shows up everywhere it belongs.</p>' +
+            '<div class="tw-pm-acts"><span class="tw-pm-btn">Join the beta ' + ARROW + '</span></div>' +
+          '</div></div>',
         notes: [
-          { t: 'The loom rides above the headline', d: 'On a phone the weave becomes a band over the copy, so the headline never has to fight it.' },
-          { t: 'Light or dark, one token swap', d: 'Every color is a variable, so dark mode is a swap at the top of the stylesheet, not a second design.' },
-          { t: 'The story becomes step buttons', d: 'No pinned scroll on a small screen. Tap a step and the loose pages weave together.' },
-          { t: 'The map turns into a list', d: 'Under 700px the knowledge map shows the same topics as a list you can tap through.' }
+          { t: 'Three glass tiles, no bar', d: 'The mark, the theme switch and a menu button in the mark’s colors. At the top the mark tile opens to the full logo, and folds back to the icon once you scroll.' },
+          { t: 'Headline above the shape', d: 'On a phone each section’s label and headline sit above its thread shape and the copy follows below, so a shape never draws through the words.' },
+          { t: 'Dark by default, light on tap', d: 'Black is the default. The switch swaps to paper and ink, and the threads keep their four colors in both.' },
+          { t: 'Page changes knit a cloth', d: 'Pick a page from the menu and a cloth of threads knits across the screen from the link, then unravels on the next page.' }
         ],
         steps: [
-          { note: 0, hold: 1.8 },
-          { note: 1, hold: .3 }, { tap: '.m-theme', toggle: 'dark', hold: 1.9 }, { tap: '.m-theme', toggle: 'dark', hold: .5 },
-          { note: 2, scroll: '.m-story', off: 110, hold: .4 }, { tap: '.m-st3', add: 'woven', hold: 2.6 },
-          { note: 3, scroll: '.m-map', off: 120, hold: 2.2 },
-          { note: -1, scroll: 0, remove: 'woven', hold: .6 }
+          { note: 0, hold: 2.2 },
+          { note: 1, add: 'tw-sc', hold: 0 }, { scroll: '.tw-pm-prob', off: 74, hold: 2.2 },
+          { note: 2, hold: .3 }, { tap: '.tw-pm-theme', toggle: 'tw-light', hold: 2 }, { tap: '.tw-pm-theme', toggle: 'tw-light', hold: .5 },
+          { note: 3, tap: '.tw-pm-menu', toggle: 'menu', hold: 1.5 }, { tap: '.tw-pmn-i2', add: 'tw-pw', hold: .75 },
+          { remove: 'menu', hold: 0 }, { add: 'tw-hiw', hold: 0 }, { remove: 'tw-sc', hold: 0 }, { scroll: 0, hold: .05 },
+          { add: 'tw-pwo', hold: 2.8 },
+          { note: -1, hold: .3 }
         ]
-      }
+      };
+      if (T) cache.mobile = mm;
+      return mm;
+    }
+
+    MK = {
+      accent: '#9B87F5', tw: true,
+      file: 'Topicweave — Product site', page: 'Home', frame: 'Desktop · Hero', url: 'topicweave.com',
+      bg: '#000000', hover: 'cta',
+      comment: { on: 'heading', by: 'Review', text: 'The threads run into the headline when the window narrows.', reply: 'Threads now fade near text and the screen edges, so the mark keeps right and the headline stays clear.' },
+      get els(){ return figmaEls(); },
+      get mobile(){ return phone(); }
     };
+    MOCKS.topicweave = MK;
   })();
+  // Keyed under both slugs until the CMS slug change (cks → topicweave) is published.
+  MOCKS.cks = MOCKS.topicweave;
   // kip: a concept baby log (kip-site/kip). Figma frame = the home hero; phone = the Today screen and the shift handoff,
   // copy taken from the site's app screens. Image channels are recorded loops of the real site, served from this repo on
   // jsDelivr (`img`: channel id → [loop, still]); the loop plays unless reduced motion or Save-Data asks for the still.

@@ -486,6 +486,6 @@
       end(sc, R, t + 1.6, t - 1.5, PLAT.map(function(p, i){ return { t: p[0].replace(' CMS', ''), at: 'p' + i }; }));
     });
 
-    // shared with the CKS scenes (22-cks.js)
+    // shared with the Topicweave scenes (24-tw-*.js)
     K.ks = { pos: pos, run: run, end: end, type: type, count: count, path: path, hide: hide, draw: draw, curve: curve, click: click, move: move, cursor: cursor };
   })();

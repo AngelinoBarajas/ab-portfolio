@@ -1,0 +1,378 @@
+{
+  "_about": "Topicweave rename (was CKS), staged for release. Apply with the Webflow MCP (update_collection_items, by id) ONLY at release time, after the ab-mission bundle with the tw-* scenes is registered, and publish together with the 301 /work/cks -> /work/topicweave. 'after_pass' is NOT applied now (new planet waits for the perf pass). Cover + social image: render with og/topicweave_cover.py (from the v3 site's own code), upload og/out/topicweave-cover.webp and og-topicweave.jpg as assets first and put their fileIds in.",
+  "missions": {
+    "collection": "6ab602e38e2fa6779570a302",
+    "items": [
+      {
+        "id": "6ab97e398d094c64bb845956",
+        "fieldData": {
+          "name": "Topicweave",
+          "slug": "topicweave",
+          "live-url": null,
+          "platform": "Hand-coded · Hostinger",
+          "summary": "Topicweave turns a website that lists what you do into one that explains what you know: one shared vocabulary in your own words ties every service, project, article and answer together, so visitors, search engines and AI assistants can follow your expertise. An optional app and a Voice Kit keep it growing, and nothing publishes without you.",
+          "objective-cadet": "AI answers reward sites that connect the dots, and most expert sites don’t: services on one page, case studies on another, a blog nothing links to. Tracking tools can tell you you’re missing; they can’t build what’s missing. Topicweave installs the missing structure on the site you already have. Name your ideas in your own words, tag each page once, and topic pages, related reading and structured data build from those tags. An optional app reports on your topics, suggests what to write next and lets you capture ideas from your phone, with every draft waiting for your OK. Launch pricing isn’t set yet, so the site invites a few beta sites instead. This mission is that product site plus its prototypes, and a [[Test flight]].",
+          "objective-engineer": "Ten pages coded by hand after an ideation board and wireframes, sharing one look layer: data attributes on the root element pick the accent, typeface, corners and glass, so a design decision is one switch. The signature is a canvas loom: up to 1,700 threads on desktop and 620 on phones that weave the mark, then take a different shape for every section, paused offscreen and a still frame under [[Reduced motion]]. On phones, page changes knit a cloth from the link you tapped and unravel it on the next page. Four clickable prototypes (a dashboard with 17 views, a phone capture app, a CMS tagging panel and the monthly email) run on one set of sample data. No framework.",
+          "params": "Name the ideas in the client’s words, not ours\nShow it working, and label every sample as a sample\nNothing publishes without the owner’s OK\nNo promised rankings, citations or timelines\nPlain HTML, CSS and JS, no framework",
+          "manifest-pages": "Home, How it works, The app, Voice Kit, Install guide, Pricing, Roadmap, Join the beta, Privacy, Terms",
+          "manifest-collections": "Shared vocabulary, Topic pages, Insights library, Prototype sample data, Roadmap phases",
+          "handoff": "A static site that uploads anywhere, plus four clickable prototypes on one set of sample data, ready to become the real app.",
+          "brand-bg": "#000000",
+          "brand-fg": "#FFFFFF",
+          "brand-accent": "#9B87F5",
+          "brand-accent-2": "#EF5B3F",
+          "brand-font": "Fraunces",
+          "stack": [
+            "6ab60563235e3b01c21a3702",
+            "6ab97e23f77d8c41978e662f",
+            "6aba8869e667b92ba2acb38a",
+            "6ab6ce3286c563fd3f896f7c",
+            "6ab97e23f77d8c41978e662d"
+          ],
+          "meta-description": "Topicweave, a connected content system for expert sites: one vocabulary in your words links services, projects and articles so people and AI can follow you.",
+          "cover": {
+            "fileId": "__COVER_FILE_ID__",
+            "alt": "The Topicweave homepage: “Turn what you know into a site people and AI can follow.” beside the woven mark in lilac, coral, teal and cobalt threads"
+          },
+          "social-image": {
+            "fileId": "__OG_FILE_ID__",
+            "alt": "The Topicweave homepage hero: Turn what you know into a site people and AI can follow, beside the woven mark."
+          }
+        }
+      }
+    ],
+    "_live_url": "Angelino 2026-10-04: no live link until topicweave.com is deployed (it's a Hostinger parked page). null also clears the old getcks.io (v2) link. Set it when the site is up."
+  },
+  "mission-channels": {
+    "collection": "6ab602e5a9791b1f2d0b2c91",
+    "_kinds": "d36f1bea... = the coded-scene kind used by the old cks-* rows (kept); design/mobile keep their own kinds",
+    "items": [
+      {
+        "id": "6ab97e58076beaf0e7bd24f9",
+        "fieldData": {
+          "name": "The loom",
+          "slug": "topicweave-the-loom",
+          "channel-id": "tw-loom",
+          "sort": 10,
+          "caption": "Threads weave the mark, then fall into the shapes the site uses for each idea: scattered, tied, mapped, woven. Click to send a ripple through them."
+        }
+      },
+      {
+        "id": "6ab97e58076beaf0e7bd24fb",
+        "fieldData": {
+          "name": "Design → build",
+          "slug": "topicweave-design-build",
+          "channel-id": "design",
+          "sort": 20,
+          "caption": "The hero frame in Figma, the review note, then the built page in Fraunces and lilac."
+        }
+      },
+      {
+        "id": "6ab97e58076beaf0e7bd24fd",
+        "fieldData": {
+          "name": "On a phone",
+          "slug": "topicweave-on-a-phone",
+          "channel-id": "mobile",
+          "sort": 30,
+          "caption": "Glass-tile nav, the loom above the headline, and page changes that knit a cloth across the screen."
+        }
+      },
+      {
+        "id": "6ab97e58076beaf0e7bd24ff",
+        "fieldData": {
+          "name": "Site plan",
+          "slug": "topicweave-site-plan",
+          "channel-id": "tw-plan",
+          "sort": 40,
+          "caption": "The ideation board: Plan, Design and Build decisions as stickies, with four threads woven through every one. Hover a thread to trace it."
+        }
+      },
+      {
+        "id": "6ab97e58076beaf0e7bd2501",
+        "fieldData": {
+          "name": "The app",
+          "slug": "topicweave-the-app",
+          "channel-id": "tw-app",
+          "sort": 50,
+          "caption": "The dashboard prototype: topics, site health and the knowledge map. Hover a topic to follow its threads."
+        }
+      },
+      {
+        "id": "6ab97e58076beaf0e7bd2503",
+        "fieldData": {
+          "name": "Voice Kit",
+          "slug": "topicweave-voice-kit",
+          "channel-id": "tw-capture",
+          "sort": 60,
+          "caption": "Talk for a minute on your phone. It comes back as a draft in your words, tagged, waiting for your OK."
+        }
+      },
+      {
+        "id": "6ab97e58076beaf0e7bd2505",
+        "fieldData": {
+          "name": "Tag once",
+          "slug": "topicweave-tag-once",
+          "channel-id": "tw-cms",
+          "sort": 70,
+          "caption": "Tag an entry with the ideas it's about and publish: the topic page, related reading and the structured data update together."
+        }
+      },
+      {
+        "id": "6ab97e58076beaf0e7bd2507",
+        "fieldData": {
+          "name": "Roadmap",
+          "slug": "topicweave-roadmap",
+          "channel-id": "tw-roadmap",
+          "sort": 80,
+          "caption": "Five build phases, each beside a real screen from the prototypes."
+        }
+      }
+    ]
+  },
+  "mission-systems": {
+    "collection": "6ab602e5ef0f0f5d10878e7c",
+    "items": [
+      {
+        "id": "6ab97e7abfa6a143ea0c0779",
+        "fieldData": {
+          "name": "The loom",
+          "slug": "topicweave-the-loom",
+          "tag": "Canvas · performance",
+          "channel": "tw-loom",
+          "sort": 10,
+          "cadet": "Colored threads weave the logo, then take a new shape for every section: scattered pieces, a ring of topics, a map, a finished cloth. It’s the idea of connecting what you know, drawn.",
+          "why": "A signature image people remember, and one that explains the product before a word is read.",
+          "engineer": "One canvas, drawn by hand. The thread count follows the screen (620 on phones, up to 1,700 on desktop), the pixel budget is capped on 4K screens, it pauses offscreen and in hidden tabs, and [[Reduced motion]] gets one still frame.",
+          "snippet": "const want = mobile ? 620 : low ? 900\n  : (devicePixelRatio || 1) >= 1.75 && w * h > 1.6e6 ? 1300\n  : w >= 1100 ? 1700 : w >= 700 ? 1200 : 620;\nif (first || want !== N) alloc(want);"
+        }
+      },
+      {
+        "id": "6ab97e7abfa6a143ea0c077b",
+        "fieldData": {
+          "name": "One switch per decision",
+          "slug": "topicweave-one-switch-per-decision",
+          "tag": "Look layer",
+          "channel": "design",
+          "sort": 20,
+          "cadet": "Every page and every prototype shares one look: lilac accent, Fraunces headlines, square corners, glass panels.",
+          "why": "The look was chosen by trying options side by side, so each choice had to stay a single switch, not a hunt through stylesheets.",
+          "engineer": "The settled choices live as data attributes on the root element and one stylesheet keys off them, the same idea as [[Variables]] in Webflow. Changing the accent or the corners everywhere is one value.",
+          "snippet": "const state = { accent: 'lilac', serif: 'fraunces', weight: 'regular',\n  corners: 'square', nav: 'bar', bg: 'grid', glass: 'on' };\n// each key becomes a data-* attribute on <html>; look.css keys off them"
+        }
+      },
+      {
+        "id": "6ab97e7abfa6a143ea0c077d",
+        "fieldData": {
+          "name": "A cloth between pages",
+          "slug": "topicweave-a-cloth-between-pages",
+          "tag": "Canvas · transitions",
+          "channel": "mobile",
+          "sort": 30,
+          "cadet": "On a phone, tapping a link knits a cloth of threads out from your finger, and the next page unravels it.",
+          "why": "Page changes are where a phone feels cheap. This one feels like the brand.",
+          "engineer": "The woven cloth repeats every four cells, so it’s one small tile drawn once and filled across every settled cell in a single call; only threads still in flight are drawn one by one. Bigger screens get a plain fade.",
+          "snippet": "const vert = ((c >> 1) + (r >> 1)) & 1;            // warp and weft in pairs\nconst over = ((c + r) & 1) === (vert ? 0 : 1);   // which thread is on top\ntx.globalAlpha = over ? 0.85 : 0.2;"
+        }
+      },
+      {
+        "id": "6ab97e7abfa6a143ea0c077f",
+        "fieldData": {
+          "name": "Reports in your own topics",
+          "slug": "topicweave-reports-in-your-own-topics",
+          "tag": "Dashboard · prototype",
+          "channel": "tw-app",
+          "sort": 40,
+          "cadet": "The app groups search data by the vocabulary you signed off, so you see which ideas are growing and which have no proof yet.",
+          "why": "A wall of URLs tells an owner nothing. Their own topics do.",
+          "engineer": "Seventeen dashboard views on hash routes, one shared sample data file, light and dark. The health score shows its weights on screen, so it’s never a mystery.",
+          "snippet": null
+        }
+      },
+      {
+        "id": "6ab97e7abfa6a143ea0c0781",
+        "fieldData": {
+          "name": "Nothing publishes without you",
+          "slug": "topicweave-nothing-publishes-without-you",
+          "tag": "Voice Kit · phone",
+          "channel": "tw-capture",
+          "sort": 50,
+          "cadet": "Talk for a minute on your phone. It comes back as a draft in your words, tagged, and Publish stays locked until you approve it.",
+          "why": "The fear with AI writing is that it sounds generic and goes out on its own. The lock answers both.",
+          "engineer": "The phone prototype walks record, review and publish. Approving flips the button to Publish; there is no path that skips it.",
+          "snippet": "if (b.id === 'approve') {\n  if (b.textContent === 'Approve') { b.textContent = 'Publish'; toast('Approved. Publish is unlocked.'); }\n  else go('published');\n}"
+        }
+      },
+      {
+        "id": "6ab97e7abfa6a143ea0c0783",
+        "fieldData": {
+          "name": "Tag once, connected everywhere",
+          "slug": "topicweave-tag-once-connected-everywhere",
+          "tag": "CMS → site + JSON-LD",
+          "channel": "tw-cms",
+          "sort": 60,
+          "cadet": "Tag an entry with the ideas it proves and publish: the topic page, related reading and the structured data all update from that one field.",
+          "why": "“Tag once, linked everywhere” is abstract until you see one field turn into ten links.",
+          "engineer": "The links are written into the CMS as real references, not painted on by a script. [[JSON-LD]] is built from the same tags, so what search engines read always matches the page.",
+          "snippet": "document.getElementById('ld').innerHTML = added.map(function (a) {\n  return '{ \"@type\": \"DefinedTerm\", \"name\": \"' + a + '\" }';\n}).join(',\\n    ');"
+        }
+      }
+    ]
+  },
+  "problems-solved": {
+    "collection": "6ab602e7cdd6733ca05a1525",
+    "items": [
+      {
+        "id": "6ab97e7cea0e1f450c97a27e",
+        "fieldData": {
+          "name": "Build what trackers only report",
+          "slug": "topicweave-build-what-trackers-only-report",
+          "code": "TRACKED-NOT-FIXED",
+          "demo": "tw-cms",
+          "sort": 10,
+          "problem": "AI-visibility trackers tell expert businesses they’re missing from the answers, then leave them to fix it.",
+          "fix": "An install that builds the missing structure on the site they already have: a vocabulary, tagged pages, topic pages and structured data.",
+          "result": "The site gets clearer with every entry, instead of another report about why it isn’t.",
+          "engineer": "Tags are native CMS references, so the links survive without any script."
+        }
+      },
+      {
+        "id": "6ab97e7cea0e1f450c97a280",
+        "fieldData": {
+          "name": "Make the mechanism obvious",
+          "slug": "topicweave-make-the-mechanism-obvious",
+          "code": "SOUNDS-COMPLICATED",
+          "demo": "tw-loom",
+          "sort": 20,
+          "problem": "Vocabularies, tagging and structured data sound like a developer project.",
+          "fix": "The loom draws the idea section by section, from scattered pieces to a finished cloth, and the tag-once demo shows one field becoming ten links.",
+          "result": "The idea lands in seconds, with no jargon on screen.",
+          "engineer": "Every section names the shape it wants; the loom reads it and re-forms as you scroll."
+        }
+      },
+      {
+        "id": "6ab97e7cea0e1f450c97a282",
+        "fieldData": {
+          "name": "Keep it in their voice",
+          "slug": "topicweave-keep-it-in-their-voice",
+          "code": "SOUNDS-LIKE-AI",
+          "demo": "tw-capture",
+          "sort": 30,
+          "problem": "Owners expect AI drafts to sound generic, and worry something will publish without them.",
+          "fix": "A Voice Kit filled in about 15 minutes from their own writing and a short recording, and a review queue where Publish stays locked until they approve.",
+          "result": "Drafts start from their own sentences, and they stay the author.",
+          "engineer": "Every piece moves Draft → In review → Approved; zero auto-publishing is the rule, not a setting."
+        }
+      },
+      {
+        "id": "6ab97e7cea0e1f450c97a284",
+        "fieldData": {
+          "name": "Earn trust by not overselling",
+          "slug": "topicweave-earn-trust-by-not-overselling",
+          "code": "NO-SNAKE-OIL",
+          "demo": null,
+          "sort": 40,
+          "problem": "Most “get found by AI” pitches promise rankings and citations nobody can guarantee.",
+          "fix": "“AI visibility, honestly”: two signals shown as signals, sample data labeled in every prototype, and no promised outcomes.",
+          "result": "The site reads like the expert, not the salesperson.",
+          "engineer": "No logos, testimonials, customer counts or rankings anywhere; every simulated screen says so."
+        }
+      },
+      {
+        "id": "6ab97e7cea0e1f450c97a286",
+        "fieldData": {
+          "name": "A beta instead of a guess",
+          "slug": "topicweave-a-beta-instead-of-a-guess",
+          "code": "NO-PRICE-YET",
+          "demo": "tw-roadmap",
+          "sort": 50,
+          "problem": "Launch pricing isn’t set, and a price list would have been a guess.",
+          "fix": "A beta: a few sites get the install now, by hand, far below the launch price, for honest feedback. Every call to action says Join the beta, and a public roadmap shows what’s coming.",
+          "result": "Early sites get a fair deal, and the product meets real sites before it launches.",
+          "engineer": "Pricing shows the packages with TBD and a time calculator, so the value is clear before the price is."
+        }
+      }
+    ]
+  },
+  "mission-stats": {
+    "collection": "6ab602e737a7a5146894d7c4",
+    "items": [
+      {
+        "id": "6ab97e7e7b1c73994a62e7a7",
+        "fieldData": {
+          "name": "call to sketch your first ten terms, in your own words",
+          "slug": "topicweave-first-call",
+          "value": 30,
+          "suffix": " min",
+          "sort": 10
+        }
+      },
+      {
+        "id": "6ab97e7e7b1c73994a62e7a9",
+        "fieldData": {
+          "name": "field on each page, filled in once, and the links build everywhere it belongs",
+          "slug": "topicweave-one-field",
+          "value": 1,
+          "suffix": "",
+          "sort": 20
+        }
+      },
+      {
+        "id": "6ab97e7e7b1c73994a62e7ab",
+        "fieldData": {
+          "name": "to fill the Voice Kit, so every draft starts in your voice",
+          "slug": "topicweave-voice-kit",
+          "value": 15,
+          "suffix": " min",
+          "sort": 30
+        }
+      },
+      {
+        "id": "6ab97e7e7b1c73994a62e7ad",
+        "fieldData": {
+          "name": "a month to read what’s working, grouped by your own topics",
+          "slug": "topicweave-monthly-email",
+          "value": 2,
+          "suffix": " min",
+          "sort": 40
+        }
+      }
+    ]
+  },
+  "observatory": {
+    "collection": "6ab88c3cea14ac23bad45867",
+    "items": [
+      {
+        "id": "6ababdca38f5b9dd11a8441f",
+        "edit": "body: replace '<a href=\"/work/cks\">CKS</a>' with '<a href=\"/work/topicweave\">Topicweave</a>' (read the live body first, change only that link, write the whole body back)"
+      }
+    ]
+  },
+  "tools": {
+    "collection": "6ab602e12eeae1c3ec984d5c",
+    "items": [
+      {
+        "id": "6ab97e23f77d8c41978e662f",
+        "fieldData": {
+          "use": "Hand-drawn animation, like the woven loom on Topicweave",
+          "color": "#9B87F5"
+        }
+      }
+    ]
+  },
+  "after_pass": {
+    "_note": "New planet, after the perf pass (Angelino 2026-10-04). Needs a woven surface type in core/10-space.js (perf chat's file) or at least these colors.",
+    "missions": {
+      "6ab97e398d094c64bb845956": {
+        "planet-colors": "#000000,#9B87F5,#4F7BFF,#139E8A",
+        "planet-ring": "#9B87F5,#EF5B3F,#139E8A,#4F7BFF",
+        "planet-glow": "rgba(155,135,245,.38)"
+      }
+    }
+  },
+  "manual": [
+    "Site settings > Publishing > 301 redirects: /work/cks -> /work/topicweave (Angelino)",
+    "Missions template head: bump the ab-mission CSS <link> to the release tag (bound field, Designer)",
+    "seo/: JSON-LD for the Missions template mentions? check seo/jsonld/launch/*.head.html for /work/cks",
+    "Search Console: request indexing of /work/topicweave after publish"
+  ]
+}
