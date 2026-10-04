@@ -1,0 +1,3 @@
+Missions template (6ab602e48e2fa6779570a308) scripts before v0.33.45:
+ABMission 0.33.8 footer, abknowledge 0.25.5 footer
+Mission item 6ab97e398d094c64bb845956: see the CMS dump fields in cms/topicweave/release.json history (name CKS, slug cks before 2026-10-04)

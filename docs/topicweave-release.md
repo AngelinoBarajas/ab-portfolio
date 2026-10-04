@@ -1,7 +1,8 @@
-# Topicweave mission release (was CKS) · prepared 2026-10-04, NOT released
+# Topicweave mission release (was CKS) · LIVE 2026-10-04 (v0.33.45)
 
 The CKS mission becomes **Topicweave** (renamed 2026-10-01, v3 site in `X:/Claude-Skills/case-study-sites/cks-v3`).
-Everything below is built and tested locally; nothing is committed, tagged, written to Webflow or published.
+**Released 2026-10-04:** v0.33.45 (commit 8d384fe) live on barajasdsgn.com + www + webflow.io. ABMission 0.33.45 on the Missions template (abknowledge 0.25.5 after it), template head CSS bumped to v0.33.45 by Angelino in the Designer, 301 /work/cks → /work/topicweave added by him. CMS applied (cover asset 6ac24632e2e34b79144ddb37, OG 6ac24632e2e34b79144ddb3a), live-url empty. Verified live at 1440 + 390: 8 channels, 8 seams, no console errors. Note: his redirect went live before the slug change; /work/cks 404'd for a few minutes until the item's slug was published on its own.
+**Still open:** Home card loom (`home/10-work.js:105` slug check), About badge sticker 'CKS' (`about/00-about.js:296`), new planet (`after_pass` in release.json), live link once topicweave.com is deployed, Flight manual feature card `work.json mission-cks` still describes CKS.
 Release only after Angelino's OK and after the perf chat's release (v0.33.44 tagged 2026-10-04, commit 5d55fc7, not yet in Webflow). Ours: v0.33.45 (fetch tags first to confirm).
 
 ## What changed (code/src, mission bundle only)
