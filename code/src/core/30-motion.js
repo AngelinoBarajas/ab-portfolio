@@ -155,10 +155,17 @@
     /* ---------- reveals ([data-split] headings, .t-signal scramble) ---------- */
     if (!reduce){
       (document.fonts ? document.fonts.ready : Promise.resolve()).then(function(){
-        $$('[data-split]').forEach(function(el){
-          var split = SplitText.create(el, { type: 'lines', mask: 'lines' });
-          gsap.from(split.lines, { yPercent: 110, duration: 1, ease: 'expo.out', stagger: .08, scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-            onComplete: function(){ split.revert(); decorate(el); } });
+        // each heading is split when it comes within a screen of the viewport, not all at load (perf pass 2026-10-04);
+        // a split doesn't change the heading's size, and one created past its start still plays its entrance
+        // (the ones already in range split right away, in this task, as before: measured first, then split)
+        var vh = innerHeight, sp = $$('[data-split]'), inRange = sp.map(function(el){ var r = el.getBoundingClientRect(); return r.bottom > -vh && r.top < vh * 2; });
+        sp.forEach(function(el, i){
+          function go(){
+            var split = SplitText.create(el, { type: 'lines', mask: 'lines' });
+            gsap.from(split.lines, { yPercent: 110, duration: 1, ease: 'expo.out', stagger: .08, scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+              onComplete: function(){ split.revert(); decorate(el); } });
+          }
+          if (inRange[i]) go(); else AB.near(el, go);
         });
         ScrollTrigger.refresh();
       });

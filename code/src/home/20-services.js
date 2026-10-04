@@ -666,7 +666,15 @@
       var svg = $('svg', v), done = $('.done', v), rk = $('.rk', v), eta = $('.eta', v), pls = $$('.pl', v), L = done.getTotalLength();
       $$('.lb', v).forEach(function(t){ t.setAttribute('fill', 'rgba(242,240,234,.6)'); t.setAttribute('font-family', 'JetBrains Mono, monospace'); t.setAttribute('font-size', '7'); t.setAttribute('letter-spacing', '.8'); });
       var at = [0, 0, 0]; // path length at each planet
-      (function(){ var best = [1e9, 1e9, 1e9]; for (var l = 0; l <= L; l += 1){ var pt = done.getPointAtLength(l); PT.forEach(function(q, i){ var dd = Math.hypot(pt.x - q[0], pt.y - q[1]); if (dd < best[i]){ best[i] = dd; at[i] = l; } }); } })();
+      // nearest point on the path to each planet: every 4 units, then every 1 around the best (perf pass 2026-10-04: a full
+      // 1-unit sweep was ~500 getPointAtLength calls at load; same result, checked against the full sweep)
+      (function(){
+        var best = [1e9, 1e9, 1e9], l, i;
+        function test(l){ var pt = done.getPointAtLength(l); PT.forEach(function(q, k){ var dd = Math.hypot(pt.x - q[0], pt.y - q[1]); if (dd < best[k]){ best[k] = dd; at[k] = l; } }); }
+        for (l = 0; l <= L; l += 4) test(l);
+        var c = at.slice();
+        for (i = 0; i < 3; i++) for (l = Math.max(0, c[i] - 4); l <= Math.min(L, c[i] + 4); l += 1){ var pt = done.getPointAtLength(l), dd = Math.hypot(pt.x - PT[i][0], pt.y - PT[i][1]); if (dd < best[i] || (dd === best[i] && l < at[i])){ best[i] = dd; at[i] = l; } }
+      })();
       function pick(){
         var pool = SV.slice(), out = []; for (var i = 0; i < 3; i++) out.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
         pls.forEach(function(g, i){ $('.body', g).setAttribute('fill', 'rgba(242,240,234,.14)'); $('.ring', g).setAttribute('stroke', out[i][1]); $('.ring', g).style.opacity = 0; $('.nm', g).textContent = out[i][0].toUpperCase(); g.__c = out[i][1]; });
@@ -694,4 +702,10 @@
       if (!reduce && hasGsap) ScrollTrigger.create({ trigger: v, start: 'top 85%', once: true, onEnter: function(){ gsap.from($$('.v-meter b i', v), { scaleX: 0, duration: 1.2, stagger: .15, ease: 'power3.out' }); } });
     }
   };
-  $$('.ab_bento-card[data-visual]').forEach(function(card){ var f = VIZ[card.getAttribute('data-visual')], v = $('.ab_bento-card_viz', card); if (f && v) f(v); });
+  // each visual builds in its own task (perf pass 2026-10-04: all of them in one task was ~350 ms of a phone's main thread).
+  // Still at load, not when near: a card's height depends on its visual, and the layout must be final before the bundle's
+  // last ScrollTrigger refresh and before a /#launch arrival is aimed. Queued as extra split steps when the bundle has them.
+  $$('.ab_bento-card[data-visual]').forEach(function(card){
+    var f = VIZ[card.getAttribute('data-visual')], v = $('.ab_bento-card_viz', card); if (!f || !v) return;
+    if (typeof __steps !== 'undefined') __steps.push(function(){ f(v); }); else f(v);
+  });

@@ -68,7 +68,10 @@
     var inner = chips.filter(function(c){ return c.__ring === 'inner'; }), outer = chips.filter(function(c){ return c.__ring === 'outer'; });
     var bodies = [];
     [inner, outer].forEach(function(set, ri){ set.forEach(function(c, i){ bodies.push({ el: c, ring: ri, a: (i / set.length) * Math.PI * 2 + ri * .4, sp: ri ? -0.00012 : 0.0002, mode: 'orbit' }); }); });
-    function orbitPos(b){ var s = orbit.offsetWidth, rx = b.ring ? s * .46 : s * .30, ry = b.ring ? s * .415 : s * .27; return { x: Math.cos(b.a) * rx, y: Math.sin(b.a) * ry }; }
+    // the orbit's width, cached (perf pass 2026-10-04): read per chip per frame, it forced a style recalc for every chip
+    var ow = 0;
+    if (window.ResizeObserver) new ResizeObserver(function(){ ow = orbit.offsetWidth; }).observe(orbit);
+    function orbitPos(b){ var s = ow || orbit.offsetWidth, rx = b.ring ? s * .46 : s * .30, ry = b.ring ? s * .415 : s * .27; return { x: Math.cos(b.a) * rx, y: Math.sin(b.a) * ry }; }
     bodies.forEach(function(b){
       gsap.set(b.el, { xPercent: -50, yPercent: -50 });
       var p = orbitPos(b); gsap.set(b.el, { x: p.x, y: p.y });

@@ -17,6 +17,45 @@
   // computed "rgb(r, g, b)" → "#rrggbb" (CMS Color fields reach the page as inline styles on hidden nodes)
   function rgbToHex(s){ var m = String(s || '').match(/\d+(\.\d+)?/g); if (!m || m.length < 3 || (m.length > 3 && +m[3] === 0)) return ''; return '#' + m.slice(0, 3).map(function(v){ var h = (+v | 0).toString(16); return h.length < 2 ? '0' + h : h; }).join(''); }
   function onView(el, fn, opts){ var io = new IntersectionObserver(function(es){ fn(es[0].isIntersecting); }, opts); io.observe(el); return io; }
+  // mobile perf pass (2026-10-04): a piece below the fold is built only when it comes within `ahead` screens of the
+  // viewport (from above, below or the side), so the load is not spent on things nobody sees yet. It must not change its own size
+  // when it builds (CSS holds the box), or content would move.
+  function near(el, fn, ahead){
+    if (!el) return;
+    if (!window.IntersectionObserver){ fn(); return; }
+    var m = Math.round((ahead == null ? 1 : ahead) * 100) + '%';
+    var io = new IntersectionObserver(function(es){ if (!es[0].isIntersecting) return; io.disconnect(); fn(); }, { rootMargin: m } /* every side: some pieces start off the side and move in (a moon on its orbit) */);
+    io.observe(el);
+  }
+  // run fn in its own task as soon as the current one ends (a MessageChannel message: not throttled like timers in a
+  // background tab). Splits load work that must still happen at load into short tasks instead of one long one.
+  var soonQ = [], soonCh = window.MessageChannel ? new MessageChannel() : null;
+  if (soonCh) soonCh.port1.onmessage = function(){ var f = soonQ.shift(); if (f) f(); };
+  function soon(fn){ if (soonCh){ soonQ.push(fn); soonCh.port2.postMessage(0); } else setTimeout(fn, 0); }
+  // ambient motion (loops that run on their own, not the entrance) starts once the page is interactive: after the load
+  // event plus a short settle, or at the first input, whichever comes first. Until then the pieces sit at their first frame.
+  var ambQ = [], ambOn = false, ambDone = false, AMB_EV = ['pointerdown', 'keydown', 'wheel', 'touchstart', 'scroll'];
+  function ambRun(f){ try { f(); } catch (e){ if (window.console) console.error(e); } }
+  function ambient(fn){ if (ambDone) ambRun(fn); else ambQ.push(fn); }
+  function ambDetach(){ ambDone = true; AMB_EV.forEach(function(t){ removeEventListener(t, ambStart, true); }); }
+  function ambStart(e){
+    // an input starts everything at once, in its capture phase: a press must already reach a hero toy's new Draggable
+    if (e && e.type){ ambOn = true; ambQ.splice(0).forEach(ambRun); ambDetach(); return; }
+    if (ambOn) return; ambOn = true;
+    // the settle timer starts one piece per task, so the start isn't one long task (an input meanwhile flushes the rest)
+    (function step(){ var f = ambQ.shift(); if (!f){ ambDetach(); return; } ambRun(f); soon(step); })();
+  }
+  AMB_EV.forEach(function(t){ addEventListener(t, ambStart, { capture: true, passive: true }); });
+  function ambSettle(){ setTimeout(ambStart, 1200); }
+  if (document.readyState === 'complete') ambSettle(); else addEventListener('load', ambSettle);
+  // hero toys: Draggable.create measures its element, which on load cost a forced layout per toy. The toy gets the styles
+  // Draggable would give it now (so a first touch never scrolls the page instead) and its Draggable when the page is
+  // interactive. A press before then starts it in the capture phase, so that same press already reaches the new Draggable.
+  function lazyDrag(el, vars, then){
+    if (!el || !window.Draggable) return;
+    el.style.touchAction = 'none'; el.style.cursor = 'grab'; el.style.userSelect = 'none'; el.style.webkitUserSelect = 'none';
+    ambient(function(){ var d = Draggable.create(el, vars)[0]; if (then) then(d); });
+  }
   // big display titles: if the widest line/word can't fit the box (long words on a phone), shrink the font until it does (never under min)
   function fitWide(el, min){
     if (!el || el.__fit) return; el.__fit = true;
@@ -94,4 +133,4 @@
     })['catch'](function(){});
   }
 
-  Object.assign(AB, { hasGsap: hasGsap, reduce: reduce, sysReduce: sysReduce, calm: calm, coarse: coarse, $: $, $$: $$, num: num, esc: esc, pad2: pad2, hex: hex, rgbToHex: rgbToHex, onView: onView, settings: S0, quotes: QUOTES, gloss: GLOSS });
+  Object.assign(AB, { hasGsap: hasGsap, reduce: reduce, sysReduce: sysReduce, calm: calm, coarse: coarse, $: $, $$: $$, num: num, esc: esc, pad2: pad2, hex: hex, rgbToHex: rgbToHex, onView: onView, near: near, soon: soon, ambient: ambient, lazyDrag: lazyDrag, settings: S0, quotes: QUOTES, gloss: GLOSS });

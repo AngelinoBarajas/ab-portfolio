@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.33.39 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.33.44 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -66,7 +66,7 @@ window.Webflow.push(function(){
     $$('[data-drag]', hero).forEach(function(el){
       var back;
       function schedule(){ if (back) back.kill(); back = gsap.delayedCall(6, function(){ gsap.to(el, { x: 0, y: 0, rotation: 0, duration: 1.4, ease: 'elastic.out(1,.55)' }); }); }
-      Draggable.create(el, { type: 'x,y', bounds: hero, inertia: true, edgeResistance: .7,
+      AB.lazyDrag(el, { type: 'x,y', bounds: hero, inertia: true, edgeResistance: .7,
         onPress: function(){ if (back) back.kill(); gsap.to(el, { scale: 1.04, duration: .2 }); },
         onRelease: function(){ gsap.to(el, { scale: 1, duration: .3 }); },
         onDragEnd: function(){ schedule(); if (AB.quest) AB.quest('toys'); }, onThrowComplete: schedule });
@@ -74,16 +74,18 @@ window.Webflow.push(function(){
     });
     // badge: rotating text ring, a tiny moon orbiting the core, spins up on hover
     if (badge && !reduce){
-      var ringTw = gsap.to($('.ring', badge), { rotation: 360, svgOrigin: '60 60', duration: 20, ease: 'none', repeat: -1 });
-      var moonTw = gsap.to($('.moonorbit', badge), { rotation: -360, svgOrigin: '60 60', duration: 6, ease: 'none', repeat: -1 });
-      gsap.to($('.core', badge), { scale: .8, svgOrigin: '60 60', duration: 1.2, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+      // ambient: the spin starts once the page is interactive (AB.ambient); paused until then, so hover can't start it early
+      var ringTw = gsap.to($('.ring', badge), { rotation: 360, svgOrigin: '60 60', duration: 20, ease: 'none', repeat: -1, paused: true });
+      var moonTw = gsap.to($('.moonorbit', badge), { rotation: -360, svgOrigin: '60 60', duration: 6, ease: 'none', repeat: -1, paused: true });
+      var coreTw = gsap.to($('.core', badge), { scale: .8, svgOrigin: '60 60', duration: 1.2, yoyo: true, repeat: -1, ease: 'sine.inOut', paused: true });
+      AB.ambient(function(){ ringTw.play(); moonTw.play(); coreTw.play(); });
       badge.addEventListener('pointerenter', function(){ gsap.to([ringTw, moonTw], { timeScale: 6, duration: .5 }); });
       badge.addEventListener('pointerleave', function(){ gsap.to([ringTw, moonTw], { timeScale: 1, duration: 1.2 }); });
     }
   }
   if (sat && canDrag){
     // satellite idles: slow drift and roll, separate from the drag transform
-    if (!reduce) gsap.to($('.ab_hero_sat-body', sat), { y: -7, rotation: 8, duration: 3.2, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+    if (!reduce) AB.ambient(function(){ gsap.to($('.ab_hero_sat-body', sat), { y: -7, rotation: 8, duration: 3.2, yoyo: true, repeat: -1, ease: 'sine.inOut' }); });
     var satDrags = 0, satGone = false;
     // keep the satellite in open space: default spot, else the first gap that doesn't overlap anything
     var placeSat = function(){
@@ -96,7 +98,7 @@ window.Webflow.push(function(){
       sat.style.top = ''; sat.style.right = '';
     };
     placeSat(); setTimeout(placeSat, 1800); addEventListener('resize', placeSat); if (document.fonts) document.fonts.ready.then(placeSat);
-    Draggable.create(sat, { type: 'x,y', bounds: hero, inertia: true, edgeResistance: .5,
+    AB.lazyDrag(sat, { type: 'x,y', bounds: hero, inertia: true, edgeResistance: .5,
       onDragStart: function(){ gsap.to(sat, { rotation: gsap.utils.random(-40, 40), duration: .4 }); },
       onDragEnd: function(){
         satDrags++;
@@ -1184,7 +1186,15 @@ window.Webflow.push(function(){
       var svg = $('svg', v), done = $('.done', v), rk = $('.rk', v), eta = $('.eta', v), pls = $$('.pl', v), L = done.getTotalLength();
       $$('.lb', v).forEach(function(t){ t.setAttribute('fill', 'rgba(242,240,234,.6)'); t.setAttribute('font-family', 'JetBrains Mono, monospace'); t.setAttribute('font-size', '7'); t.setAttribute('letter-spacing', '.8'); });
       var at = [0, 0, 0]; // path length at each planet
-      (function(){ var best = [1e9, 1e9, 1e9]; for (var l = 0; l <= L; l += 1){ var pt = done.getPointAtLength(l); PT.forEach(function(q, i){ var dd = Math.hypot(pt.x - q[0], pt.y - q[1]); if (dd < best[i]){ best[i] = dd; at[i] = l; } }); } })();
+      // nearest point on the path to each planet: every 4 units, then every 1 around the best (perf pass 2026-10-04: a full
+      // 1-unit sweep was ~500 getPointAtLength calls at load; same result, checked against the full sweep)
+      (function(){
+        var best = [1e9, 1e9, 1e9], l, i;
+        function test(l){ var pt = done.getPointAtLength(l); PT.forEach(function(q, k){ var dd = Math.hypot(pt.x - q[0], pt.y - q[1]); if (dd < best[k]){ best[k] = dd; at[k] = l; } }); }
+        for (l = 0; l <= L; l += 4) test(l);
+        var c = at.slice();
+        for (i = 0; i < 3; i++) for (l = Math.max(0, c[i] - 4); l <= Math.min(L, c[i] + 4); l += 1){ var pt = done.getPointAtLength(l), dd = Math.hypot(pt.x - PT[i][0], pt.y - PT[i][1]); if (dd < best[i] || (dd === best[i] && l < at[i])){ best[i] = dd; at[i] = l; } }
+      })();
       function pick(){
         var pool = SV.slice(), out = []; for (var i = 0; i < 3; i++) out.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
         pls.forEach(function(g, i){ $('.body', g).setAttribute('fill', 'rgba(242,240,234,.14)'); $('.ring', g).setAttribute('stroke', out[i][1]); $('.ring', g).style.opacity = 0; $('.nm', g).textContent = out[i][0].toUpperCase(); g.__c = out[i][1]; });
@@ -1212,7 +1222,13 @@ window.Webflow.push(function(){
       if (!reduce && hasGsap) ScrollTrigger.create({ trigger: v, start: 'top 85%', once: true, onEnter: function(){ gsap.from($$('.v-meter b i', v), { scaleX: 0, duration: 1.2, stagger: .15, ease: 'power3.out' }); } });
     }
   };
-  $$('.ab_bento-card[data-visual]').forEach(function(card){ var f = VIZ[card.getAttribute('data-visual')], v = $('.ab_bento-card_viz', card); if (f && v) f(v); });
+  // each visual builds in its own task (perf pass 2026-10-04: all of them in one task was ~350 ms of a phone's main thread).
+  // Still at load, not when near: a card's height depends on its visual, and the layout must be final before the bundle's
+  // last ScrollTrigger refresh and before a /#launch arrival is aimed. Queued as extra split steps when the bundle has them.
+  $$('.ab_bento-card[data-visual]').forEach(function(card){
+    var f = VIZ[card.getAttribute('data-visual')], v = $('.ab_bento-card_viz', card); if (!f || !v) return;
+    if (typeof __steps !== 'undefined') __steps.push(function(){ f(v); }); else f(v);
+  });
 
   });
   __steps.push(function(){
@@ -1333,7 +1349,8 @@ window.Webflow.push(function(){
         onToggle: function(self){ var nav = $('#nav'); if (self.isActive && nav) nav.classList.remove('is-hidden'); },
         onUpdate: function(self){ gsap.to(proxy, { p: self.progress, duration: .45, ease: 'power2.out', overwrite: true, onUpdate: function(){ setP(proxy.p); } }); } });
       window.__abMissionST = st;
-      ScrollTrigger.refresh();
+      // no refresh here (perf pass 2026-10-04): the Home bundle refreshes once after its last step, a moment later, and
+      // a second full refresh with the pin in place cost ~130 ms of a phone's load
     }
     function go(i){
       i = Math.max(0, Math.min(N - 1, i));
@@ -1349,7 +1366,8 @@ window.Webflow.push(function(){
   /* ===== home/40-stack.js ===== */
 
   /* ---------- orbit (Tools Collection List → chips on two rings), shared system in ab-core ---------- */
-  AB.orbit($('#orbit'), $('#toolReadout'));
+  // built when it comes within a screen of the viewport (perf pass 2026-10-04); the orbit box is sized by CSS
+  AB.near($('#orbit'), function(){ AB.orbit($('#orbit'), $('#toolReadout')); });
 
   /* ---------- distance meter (page scroll → falling toward Gargantua, the footer's black hole): the marker slides down the
      track to the black hole at its foot and the readout counts the distance down; halfway it passes Miller's planet ---------- */

@@ -22,7 +22,7 @@
       items.forEach(function(el){
         var back;
         function schedule(){ if (back) back.kill(); back = gsap.delayedCall(6, function(){ gsap.to(el, { x: 0, y: 0, rotation: 0, duration: 1.4, ease: 'elastic.out(1,.55)' }); }); }
-        Draggable.create(el, { type: 'x,y', bounds: hero, inertia: !!window.InertiaPlugin, edgeResistance: .7, zIndexBoost: false,
+        AB.lazyDrag(el, { type: 'x,y', bounds: hero, inertia: !!window.InertiaPlugin, edgeResistance: .7, zIndexBoost: false,
           onPress: function(){ if (back) back.kill(); gsap.to(el, { scale: 1.04, duration: .2 }); },
           onRelease: function(){ gsap.to(el, { scale: 1, duration: .3 }); },
           onDragEnd: function(){ schedule(); if (AB.quest) AB.quest('toys'); }, onThrowComplete: schedule });

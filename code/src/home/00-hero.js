@@ -59,7 +59,7 @@
     $$('[data-drag]', hero).forEach(function(el){
       var back;
       function schedule(){ if (back) back.kill(); back = gsap.delayedCall(6, function(){ gsap.to(el, { x: 0, y: 0, rotation: 0, duration: 1.4, ease: 'elastic.out(1,.55)' }); }); }
-      Draggable.create(el, { type: 'x,y', bounds: hero, inertia: true, edgeResistance: .7,
+      AB.lazyDrag(el, { type: 'x,y', bounds: hero, inertia: true, edgeResistance: .7,
         onPress: function(){ if (back) back.kill(); gsap.to(el, { scale: 1.04, duration: .2 }); },
         onRelease: function(){ gsap.to(el, { scale: 1, duration: .3 }); },
         onDragEnd: function(){ schedule(); if (AB.quest) AB.quest('toys'); }, onThrowComplete: schedule });
@@ -67,16 +67,18 @@
     });
     // badge: rotating text ring, a tiny moon orbiting the core, spins up on hover
     if (badge && !reduce){
-      var ringTw = gsap.to($('.ring', badge), { rotation: 360, svgOrigin: '60 60', duration: 20, ease: 'none', repeat: -1 });
-      var moonTw = gsap.to($('.moonorbit', badge), { rotation: -360, svgOrigin: '60 60', duration: 6, ease: 'none', repeat: -1 });
-      gsap.to($('.core', badge), { scale: .8, svgOrigin: '60 60', duration: 1.2, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+      // ambient: the spin starts once the page is interactive (AB.ambient); paused until then, so hover can't start it early
+      var ringTw = gsap.to($('.ring', badge), { rotation: 360, svgOrigin: '60 60', duration: 20, ease: 'none', repeat: -1, paused: true });
+      var moonTw = gsap.to($('.moonorbit', badge), { rotation: -360, svgOrigin: '60 60', duration: 6, ease: 'none', repeat: -1, paused: true });
+      var coreTw = gsap.to($('.core', badge), { scale: .8, svgOrigin: '60 60', duration: 1.2, yoyo: true, repeat: -1, ease: 'sine.inOut', paused: true });
+      AB.ambient(function(){ ringTw.play(); moonTw.play(); coreTw.play(); });
       badge.addEventListener('pointerenter', function(){ gsap.to([ringTw, moonTw], { timeScale: 6, duration: .5 }); });
       badge.addEventListener('pointerleave', function(){ gsap.to([ringTw, moonTw], { timeScale: 1, duration: 1.2 }); });
     }
   }
   if (sat && canDrag){
     // satellite idles: slow drift and roll, separate from the drag transform
-    if (!reduce) gsap.to($('.ab_hero_sat-body', sat), { y: -7, rotation: 8, duration: 3.2, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+    if (!reduce) AB.ambient(function(){ gsap.to($('.ab_hero_sat-body', sat), { y: -7, rotation: 8, duration: 3.2, yoyo: true, repeat: -1, ease: 'sine.inOut' }); });
     var satDrags = 0, satGone = false;
     // keep the satellite in open space: default spot, else the first gap that doesn't overlap anything
     var placeSat = function(){
@@ -89,7 +91,7 @@
       sat.style.top = ''; sat.style.right = '';
     };
     placeSat(); setTimeout(placeSat, 1800); addEventListener('resize', placeSat); if (document.fonts) document.fonts.ready.then(placeSat);
-    Draggable.create(sat, { type: 'x,y', bounds: hero, inertia: true, edgeResistance: .5,
+    AB.lazyDrag(sat, { type: 'x,y', bounds: hero, inertia: true, edgeResistance: .5,
       onDragStart: function(){ gsap.to(sat, { rotation: gsap.utils.random(-40, 40), duration: .4 }); },
       onDragEnd: function(){
         satDrags++;

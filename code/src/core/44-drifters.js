@@ -57,5 +57,7 @@
       });
     }
     function go(){ scatter(); others(); }
-    if ('requestIdleCallback' in window) requestIdleCallback(go, { timeout: 2500 }); else setTimeout(go, 1200);
+    // never in the hero, so they wait until the page is interactive (perf pass 2026-10-04; was an idle callback, which the
+    // site's 2 s idle deadline pulled into the load)
+    AB.ambient(function(){ if ('requestIdleCallback' in window) requestIdleCallback(go, { timeout: 2500 }); else setTimeout(go, 200); });
   })();

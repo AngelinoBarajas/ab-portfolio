@@ -1,6 +1,7 @@
 
   /* ---------- orbit (Tools Collection List → chips on two rings), shared system in ab-core ---------- */
-  AB.orbit($('#orbit'), $('#toolReadout'));
+  // built when it comes within a screen of the viewport (perf pass 2026-10-04); the orbit box is sized by CSS
+  AB.near($('#orbit'), function(){ AB.orbit($('#orbit'), $('#toolReadout')); });
 
   /* ---------- distance meter (page scroll → falling toward Gargantua, the footer's black hole): the marker slides down the
      track to the black hole at its foot and the readout counts the distance down; halfway it passes Miller's planet ---------- */

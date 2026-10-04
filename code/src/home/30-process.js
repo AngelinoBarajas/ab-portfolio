@@ -114,7 +114,8 @@
         onToggle: function(self){ var nav = $('#nav'); if (self.isActive && nav) nav.classList.remove('is-hidden'); },
         onUpdate: function(self){ gsap.to(proxy, { p: self.progress, duration: .45, ease: 'power2.out', overwrite: true, onUpdate: function(){ setP(proxy.p); } }); } });
       window.__abMissionST = st;
-      ScrollTrigger.refresh();
+      // no refresh here (perf pass 2026-10-04): the Home bundle refreshes once after its last step, a moment later, and
+      // a second full refresh with the pin in place cost ~130 ms of a phone's load
     }
     function go(i){
       i = Math.max(0, Math.min(N - 1, i));

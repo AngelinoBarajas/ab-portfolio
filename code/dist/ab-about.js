@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-about v0.33.36 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-about v0.33.44 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abAboutInit) return;
@@ -23,6 +23,9 @@ window.Webflow.push(function(){
     var o = new IntersectionObserver(function(es){ if (es[0].isIntersecting){ fn(); o.disconnect(); } }, opts || { threshold: .4 });
     o.observe(el);
   }
+  // the Between launches cards build when their card is within a screen of the viewport (perf pass 2026-10-04: all of
+  // them built at load on a phone). Only cards whose box doesn't change when they build (checked: clocks, crew, philosophy)
+  function nearCard(sel, fn){ var el = $(sel); if (!el) return; AB.near(el.closest('.ab_bento-card') || el, fn); }
   function keyAct(el, fn){ el.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); fn(e); } }); }
 
   /* ---------- decorative SVGs into their Designer slots ---------- */
@@ -86,8 +89,11 @@ window.Webflow.push(function(){
       return m;
     });
     var t0 = Date.now();
+    // the planet's width, cached: reading it every frame forced a full layout per frame (the top cost of About's load on a
+    // phone, perf pass 2026-10-04); it only changes when the planet box resizes (layout width, so a press scale isn't counted twice)
+    var pw = 0;
     function place(t){
-      var w = P.getBoundingClientRect().width || 100;
+      var w = pw || (pw = P.offsetWidth) || 100;
       MOONS.forEach(function(m){
         var a = m.phase + (reduce ? 0 : t / m.period * Math.PI * 2);
         var ex = Math.cos(a) * m.rx, ey = Math.sin(a) * m.ry, rr = m.rot * Math.PI / 180;
@@ -97,12 +103,19 @@ window.Webflow.push(function(){
         m.el.style.zIndex = front ? 6 : 0;
       });
     }
+    if (window.ResizeObserver) new ResizeObserver(function(){ pw = P.offsetWidth; place(reduce || !t0 ? 0 : (Date.now() - t0) / 1000); }).observe(P);
+    else addEventListener('resize', function(){ pw = 0; });
     place(0);
     if (reduce) return;
     var visible = true;
     if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ visible = es[0].isIntersecting; }, { rootMargin: '200px' }).observe(P);
-    if (hasGsap) gsap.ticker.add(function(){ if (visible) place((Date.now() - t0) / 1000); });
-    else (function loop(){ if (visible) place((Date.now() - t0) / 1000); requestAnimationFrame(loop); })();
+    // ambient: the moons start orbiting once the page is interactive, from where place(0) left them
+    t0 = 0;
+    AB.ambient(function(){
+      t0 = Date.now();
+      if (hasGsap) gsap.ticker.add(function(){ if (visible) place((Date.now() - t0) / 1000); });
+      else (function loop(){ if (visible) place((Date.now() - t0) / 1000); requestAnimationFrame(loop); })();
+    });
   })();
 
   /* ---------- badge + meta field: "Training · Self-taught" became "Flight hours · 10,000+" (Angelino, 2026-09-30). The
@@ -118,6 +131,7 @@ window.Webflow.push(function(){
     if (hint) hint.textContent = coarse ? 'Tap to flip · swipe sideways to swing' : 'Click the badge to flip it · drag it to swing';
     badge.setAttribute('aria-label', 'Crew badge. Press Enter to flip it over, arrow keys to swing it.');
     function flip(){
+      buildBack();
       if (AB.quest) AB.quest('badge'); 
       badge.classList.toggle('is-flipped'); var f = badge.classList.contains('is-flipped');
       if (front) front.setAttribute('aria-hidden', f ? 'true' : 'false'); if (back) back.setAttribute('aria-hidden', f ? 'false' : 'true');
@@ -294,7 +308,13 @@ window.Webflow.push(function(){
       el.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none"><defs><radialGradient id="abw-scuff' + seed + '"><stop offset="0" stop-color="rgba(255,255,255,.07)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient></defs>' + s + '</svg>';
       face.appendChild(el);
     }
-    wear(front, 7); wear(back, 19);
+    wear(front, 7);
+    // the back face (its wear + the mission patches, four textured planets) is only seen after a flip, so it builds once
+    // the page is interactive, or at the first hover / focus / flip if that comes sooner (perf pass 2026-10-04)
+    var backDone = false;
+    function buildBack(){ if (backDone) return; backDone = true; wear(back, 19); patches(); }
+    ['pointerenter', 'pointerdown', 'focus'].forEach(function(t){ badge.addEventListener(t, buildBack); });
+    AB.ambient(function(){ if ('requestIdleCallback' in window) requestIdleCallback(buildBack, { timeout: 1500 }); else setTimeout(buildBack, 300); });
 
     // mission patches on the back: what's launched or in orbit (Work page statuses, 2026-09-30); planets are the site's own
     var PATCHES = [
@@ -304,7 +324,8 @@ window.Webflow.push(function(){
       { n: 'Knowledge System', s: 'In orbit', k: 'orbit', shape: 'shield', c: '#1d2350,#3f4fa8,#7c5cff,#c9bcff,#2a1d6b', bg: '#241d56', x: 74, y: 4, w: 70, h: 78, r: 9 },
       { n: 'AB Identity', s: 'Shipped', k: 'shipped', shape: 'mark', x: 60, y: 116, w: 86, h: 58, r: -7 }
     ];
-    if (back){
+    function patches(){
+      if (!back) return;
       var box = document.createElement('div'); box.className = 'ab_badge_stk';
       box.setAttribute('role', 'img');
       box.setAttribute('aria-label', 'Mission patches: ' + PATCHES.map(function(p){ return p.n + ', ' + p.s.toLowerCase(); }).join('; '));
@@ -415,7 +436,7 @@ window.Webflow.push(function(){
   })();
 
   /* ---------- Interstellar: time dilation clocks (1 hour there = 7 years here) ---------- */
-  (function(){
+  nearCard('[data-td]', function(){
     var td = $('[data-td]'); if (!td) return;
     var here = 0, hover = false, vis = false, last = 0, elH = $('[data-td-here]', td), elE = $('[data-td-earth]', td);
     // the Endurance: a ring ship floating at the edge of the black hole; flying close pulls it in to the horizon
@@ -510,7 +531,7 @@ window.Webflow.push(function(){
     }
     if (reduce){ elH.textContent = '01:00:00'; elE.textContent = '7y 000d 00h'; return; }
     new IntersectionObserver(function(es){ var was = vis; vis = es[0].isIntersecting; if (vis && !was) requestAnimationFrame(tick); }).observe(td);
-  })();
+  });
 
   /* ---------- Between launches cards: spotlight + tilt from core (AB.cardFx), bookshelf included (Angelino, 2026-09-26) ---------- */
   if (AB.cardFx) $$('.section_about-off .ab_bento-card').forEach(AB.cardFx);
@@ -519,7 +540,7 @@ window.Webflow.push(function(){
      a tilted orbital plane; rings split into back/front halves around the sun, planets scale + layer by depth and are
      lit on the side facing the sun. Hover speeds the orbits up (eased rate, so nobody jumps), a mouse tilts the plane,
      off screen it stops, reduced motion gets one still frame. The Designer's CSS orbits are hidden (.is-3d). ---------- */
-  (function(){
+  nearCard('.ab_crew_sys', function(){
     var sys = $('.ab_crew_sys'); if (!sys) return;
     var box = sys.parentNode, card = sys.closest('.ab_bento-card') || box, NS = 'http://www.w3.org/2000/svg';
     var P = [
@@ -592,7 +613,7 @@ window.Webflow.push(function(){
     card.addEventListener('pointermove', function(e){ if (e.pointerType !== 'mouse') return; var r = box.getBoundingClientRect(); tiltT = .28 + Math.max(0, Math.min(1, (e.clientY - r.top) / r.height)) * .3; yawT = ((e.clientX - r.left) / r.width - .5) * .5; });
     if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ vis = es[0].isIntersecting; if (vis) start(); }).observe(box);
     else start();
-  })();
+  });
 
   /* ---------- space facts (Designer list [data-about-facts]) + drag-to-spin planet ---------- */
   (function(){
@@ -618,7 +639,7 @@ window.Webflow.push(function(){
      Angelino's astronaut (logo/SVG/astronaut-1.svg, recolored to the site palette) floats on a tether from the card's
      corner. Scrolling nudges him (he can drift a little past the frame and settles back), he can be dragged and springs
      home, and every new question changes his visor's gradient, sweeps a glint across it and gives him a little spin. */
-  (function(){
+  nearCard('[data-ph]', function(){
     var box = $('[data-ph]'), qT = $('[data-ph-q]'), qN = $('[data-ph-no]');
     var QS = $$('[data-about-questions] p').map(function(p){ return p.textContent.trim(); }).filter(Boolean);
     if (!box || !qT || !QS.length) return;
@@ -771,7 +792,7 @@ window.Webflow.push(function(){
     // tapping anywhere on the card asks the next question (links inside it still work)
     card.style.cursor = 'var(--hand, pointer)';
     card.addEventListener('click', function(e){ if (e.target.closest && e.target.closest('a')) return; next(); }); keyAct(box, next);
-  })();
+  });
 
   /* ---------- player one: click for XP, level up; the Konami code is a cheat ---------- */
   var LV = { n: 7, BOSS: 20, beaten: false, boss: null };
@@ -844,7 +865,9 @@ window.Webflow.push(function(){
   })();
 
   /* ---------- bookshelf: knock a book off (colors + heights come from data attributes) ---------- */
-  (function(){
+  // the bookshelf sets its own height when it builds, so it can't wait until it's near (content below would move);
+  // it builds right after the page's init, in its own task
+  AB.soon(function(){
     var shelf = $('[data-shelf]'); if (!shelf) return;
     var note = $('[data-shelf-note]', shelf), nt;
     // real titles on six spines (the rest stay genres): each lands on the spine that already fits it, keeps its color,
@@ -1161,7 +1184,7 @@ window.Webflow.push(function(){
     function rebuild(){ clearTimeout(rz); rz = setTimeout(build, 120); }
     if (window.ResizeObserver) new ResizeObserver(rebuild).observe(shelf); else window.addEventListener('resize', rebuild);
     requestAnimationFrame(build);
-  })();
+  });
 
   /* ===== about/10-boss.js ===== */
   /* =========================================================

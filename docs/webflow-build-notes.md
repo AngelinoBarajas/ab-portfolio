@@ -819,3 +819,31 @@ Lighthouse mobile re-check of 11 live pages (table + diagnosis in `docs/qa-repor
 - Left for the Designer: **P1/P2** (Topics template visibility *Missions is set* / *Services is set*): the script hides empty sections after paint (topic pages without missions 0.11 at ~1024 px).
 - Tested before shipping by routing jsDelivr bundles to local `dist/`; the template CSS jump (0.25.5 → 0.33.29) was screenshot-diffed on 8 pages at 390/1440 ([[lesson_cls-test-desktop-and-cms-pages]]).
 
+
+## Field note 23 (2026-10-01): staging
+
+Field note **23** (WB-15 `ai-creative-tool-taste`, item `6abe830205920582ee7be3c7`, sort 230) written, approved and published to webflow.io 2026-10-01: AI as a creative tool, paste-up → desktop publishing → AI, taste as the part AI can't hold. At his ask the note does **not** say AI wrote the site's code (AI is described only as doing bulk work: CMS entries, refining, bug hunting), and client moments are hinted at, not named. Topics philosophy-at-work / brand-identity / design-systems. Page 200, listed on /observatory, 4 cross-links (notes 14, 16, 19, 22) 200. Next free Observatory: WB-16 / BN-09, sort 240, draft 24.
+Importer: added `"23"` to `_draft-topics.json` › insight_topics, removed YAML quotes from the title (the parser keeps them literally), filtered the payload to sort 23 → 230, created staged with isDraft false, then `publish_site` with `publishToWebflowSubdomain: true` (no custom domains on this site).
+
+## Mobile performance pass (2026-10-04): v0.33.44 (ab-core JS, ab-home, ab-about)
+
+Goal: lift Home (47) and About (48) mobile without changing how anything looks. Measured with a local A/B harness (live barajasdsgn.com HTML served from localhost, only the AB bundles swapped to the local build; Lighthouse 13.5 mobile, 5 runs) plus throttled traces (4x CPU, 412 px). Local scores run lower than live (uncompressed local files), so compare base vs new only.
+
+| Page | Perf base → new (median of 5) | TBT base → new | CLS |
+|---|---|---|---|
+| Home | 43 → **62** (61/62/61/62/62) | 801 → **115 ms** | unchanged |
+| About | 38 → **60** (60/62/60/60/61) | 1043 → **72 ms** | unchanged |
+
+What each cost was and what changed (all site-wide helpers are on `AB`, `core/00-base.js`):
+- **`AB.near(el, fn)`** builds a piece once it is within a screen of the viewport (every side). Used only where the build can't change any box: About's Interstellar clocks, crew 3D, philosophy astronaut (`nearCard`), the Home tools orbit, footer planet Draggables, `[data-split]` heading splits (the ones in range at fonts.ready still split at once), and planet **texture painting** (watched by the planet's section, because a planet hanging off the side of a page that clips sideways overflow never counts as near itself: About's wife moon).
+- **Not near-built, on purpose:** Home's bento visuals and About's bookshelf set their own card heights when they build (services section +560 px on a phone). Built lazily, a `/#launch` arrival landed 560 px off and scrolling up jumped (shift 0.78). They build at load again, but each Home visual is its own split step (`__steps`) and the shelf runs in its own task (`AB.soon`).
+- **`AB.ambient(fn)`**: loops that run on their own start once the page is interactive (load + 1.2 s, or the first pointerdown/keydown/wheel/touchstart/scroll). Home hero badge spin + satellite bob, About moon orbit, drifter planets. The timer start runs one piece per task; an input runs them all at once.
+- **`AB.lazyDrag(el, vars)`**: hero toys (Home words, planets, badge, satellite; every other page's hero words + planet via `core/39-herodrag`) get Draggable's inline styles at load (`touch-action:none`, `cursor:grab`, `user-select:none`) and their Draggable at ambient start. A press before then starts ambient in the capture phase, so the same press already reaches the new Draggable (tested touch + mouse at 150 ms and 1.6 s after load).
+- **Texture worker** (`core/10-space.js`): `makeTexture` split into `drawTexture(canvas, …)`; where the browser has `OffscreenCanvas`, a Blob-URL worker runs the same functions (shipped by their own minified names) and returns a JPEG Blob → `blob:` URL. Byte-identical to the main-thread JPEGs on Home/About/Process/Work. One hero planet's texture was a 150–250 ms main-thread task even on a fast laptop; this was the bimodal About score (42 vs 60 depending on whether first paint landed before it). No OffscreenCanvas (older iOS, Playwright WebKit) or any worker error → made on the main thread as before.
+- **Forced layouts per frame:** About's pilot planet read `getBoundingClientRect()` every frame for the moons (the top cost of About's load); Home's orbit read `offsetWidth` per chip per frame. Both cached (ResizeObserver).
+- Badge back face (wear + 4 patch planets) builds at ambient, or at the first hover/focus/flip.
+- Home trajectory visual: nearest-point search every 4 units then refined (was ~500 `getPointAtLength` calls); same three results.
+- Removed the Process step's own `ScrollTrigger.refresh()` (the bundle refreshes after its last step; ScrollTrigger's own load refresh also runs).
+
+Verified: section boxes before/after scrolling identical to base on all 12 pages at 412 + 1440 (incl. `/#launch` landing position), layout shifts while scrolling no worse than base, no new console errors, every planet textured after a scroll-through, badge back identical when flipped 300 ms after load, side-by-side screenshots of every changed piece.
+Known, not from this pass: Home's init runs in jQuery's ready timer *after* first paint, so the hero title fit / nav "Booking" text can register as a ~0.02 shift when a frame lands in between (seen in local Lighthouse runs, live measured 0).

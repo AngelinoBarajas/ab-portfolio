@@ -124,11 +124,15 @@
           rotation: aa * 180 / Math.PI + 180 - t * 40, scaleX: 1 + t * t * 7, scaleY: Math.max(.04, 1 - t * .96), opacity: t > .78 ? Math.max(0, (1 - t) / .22) : 1 });
       }, onComplete: done });
     }
+    // each planet becomes draggable when the footer comes within a screen of the viewport (perf pass 2026-10-04)
     feedPlanets.forEach(function(p){
-      var drag = Draggable.create(p, { type: 'x,y', zIndexBoost: true,
-        onDrag: function(){ tidal(p); },
-        onRelease: function(){ var t = tidal(p); if (t.d < t.b.w * 1.3) consume(p, this); else home(p, this); } })[0];
-      p.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); if (drag.enabled()) consume(p, drag); } });
+      var drag = null;
+      AB.near(p, function(){
+        drag = Draggable.create(p, { type: 'x,y', zIndexBoost: true,
+          onDrag: function(){ tidal(p); },
+          onRelease: function(){ var t = tidal(p); if (t.d < t.b.w * 1.3) consume(p, this); else home(p, this); } })[0];
+      });
+      p.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); if (drag && drag.enabled()) consume(p, drag); } });
     });
   })();
 

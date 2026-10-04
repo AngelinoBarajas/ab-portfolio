@@ -59,8 +59,9 @@
     gas: '#2b1d4f,#5a3f8e,#c68fbf,#3a2f6b,#f0b48a', rocky: '#6b6258,#9a8c7a,#433c35', ice: '#e3f2ff,#9cc3ee,#5a7fb8',
     lava: '#140807,#3a1510,#ff6a3d,#ffd27a', terra: '#0e3a5c,#1e6e8c,#3f8f4a,#a88b5c,#f2f0ea'
   };
-  function makeTexture(type, cols, seed, W){
-    var H = W / 2, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  // drawTexture paints into any canvas, so the same code runs in the texture worker (OffscreenCanvas) or here
+  function drawTexture(cv, type, cols, seed, W){
+    var H = W / 2; cv.width = W; cv.height = H;
     var ctx = cv.getContext('2d'), img = ctx.createImageData(W, H), d = img.data, P = 8;
     for (var y = 0; y < H; y++){
       var v = y / H, lat = Math.abs(v - .5) * 2;
@@ -170,7 +171,29 @@
         });
       }
     }
-    return cv.toDataURL('image/jpeg', .9);
+    return cv;
+  }
+  function makeTexture(type, cols, seed, W){ return drawTexture(document.createElement('canvas'), type, cols, seed, W).toDataURL('image/jpeg', .9); }
+  // textures are made in a Web Worker where the browser has OffscreenCanvas (perf pass 2026-10-04): the per-pixel noise of
+  // one hero planet was a 150–250 ms main-thread task even on a fast laptop. Same functions, same JPEG encoder; the
+  // functions travel by their own (minified) names. No worker, or it fails: made here, as before.
+  var texW = null, texCb = {}, texId = 0;
+  (function(){
+    try {
+      if (!window.Worker || !window.OffscreenCanvas || !window.Blob || !window.URL || !URL.createObjectURL) return;
+      var fns = [mix, ramp, hash, vnoise, fbm, drawTexture];
+      if (fns.some(function(f){ return !f.name; })) return;
+      var src = fns.map(function(f){ return 'var ' + f.name + '=' + String(f) + ';'; }).join('\n') +
+        '\nonmessage=function(e){var d=e.data;try{' + drawTexture.name + '(new OffscreenCanvas(1,1),d.t,d.c,d.s,d.w).convertToBlob({type:"image/jpeg",quality:.9}).then(function(b){postMessage({id:d.id,b:b});},function(){postMessage({id:d.id});});}catch(x){postMessage({id:d.id});}};';
+      texW = new Worker(URL.createObjectURL(new Blob([src], { type: 'text/javascript' })));
+      texW.onmessage = function(e){ var cb = texCb[e.data.id]; delete texCb[e.data.id]; if (cb) cb(e.data.b ? URL.createObjectURL(e.data.b) : ''); };
+      texW.onerror = function(){ texW = null; var p = texCb; texCb = {}; Object.keys(p).forEach(function(k){ p[k](''); }); };
+    } catch (e){ texW = null; }
+  })();
+  function textureURL(type, cols, seed, W, done){
+    if (!texW){ done(makeTexture(type, cols, seed, W)); return; }
+    var id = ++texId; texCb[id] = function(u){ done(u || makeTexture(type, cols, seed, W)); };
+    texW.postMessage({ id: id, t: type, c: cols, s: seed, w: W });
   }
   /* ---------- random planets: a type + a color harmony (analogous / complementary / triad) per call ----------
      AB.planetLook(rnd?) -> { type, colors, ring, tilt, open, glow, seed }; AB.applyPlanetLook(el, look) writes the data
@@ -246,6 +269,10 @@
     });
     return out.length ? out : ['/', '/work', '/services', '/process', '/about', '/observatory', '/contact'].filter(function(x){ return x !== here; });
   }
+  // a planet's texture paints at the next idle moment (200 ms at most) once the planet is within a screen of the viewport (perf pass
+  // 2026-10-04: off-screen planets painted theirs during the load); the texture is a background, so nothing moves
+  // (watched by its section: a planet hanging off the side of a page that clips sideways overflow never counts as near itself)
+  function paintNear(el, paint){ AB.near(el.closest('section, [class^="section_"], [class*=" section_"], footer') || el, function(){ if ('requestIdleCallback' in window) requestIdleCallback(paint, { timeout: 200 }); else setTimeout(paint, 30); }); }
   function buildWormhole(el){
     el.classList.add('is-wormhole');
     var sz = el.getBoundingClientRect().width || 200, armed = 0;
@@ -259,7 +286,7 @@
     el.removeAttribute('aria-hidden'); el.setAttribute('role', 'link'); el.tabIndex = 0; el.setAttribute('aria-label', 'Wormhole: fall through to a random page of this site');
     var farTx = '';
     var paint = function(){ farTx = farSide(sz > 240 ? 512 : 320); $$('.wh-far i', body).forEach(function(i){ i.style.backgroundImage = 'url(' + farTx + ')'; }); body.classList.add('on'); };
-    if ('requestIdleCallback' in window) requestIdleCallback(paint, { timeout: 800 }); else setTimeout(paint, 30);
+    paintNear(el, paint);
     var lens = { el: $('.wh-ball', body), b: 0, to: 0 }; LENSES.push(lens);
     // probes: now and then one drifts past, gets caught, spirals in (faster, stretching) and is gone: "signal lost".
     // Only while the wormhole is on screen, never under reduced motion or during the fall.
@@ -396,8 +423,8 @@
       if (ds.label && el.hasAttribute('data-drag')){ el.setAttribute('role', 'img'); el.setAttribute('aria-label', 'Draggable planet: ' + ds.label); el.tabIndex = 0; }
       else el.setAttribute('aria-hidden', 'true');
     }
-    var paint = function(){ var W = sz > 160 ? 512 : sz > 70 ? 256 : 128; if (type === 'crystal' || type === 'lava') W = sz > 110 ? 1024 : sz > 50 ? 512 : 256; /* sharp edges need ~2 texels per screen pixel */ tex.style.setProperty('--tex', 'url(' + makeTexture(type, cols, seed, W) + ')'); requestAnimationFrame(function(){ tex.classList.add('on'); }); };
-    if ('requestIdleCallback' in window) requestIdleCallback(paint, { timeout: 800 }); else setTimeout(paint, 30);
+    var paint = function(){ var W = sz > 160 ? 512 : sz > 70 ? 256 : 128; if (type === 'crystal' || type === 'lava') W = sz > 110 ? 1024 : sz > 50 ? 512 : 256; /* sharp edges need ~2 texels per screen pixel */ textureURL(type, cols, seed, W, function(u){ tex.style.setProperty('--tex', 'url(' + u + ')'); requestAnimationFrame(function(){ tex.classList.add('on'); }); }); };
+    paintNear(el, paint);
   }
   var planets = $$('.ab_planet[data-planet]');
   var pio = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting){ buildPlanet(e.target); pio.unobserve(e.target); } }); }, { rootMargin: '1400px' });
