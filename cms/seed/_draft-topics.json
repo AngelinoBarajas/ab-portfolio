@@ -73,6 +73,7 @@
     "28": ["mobile-performance", "perceived-speed", "custom-code", "webflow-cms"],
     "29": ["philosophy-at-work", "better-questions", "brand-identity"],
     "30": ["philosophy-at-work", "micro-interaction", "search-ai-answers"],
-    "31": ["micro-interaction", "motion-scroll", "philosophy-at-work"]
+    "31": ["micro-interaction", "motion-scroll", "philosophy-at-work"],
+    "32": ["philosophy-at-work", "brand-identity", "design-systems", "micro-interaction"]
   }
 }
