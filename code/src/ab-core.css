@@ -974,6 +974,8 @@ section:hover > .ab_frame-label{color:var(--select)}
 
 /* ---------- logo (core/22-logo.js inlines the SVG): warp in, the planet spins in as a sphere and opens, letters draw + fill, black-hole hover ---------- */
 .ab_logo-svg{display:block;height:24px;width:auto;overflow:visible;color:inherit}
+/* Webflow's normalize (svg:not(:root){overflow:hidden}) outranks the class: the draw-in stroke was clipped at the viewBox (bottom of the B) */
+.ab_logo-svg:not(:root),.ab_mark:not(:root){overflow:visible}
 .ab_logo-svg path{fill:currentColor;stroke:currentColor;stroke-width:10;stroke-linejoin:round;stroke-opacity:0;transform-box:view-box;transform-origin:240px 121px;transition:transform .9s cubic-bezier(.2,.9,.2,1)}
 .ab_logo-svg.is-draw{animation:ab-logo-warp 1s cubic-bezier(.16,1,.3,1) both}
 .ab_logo-svg.is-draw .lg-m>path{animation:ab-logo-fill .6s ease-out calc(.85s + var(--i) * .12s) both}
