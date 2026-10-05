@@ -1,0 +1,18 @@
+Hero planets before v0.33.53 (2026-10-05). Restore by API (data_style_tool update_style / data_element_tool set_attributes).
+
+STYLES
+.ab_planet.is-dbh        main: z-index 2; right clamp(10px,6vw,110px); top clamp(150px,16vw,210px); width clamp(120px,19vw,290px) | small: top 96px; right 14px; width 120px; opacity .9   (UNCHANGED, shared with Mission + Service templates)
+.ab_planet.is-dbh.is-ks  main: top clamp(140px,15vw,200px)
+.ab_planet.is-dbh.is-hub main: left auto; z-index 2; right clamp(10px,7vw,130px); top clamp(170px,14vw,230px); width clamp(130px,16vw,260px) | small: top 118px; right -24px; width 120px
+.ab_planet.is-sm-hero    main: width 62%; height 62%
+.ab_sm-hero_grid         main: grid-template-columns minmax(0,1fr) minmax(160px,260px) (+ display grid, align center, gap clamp(24px,4vw,64px)) | medium/small: minmax(0,1fr)
+
+ELEMENT ATTRIBUTES
+Work 6ab6853da89bdfd5de03324d el 1c9cdd12-8f54-050a-4b9f-3dcda4a1d010 classes [ab_planet,is-dbh]
+  data-label "Archive planet" data-drag "" data-glow rgba(143,177,255,.4) data-spin 60 data-tilt -18 data-ring #f0e6ff,#9a8cd6,#4d4488 data-colors #1d2350,#3f4fa8,#8fb1ff,#e9d9ff,#2b1f5c data-seed 21 data-planet gas
+Observatory 6ab88dfc86c563fd3fd8e914 el 1a2400fa-d0fa-6725-a924-25cd90be94e1 classes [ab_planet,is-dbh,is-ks]
+  data-label "The Observatory" data-drag "" data-glow rgba(165,151,255,.35) data-spin 70 data-tilt -14 data-ring #ffd9cc,#FF6A3D,#2a2263 data-colors #120e2a,#2a2263,#5b4bd6,#a597ff,#ece8ff data-seed 31 data-planet gas
+Site map 6ac3b3e7a2b23444c2d6d6f5 el a4e4ee6c-12ae-0c55-94f1-86d8d282f657 classes [ab_planet,is-sm-hero]
+  data-label "Chart planet" data-drag "" data-glow rgba(143,177,255,.35) data-spin 80 data-tilt -16 data-ring #e9d9ff,#8fb1ff,#3f4fa8 data-colors #1d2350,#3f4fa8,#8fb1ff,#e9d9ff,#2b1f5c data-planet gas
+Process 6ab701e2df00b2e38832af5b hero planet [ab_planet,is-dbh,is-process]
+  data-label "Destination · Website" data-drag "" data-glow rgba(20,110,245,.4) data-spin 50 data-tilt -16 data-ring #cfe0ff,#146EF5,#0d2a66 data-colors #0d2a66,#146EF5,#8fb8ff,#e8f0ff,#1d2350 data-seed 11 data-process-planet "" data-planet gas

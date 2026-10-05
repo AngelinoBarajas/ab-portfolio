@@ -205,6 +205,11 @@ input.button.is-primary:hover{background-color:var(--star)}
 /* ---------- nav ---------- */
 .ab_nav_bar{-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:transform .4s ease}
 .ab_nav_component.is-hidden .ab_nav_bar{transform:translateY(-130%)}
+/* the fixed header box is 88px tall and stays put when the bar slides away: only the bar takes clicks, and not while hidden
+   (it covered the footer's first row of links when the page was scrolled to the bottom) */
+.ab_nav_component{pointer-events:none}
+.ab_nav_component > *{pointer-events:auto}
+.ab_nav_component.is-hidden .ab_nav_bar{pointer-events:none}
 /* Home testimonials: the CMS list wrappers stay out of the quote grid; its empty state never shows */
 .ab_quotes .w-dyn-list,.ab_quotes .w-dyn-items,.ab_quotes .w-dyn-item{display:contents}
 .ab_quotes .w-dyn-empty{display:none}
