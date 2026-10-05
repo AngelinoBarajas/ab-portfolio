@@ -122,10 +122,13 @@
       };
     })();
 
-    // styles injected from here, so the signature planets ship with the script alone (no stylesheet release)
+    // styles injected from here, so they ship with the script alone (no stylesheet release)
     var css = document.createElement('style'); css.id = 'sig-planets';
     css.textContent = '.ab_planet.is-sig .sphere,.ab_planet.is-sig .pring,.ab_planet.is-sig .tex{opacity:0!important}' +
-      '.ab_planet.is-sig{overflow:visible!important}.ab_planet.is-sig .sig-cv{position:absolute;left:50%;top:50%;pointer-events:none;z-index:2}';
+      '.ab_planet.is-sig{overflow:visible!important}.ab_planet.is-sig .sig-cv{position:absolute;left:50%;top:50%;pointer-events:none;z-index:2}' +
+      // monitor scene controls: every button at least 24 × 24 (WCAG 2.2 target size); .scn-pp's own size lost to the
+      // `all:unset` on `.scn-ctl button`. Also in ab-mission.css for its next release; injected here so it ships now.
+      '.scn-ctl button{min-width:24px;min-height:24px;box-sizing:border-box}.scn-ctl .scn-pp{width:24px;height:24px}';
     document.head.appendChild(css);
     function mount(el, slug){
       var make = SIG[slug]; if (!make || el.__sig) return; el.__sig = true;

@@ -96,6 +96,8 @@ body.eng [data-cadet-only]{display:none}
 .scn-ph.on{color:var(--star);border-color:var(--signal)}
 .scn-ph.on i{background:var(--signal)}
 .scn-pp{width:24px;height:24px;padding:0!important;display:grid!important;place-items:center}
+/* target size: every control at least 24 × 24 (the .scn-pp size above loses to `all:unset` on .scn-ctl button) */
+.scn-ctl button{min-width:24px;min-height:24px;box-sizing:border-box}.scn-ctl .scn-pp{width:24px;height:24px}
 .scn-pp svg{width:10px;height:10px;fill:currentColor}
 @media (max-width:620px){.scn-ctl{left:8px;bottom:8px;gap:3px}.scn-ctl button{font-size:9px;padding:4px 5px;letter-spacing:.04em}.scn-ph i{display:none}}
 
