@@ -37,6 +37,7 @@ Voice: first person, plain, US spelling, a little playful. No invented clients, 
 | 29 | Ten thousand hours, give or take: Outliers and what practice looks like when nobody's teaching you | Why before how | Webflow development, Branding |
 | 30 | 1984 on the web: Newspeak, the memory hole and the interface that lies politely | Why before how | Webflow development, Branding |
 | 31 | Thirty seconds of fun: what Halo taught me about the smallest loop on a website | Why before how | Motion, Branding |
+| 32 | Zombie websites and the hand of the maker: Ruskin, Gutenberg and building with AI | Why before how | Branding, Design systems, Motion |
 
 Proposed library themes: **Build notes** (Webflow tutorials from real builds) and **Why before how** (philosophy meets science). Topic tags are suggestions for the shared vocabulary; the integration chat maps them to the real Topics collection.
 

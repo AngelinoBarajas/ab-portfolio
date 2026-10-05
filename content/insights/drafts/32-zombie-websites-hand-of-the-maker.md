@@ -1,6 +1,6 @@
 ---
 status: approved
-title: "Zombie websites and the hand of the maker: Ruskin, Gutenberg and building with AI"
+title: Zombie websites and the hand of the maker: Ruskin, Gutenberg and building with AI
 slug: zombie-websites-hand-of-the-maker-ai
 theme: Why before how
 topics: [Philosophy at work, Brand identity, Design systems, Micro-interactions]
