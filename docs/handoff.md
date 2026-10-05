@@ -1,4 +1,14 @@
-# Session handoff (2026-09-30, iPhone Safari session: v0.33.33 on staging)
+# Session handoff (updated 2026-10-05: perf pass, Topicweave look, knowledge alignment, site map; live through v0.33.52)
+
+- **Session recap 2026-10-04/05 (perf chat), all LIVE on barajasdsgn.com + www + webflow.io:**
+  - **v0.33.44 mobile perf pass:** texture worker (OffscreenCanvas, byte-identical JPEGs, main-thread fallback), `AB.near` / `AB.soon` / `AB.ambient` / `AB.lazyDrag`, per-frame layout reads cached, lazy builds only for fixed-size pieces. Live mobile: Home 47→72–76, About 48→68–72, every page up, CLS 0 on 10/12 (qa-report has 3 tables).
+  - **v0.33.46 / v0.33.47:** Home Topicweave card = black + `twLoom` mark loom; `data-planet="woven"` surface (Topicweave only, never in TYPES); About badge patch woven. Topicweave chat shipped v0.33.45, .48–.52 (mission code, signature planets in `mission/35-signature.js`, tap targets).
+  - **ab-knowledge aligned** on every page (JS 0.33.39 / CSS 0.33.38, template heads updated by Angelino in the Designer).
+  - **Site map page** `/site-map` + footer link (see bullet below).
+  - **Contracts:** `mission/35-signature.js` hides core's `.sphere/.pring/.tex` (tell the mission chat before renaming those); a site publish ships whatever any chat has staged (check `get_site` lastUpdated vs your own writes first).
+  - **Google:** old Squarespace listing for www is stale index; Angelino to Request indexing in Search Console (barajasdsgn.com + www).
+  - **Next free tag v0.33.53.** Uncommitted `code/dist/*` in the working tree are rebuild noise (banners), not releases.
+
 
 Read this first in a new chat, then `CLAUDE.md`, `docs/progress.md` and `docs/webflow-build-notes.md`.
 
