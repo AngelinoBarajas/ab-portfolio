@@ -1,5 +1,7 @@
 # Session handoff (updated 2026-10-05: perf pass, Topicweave look, knowledge alignment, site map; live through v0.33.52)
 
+- **v0.33.54 LIVE (2026-10-05, carousel chat):** ab-core CSS only (site head `<link>` + SRI swapped by API, backup `backups/2026-10-05-v0.33.54-site-head-before.txt`). Logo draw-in outline was clipped at the viewBox (bottom of the B): Webflow's normalize `svg:not(:root){overflow:hidden}` outranked `.ab_logo-svg{overflow:visible}`; added `.ab_logo-svg:not(:root),.ab_mark:not(:root){overflow:visible}`. Verified computed overflow visible on barajasdsgn.com, www and webflow.io, no console errors. Remind Angelino to hard-refresh the Designer before editing. **Next free tag v0.33.55.** Launch carousel (not deployed) lives in `X:/Claude-Skills/carousels/ab-launch/`.
+
 - **Session recap 2026-10-04/05 (perf chat), all LIVE on barajasdsgn.com + www + webflow.io:**
   - **v0.33.44 mobile perf pass:** texture worker (OffscreenCanvas, byte-identical JPEGs, main-thread fallback), `AB.near` / `AB.soon` / `AB.ambient` / `AB.lazyDrag`, per-frame layout reads cached, lazy builds only for fixed-size pieces. Live mobile: Home 47→72–76, About 48→68–72, every page up, CLS 0 on 10/12 (qa-report has 3 tables).
   - **v0.33.46 / v0.33.47:** Home Topicweave card = black + `twLoom` mark loom; `data-planet="woven"` surface (Topicweave only, never in TYPES); About badge patch woven. Topicweave chat shipped v0.33.45, .48–.52 (mission code, signature planets in `mission/35-signature.js`, tap targets).
