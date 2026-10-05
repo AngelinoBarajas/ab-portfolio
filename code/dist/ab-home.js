@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.33.47 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.33.55 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -1016,13 +1016,13 @@ window.Webflow.push(function(){
           if (reduce || !hasGsap){ finish(); toast('You wake up in your bed. The story ends.'); if (AB.quest) AB.quest('rabbit'); return; }
           var lid = $('.ab_mx_lids i', el), b1 = $('.ab_mx_lids .is-b1', el), b2 = $('.ab_mx_lids .is-b2', el), shut = '0.01%';
           T().to(stage, { opacity: 0, duration: .5 })
-            .add(function(){ stage.hidden = true; if (rain) rain.stop(); cv.style.display = 'none'; gsap.set(lid, { '--eh': shut }); gsap.set(b1, { opacity: 1 }); gsap.set(b2, { opacity: 0 }); el.classList.add('is-wake'); })
+            .add(function(){ stage.hidden = true; if (rain) rain.stop(); cv.style.display = 'none'; gsap.set(lid, { '--eh': shut, '--ew': '50%' }); gsap.set(b1, { opacity: 1 }); gsap.set(b2, { opacity: 0 }); el.classList.add('is-wake'); })
             .to(lid, { '--eh': '30%', duration: .8, ease: 'power2.out' }, '+=.6')
             .to(lid, { '--eh': shut, duration: .24, ease: 'power2.in' }, '+=.35')
             .set(b1, { opacity: 0 }).set(b2, { opacity: 1 })
             .to(lid, { '--eh': '58%', duration: .6, ease: 'power2.out' }, '+=.3')
             .to(lid, { '--eh': shut, duration: .2, ease: 'power2.in' }, '+=.3')
-            .to(lid, { '--eh': '260%', duration: 1.7, ease: 'power2.inOut' }, '+=.35')
+            .to(lid, { '--eh': '260%', '--ew': '260%', duration: 1.7, ease: 'power2.inOut' }, '+=.35')
             .to(b2, { opacity: 0, duration: 1.6, ease: 'power1.inOut' }, '<.45')
             .add(function(){ finish(); toast('You wake up in your bed. The story ends.'); if (AB.quest) AB.quest('rabbit'); });
         }

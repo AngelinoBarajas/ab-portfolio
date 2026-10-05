@@ -427,7 +427,8 @@ input.button.is-primary:hover{background-color:var(--star)}
 .ab_mx_lids{position:absolute;inset:0;pointer-events:none;display:none}
 .ab_mx.is-wake{background:transparent}.ab_mx.is-wake .ab_mx_lids{display:block}
 .ab_mx_lids i,.ab_mx_lids b{position:absolute;inset:0}
-.ab_mx_lids i{--eh:0.01%;background:#000;-webkit-mask-image:radial-gradient(92% var(--eh) at 50% 50%,transparent 74%,#000 100%);mask-image:radial-gradient(92% var(--eh) at 50% 50%,transparent 74%,#000 100%)}
+/* --ew = the eye's half-width: 50% keeps the corners inside the screen during the blinks (92% ran past the edges, so light showed at the sides); the last open widens it */
+.ab_mx_lids i{--eh:0.01%;--ew:50%;background:#000;-webkit-mask-image:radial-gradient(var(--ew) var(--eh) at 50% 50%,transparent 74%,#000 100%);mask-image:radial-gradient(var(--ew) var(--eh) at 50% 50%,transparent 74%,#000 100%)}
 .ab_mx_lids .is-b1{-webkit-backdrop-filter:blur(18px) brightness(.85);backdrop-filter:blur(18px) brightness(.85)}
 .ab_mx_lids .is-b2{-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);opacity:0}
 .ab_mx_stage{position:relative;width:min(100% - 32px,720px);text-align:center}
