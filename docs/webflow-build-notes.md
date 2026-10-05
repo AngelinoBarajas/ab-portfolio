@@ -851,3 +851,16 @@ Known, not from this pass: Home's init runs in jQuery's ready timer *after* firs
 **v0.33.46 (2026-10-04, live):** after the Topicweave slug change (cks → topicweave, shipped by the Topicweave chat as v0.33.45) the Home work card lost its loom preview (`home/10-work.js` matched `slug === 'cks'`); it now matches `topicweave` with `cks` as fallback. About badge mission patch renamed CKS → Topicweave (fits the 84 px patch). Verified live at 1440 + 412.
 
 **v0.33.47 (2026-10-04, live):** Topicweave look. ab-core: `data-planet="woven"` (the v3 basket-weave cloth: warp/weft in pairs, over .85 / under .2, data-colors = base + lilac, coral, teal, cobalt; 40/32/20/8 cells around for 1024/512/256/128 textures, ≤40 px planets get 8 broad cells), plan from the Topicweave chat; the CMS Planet type needs a "Woven" option (Designer/CMS settings) before the mission's fields can use it. ab-home: the Topicweave work card is black/white with `twLoom` (port of mission/24-tw-loom.js › mark: fibers fly in and weave the mark, stream along its bars; replaces the old CKS `miniLoom`). ab-about: badge patch woven on black. Verified live 1440 + 412.
+
+## Site map page (2026-10-05): /site-map, built by API, staging
+
+Page `6ac3b3e7a2b23444c2d6d6f5` (`/site-map`, static; duplicate of Contact, Contact sections removed; no page code or scripts). Generator `webflow/build/sitemap/make.py` (+ `../prep.py`), reusing the hero classes (`ab_dbh*`, `ab_crumb*`, `ab_rec*`). "Navigation chart": hero (title words are hero toys, a draggable ringed planet, sector jump links) + five sectors in a hairline grid, each with a small built planet:
+- 01 Main routes: static links (Home, Work, Services, Process, About, Observatory, Topics, Contact).
+- 02 Missions: CMS list, filter Hide from site = off, sort Sort asc (5 today; matches sitemap.xml). Label: Year.
+- 03 Services: CMS list, sort Sort asc (8). Label: Short name. Full width, 4 columns.
+- 04 Field notes: Observatory CMS list, sort Sort desc, newest first (32). Label: Code (BN-xx / WB-xx).
+- 05 Topics: CMS list, sort Sort asc (27; option fields can't sort, Sort order already groups the constellations). Label: Category.
+Every list updates on publish; no script, no stylesheet (all real Webflow classes; `.ab_sm-items/.ab_sm-item` are `display:contents` on the Dynamo wrapper/list/item). Footer component: "Site map" link (URL `/site-map`) after Contact in the first column.
+- **API limit (again):** `static_link` mode `collectionPage` renders the template slug (`href="detail_work"`), and `get_bindable_sources` offers no "current item page" source. Designer step: each list's `ab_sm-link` Link Block › Link settings › Current Mission / Service / Observation / Topic.
+- `.ab_planet` is absolutely positioned site-wide; inline planets need `position:relative` (combo `.ab_planet.is-sm`).
+- A page-type link created inside a component through `data_element_builder` rendered `href="#"`; `set_link` with a URL fixed it.
