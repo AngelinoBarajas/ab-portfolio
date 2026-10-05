@@ -236,3 +236,5 @@ Mobile median of 3 (all 3 in brackets), desktop 1 run. Columns: morning before p
 | /topics/webflow-cms | 76 → 81 → **76** (75/76/78) | 68 ms | 0.000 | 98 |
 
 Within run-to-run noise of the post-pass table (spreads of 5–14 points inside one page's 3 runs); blocking time stays 45–180 ms everywhere (was up to 1,264 ms). CLS 0 on 10 of 12 pages, incl. Home and Contact (0.027 / 0.034 this morning). Topicweave's 7.0 s LCP with 0 ms TBT is Lighthouse's simulated estimate (same pattern as the old /work/cks). New a11y flag on Topicweave: `target-size` (from the mission chat's v0.33.49–51 work); otherwise the same pre-existing contrast / label flags.
+
+**Tap targets fixed (v0.33.52, Topicweave chat):** `.scn-ctl` buttons on the mission monitor are now at least 24 x 24 (`all:unset` was beating `.scn-pp`'s size). Live re-check of /work/topicweave (3 runs): `target-size` passes, a11y 93 → **96** (only the pre-existing color-contrast flag left), perf 48/61/61.
