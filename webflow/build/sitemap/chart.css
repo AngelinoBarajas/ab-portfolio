@@ -1,0 +1,22 @@
+.section_sm-chart{position:relative;padding-top:clamp(24px,3vw,40px);padding-bottom:clamp(64px,8vw,120px)}
+.ab_sm-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;border:1px solid var(--hair);background-color:var(--hair)}
+.ab_sm-sector{position:relative;display:flex;flex-direction:column;gap:14px;padding:clamp(20px,2.4vw,34px);background-color:var(--deep)}
+.ab_sm-sector.is-wide{grid-column-start:1;grid-column-end:-1}
+.ab_sm-sector_head{display:flex;justify-content:space-between;gap:12px;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dust)}
+.ab_sm-sector_no{color:var(--signal)}
+.ab_sm-sector_path{color:var(--dust)}
+.ab_sm-sector_title{display:flex;align-items:center;gap:14px}
+.ab_planet.is-sm{position:relative;top:auto;left:auto;right:auto;bottom:auto;flex:none;width:34px;height:34px}
+.ab_sm-sector_h{font-family:var(--display);font-weight:900;font-size:clamp(26px,2.6vw,40px);line-height:1;text-transform:uppercase}
+.ab_sm-sector_p{max-width:56ch;font-size:15px;color:var(--soft)}
+.ab_sm-list{display:grid;grid-template-columns:minmax(0,1fr);border-top:1px solid var(--hair)}
+.ab_sm-list.is-cols{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));grid-column-gap:28px}
+.ab_sm-host{display:contents}
+.ab_sm-items{display:contents}
+.ab_sm-item{display:contents}
+.ab_sm-link{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:baseline;grid-column-gap:10px;padding-top:10px;padding-bottom:10px;border-bottom:1px solid var(--hair);color:var(--star);text-decoration:none}
+.ab_sm-dot{width:6px;height:6px;border-radius:50%;background-color:var(--signal);transform:translateY(-2px)}
+.ab_sm-link_n{font-size:16px;line-height:1.3;color:var(--star)}
+.ab_sm-link_p{font-family:var(--mono);font-size:11px;letter-spacing:0.04em;color:var(--dust);text-align:right}
+.ab_sm-all{align-self:flex-start;margin-top:auto;padding-top:6px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--signal);text-decoration:none}
+@media screen and (max-width: 767px){.ab_sm-grid{grid-template-columns:minmax(0,1fr)}.ab_sm-list.is-cols{grid-template-columns:minmax(0,1fr)}.ab_sm-link{grid-template-columns:auto minmax(0,1fr)}.ab_sm-link_p{display:none}}
