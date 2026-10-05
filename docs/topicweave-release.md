@@ -7,7 +7,8 @@ The CKS mission becomes **Topicweave** (renamed 2026-10-01, v3 site in `X:/Claud
 **v0.33.49 (live 15:10 UTC):** 510 globe see-through (dots + graticule, HQ pins, arcs as three thin rings), Topicweave inner globe only, signature planet also in the tools-in-orbit center.
 **v0.33.50 (live):** Topicweave planet gets four # rings (lilac/cobalt vertical, coral/teal horizontal, woven like the logo).
 **v0.33.51 (live):** Topicweave rings changed to four regular concentric rings in the weave colors; supercharge on hover (v3 energize) on both signature planets.
-**Still open:** ~~new planet~~ done (`after_pass` in release.json), live link once topicweave.com is deployed, Flight manual feature card `work.json mission-cks` still describes CKS.
+**v0.33.52 (live 2026-10-05):** monitor scene controls at least 24 × 24 (Lighthouse target-size). Flight manual card + changelog updated (v0.33.48–52).
+**Still open:** ~~new planet~~ done (`after_pass` in release.json), live link once topicweave.com is deployed.
 Release only after Angelino's OK and after the perf chat's release (v0.33.44 tagged 2026-10-04, commit 5d55fc7, not yet in Webflow). Ours: v0.33.45 (fetch tags first to confirm).
 
 ## What changed (code/src, mission bundle only)
