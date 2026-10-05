@@ -16,3 +16,5 @@ Site map 6ac3b3e7a2b23444c2d6d6f5 el a4e4ee6c-12ae-0c55-94f1-86d8d282f657 classe
   data-label "Chart planet" data-drag "" data-glow rgba(143,177,255,.35) data-spin 80 data-tilt -16 data-ring #e9d9ff,#8fb1ff,#3f4fa8 data-colors #1d2350,#3f4fa8,#8fb1ff,#e9d9ff,#2b1f5c data-planet gas
 Process 6ab701e2df00b2e38832af5b hero planet [ab_planet,is-dbh,is-process]
   data-label "Destination · Website" data-drag "" data-glow rgba(20,110,245,.4) data-spin 50 data-tilt -16 data-ring #cfe0ff,#146EF5,#0d2a66 data-colors #0d2a66,#146EF5,#8fb8ff,#e8f0ff,#1d2350 data-seed 11 data-process-planet "" data-planet gas
+
+SITE HEAD (before): ab-core.prod.css @v0.33.43 integrity sha384-pJmD8/3mECvHaBuysDKqyLR3LzilhxQbs9ZV/84v+ijoSFijMWteI6sWd3UifZVA (rest of the head unchanged: preconnect jsdelivr, preload Archivo + Geist woff2)

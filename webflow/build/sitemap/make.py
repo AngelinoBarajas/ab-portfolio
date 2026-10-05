@@ -1,3 +1,6 @@
+# RETIRED 2026-10-05: do not run. The live /site-map page in Webflow is the source of truth now (edited there by API since:
+# hover states, one-line title, ocean hero planet at 88% in a clamp(260px,calc(50vw - 340px),320px) column). Running this would
+# write back the original look. Kept as a record of how the page was first built; see docs/webflow-build-notes.md › Site map page.
 """Write the Site map page (/site-map) section files (html + css), then run ../prep.py on each.
 
 usage: python webflow/build/sitemap/make.py
