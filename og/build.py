@@ -11,9 +11,10 @@ OUT = HERE / "out"
 OUT.mkdir(exist_ok=True)
 CHROME = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 
-svg = (ROOT / "logo" / "ab-logo.svg").read_text(encoding="utf-8")
+svg = (ROOT / "logo" / "AB Logo v2.svg").read_text(encoding="utf-8")
 MARK = re.sub(r"<defs>.*?</defs>", "", re.search(r"<svg[^>]*>(.*)</svg>", svg, re.S).group(1), flags=re.S)
-MARK = MARK.replace('class="cls-1"', 'fill="#F2F0EA"')
+# logo v2 (2026-09-30): white A/B, orange planet + ring, as on the site (--mark-planet #f36c42)
+MARK = MARK.replace('class="cls-1"', 'fill="#F2F0EA"').replace('class="cls-2"', 'fill="#f36c42"')
 
 # The planets are the site's own: same data-* as the pages, drawn by the real planet code
 # (code/src/core/10-space.js + the planet block of code/src/ab-core.css).
@@ -37,7 +38,9 @@ base = (core / "00-base.js").read_text(encoding="utf-8")
 space = (core / "10-space.js").read_text(encoding="utf-8")
 HELPERS = "\n".join(l for l in base.splitlines() if l.strip().startswith(("function num(", "function hex(")))
 BUILDER = space[space.index("  function mix("):space.index("  var planets = $$")]
+# since the v0.33.44 perf pass textures come from a Web Worker and paint via AB.near: run both inline here
 PLANET_JS = ("window.requestIdleCallback=function(f){f();};window.requestAnimationFrame=function(f){f();};\n"
+             + "window.Worker=undefined;window.AB={near:function(e,f){f();}};\n"
              + HELPERS + "\n" + BUILDER
              + "\n[].forEach.call(document.querySelectorAll('.ab_planet'), buildPlanet);")
 
@@ -69,7 +72,7 @@ for key, (eyebrow, l1, l2, tag, planet) in VARIANTS.items():
                     "--force-device-scale-factor=1", "--virtual-time-budget=4000",
                     "--screenshot=%s" % png, src.resolve().as_uri()], check=True,
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    src.unlink()
+    if not os.environ.get("KEEP"): src.unlink()
     print(png, os.path.getsize(png))
 
 # AB Identity social image: the Work card's "Mark" cover (AB.markSVG with the construction grid),
