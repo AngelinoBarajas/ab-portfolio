@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core v0.33.47 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core v0.33.56 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abCoreInit) return;
@@ -363,6 +363,8 @@ window.Webflow.push(function(){
   /* ---------- random planets: a type + a color harmony (analogous / complementary / triad) per call ----------
      AB.planetLook(rnd?) -> { type, colors, ring, tilt, open, glow, seed }; AB.applyPlanetLook(el, look) writes the data
      attributes (call before buildPlanet, or clear __built to rebuild). Designer planets and service colors keep theirs. */
+  // never add 'woven' here: it is Topicweave's own surface (Angelino, 2026-10-04), not part of the random pool that
+  // drifters, About's far planet and Home's morph specimen draw from
   var TYPES = ['gas', 'gas', 'storm', 'storm', 'rocky', 'ice', 'lava', 'terra', 'desert', 'ocean', 'toxic', 'crystal'];
   // ring styles (data-ring-style, CSS .is-ring-*): classic bands, one thin bright band, a wide dusty sheet, two rings with a gap, many fine bands
   var RINGS = ['classic', 'classic', 'thin', 'wide', 'double', 'banded'];
@@ -1458,7 +1460,14 @@ window.Webflow.push(function(){
       });
       $$('.t-signal').forEach(function(el){
         var txt = el.textContent;
-        ScrollTrigger.create({ trigger: el, start: 'top 85%', once: true, onEnter: function(){ gsap.fromTo(el, { scrambleText: { text: '', chars: '' } }, { duration: 1.4, scrambleText: { text: txt, chars: '░▒▓<>/_#', revealDelay: .2, speed: .5 } }); } });
+        // the decode starts from an empty heading, so its size is held for the run: it collapsed (phone) and narrowed, letting
+        // a wrapping sibling (Featured reads lede) ride up beside it (desktop), and the page below jumped;
+        // no < > in the noise: ScrambleText writes HTML, so they showed up as bits of "&lt;"
+        ScrollTrigger.create({ trigger: el, start: 'top 85%', once: true, onEnter: function(){
+          el.style.minHeight = el.offsetHeight + 'px'; el.style.minWidth = el.offsetWidth + 'px';
+          gsap.fromTo(el, { scrambleText: { text: '', chars: '' } }, { duration: 1.4, scrambleText: { text: txt, chars: '░▒▓/_#', revealDelay: .2, speed: .5 },
+            onComplete: function(){ el.style.minHeight = el.style.minWidth = ''; } });
+        } });
       });
     } else decorate(document);
 

@@ -171,7 +171,14 @@
       });
       $$('.t-signal').forEach(function(el){
         var txt = el.textContent;
-        ScrollTrigger.create({ trigger: el, start: 'top 85%', once: true, onEnter: function(){ gsap.fromTo(el, { scrambleText: { text: '', chars: '' } }, { duration: 1.4, scrambleText: { text: txt, chars: '░▒▓<>/_#', revealDelay: .2, speed: .5 } }); } });
+        // the decode starts from an empty heading, so its size is held for the run: it collapsed (phone) and narrowed, letting
+        // a wrapping sibling (Featured reads lede) ride up beside it (desktop), and the page below jumped;
+        // no < > in the noise: ScrambleText writes HTML, so they showed up as bits of "&lt;"
+        ScrollTrigger.create({ trigger: el, start: 'top 85%', once: true, onEnter: function(){
+          el.style.minHeight = el.offsetHeight + 'px'; el.style.minWidth = el.offsetWidth + 'px';
+          gsap.fromTo(el, { scrambleText: { text: '', chars: '' } }, { duration: 1.4, scrambleText: { text: txt, chars: '░▒▓/_#', revealDelay: .2, speed: .5 },
+            onComplete: function(){ el.style.minHeight = el.style.minWidth = ''; } });
+        } });
       });
     } else decorate(document);
 
