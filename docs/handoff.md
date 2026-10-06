@@ -1,5 +1,7 @@
 # Session handoff (updated 2026-10-05: perf pass, Topicweave look, knowledge alignment, site map; live through v0.33.52)
 
+- **v0.33.56 STAGED, not yet published (2026-10-06 01:57 UTC, screen-hopping chat):** decode headings (`.t-signal`, e.g. Featured reads) made the page jump while decoding: ScrambleText starts from an empty heading, so on phones it lost a line (74→37px) and on desktop it narrowed and the lede (wrapping flex row `.ab_sec-h`) rode up beside it (section 998→914px). Fix in `core/30-motion.js`: hold the heading's min-height/min-width for the run; dropped `<>` from the noise (they leaked as bits of `&lt;`). Tested live HTML + local dist at 1900 and 390: page height constant. ab-core JS registered 0.33.56 + applied site-wide (`sha384-TkODZZs54PNGYGM4SenRUM8e+U25iJ9yS66qKEFGIwO/qAhSxHiU3sr02POyiD6v`, CDN hash checked). Before this write, get_site lastUpdated was already 01:51 UTC (someone else's staged edit, owner unknown). Publish waits on Angelino's OK. Flight manual entry after publish. **Next free tag v0.33.57.**
+
 - **Open: unpublished Webflow edit (found 2026-10-05):** get_site lastUpdated 20:42 UTC > lastPublished 19:20 UTC. Not the carousel chat or its fork (their last writes were 19:20, published), not the hero planets chat (last Webflow write = Site map grid clamp, shipped at 19:20). Find the owner before the next site publish, since a publish ships it.
 - **`webflow/build/sitemap/make.py` retired (2026-10-05):** header note says don't run it; the live /site-map in Webflow is the source of truth.
 
