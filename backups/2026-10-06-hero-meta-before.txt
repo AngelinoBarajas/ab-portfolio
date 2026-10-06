@@ -1,0 +1,5 @@
+Home (6ab5fe4b5ee75f9c981dc0cb) .ab_hero_meta second line, before the hierarchy pass (2026-10-06):
+  div 8d232256-c5cb-4986-953f-0540e60d6be5
+    span.text-color-signal "↗ Go ahead, throw it."
+    String 8d232256-c5cb-4986-953f-0540e60d6be2 " · "            <- removed
+    span#vpSize 8d232256-c5cb-4986-953f-0540e60d6be4 "1440 × 900"  <- removed (core/10-space.js null-checks #vpSize)

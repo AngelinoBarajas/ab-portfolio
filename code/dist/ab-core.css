@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.33.60 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.33.63 · github.com/AngelinoBarajas/ab-portfolio */
 /* body font fallback sized to Geist (Arial measured against it: 102.47% wide), so text keeps its line breaks when Geist
    swaps in and the heroes don't jump (About CLS 0.24 on desktop). Re-declares the Webflow variable: if the body font is
    changed in the Designer, change it here too. Android (no Arial) falls through to plain sans-serif. */
@@ -756,6 +756,9 @@ input.button.is-primary:hover{background-color:var(--_color---text--primary)}
 .ab_alt-sub{display:block;margin-top:2px;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--_color---brand--signal)}
 .ab_alt-bh{position:absolute;left:50%;bottom:-7px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#07080D;box-shadow:0 0 0 1.5px rgba(255,179,107,.9),0 0 10px 2px rgba(255,106,61,.55)}
 @media (max-width:900px){.ab_alt{display:none}}
+/* quiet HUD (core/20-ui.js): the cursor readout + distance meter fade while they float over section content */
+.ab_hud,.ab_alt{transition:opacity .45s ease}
+html.ab-hud-quiet .ab_hud,html.ab-hud-quiet .ab_alt{opacity:.22}
 /* same nesting as the page: gutters on the full width (padding-global), then the max width inside them (container-large).
    The max width used to include the gutters, so the columns sat ~33px inside the content on each side at 1440.
    Column gap 16px = the card grids' gap (bento, Problems solved), so 3-up cards span 4 columns exactly */

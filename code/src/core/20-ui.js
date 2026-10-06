@@ -164,4 +164,18 @@
     })();
   })();
 
+  /* ---------- quiet HUD: the cursor readout and the Home distance meter stay bright over the hero and the footer and
+     fade while they float over section content (html.ab-hud-quiet, CSS in ab-core) so they don't talk over the page ---------- */
+  (function(){
+    var root = document.documentElement, foot = $('#siteFoot'), quiet = null, queued = false;
+    function check(){
+      queued = false;
+      var q = scrollY > innerHeight * .6 && !(foot && foot.getBoundingClientRect().top < innerHeight * .7);
+      if (q !== quiet){ quiet = q; root.classList.toggle('ab-hud-quiet', q); }
+    }
+    addEventListener('scroll', function(){ if (!queued){ queued = true; requestAnimationFrame(check); } }, { passive: true });
+    addEventListener('resize', check);
+    check();
+  })();
+
   Object.assign(AB, { addSel: addSel, decorate: decorate });
