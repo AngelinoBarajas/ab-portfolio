@@ -238,14 +238,16 @@
     else if (eng && snip) eng.insertAdjacentHTML('beforeend', codeBlock(snip, (txt('.ab_anom_title', a) || 'excerpt').toLowerCase()));
     if (demo && hasCh(demo)){ var st = $('.ab_stamp', a); (st || a).insertAdjacentHTML(st ? 'beforebegin' : 'beforeend', showBtn(demo, 'See it on the monitor')); }
     if (reduce || !hasGsap || !window.ScrollTrigger) return;
+    // phones: a smaller drop (from 2.2x the stamp ran past the screen edge) and no impact jolt (it read as the cards
+    // wobbling, Angelino 2026-10-06). The waiting size is set inline too: the Missions head (CSS link) can't be
+    // rewritten by API, so the CSS twin of this rule only ships with the next Designer CSS bump
+    var narrow = innerWidth < 768, stp = $('.ab_stamp', a);
     a.classList.add('pre');
+    if (narrow && stp) stp.style.transform = 'rotate(-8deg) scale(1.5)';
     ScrollTrigger.create({ trigger: a, start: 'top 78%', once: true, onEnter: function(){
       gsap.delayedCall((i % 2) * .18, function(){
         a.classList.remove('pre');
-        // phones: a smaller drop (from 2.2x the stamp ran past the screen edge) and no impact jolt (it read as the
-        // cards wobbling, Angelino 2026-10-06)
-        var narrow = innerWidth < 768;
-        gsap.fromTo($('.ab_stamp', a), { scale: narrow ? 1.5 : 2.2, opacity: 0, rotation: -18 }, { scale: 1, opacity: .9, rotation: -8, duration: .45, ease: 'back.out(2.2)' });
+        gsap.fromTo(stp, { scale: narrow ? 1.5 : 2.2, opacity: 0, rotation: -18 }, { scale: 1, opacity: .9, rotation: -8, duration: .45, ease: 'back.out(2.2)' });
         if (!narrow) gsap.fromTo(a, { x: -3 }, { x: 0, duration: .3, ease: 'elastic.out(1,.3)', delay: .35 });
       });
     } });
