@@ -63,7 +63,15 @@ pages = {
    {"about": PERSON}, [("Process", None)]),
  "about": page("ProfilePage", "/about", "About Angelino Barajas",
    "Self-taught designer and developer with a philosophy degree and a soft spot for space.",
-   {"mainEntity": PERSON}, [("About", None)]),
+   # the Person in full, not just its @id: Google checks a ProfilePage on its own and flagged the bare
+   # reference as an "Unnamed item" (Search Console, 2026-10-06)
+   {"mainEntity": {"@type": "Person", "@id": D + "/#person", "name": "Angelino Barajas", "url": D + "/",
+     "jobTitle": "Webflow designer and developer",
+     "description": "Self-taught designer and developer with a philosophy degree, building Webflow sites with interactive 3D, CMS-driven content and motion.",
+     "knowsAbout": ["Webflow development", "Interactive 3D", "WebGL", "Motion design", "GSAP",
+                    "Brand identity", "CMS integrations", "Design systems", "Web performance"],
+     "sameAs": ["https://www.linkedin.com/in/angelino-barajas/", "https://www.instagram.com/barajas_design/",
+                "https://github.com/AngelinoBarajas/"]}}, [("About", None)]),
  "contact": page("ContactPage", "/contact", "Contact · Open a channel",
    "Questions, help with an existing site, collaborations, hiring or a call.",
    {"about": PERSON}, [("Contact", None)]),

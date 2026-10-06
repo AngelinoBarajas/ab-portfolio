@@ -15,7 +15,28 @@
     "@id": "https://barajasdsgn.com/about#breadcrumb"
    },
    "mainEntity": {
-    "@id": "https://barajasdsgn.com/#person"
+    "@type": "Person",
+    "@id": "https://barajasdsgn.com/#person",
+    "name": "Angelino Barajas",
+    "url": "https://barajasdsgn.com/",
+    "jobTitle": "Webflow designer and developer",
+    "description": "Self-taught designer and developer with a philosophy degree, building Webflow sites with interactive 3D, CMS-driven content and motion.",
+    "knowsAbout": [
+     "Webflow development",
+     "Interactive 3D",
+     "WebGL",
+     "Motion design",
+     "GSAP",
+     "Brand identity",
+     "CMS integrations",
+     "Design systems",
+     "Web performance"
+    ],
+    "sameAs": [
+     "https://www.linkedin.com/in/angelino-barajas/",
+     "https://www.instagram.com/barajas_design/",
+     "https://github.com/AngelinoBarajas/"
+    ]
    }
   },
   {
