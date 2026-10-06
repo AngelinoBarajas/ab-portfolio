@@ -1,0 +1,6 @@
+<!-- AB Portfolio · ab-mission.css (Missions template only; source: code/src/ab-mission.css) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.19.0/code/dist/ab-mission.prod.css" integrity="sha384-6VACOLP2jjlESX7+7/yoFIySRQjKFn+ZDX15sf5HuXtK3W5CbZSAi34L9pzZDdAT" crossorigin="anonymous">
+<!-- AB Portfolio · ab-knowledge.css (observations row; source: code/src/ab-knowledge.css) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.25.5/code/dist/ab-knowledge.prod.css" integrity="sha384-rzInPny7mBiDHEBtUtMdSduMaPsLJ1IIYUd5E1X/IFG+3L9ytRXIC9oKn4YX39iO" crossorigin="anonymous">
+
+<meta name="robots" content="{{wf {&quot;path&quot;:&quot;robots&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}">

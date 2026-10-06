@@ -38,6 +38,12 @@
         ],
         "createdAt": "2026-09-29T03:03:09.922Z",
         "reason": "Claude: #F2F0EA/#F7F6F1 are the live AB Portfolio light-theme tokens the prototype must match"
+      },
+      {
+        "rule": "overused-font",
+        "value": "fraunces",
+        "createdAt": "2026-10-04T07:18:31.405Z",
+        "reason": "Topicweave brand typeface: the mission replicates the v3 Topicweave site (cks-v3/build.py loads Fraunces); matching the client's real brand is the requirement"
       }
     ]
   }

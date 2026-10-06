@@ -1,0 +1,4 @@
+# Observatory Template (6ab88c3cea14ac23bad4586d) + Topics Template (6ab88c3ca4f6b80de4d1820d) head, identical, before og-site-v2 swap
+<!-- AB Portfolio · ab-knowledge.css (source: code/src/ab-knowledge.css) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.33.38/code/dist/ab-knowledge.prod.css" integrity="sha384-jBS8jhU0dEkGuq2n3cyuYf/y3S3XyuCD7UgkaX/PtVJLbhUSZoPe+98hBNqAOoyd" crossorigin="anonymous">
+<meta property="og:image" content="https://cdn.prod.website-files.com/6ab5fe4a5ee75f9c981dc0be/6ab8149fe5d9f17124004a93_og-site.jpg">

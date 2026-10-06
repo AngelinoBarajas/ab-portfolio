@@ -1,0 +1,6 @@
+<!-- AB Portfolio · perf: connect to the code CDN early, fetch the display + body fonts before CSS asks for them -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" href="https://webflow-files-prod.global.ssl.fastly.net/6ab5fe4a5ee75f9c981dc0be/fonts/6ab5ff8d2159a2087d3ac41e-Archivo-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://webflow-files-prod.global.ssl.fastly.net/6ab5fe4a5ee75f9c981dc0be/fonts/6ab5ff8d4f8377385169dcd8-Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<!-- AB Portfolio · ab-core.css (source: github.com/AngelinoBarajas/ab-portfolio code/src/ab-core.css) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.33.55/code/dist/ab-core.prod.css" integrity="sha384-Z6te1Q0NCUmpVuD49MNC81jQE0BP4Eb1DrGn5AyjO3+akHe7wQ//a3NgJaer4Fku" crossorigin="anonymous">

@@ -1,0 +1,8 @@
+SITE HEAD core: https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.28.12/code/dist/ab-core.prod.css sha384-W1HuTV4RMZmyPUs+CH1eFnObcpeYe+80tPIv+NWv4pg4fagMeauPRKXj7b6jcjxD
+process: @v0.17.1 ab-process.prod.css sha384-/cNX3AWg3nkYU1FWFqkmovOEKK7AwmxgvCTleMwcY8eRR1++NdA7/9Noyu/DIvPD
+observatory: @v0.27.9 ab-knowledge.prod.css sha384-AFfrOcCUQ2qUSzUYcIGfjcIuVXhYz80fgZadKwK35TbCMxK9dofEaTczyU8v4t+X
+services template: @v0.28.9 ab-services.prod.css sha384-jmQASFdNApH3fgLfyZ0V4+lf0OsX0zJIu3Av2/6B6o+Tgl7CnLGkfPqlq+3wiqch (+ knowledge @v0.25.5 unchanged)
+about: @v0.24.0 ab-about.prod.css sha384-uVKrTsylfdcdK0PgRITg2lbdUXv+HknqGaMMUICQBUCqEyO5CTXnpCV8ed/Mz8TI
+hub: @v0.17.1 ab-hub.prod.css sha384-xbeWFAQjd7Ja8fLZk5r+BHlNDy+42sJhKfR4k7JAk9oqTp4/JYPG+GZ+mRZGEMSr
+contact: @v0.19.0 ab-contact.prod.css sha384-Qf7iwX5nM7cLraZTTABsdHhoZHxPwOSZkf/OacBLAG7t0J3hBU33ep8vMND7YUSL
+scripts before: abcore 0.28.12 (site), abhome 0.28.5, abprocess 0.23.0, abknowledge 0.27.8 (observatory, obs/topics templates), abservices 0.28.9, ababout 0.24.1

@@ -6,3 +6,9 @@ Thumbs.db
 .build/
 og/.chrome/
 og/_*.png
+
+# regenerable captures / caches
+__pycache__/
+og/forum/*.png
+og/forum/*.jpg
+og/forum/*.html

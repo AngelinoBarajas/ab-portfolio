@@ -1,0 +1,7 @@
+Site scripts before v0.33.0 (Calm mode): GSAP x7 3.13.0, Lenis 1.3.26 (footer) · abwarpin 0.4.0 (header) · abcore 0.32.0 (footer)
+Site head before:
+<!-- AB Portfolio · perf: connect to the code CDN early, fetch the display font before CSS asks for it -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" href="https://webflow-files-prod.global.ssl.fastly.net/6ab5fe4a5ee75f9c981dc0be/fonts/6ab5ff8d2159a2087d3ac41e-Archivo-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<!-- AB Portfolio · ab-core.css (source: github.com/AngelinoBarajas/ab-portfolio code/src/ab-core.css) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.32.0/code/dist/ab-core.prod.css" integrity="sha384-nhgv8o+9T5xkGgMlvWtKuVNM703SgJ58DohBfh1ohnBFAUaC+zW30Ry7lCJ6G49N" crossorigin="anonymous">

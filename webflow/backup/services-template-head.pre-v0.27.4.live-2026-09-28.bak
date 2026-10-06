@@ -1,0 +1,5 @@
+<!-- AB Portfolio · ab-services.css (Services template only; source: code/src/ab-services.css) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.27.3/code/dist/ab-services.prod.css" integrity="sha384-4O/ohsV7TMxpnXjRdbCVrliQyzlPx1EhlQDJQEwsCPAKbmHEIpg28kRAjgfkC7P2" crossorigin="anonymous">
+<!-- AB Portfolio · ab-knowledge.css (further reading row; source: code/src/ab-knowledge.css) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.25.5/code/dist/ab-knowledge.prod.css" integrity="sha384-rzInPny7mBiDHEBtUtMdSduMaPsLJ1IIYUd5E1X/IFG+3L9ytRXIC9oKn4YX39iO" crossorigin="anonymous">
+<!-- scripts: abservices 0.27.3 (footer), abknowledge 0.25.5 (footer), in that order -->
