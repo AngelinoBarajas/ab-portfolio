@@ -6,6 +6,10 @@
    "@id": "https://barajasdsgn.com/#website",
    "url": "https://barajasdsgn.com/",
    "name": "Angelino Barajas",
+   "alternateName": [
+    "barajasdsgn",
+    "Barajas Design"
+   ],
    "description": "Webflow designer and developer: interactive 3D, CMS-driven sites and motion.",
    "inLanguage": "en-US",
    "publisher": {

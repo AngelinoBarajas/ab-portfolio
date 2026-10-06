@@ -36,6 +36,8 @@ def page(t, path, name, desc, extra=None, trail=None):
 pages = {
  "home": {"@context": CTX, "@graph": [
    {"@type": "WebSite", "@id": D + "/#website", "url": D + "/", "name": "Angelino Barajas",
+    # the brand handle people search (domain, Instagram barajas_design), so Google reads it as the site name too
+    "alternateName": ["barajasdsgn", "Barajas Design"],
     "description": "Webflow designer and developer: interactive 3D, CMS-driven sites and motion.",
     "inLanguage": "en-US", "publisher": PERSON},
    {"@type": "Person", "@id": D + "/#person", "name": "Angelino Barajas", "url": D + "/",
