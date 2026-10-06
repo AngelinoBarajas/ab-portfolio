@@ -75,6 +75,17 @@ pages = {
  "contact": page("ContactPage", "/contact", "Contact · Open a channel",
    "Questions, help with an existing site, collaborations, hiring or a call.",
    {"about": PERSON}, [("Contact", None)]),
+ # index pages (added 2026-10-06): the field-note log, the topic vocabulary and the site map
+ "observatory": page("CollectionPage", "/observatory", "The Observatory · Notes from real Webflow builds",
+   "Notes from real Webflow builds and the ideas behind them, organized by topic, not by date.",
+   {"author": PERSON, "about": PERSON}, [("Observatory", None)]),
+ "topics": page("CollectionPage", "/topics", "Star chart · The vocabulary behind this site",
+   "27 topics in six constellations, the shared vocabulary of this site. Each one links to the observations, missions and services that prove it.",
+   {"mainEntity": {"@type": "DefinedTermSet", "@id": D + "/topics#set", "name": "Topics", "url": D + "/topics"}},
+   [("Topics", None)]),
+ "site-map": page("WebPage", "/site-map", "Site map · Every page on this site",
+   "A navigation chart of the whole site: main routes, mission debriefs, services, field notes and every topic.",
+   None, [("Site map", None)]),
 }
 # Home FAQ (Pre-flight checks) as FAQPage, from the FAQ seed (Homepage scope, CMS sort order). Any answer still holding a
 # [placeholder] keeps the whole block out, so a draft never ships as structured data.
@@ -98,7 +109,27 @@ service = {"@context": CTX, "@graph": [
    "description": "[Summary]", "serviceType": "[Name]", "audience": {"@type": "Audience", "audienceType": "[Best for]"},
    "provider": PERSON, "isPartOf": {"@id": D + "/services#page"}},
   crumbs("/services/[Slug]", ("Services", D + "/services"), ("[Name]", None))]}
-for k, v in (("mission-template", mission), ("services-template", service)):
+# field notes: an Article whose author is the Person in full (Google checks each page on its own, see About).
+# [Published On] / [Updated On] are Webflow's built-in item dates (pick the 2026-10-05 style format if offered);
+# the image is the site share card these notes already use as og:image
+AUTHOR = {"@type": "Person", "@id": D + "/#person", "name": "Angelino Barajas", "url": D + "/about"}
+# kept short on purpose: every [Field] is inserted by hand in the Designer, so the slug appears once (url)
+def tcrumbs(section, url, *last):
+    return {"@type": "BreadcrumbList", "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": D + "/"},
+        {"@type": "ListItem", "position": 2, "name": section, "item": url},
+        {"@type": "ListItem", "position": 3, "name": "[Name]"}]}
+note = {"@context": CTX, "@graph": [
+  {"@type": "Article", "url": D + "/observatory/[Slug]", "headline": "[Name]", "description": "[Meta description]",
+   "image": "https://cdn.prod.website-files.com/6ab5fe4a5ee75f9c981dc0be/6ac45ee001aa4a019275f439_og-site-v2.jpg",
+   "datePublished": "[Published On]", "dateModified": "[Updated On]", "author": AUTHOR, "publisher": AUTHOR,
+   "isPartOf": {"@id": D + "/observatory#page"}, "inLanguage": "en-US"},
+  tcrumbs("Observatory", D + "/observatory")]}
+topic = {"@context": CTX, "@graph": [
+  {"@type": "DefinedTerm", "url": D + "/topics/[Slug]", "name": "[Name]", "description": "[Definition]",
+   "inDefinedTermSet": {"@id": D + "/topics#set"}},
+  tcrumbs("Topics", D + "/topics")]}
+for k, v in (("mission-template", mission), ("services-template", service), ("observatory-template", note), ("topics-template", topic)):
     body = json.dumps(v, ensure_ascii=False, separators=(",", ":"))
     (OUT / (k + ".head.html")).write_text('<script type="application/ld+json">' + body + "</script>\n", encoding="utf-8")
 

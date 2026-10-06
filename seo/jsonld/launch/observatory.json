@@ -1,0 +1,42 @@
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "CollectionPage",
+   "@id": "https://barajasdsgn.com/observatory#page",
+   "url": "https://barajasdsgn.com/observatory",
+   "name": "The Observatory · Notes from real Webflow builds",
+   "description": "Notes from real Webflow builds and the ideas behind them, organized by topic, not by date.",
+   "isPartOf": {
+    "@id": "https://barajasdsgn.com/#website"
+   },
+   "inLanguage": "en-US",
+   "breadcrumb": {
+    "@id": "https://barajasdsgn.com/observatory#breadcrumb"
+   },
+   "author": {
+    "@id": "https://barajasdsgn.com/#person"
+   },
+   "about": {
+    "@id": "https://barajasdsgn.com/#person"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "@id": "https://barajasdsgn.com/observatory#breadcrumb",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Home",
+     "item": "https://barajasdsgn.com/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Observatory"
+    }
+   ]
+  }
+ ]
+}

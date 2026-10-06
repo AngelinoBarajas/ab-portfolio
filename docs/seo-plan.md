@@ -40,6 +40,9 @@ Other findings:
 | 404 | *keep* | *keep* |
 | Mission template | `[Name] · Mission debrief · Angelino Barajas` | `[Meta description]` (new Missions field) |
 | Services template | `[Name] · Services · Angelino Barajas` (max 55) | `[Summary]` (130–186; two run a little long, Google trims) |
+| Observatory / Topics / Site map (2026-10-06) | CollectionPage (+ DefinedTermSet on Topics) / WebPage + BreadcrumbList, pushed by API |
+| Observatory template (field notes) | Article (headline, description, share-card image, Published On / Updated On, author = Person in full) + BreadcrumbList, in template head |
+| Topics template | DefinedTerm (name, Definition, in the Topics set) + BreadcrumbList, in template head |
 
 New Missions field **Meta description** (PlainText):
 
