@@ -242,8 +242,11 @@
     ScrollTrigger.create({ trigger: a, start: 'top 78%', once: true, onEnter: function(){
       gsap.delayedCall((i % 2) * .18, function(){
         a.classList.remove('pre');
-        gsap.fromTo($('.ab_stamp', a), { scale: 2.2, opacity: 0, rotation: -18 }, { scale: 1, opacity: .9, rotation: -8, duration: .45, ease: 'back.out(2.2)' });
-        gsap.fromTo(a, { x: -3 }, { x: 0, duration: .3, ease: 'elastic.out(1,.3)', delay: .35 });
+        // phones: a smaller drop (from 2.2x the stamp ran past the screen edge) and no impact jolt (it read as the
+        // cards wobbling, Angelino 2026-10-06)
+        var narrow = innerWidth < 768;
+        gsap.fromTo($('.ab_stamp', a), { scale: narrow ? 1.5 : 2.2, opacity: 0, rotation: -18 }, { scale: 1, opacity: .9, rotation: -8, duration: .45, ease: 'back.out(2.2)' });
+        if (!narrow) gsap.fromTo(a, { x: -3 }, { x: 0, duration: .3, ease: 'elastic.out(1,.3)', delay: .35 });
       });
     } });
   });

@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission.css v0.33.45 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission.css v0.33.57 · github.com/AngelinoBarajas/ab-portfolio */
 /* AB Portfolio · ab-mission.css · Mission template (/work/[slug]) only. Script-built parts + states the Designer cannot express. */
 /* ---------- monitor internals (views are built by ab-mission; the monitor frame/decor lives in ab-core.css) ---------- */
 .ab_screen canvas{max-width:100%}
@@ -97,6 +97,8 @@ body.eng [data-cadet-only]{display:none}
 .scn-ph.on{color:var(--_color---text--primary);border-color:var(--_color---brand--signal)}
 .scn-ph.on i{background:var(--_color---brand--signal)}
 .scn-pp{width:24px;height:24px;padding:0!important;display:grid!important;place-items:center}
+/* target size: every control at least 24 × 24 (the .scn-pp size above loses to `all:unset` on .scn-ctl button) */
+.scn-ctl button{min-width:24px;min-height:24px;box-sizing:border-box}.scn-ctl .scn-pp{width:24px;height:24px}
 .scn-pp svg{width:10px;height:10px;fill:currentColor}
 @media (max-width:620px){.scn-ctl{left:8px;bottom:8px;gap:3px}.scn-ctl button{font-size:9px;padding:4px 5px;letter-spacing:.04em}.scn-ph i{display:none}}
 
@@ -461,6 +463,7 @@ body.eng .crew-dock .dot{background:#7cc4ff;box-shadow:0 0 10px #7cc4ff}
 .ab_anom:hover,.ab_anom:focus-within,.ab_swatch:hover,.ab_dbq:hover{z-index:10}
 .ab_anom_who[data-who="client"]{color:#7cc4ff}
 .ab_anom.pre .ab_stamp{opacity:0;transform:rotate(-8deg) scale(2.2)}
+@media (max-width:767px){.ab_anom.pre .ab_stamp{transform:rotate(-8deg) scale(1.5)}}
 .ab_anom.pre .ab_anom_row.is-fix{opacity:.15;filter:blur(3px)}
 .ab_anom_row.is-res > div:last-child{color:var(--_color---text--primary);font-weight:500}
 .ab_anom .ab_mc-show{align-self:flex-start;margin-top:auto;min-height:44px;padding:12px 18px;font-size:12px}

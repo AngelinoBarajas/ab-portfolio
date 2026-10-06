@@ -460,6 +460,7 @@ body.eng .crew-dock .dot{background:#7cc4ff;box-shadow:0 0 10px #7cc4ff}
 .ab_anom:hover,.ab_anom:focus-within,.ab_swatch:hover,.ab_dbq:hover{z-index:10}
 .ab_anom_who[data-who="client"]{color:#7cc4ff}
 .ab_anom.pre .ab_stamp{opacity:0;transform:rotate(-8deg) scale(2.2)}
+@media (max-width:767px){.ab_anom.pre .ab_stamp{transform:rotate(-8deg) scale(1.5)}}
 .ab_anom.pre .ab_anom_row.is-fix{opacity:.15;filter:blur(3px)}
 .ab_anom_row.is-res > div:last-child{color:var(--star);font-weight:500}
 .ab_anom .ab_mc-show{align-self:flex-start;margin-top:auto;min-height:44px;padding:12px 18px;font-size:12px}
