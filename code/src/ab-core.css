@@ -1208,3 +1208,15 @@ div.abx-bad,fieldset.abx-bad{outline:1px dashed color-mix(in srgb,var(--signal) 
 /* card arrow (→) sat ~2.5px low: JetBrains Mono's arrow rides below the line box's middle. Line-height 1 + a little bottom
    padding centers the ink in the 34px square (measured from pixels at 2x) */
 .ab_ks-go{line-height:1;padding-bottom:5px}
+
+/* ---------- mission switcher on phones: one swipeable row instead of three wrapped rows (Angelino 2026-10-06).
+   Lives here, not in ab-mission.css: the Missions template head holds CMS bindings, so its CSS link is a Designer-only
+   bump. ab-mission JS scrolls the current mission into view and drops the edge fade once the row is scrolled to its end */
+@media (max-width:767px){
+  .ab_mswitch{flex-wrap:nowrap;min-width:0;width:100%;max-width:100%}
+  .ab_mswitch > .w-dyn-list{min-width:0;width:100%}
+  .ab_mswitch .w-dyn-items{display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;padding-right:28px;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent)}
+  .ab_mswitch .w-dyn-items::-webkit-scrollbar{display:none}
+  .ab_mswitch .w-dyn-items.is-end{-webkit-mask-image:none;mask-image:none}
+  .ab_mswitch_link{flex:none;white-space:nowrap;scroll-snap-align:start}
+}

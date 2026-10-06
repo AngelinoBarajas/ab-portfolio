@@ -25,6 +25,15 @@
     if (m.slug === SLUG) m.el.setAttribute('aria-current', 'page');
     if (m.slug) m.el.setAttribute('href', '/work/' + m.slug);
   });
+  // phones: the switcher is one swipeable row (ab-core.css); start it with the current mission in view (scrollLeft, not
+  // scrollIntoView, which would also scroll the page) and drop the edge fade at the end of the row
+  (function(){
+    // measured from the link's box: the list items are display:contents, so they have no offsets of their own
+    var row = $('#mswitch .w-dyn-items'), cur = LIST[MI] && LIST[MI].el; if (!row) return;
+    function end(){ row.classList.toggle('is-end', row.scrollLeft + row.clientWidth >= row.scrollWidth - 4); }
+    if (cur && row.scrollWidth > row.clientWidth) row.scrollLeft = Math.max(0, cur.getBoundingClientRect().left - row.getBoundingClientRect().left - 16);
+    end(); row.addEventListener('scroll', end, { passive: true });
+  })();
   var NO = pad2(MI + 1), TOTAL = pad2(Math.max(1, LIST.length));
   var NEXT = LIST.length > 1 ? LIST[(MI + 1) % LIST.length] : null;
 
