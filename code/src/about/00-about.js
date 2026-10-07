@@ -314,10 +314,12 @@
     var PATCHES = [
       { n: '510 Visuals', s: 'Live', k: 'live', shape: 'circle', c: '#0f1a1d,#1c2227,#37535a,#5a8a94,#b8c9cc', bg: '#1c2a2e', x: 0, y: 20, w: 74, h: 74, r: -8 },
       { n: 'Topicweave', s: 'In orbit', k: 'orbit', shape: 'rect', t: 'woven', c: '#05060A,#9B87F5,#EF5B3F,#139E8A,#4F7BFF', bg: '#000000', x: 25, y: 0, w: 84, h: 60, r: 6, peel: 1 },
-      { n: 'kip', s: 'In orbit', k: 'orbit', shape: 'circle', c: '#14204F,#FF7A45,#FFC94A,#FFF4E6,#5FD3A8', bg: '#14204F', x: 51, y: 34, w: 66, h: 66, r: -5 },
+      { n: 'kip', s: 'In orbit', k: 'orbit', shape: 'circle', june: 1, bg: '#14204F', x: 51, y: 34, w: 66, h: 66, r: -5 },
       { n: 'Knowledge System', s: 'In orbit', k: 'orbit', shape: 'shield', c: '#1d2350,#3f4fa8,#7c5cff,#c9bcff,#2a1d6b', bg: '#241d56', x: 74, y: 4, w: 70, h: 78, r: 9 },
       { n: 'AB Identity', s: 'Shipped', k: 'shipped', shape: 'mark', x: 60, y: 116, w: 86, h: 58, r: -7 }
     ];
+    // this bundle's own tag on jsDelivr → code/vendor/ (kip's patch image ships in the repo)
+    var VEND = (function(){ var sc = document.querySelector('script[src*="/code/dist/ab-about"]'); return sc ? sc.src.replace(/code\/dist\/[^\/]*$/, 'code/vendor/') : 'https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@main/code/vendor/'; })();
     function patches(){
       if (!back) return;
       var box = document.createElement('div'); box.className = 'ab_badge_stk';
@@ -330,8 +332,15 @@
           html += '<div class="abst is-mark is-' + p.k + '" style="' + st + '" title="' + p.n + ' · ' + p.s + '"><span class="abst-logo">' + (AB.markSVG ? AB.markSVG({ cls: 'abst-mk' }) : '') + '</span><em>' + p.s + '</em></div>';
           return;
         }
-        html += '<div class="abst is-' + p.shape + ' is-' + p.k + (p.peel ? ' is-peel' : '') + '" style="' + st + ';--bg:' + p.bg + '" title="' + p.n + ' · ' + p.s + '">' +
-          '<span class="abst-pl"><span class="ab_planet" data-planet="' + (p.t || 'gas') + '" data-seed="' + (31 + i * 7) + '" data-colors="' + p.c + '" data-spin="80" aria-hidden="true"></span></span>' +
+        // kip's patch carries its signature planet: June's real 3D head (code/vendor/kip/june-head.webp) with her crib
+        // mobile as a little ring, back half behind her, front half with a star and two balls (Angelino 2026-10-07)
+        var pl = p.june ? '<span class="abst-pl" aria-hidden="true">' +
+            '<svg viewBox="-22 -14 44 28" style="position:absolute;left:-10px;top:-2px;width:44px;height:28px;overflow:visible"><path d="M-18 3A18 5 -12 0 1 18 -4.5" fill="none" stroke="#FFF4E6" stroke-opacity=".45" stroke-width=".9"/></svg>' +
+            '<img src="' + VEND + 'kip/june-head.webp" alt="" loading="lazy" style="position:absolute;left:-2px;top:-3px;width:28px;height:27px;object-fit:contain">' +
+            '<svg viewBox="-22 -14 44 28" style="position:absolute;left:-10px;top:-2px;width:44px;height:28px;overflow:visible"><path d="M-18 3A18 5 -12 0 0 18 -4.5" fill="none" stroke="#FFF4E6" stroke-width=".9"/>' +
+            '<path d="M-14 7.5l.9 1.9 2 .3-1.5 1.4.4 2-1.8-1-1.8 1 .4-2-1.5-1.4 2-.3z" fill="#FFC94A"/><circle cx="1" cy="6.5" r="1.6" fill="#5FD3A8"/><circle cx="13" cy="1.5" r="1.5" fill="#FF8FA3"/></svg></span>'
+          : '<span class="abst-pl"><span class="ab_planet" data-planet="' + (p.t || 'gas') + '" data-seed="' + (31 + i * 7) + '" data-colors="' + p.c + '" data-spin="80" aria-hidden="true"></span></span>';
+        html += '<div class="abst is-' + p.shape + ' is-' + p.k + (p.peel ? ' is-peel' : '') + '" style="' + st + ';--bg:' + p.bg + '" title="' + p.n + ' · ' + p.s + '">' + pl +
           '<b>' + p.n + '</b><em>' + p.s + '</em></div>';
       });
       box.innerHTML = html;
