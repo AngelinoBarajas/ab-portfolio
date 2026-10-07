@@ -1,0 +1,21 @@
+{
+  "_about": "Tools removed 2026-10-07 at Angelino's ask, with every reference they had (restore = create the item again, then re-add the ids).",
+  "tools_collection": "6ab602e12eeae1c3ec984d5c",
+  "removed": [
+    {"id": "6ab681b2ac3219dc877e1840", "name": "Lightroom", "slug": "lightroom", "color": "#31A8FF", "icon": "401a2a858c49e86e22d1e7b945593b62", "use": "Photo editing and color grading", "referenced_by": []},
+    {"id": "6ab60563235e3b01c21a3708", "name": "Astro", "slug": "astro", "color": "#8A8FA3", "icon": "232f8a1db7303dab4c8a7d49c75d852d", "use": null, "referenced_by": ["service Custom Deploys 6ab605e276fdd25d636a5993 tools"]},
+    {"id": "6ab60563235e3b01c21a3704", "name": "APIs", "slug": "apis", "color": "#8A8FA3", "icon": "232f8a1db7303dab4c8a7d49c75d852d", "use": null, "referenced_by": ["service CMS Integrations 6ab605e276fdd25d636a5995 tools"]},
+    {"id": "6aba8869e667b92ba2acb38a", "name": "SVG", "slug": "svg", "color": "#FF7A45", "icon": "401a2a858c49e86e22d1e7b945593b62", "use": "Characters, icons and charts drawn by hand", "referenced_by": ["mission Topicweave 6ab97e398d094c64bb845956 stack"]},
+    {"id": "6ab6bff5ceb091fbb0638d32", "name": "Pen + paper", "slug": "pen-paper", "color": "#F2F0EA", "icon": "401a2a858c49e86e22d1e7b945593b62", "use": "Sketching the first iterations by hand", "referenced_by": ["mission AB Identity 6ab605962eeae1c3ec9950ae stack"]},
+    {"id": "6ab60563235e3b01c21a3714", "name": "WebPageTest", "slug": "webpagetest", "color": "#8A8FA3", "icon": "232f8a1db7303dab4c8a7d49c75d852d", "use": null, "referenced_by": ["service Performance 6ab605e276fdd25d636a5999 tools"]},
+    {"id": "6ac46de52ba9bf26ae2f7cc0", "name": "Resend", "slug": "resend", "color": "#F2F0EA", "icon": "232f8a1db7303dab4c8a7d49c75d852d", "use": "Email delivery for forms and app notices", "referenced_by": ["mission Topicweave 6ab97e398d094c64bb845956 stack"]},
+    {"id": "6ab60563235e3b01c21a370e", "name": "Lighthouse", "slug": "lighthouse", "color": "#8A8FA3", "icon": "232f8a1db7303dab4c8a7d49c75d852d", "use": null, "referenced_by": ["service Performance 6ab605e276fdd25d636a5999 tools"]}
+  ],
+  "before": {
+    "Custom Deploys tools": ["6ab60563235e3b01c21a3708", "6ab60563235e3b01c21a3710", "6ab60563235e3b01c21a3712", "6ab60563235e3b01c21a36fe"],
+    "CMS Integrations tools": ["6ab60563235e3b01c21a3716", "6ab60563235e3b01c21a3706", "6ab60563235e3b01c21a370c", "6ab60563235e3b01c21a3704"],
+    "Performance tools": ["6ab60563235e3b01c21a370e", "6ab60563235e3b01c21a3714", "6ab60563235e3b01c21a36f6", "6ab6050a235e3b01c21a0482"],
+    "Topicweave stack": ["6ab60563235e3b01c21a3702", "6ab97e23f77d8c41978e662f", "6aba8869e667b92ba2acb38a", "6ab6ce3286c563fd3f896f7c", "6ab97e23f77d8c41978e662d", "6ab60563235e3b01c21a3712", "6ac46de52ba9bf26ae2f7cbe", "6ac46de52ba9bf26ae2f7cc0"],
+    "AB Identity stack": ["6ab6bff5ceb091fbb0638d32", "6ab60563235e3b01c21a3702", "6ab681b2ac3219dc877e183c", "6ab681b2ac3219dc877e183e"]
+  }
+}
