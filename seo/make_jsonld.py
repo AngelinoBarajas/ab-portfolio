@@ -110,7 +110,7 @@ service = {"@context": CTX, "@graph": [
    "provider": PERSON, "isPartOf": {"@id": D + "/services#page"}},
   crumbs("/services/[Slug]", ("Services", D + "/services"), ("[Name]", None))]}
 # field notes: an Article whose author is the Person in full (Google checks each page on its own, see About).
-# [Published On] / [Updated On] are Webflow's built-in item dates (pick the 2026-10-05 style format if offered);
+# no dates: Webflow's head-code date tokens render "Oct 01, 2026" (not ISO), so they were left out (2026-10-07);
 # the image is the site share card these notes already use as og:image
 AUTHOR = {"@type": "Person", "@id": D + "/#person", "name": "Angelino Barajas", "url": D + "/about"}
 # kept short on purpose: every [Field] is inserted by hand in the Designer, so the slug appears once (url)
@@ -122,7 +122,7 @@ def tcrumbs(section, url, *last):
 note = {"@context": CTX, "@graph": [
   {"@type": "Article", "url": D + "/observatory/[Slug]", "headline": "[Name]", "description": "[Meta description]",
    "image": "https://cdn.prod.website-files.com/6ab5fe4a5ee75f9c981dc0be/6ac45ee001aa4a019275f439_og-site-v2.jpg",
-   "datePublished": "[Published On]", "dateModified": "[Updated On]", "author": AUTHOR, "publisher": AUTHOR,
+   "author": AUTHOR, "publisher": AUTHOR,
    "isPartOf": {"@id": D + "/observatory#page"}, "inLanguage": "en-US"},
   tcrumbs("Observatory", D + "/observatory")]}
 topic = {"@context": CTX, "@graph": [
