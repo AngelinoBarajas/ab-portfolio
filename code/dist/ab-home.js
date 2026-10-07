@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-home v0.33.64 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-home v0.33.66 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abHomeInit) return;
@@ -295,17 +295,24 @@ window.Webflow.push(function(){
           inner.appendChild(lc); f.__loom = lc;
         }
         else if (slug === 'kip'){
-          // kip's deeper tangerine with white text, and three of June's village hopping in place: the real 3D portraits from
-          // kipvillage.com (code/vendor/kip/cast/, Angelino 2026-10-06). Sam, June and Nana: their mint, butter and rose circles read on tangerine
-          inner.style.setProperty('--fbg', '#E85F2A'); inner.style.setProperty('--ffg', '#FFFFFF'); f.__bg = '#E85F2A';
+          // kip: the real house from kipvillage.com as the card (code/vendor/kip/hero-house.webp, a fade at the foot so the
+          // title reads), and three of June's village hopping on its sky: the site's 3D portraits (Angelino 2026-10-07)
+          inner.style.setProperty('--fbg', '#2a3a6a'); inner.style.setProperty('--ffg', '#FFFFFF'); f.__bg = '#2a3a6a';
           var ar = document.createElement('div'); ar.className = 'ab_board_kip'; ar.setAttribute('aria-hidden', 'true');
           ar.style.cssText = 'position:absolute;right:24px;top:26px;display:flex;gap:10px;align-items:flex-end;z-index:0';
           var KV = (function(){ var s = document.querySelector('script[src*="/code/dist/ab-home"]'); return s ? s.src.replace(/code\/dist\/[^\/]*$/, 'code/vendor/') : 'https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@main/code/vendor/'; })();
+          var hb = document.createElement('div'); hb.className = 'ab_board_kip-bg'; hb.setAttribute('aria-hidden', 'true');
+          hb.style.cssText = 'position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(to top,rgba(18,16,38,.9) 0%,rgba(18,16,38,.55) 30%,rgba(18,16,38,0) 58%),url("' + KV + 'kip/hero-house.webp") center 30%/cover no-repeat';
+          inner.insertBefore(hb, inner.firstChild); var HBI = hb.style.backgroundImage;
           ar.innerHTML = ['sam', 'june', 'nana'].map(function(n){ return '<img src="' + KV + 'kip/cast/' + n + '.webp" alt="" loading="lazy" decoding="async" width="112" height="112">'; }).join('');
           [].forEach.call(ar.children, function(s){ s.style.cssText = 'flex:none;width:64px;height:64px;display:block;transform-origin:50% 100%;filter:drop-shadow(0 4px 6px rgba(30,27,46,.25))'; });
           // phone deck (≤767, frames 4:5): centered and larger, clear of the Open case button, like the deck's canvas previews
           var mq = window.matchMedia('(max-width: 767px)');
-          var place = function(){ var d = mq.matches; ar.style.left = d ? '50%' : 'auto'; ar.style.right = d ? 'auto' : '24px'; ar.style.top = d ? '24%' : '26px'; ar.style.transform = d ? 'translateX(-50%) scale(1.3)' : ''; ar.style.transformOrigin = '50% 0'; };
+          var place = function(){ var d = mq.matches; ar.style.left = d ? '50%' : 'auto'; ar.style.right = d ? 'auto' : '24px'; ar.style.top = d ? '17%' : '26px'; ar.style.transform = d ? 'translateX(-50%) scale(1.1)' : '';
+            // phone deck (4:5): the whole house under a sky band, the portraits in that sky, a fade at the top behind Open case
+            hb.style.backgroundColor = d ? '#a8e4ff' : ''; hb.style.backgroundRepeat = 'no-repeat';
+            hb.style.backgroundImage = d ? 'linear-gradient(to bottom,rgba(18,16,38,.5) 0%,rgba(18,16,38,0) 18%),linear-gradient(to bottom,#a8e4ff 0%,#a8e4ff 27%,rgba(168,228,255,0) 36%),' + HBI : HBI;
+            hb.style.backgroundSize = d ? '100% 100%, 100% 100%, 100% 100%, 112% auto' : '100% 100%, cover'; hb.style.backgroundPosition = d ? '0 0, 0 0, 0 0, center 58%' : '0 0, center 30%'; ar.style.transformOrigin = '50% 0'; };
           place(); if (mq.addEventListener) mq.addEventListener('change', place);
           inner.appendChild(ar); f.__hop = ar;
         }

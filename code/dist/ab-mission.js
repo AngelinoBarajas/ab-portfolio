@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission v0.33.65 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission v0.33.66 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abMissionInit) return;
@@ -3740,6 +3740,35 @@ window.Webflow.push(function(){
       };
     })();
 
+    // when the hero planet sits on the mission switcher row (phones, tablets, ~1024), a drawing that reaches past (June's curl and mobile, the AB logo)
+    // her planet box. Measure the page and move her into the bigger clear strip, above the switcher (under the fixed
+    // header) or below it (above the summary), sized to fit. UP / DN / SIDE = how far it reaches (× R) up, down and to each side.
+    function heroFit(el, R0, UP, DN, SIDE){
+      var out = { R: R0, dy: 0, dx: 0 };
+      if (!el || !el.closest || !el.closest('#hero')) return out;
+      var sw = document.getElementById('mswitch'), nav = document.querySelector('.ab_nav_component'), sum = document.querySelector('.ab_dbh_sum');
+      if (!sw) return out;
+      var y0 = window.pageYOffset || 0, pr = el.getBoundingClientRect(), s = sw.getBoundingClientRect();
+      var cx = pr.left + pr.width / 2, cy = pr.top + pr.height / 2 + y0, sTop = s.top + y0, sBot = s.bottom + y0;
+      if (cx + SIDE * R0 < s.left || cx - SIDE * R0 > s.right || cy - UP * R0 > sBot || cy + DN * R0 < sTop) return out;
+      var hb = nav ? nav.getBoundingClientRect().bottom : 0, lim = sum ? sum.getBoundingClientRect().top + y0 : sBot + 4 * R0;
+      var up = (sTop - 8 - (hb + 8)) / (UP + DN), dn = (lim - 8 - (sBot + 8)) / (UP + DN);
+      var R = Math.max(R0 * .4, Math.min(R0, Math.max(up, dn)));
+      var top = up >= dn ? hb + 8 : sBot + 8;
+      // below the switcher, the eyebrow line ("Mission debrief · 03 / 05") can still run under her: then start below it
+      var eb = up < dn && document.querySelector('.ab_dbh_eyebrow');
+      if (eb && document.createRange){
+        var rg = document.createRange(); rg.selectNodeContents(eb); var er = rg.getBoundingClientRect();
+        if (er.width && cx - SIDE * R < er.right && cx + SIDE * R > er.left && top + (UP + DN) * R > er.top + y0){
+          top = er.bottom + y0 + 8; R = Math.max(R0 * .4, Math.min(R0, (lim - 8 - top) / (UP + DN)));
+        }
+      }
+      out.R = R; out.dy = top + UP * R - cy;
+      // and keep the mobile on screen sideways
+      var W = document.documentElement.clientWidth;
+      if (cx + SIDE * R > W - 6) out.dx = W - 6 - SIDE * R - cx; else if (cx - SIDE * R < 6) out.dx = 6 + SIDE * R - cx;
+      return out;
+    }
     /* ---- kip: baby June's head, with the crib mobile turning around her ---- */
     // Angelino 2026-10-06: June's head is the planet and the rings are the nursery mobile spinning. The head is the real 3D
     // character (shot on the live kipvillage.com scene against its green booth: vendor/kip/june-head.webp); the rings are the
@@ -3772,38 +3801,9 @@ window.Webflow.push(function(){
         g.addColorStop(0, hi ? '#ffffff' : 'rgba(255,255,255,.9)'); g.addColorStop(.35, col); g.addColorStop(1, col === MINT ? '#2E9E76' : '#D9607A');
         ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, s, 0, Math.PI * 2); ctx.fill();
       }
-      // when the hero planet sits on the mission switcher row (phones, tablets, ~1024), June's curl and mobile reach past
-      // her planet box. Measure the page and move her into the bigger clear strip, above the switcher (under the fixed
-      // header) or below it (above the summary), sized to fit. Her drawing spans ~1.15R up, ~0.95R down, ~1.62R across.
-      function fit(el, R0){
-        var out = { R: R0, dy: 0, dx: 0 };
-        if (!el || !el.closest || !el.closest('#hero')) return out;
-        var sw = document.getElementById('mswitch'), nav = document.querySelector('.ab_nav_component'), sum = document.querySelector('.ab_dbh_sum');
-        if (!sw) return out;
-        var y0 = window.pageYOffset || 0, pr = el.getBoundingClientRect(), s = sw.getBoundingClientRect();
-        var cx = pr.left + pr.width / 2, cy = pr.top + pr.height / 2 + y0, sTop = s.top + y0, sBot = s.bottom + y0;
-        if (cx + 1.62 * R0 < s.left || cx - 1.62 * R0 > s.right || cy - 1.15 * R0 > sBot || cy + .95 * R0 < sTop) return out;
-        var hb = nav ? nav.getBoundingClientRect().bottom : 0, lim = sum ? sum.getBoundingClientRect().top + y0 : sBot + 4 * R0;
-        var up = (sTop - 8 - (hb + 8)) / 2.1, dn = (lim - 8 - (sBot + 8)) / 2.1;
-        var R = Math.max(R0 * .4, Math.min(R0, Math.max(up, dn)));
-        var top = up >= dn ? hb + 8 : sBot + 8;
-        // below the switcher, the eyebrow line ("Mission debrief · 03 / 05") can still run under her: then start below it
-        var eb = up < dn && document.querySelector('.ab_dbh_eyebrow');
-        if (eb && document.createRange){
-          var rg = document.createRange(); rg.selectNodeContents(eb); var er = rg.getBoundingClientRect();
-          if (er.width && cx - 1.62 * R < er.right && cx + 1.62 * R > er.left && top + 2.1 * R > er.top + y0){
-            top = er.bottom + y0 + 8; R = Math.max(R0 * .4, Math.min(R0, (lim - 8 - top) / 2.1));
-          }
-        }
-        out.R = R; out.dy = top + 1.15 * R - cy;
-        // and keep the mobile on screen sideways
-        var W = document.documentElement.clientWidth;
-        if (cx + 1.62 * R > W - 6) out.dx = W - 6 - 1.62 * R - cx; else if (cx - 1.62 * R < 6) out.dx = 6 + 1.62 * R - cx;
-        return out;
-      }
       return function(R0, el){
         load();
-        var F = fit(el, R0), R = F.R, DY = F.dy, DX = F.dx;
+        var F = heroFit(el, R0, 1.15, .95, 1.62), R = F.R, DY = F.dy, DX = F.dx;
         var small = R < 26;
         function arms(ctx, cx, cy, t, front, en){
           ARMS.forEach(function(A, ai){
@@ -3844,6 +3844,186 @@ window.Webflow.push(function(){
             ctx.drawImage(img, -SCX * sc, -SCY * sc, w, h); ctx.restore();
           }
           arms(ctx, cx, cy, t, true, en);
+        } };
+      };
+    })();
+
+    /* ---- AB Identity: the logo, tilted and solid, with a real planet in the mark's planet ---- */
+    // Angelino 2026-10-07: the A and B white, tilted a little and extruded so they read 3D, a shine sweeping over them on
+    // hover. The planet fills the mark's circle, in the style of the About page's planet (the core gas texture in the brand
+    // oranges), and its thin rings fill the logo's own negative space: they're clipped to the mark's planet shape, so they
+    // run exactly where the swoosh cuts the A's crossbar and the B's top loop. Logo units: AB.MARK, 490.16 × 241.75,
+    // planet circle r 98 at (240, 121). The texture is the core planet's own (`.tex` --tex), built under this canvas.
+    // The word "Identity" in the hero title turns to the site's starfield outline (.t-outline) so the logo can sit big behind it.
+    SIG['ab-identity'] = (function(){
+      var CX = 240, CY = 121, PR = 95, TILT = -21.5 * Math.PI / 180, LTILT = -6 * Math.PI / 180;
+      var COLS = ['#ffd29a', '#ff8a4c', '#6b2b16', '#ffb27a', '#a44a1f', '#ffe6cf', '#c2451a'];
+      function sil(k){
+        // the letters (A, its leg, B) as one white silhouette on an offscreen canvas, logo units × k, 10-unit margin
+        var M = AB.MARK; if (!M || !window.Path2D) return null;
+        var c = document.createElement('canvas'), x = c.getContext('2d');
+        c.width = Math.ceil(510 * k); c.height = Math.ceil(262 * k); x.scale(k, k); x.translate(10, 10); x.fillStyle = '#fff';
+        try { [M.a, M.leg, M.b].forEach(function(d){ x.fill(new Path2D(d)); }); } catch(e){ return null; }
+        return c;
+      }
+      function tint(src, col){
+        var c = document.createElement('canvas'); c.width = src.width; c.height = src.height; var x = c.getContext('2d');
+        x.drawImage(src, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = col; x.fillRect(0, 0, c.width, c.height); return c;
+      }
+      var titled = false;
+      function outlineTitle(){
+        // "AB Identity" → the last word in the starfield outline style (the CSS class already ships in ab-core.css)
+        // core's hero toys (39-herodrag) split the title into draggable .w word spans just after the page bundles run, so
+        // mark the last word once that split exists (or wrap it ourselves if the toys never run: no GSAP / Draggable)
+        if (titled) return; titled = true;
+        var tries = 0;
+        (function mark(){
+          var h = document.getElementById('heroTitle'); if (!h) return;
+          var ws = h.querySelectorAll('.w');
+          if (ws.length > 1){ ws[ws.length - 1].classList.add('t-outline'); return; }
+          if (++tries < 20) return setTimeout(mark, 100);
+          if (h.children.length) return;
+          var t = h.textContent, i = t.lastIndexOf(' '); if (i < 0) return;
+          h.innerHTML = esc(t.slice(0, i + 1)) + '<span class="t-outline">' + esc(t.slice(i + 1)) + '</span>';
+        })();
+      }
+      return function(R0, el){
+        var hero = el && el.closest && el.closest('#hero'); if (hero) outlineTitle();
+        // the logo reaches ~0.8R up, ~0.88R down (with the extrusion) and ~1.66R to each side (tilt included) at the hero's 2.9R width
+        var F = hero ? heroFit(el, R0, .82, .88, 1.66) : { R: R0, dx: 0, dy: 0 }, R = F.R, DX = F.dx, DY = F.dy;
+        var small = R < 26, k = R * (hero ? 2.9 : 2.3) / 490.16, dpr = Math.min(2, window.devicePixelRatio || 1);
+        var S = sil(k * dpr), face = S && tint(S, '#F2F0EA'), side = S && tint(S, '#4d3f3a'), edge = S && tint(S, '#7d6d66');
+        var PP = null; try { PP = window.Path2D && AB.MARK ? new Path2D(AB.MARK.planet) : null; } catch(e){}
+        var texImg = null, texTry = 0, tex = el && el.querySelector('.tex');
+        function getTex(){
+          if (texImg || !tex || texTry++ % 30) return;
+          var v = tex.style.getPropertyValue('--tex'), m = v && v.match(/url\(["']?(.*?)["']?\)$/);
+          if (m){ var im = new Image(); im.onload = function(){ texImg = im; }; im.src = m[1]; texTry = 1e9; }
+        }
+        function rings(ctx, front, t, en){
+          // thin bands on one tilted plane, clipped to the mark's planet shape (the swoosh + the circle)
+          if (!PP) return;
+          ctx.save(); ctx.translate(-CX, -CY); ctx.clip(PP); ctx.translate(CX, CY); ctx.rotate(TILT);
+          for (var a = 104, n = 0; a <= 226; a += 5.5, n++){
+            ctx.beginPath();
+            if (front) ctx.ellipse(0, 0, a, a * .17, 0, 0, Math.PI); else ctx.ellipse(0, 0, a, a * .17, 0, Math.PI, Math.PI * 2);
+            ctx.lineWidth = 2.2 + (n % 3) * 1.4; ctx.strokeStyle = COLS[n % COLS.length];
+            ctx.globalAlpha = (front ? .85 : .6) * (.65 + .35 * Math.sin(n * 1.7 + t * .3 * (1 + en))) + .1 * en; ctx.stroke();
+          }
+          ctx.globalAlpha = 1; ctx.restore();
+        }
+        return { pad: Math.max(hero ? 1.6 : 1.3, (Math.max(Math.abs(DX), Math.abs(DY)) + 1.6 * R) / R0), boost: 1, pulse: '255,106,61', draw: function(ctx, cx, cy, t, en){
+          en = en || 0; getTex(); cx += DX; cy += DY;
+          ctx.save(); ctx.translate(cx, cy); ctx.rotate(LTILT);
+          // letters: an extrusion down-right, the face, and the shine on hover (source-atop: only the letters are drawn yet)
+          if (S){
+            var w = S.width / dpr, h = S.height / dpr, ox = -(CX + 10) * k, oy = -(CY + 10) * k, d = Math.max(2, Math.round(10 * k));
+            for (var i = d; i > 0; i--) ctx.drawImage(i > 1 ? side : edge, ox + i * .5, oy + i * .85, w, h);
+            ctx.drawImage(face, ox, oy, w, h);
+            if (en > .02){
+              var sx = ((t * .9) % 2.2 - .6) * w + ox, g = ctx.createLinearGradient(sx - w * .12, oy, sx + w * .12, oy + h * .3);
+              g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(.5, 'rgba(255,255,255,' + (.8 * en) + ')'); g.addColorStop(1, 'rgba(255,255,255,0)');
+              ctx.globalCompositeOperation = 'source-atop'; ctx.fillStyle = g; ctx.fillRect(ox, oy, w, h); ctx.globalCompositeOperation = 'source-over';
+            }
+          }
+          ctx.scale(k, k);
+          if (!small) rings(ctx, false, t, en);
+          // the planet: the core gas texture turning in the circle, lit from the top left
+          ctx.save(); ctx.beginPath(); ctx.arc(0, 0, PR, 0, Math.PI * 2); ctx.clip();
+          ctx.fillStyle = '#a44a1f'; ctx.fillRect(-PR, -PR, PR * 2, PR * 2);
+          if (texImg){
+            ctx.rotate(-16 * Math.PI / 180);
+            var th = PR * 2.3, tw = th * texImg.width / texImg.height, off = (t * 7) % tw;
+            for (var x = -tw * 2 + off; x < PR * 1.6; x += tw) ctx.drawImage(texImg, x, -th / 2, tw, th);
+            ctx.rotate(16 * Math.PI / 180);
+          }
+          var sh = ctx.createRadialGradient(-PR * .35, -PR * .4, PR * .05, 0, 0, PR * 1.02);
+          sh.addColorStop(0, 'rgba(255,236,220,.35)'); sh.addColorStop(.45, 'rgba(255,200,160,0)'); sh.addColorStop(.8, 'rgba(30,6,0,.25)'); sh.addColorStop(1, 'rgba(20,4,0,.7)');
+          ctx.fillStyle = sh; ctx.fillRect(-PR, -PR, PR * 2, PR * 2);
+          ctx.restore();
+          if (!small) rings(ctx, true, t, en);
+          ctx.restore();
+        } };
+      };
+    })();
+
+    /* ---- Knowledge System: a knowledge graph planet with the KNS satellite as its moon ---- */
+    // Angelino 2026-10-07 (option B): 90 entries (small dots) wired to 10 tag hubs (bright nodes) across a violet sphere, signals
+    // running along the links, the far side faint; the site's KNS satellite glyph (core 42-top .sat-ico) orbits as a moon.
+    // Hover: the links light up and the satellite beams to the nearest hub. Colors = the mission's CMS planet palette.
+    SIG['knowledge-system'] = (function(){
+      var TAU = Math.PI * 2;
+      function rnd(n, s){ var a = []; for (var i = 0; i < n; i++){ s = (s * 16807) % 2147483647; a.push((s - 1) / 2147483646); } return a; }
+      function pt(lat, lon){ var c = Math.cos(lat); return [c * Math.cos(lon), Math.sin(lat), c * Math.sin(lon)]; }
+      // 10 hubs (topics) spread evenly over the sphere (golden spiral), 90 entries each linked to 1–2 hubs
+      var NH = 10, H = [], E = [], L = [], r = rnd(900, 11), i, j, q = 0;
+      for (i = 0; i < NH; i++) H.push(pt(Math.asin(1 - 2 * (i + .5) / NH), i * 2.39996 + .4));
+      for (i = 0; i < 90; i++){
+        var h = Math.floor(r[q++] * NH), b = H[h], v = [b[0] + (r[q++] - .5) * .7, b[1] + (r[q++] - .5) * .7, b[2] + (r[q++] - .5) * .7], m = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+        E.push([v[0] / m, v[1] / m, v[2] / m]); L.push([E.length - 1, h, r[q++]]);
+        if (r[q++] > .7){ var h2 = (h + 1 + Math.floor(r[q++] * (NH - 1))) % NH; L.push([E.length - 1, h2, r[q++]]); }
+      }
+      for (i = 0; i < NH; i++) for (j = i + 1; j < NH; j++) if (r[q++] > .78) L.push([-1 - i, j, r[q++]]); // hub to hub
+      var SAT = { a: 'M9.5 4l2.5-2.5 2.5 2.5', p: 'M1 9.5h6v5H1zM17 9.5h6v5h-6z', s: 'M7 12h3M14 12h3' };
+      var SP = null;
+      function satPaths(){ if (SP !== null) return SP; SP = false; try { if (window.Path2D) SP = [new Path2D(SAT.a), new Path2D(SAT.p), new Path2D(SAT.s)]; } catch(e){} return SP; }
+      return function(R){
+        var small = R < 26, rot = 0, tl = .35, ct = Math.cos(tl), st = Math.sin(tl);
+        function proj(v){ var x = v[0] * Math.cos(rot) - v[2] * Math.sin(rot), z = v[0] * Math.sin(rot) + v[2] * Math.cos(rot), y = v[1] * ct - z * st, z2 = v[1] * st + z * ct; return [x, -y, z2]; }
+        function slerp(a, b, f){ var v = [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f], m = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]) || 1; return [v[0] / m, v[1] / m, v[2] / m]; }
+        function sat(ctx, cx, cy, t, front, en, hubs){
+          // the moon's orbit: a tilted ellipse; its far half is drawn before the planet
+          var u = t * .45, a = R * 1.55, b = R * .42, ti = -.38, ex = Math.cos(u) * a, ey = Math.sin(u) * b, x = cx + ex * Math.cos(ti) - ey * Math.sin(ti), y = cy + ex * Math.sin(ti) + ey * Math.cos(ti);
+          var isFront = Math.sin(u) > 0;
+          if (front){
+            ctx.globalAlpha = .18 + .2 * en; ctx.strokeStyle = '#a597ff'; ctx.lineWidth = 1; ctx.setLineDash([2, 4]);
+            ctx.beginPath(); ctx.ellipse(cx, cy, a, b, ti, 0, Math.PI); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+          }
+          if (isFront !== front) return;
+          if (front && en > .05 && hubs.length){
+            var best = hubs[0]; hubs.forEach(function(hb){ if (hb[2] > best[2]) best = hb; });
+            var g = ctx.createLinearGradient(x, y, cx + best[0] * R, cy + best[1] * R); g.addColorStop(0, 'rgba(236,232,255,' + .8 * en + ')'); g.addColorStop(1, 'rgba(76,141,255,0)');
+            ctx.strokeStyle = g; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(cx + best[0] * R, cy + best[1] * R); ctx.stroke();
+          }
+          var P = satPaths(), s = Math.max(.5, R / 70) * (front ? 1 : .8);
+          ctx.save(); ctx.translate(x, y); ctx.rotate(ti + Math.cos(u) * .2); ctx.scale(s, s); ctx.translate(-12, -9);
+          ctx.globalAlpha = front ? 1 : .45;
+          if (P){ ctx.lineWidth = 1.3 / s * Math.max(1, s * .7); ctx.strokeStyle = '#ece8ff'; ctx.stroke(P[0]); ctx.stroke(P[2]); ctx.fillStyle = 'rgba(76,141,255,.55)'; ctx.fill(P[1]); ctx.stroke(P[1]); }
+          ctx.fillStyle = '#ece8ff'; ctx.fillRect(10, 8.5, 4, 7);
+          ctx.restore(); ctx.globalAlpha = 1;
+        }
+        return { pad: small ? 1.3 : 1.75, boost: 1.4, pulse: '165,151,255', draw: function(ctx, cx, cy, t, en){
+          en = en || 0; rot = t * .16;
+          var hubs = H.map(proj);
+          if (!small) sat(ctx, cx, cy, t, false, en, hubs);
+          // the sphere
+          var g = ctx.createRadialGradient(cx - R * .35, cy - R * .4, R * .05, cx, cy, R);
+          g.addColorStop(0, '#3f33a3'); g.addColorStop(.5, '#211a52'); g.addColorStop(1, '#0d0a20');
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU); ctx.fill();
+          ctx.globalAlpha = .55; ctx.strokeStyle = '#a597ff'; ctx.lineWidth = Math.max(.8, R / 110); ctx.beginPath(); ctx.arc(cx, cy, R - .5, 0, TAU); ctx.stroke(); ctx.globalAlpha = 1;
+          // links: each drawn as a curve over the surface, with a signal pulse running along it
+          var ents = E.map(proj), seg = small ? 4 : 10;
+          L.forEach(function(l){
+            var A = l[0] < 0 ? H[-1 - l[0]] : E[l[0]], B = H[l[1]], hubLink = l[0] < 0;
+            ctx.beginPath(); var prev = null, zs = 0;
+            for (var k = 0; k <= seg; k++){ var p = proj(slerp(A, B, k / seg)); zs += p[2]; if (k) ctx.lineTo(cx + p[0] * R, cy + p[1] * R); else ctx.moveTo(cx + p[0] * R, cy + p[1] * R); }
+            var front = zs / (seg + 1) > 0;
+            ctx.globalAlpha = front ? (hubLink ? .65 : .5) + .4 * en : .1; ctx.strokeStyle = hubLink ? '#4C8DFF' : '#a597ff'; ctx.lineWidth = Math.max(.7, R / (hubLink ? 100 : 140)) * (1 + .5 * en); ctx.stroke();
+            if (front && !small){
+              var f = ((t * (.25 + .5 * en) + l[2]) % 1), s = proj(slerp(A, B, f));
+              ctx.globalAlpha = .9; ctx.fillStyle = '#ece8ff'; ctx.beginPath(); ctx.arc(cx + s[0] * R, cy + s[1] * R, Math.max(.8, R / 110), 0, TAU); ctx.fill();
+            }
+          });
+          // entries and hubs, front bright and back faint
+          ents.forEach(function(p){ ctx.globalAlpha = p[2] > 0 ? 1 : .2; ctx.fillStyle = '#c4baff'; ctx.beginPath(); ctx.arc(cx + p[0] * R, cy + p[1] * R, Math.max(.8, R / 75) * (p[2] > 0 ? 1 : .7), 0, TAU); ctx.fill(); });
+          hubs.forEach(function(p){
+            if (p[2] < 0){ ctx.globalAlpha = .2; ctx.fillStyle = '#4C8DFF'; ctx.beginPath(); ctx.arc(cx + p[0] * R, cy + p[1] * R, Math.max(1, R / 45) * .7, 0, TAU); ctx.fill(); return; }
+            var X = cx + p[0] * R, Y = cy + p[1] * R, rr = Math.max(1.4, R / 40), gl = ctx.createRadialGradient(X, Y, 0, X, Y, rr * (3 + 2 * en));
+            gl.addColorStop(0, 'rgba(236,232,255,.95)'); gl.addColorStop(.35, 'rgba(76,141,255,.55)'); gl.addColorStop(1, 'rgba(76,141,255,0)');
+            ctx.globalAlpha = 1; ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(X, Y, rr * (3 + 2 * en), 0, TAU); ctx.fill();
+          });
+          ctx.globalAlpha = 1;
+          if (!small) sat(ctx, cx, cy, t, true, en, hubs.filter(function(p){ return p[2] > 0; }));
         } };
       };
     })();
