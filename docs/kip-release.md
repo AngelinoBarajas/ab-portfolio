@@ -47,8 +47,9 @@ for all, barajasdsgn.com + www + webflow.io. After: verify /work/kip live (8 cha
 /work cards, /services pages listing kip; then add v0.33.62 + v0.33.64 to the Flight manual changelog + histories
 ("kip debrief", "Home work board").
 
-## Still open (proposed one at a time)
-- OG image for /work/kip (old og-kip.png shows the flat characters).
-- About crew-badge kip patch (planet colors only today; could carry June).
-- Services: kip now has 3D; consider adding it to Interactive 3D's missions.
-- `core/35-orbit.js` LOGOS has no Spline icon (falls back to the generic one); core belongs to the other chats.
+## Follow-ups shipped (2026-10-07)
+- v0.33.65: June's planet one ring, gentler hover; hero planet clears the switcher on phones (`heroFit`).
+- v0.33.66: Home kip card = the house with hopping portraits; AB Identity + Knowledge System signature planets; Work grid card planets hidden.
+- v0.33.67: AB Identity rings drawn whole in front of the planet; KS phone fit.
+- v0.33.68: About badge kip patch (June), kip OG image (`og/kip_og.py`), kip ↔ Interactive 3D.
+- Left as is: `core/35-orbit.js` LOGOS has no Spline icon (generic icon shows); Interactive 3D's tools list doesn't name Spline.
