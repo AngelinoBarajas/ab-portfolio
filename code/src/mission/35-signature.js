@@ -282,10 +282,15 @@
           var v = tex.style.getPropertyValue('--tex'), m = v && v.match(/url\(["']?(.*?)["']?\)$/);
           if (m){ var im = new Image(); im.onload = function(){ texImg = im; }; im.src = m[1]; texTry = 1e9; }
         }
-        function rings(ctx, front, t, en){
-          // thin bands on one tilted plane, clipped to the mark's planet shape (the swoosh + the circle)
+        function rings(ctx, front, t, en, overPlanet){
+          // thin bands on one tilted plane. Off the planet they're clipped to the mark's planet shape (the swoosh fills
+          // the A's crossbar and the B's top loop); over the planet the near half is drawn whole, so the rings pass in
+          // front of it instead of showing only the swoosh's thin strip (which read as rings cutting through it)
           if (!PP) return;
-          ctx.save(); ctx.translate(-CX, -CY); ctx.clip(PP); ctx.translate(CX, CY); ctx.rotate(TILT);
+          ctx.save();
+          if (overPlanet){ ctx.beginPath(); ctx.arc(0, 0, PR, 0, Math.PI * 2); ctx.clip(); }
+          else { ctx.translate(-CX, -CY); ctx.clip(PP); ctx.translate(CX, CY); }
+          ctx.rotate(TILT);
           for (var a = 104, n = 0; a <= 226; a += 5.5, n++){
             ctx.beginPath();
             if (front) ctx.ellipse(0, 0, a, a * .17, 0, 0, Math.PI); else ctx.ellipse(0, 0, a, a * .17, 0, Math.PI, Math.PI * 2);
@@ -323,7 +328,7 @@
           sh.addColorStop(0, 'rgba(255,236,220,.35)'); sh.addColorStop(.45, 'rgba(255,200,160,0)'); sh.addColorStop(.8, 'rgba(30,6,0,.25)'); sh.addColorStop(1, 'rgba(20,4,0,.7)');
           ctx.fillStyle = sh; ctx.fillRect(-PR, -PR, PR * 2, PR * 2);
           ctx.restore();
-          if (!small) rings(ctx, true, t, en);
+          if (!small){ rings(ctx, true, t, en, false); rings(ctx, true, t, en, true); }
           ctx.restore();
         } };
       };
@@ -349,7 +354,9 @@
       var SAT = { a: 'M9.5 4l2.5-2.5 2.5 2.5', p: 'M1 9.5h6v5H1zM17 9.5h6v5h-6z', s: 'M7 12h3M14 12h3' };
       var SP = null;
       function satPaths(){ if (SP !== null) return SP; SP = false; try { if (window.Path2D) SP = [new Path2D(SAT.a), new Path2D(SAT.p), new Path2D(SAT.s)]; } catch(e){} return SP; }
-      return function(R){
+      return function(R0, el){
+        // on narrow layouts the hero planet + its satellite's orbit move clear of the mission switcher (heroFit)
+        var F = el && el.closest && el.closest('#hero') ? heroFit(el, R0, 1.05, 1.05, 1.6) : { R: R0, dx: 0, dy: 0 }, R = F.R, DX = F.dx, DY = F.dy;
         var small = R < 26, rot = 0, tl = .35, ct = Math.cos(tl), st = Math.sin(tl);
         function proj(v){ var x = v[0] * Math.cos(rot) - v[2] * Math.sin(rot), z = v[0] * Math.sin(rot) + v[2] * Math.cos(rot), y = v[1] * ct - z * st, z2 = v[1] * st + z * ct; return [x, -y, z2]; }
         function slerp(a, b, f){ var v = [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f], m = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]) || 1; return [v[0] / m, v[1] / m, v[2] / m]; }
@@ -374,8 +381,8 @@
           ctx.fillStyle = '#ece8ff'; ctx.fillRect(10, 8.5, 4, 7);
           ctx.restore(); ctx.globalAlpha = 1;
         }
-        return { pad: small ? 1.3 : 1.75, boost: 1.4, pulse: '165,151,255', draw: function(ctx, cx, cy, t, en){
-          en = en || 0; rot = t * .16;
+        return { pad: Math.max(small ? 1.3 : 1.75, (Math.max(Math.abs(DX), Math.abs(DY)) + 1.75 * R) / R0), boost: 1.4, pulse: '165,151,255', draw: function(ctx, cx, cy, t, en){
+          en = en || 0; rot = t * .16; cx += DX; cy += DY;
           var hubs = H.map(proj);
           if (!small) sat(ctx, cx, cy, t, false, en, hubs);
           // the sphere
