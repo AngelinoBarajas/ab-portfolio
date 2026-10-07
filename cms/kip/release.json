@@ -17,7 +17,7 @@
           "handoff": "A one-page static site deployed from GitHub to Hostinger, the 3D house as a Spline scene, a Figma ideation file, and a cast of nine 3D characters ready for the real app.",
           "stack": [
             "6ab60563235e3b01c21a3702",
-            "__SPLINE_TOOL_ID__",
+            "6ac58fda1dd1650694084858",
             "6ab6ce3286c563fd3f896f7c",
             "6ab60563235e3b01c21a36fe",
             "6ab97e23f77d8c41978e662d"
@@ -25,12 +25,8 @@
           "meta-description": "kip, a concept baby log for the whole village, told as a 3D house you can step into: one room per feature, and every phone works.",
           "benefits": "Know who fed her last without texting anyone: every entry carries the face of whoever logged it\nStart every shift caught up: kip sums up everything since you left, with a note from the parents\nNo accidental double doses: kip shows who already gave vitamin D today and asks before logging another\nAt 3am, one hand is enough: dim, warm, three giant buttons",
           "cover": {
-            "fileId": "__COVER_FILE_ID__",
+            "url": "https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.33.62/prototypes/img/kip2-cover.webp",
             "alt": "The kip house on kipvillage.com: a cutaway dollhouse with the whole village inside, one room per feature"
-          },
-          "social-image": {
-            "fileId": "__OG_FILE_ID__",
-            "alt": "kip: One little log. The whole village in it. The 3D house with June’s village inside"
           },
           "board-line": "One shared log for everyone raising a newborn, told as a 3D house you can step into."
         }
@@ -52,7 +48,10 @@
         },
         "_icon": "use the 3D option id of Three.js (9d1d6cf5d1b07672bb17e734538ea1f6) unless a better one exists"
       }
-    ]
+    ],
+    "created": {
+      "spline": "6ac58fda1dd1650694084858"
+    }
   },
   "mission-channels": {
     "collection": "6ab602e5a9791b1f2d0b2c91",
@@ -284,7 +283,7 @@
           "code": "TWELVE-PAGES",
           "demo": "house",
           "sort": 40,
-          "problem": "The first kip site explained the product across twelve pages. Most people never read past the second.",
+          "problem": "The first kip site explained the product across twelve pages, so seeing all of it meant a lot of clicking and reading.",
           "fix": "One page with a house where every room demonstrates one feature, with a working phone in each.",
           "result": "The whole product in one scroll, and every feature is something you do, not something you read.",
           "engineer": "The house grows from a card to full screen as you scroll, then five sections tell the same features again with the same tappable phone."
