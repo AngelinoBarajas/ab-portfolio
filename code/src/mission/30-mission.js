@@ -52,16 +52,16 @@
     var it = $('[data-channel]', item) || item;
     var imgs = $$('img', it).filter(function(im){ return !im.classList.contains('w-dyn-bind-empty'); }).map(function(im){ return im.getAttribute('src') || ''; }).filter(function(s){ return s && !/placeholder/i.test(s); });
     var cid = it.getAttribute('data-id') || ('ch' + i);
-    // coded scenes are picked by channel id (the CMS Kind option can't gain values via the API); tw-* ids are their own kind
-    return { id: cid, kind: (/^tw-/.test(cid) ? cid : ({ sketch: 'sketch', vector: 'vector', graph: 'graph', library: 'library', voice: 'voice', setup: 'setup', video: 'video', schema: 'schema', portable: 'portable' })[cid]) || (it.getAttribute('data-kind') || 'img').toLowerCase(), mode: (it.getAttribute('data-mode') || '').toLowerCase(),
+    // coded scenes are picked by channel id (the CMS Kind option can't gain values via the API); tw-* and kip-* ids are their own kind
+    return { id: cid, kind: (/^(tw|kip)-/.test(cid) ? cid : ({ sketch: 'sketch', vector: 'vector', graph: 'graph', library: 'library', voice: 'voice', setup: 'setup', video: 'video', schema: 'schema', portable: 'portable' })[cid]) || (it.getAttribute('data-kind') || 'img').toLowerCase(), mode: (it.getAttribute('data-mode') || '').toLowerCase(),
       label: it.getAttribute('data-label') || ('Channel ' + (i + 1)), caption: it.getAttribute('data-caption') || '', src: imgs[0] || '', before: imgs[0] || '', after: imgs[1] || imgs[0] || '' };
   });
-  // image channels whose loops live in the repo (MOCKS[slug].img: id → [loop, still], on jsDelivr, so Webflow can't flatten
+  // image channels whose loops live in the repo ([still] alone = a screenshot, not a loop; a third entry = an MP4 of the loop, played instead of the WebP) (MOCKS[slug].img: id → [loop, still], on jsDelivr, so Webflow can't flatten
   // an animated WebP); reduced motion or Save-Data shows the still. A CMS image, when set, still wins.
   (function(){
     var MI = MOCKS[SLUG] && MOCKS[SLUG].img; if (!MI) return;
     var still = reduce || !!(navigator.connection && navigator.connection.saveData);
-    CH.forEach(function(c){ var L = MI[c.id]; if (!L || c.src) return; c.src = still ? (L[1] || L[0]) : L[0]; c.before = c.src; c.after = L[1] || L[0]; c.loop = !still; });
+    CH.forEach(function(c){ var L = MI[c.id]; if (!L || c.src) return; c.src = still ? (L[1] || L[0]) : L[0]; c.before = c.src; c.after = L[1] || L[0]; c.loop = !still && !!L[1]; c.vid = !still && L[2] || ''; });
   })();
   var PINS = $$('[data-pins-source] .w-dyn-item').map(function(item){
     var it = $('[data-pin]', item) || item;
@@ -304,7 +304,7 @@
   /* ---------- stack orbit (Tools the mission ran on) ---------- */
   (function(){
     var orbit = $('#stkOrbit'); if (!orbit) return;
-    var TOOLC = { 'webflow': '#146EF5', 'client-first': '#4353FF', 'gsap': '#0AE448', 'three.js': '#FFFFFF', 'lenis': '#FF98A2', 'unicorn studio': '#7C5CFF', 'github': '#F0F6FC', 'd3': '#F9A03C', 'figma': '#A259FF', 'webflow cms': '#146EF5', 'finsweet': '#161616', 'claude': '#D97757', 'pen + paper': '#F2F0EA', 'photoshop': '#31A8FF', 'illustrator': '#FF9A00', 'vercel': '#FFFFFF', 'supabase': '#3ECF8E', 'resend': '#F2F0EA', 'hostinger': '#673DE6' };
+    var TOOLC = { 'webflow': '#146EF5', 'client-first': '#4353FF', 'gsap': '#0AE448', 'three.js': '#FFFFFF', 'lenis': '#FF98A2', 'unicorn studio': '#7C5CFF', 'github': '#F0F6FC', 'd3': '#F9A03C', 'figma': '#A259FF', 'webflow cms': '#146EF5', 'finsweet': '#161616', 'claude': '#D97757', 'pen + paper': '#F2F0EA', 'photoshop': '#31A8FF', 'illustrator': '#FF9A00', 'vercel': '#FFFFFF', 'supabase': '#3ECF8E', 'resend': '#F2F0EA', 'hostinger': '#673DE6', 'spline': '#A26CFF' };
     // color fallback when the chip's hidden color node isn't bound in the Designer
     $$('.ab_stack_chip', orbit).forEach(function(c){
       var cn = $('[data-field="color"]', c), nm = (c.getAttribute('data-name') || c.textContent).trim().toLowerCase();

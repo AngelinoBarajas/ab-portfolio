@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission v0.33.61 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission v0.33.62 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abMissionInit) return;
@@ -339,111 +339,50 @@ window.Webflow.push(function(){
   })();
   // Keyed under both slugs until the CMS slug change (cks → topicweave) is published.
   MOCKS.cks = MOCKS.topicweave;
-  // kip: a concept baby log (kip-site/kip). Figma frame = the home hero; phone = the Today screen and the shift handoff,
-  // copy taken from the site's app screens. Image channels are recorded loops of the real site, served from this repo on
-  // jsDelivr (`img`: channel id → [loop, still]); the loop plays unless reduced motion or Save-Data asks for the still.
+  // kip: a concept baby log, relaunched 2026-10-06 as a one-page site with an interactive 3D house (kipvillage.com,
+  // repo kip-one). Figma frame = the live hero, element by element (the house card is cropped from the live render:
+  // vendor/kip/hero-house.webp). Image channels are recordings of the live site (prototypes/img/kip2-ch-*, served at this
+  // bundle's tag): `img` maps channel id → [loop, still]; a still-only entry is [still]. The live channel shows the real
+  // site in an iframe once kipvillage.com answers (`live`); kip-plan is the coded site plan (25-kip-plan.js).
   (function(){
-    // the six characters, from the site's press-kit SVGs (kip-site/kip/img/kit)
-    var KC = {
-      ari: '<path d="M60 10C86 10 104 36 106 64c2 30-16 50-46 50S12 94 14 64C16 36 34 10 60 10Z" fill="#FF7A45"/><path d="M58 11c-4-9 4-15 12-11" fill="none" stroke="#FF7A45" stroke-width="7" stroke-linecap="round"/><ellipse cx="40" cy="72" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><ellipse cx="80" cy="72" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><circle cx="47" cy="62" r="4.6" fill="#1E1B2E"/><circle cx="73" cy="62" r="4.6" fill="#1E1B2E"/><path d="M53 75 Q60 82 67 75" fill="none" stroke="#1E1B2E" stroke-width="3.6" stroke-linecap="round"/>',
-      sam: '<rect x="24" y="8" width="72" height="108" rx="36" fill="#6FA8FF"/><path d="M52 10c2-8 12-8 14-2" fill="none" stroke="#6FA8FF" stroke-width="6" stroke-linecap="round"/><path d="M44 44h10M66 44h10" stroke="#1E1B2E" stroke-width="3.2" stroke-linecap="round"/><ellipse cx="42" cy="66" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><ellipse cx="78" cy="66" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><circle cx="49" cy="56" r="4.6" fill="#1E1B2E"/><circle cx="71" cy="56" r="4.6" fill="#1E1B2E"/><path d="M52 67 Q60 79 68 67 Z" fill="#1E1B2E"/>',
-      nana: '<circle cx="60" cy="22" r="13" fill="#FFC94A"/><path d="M8 114C8 58 28 32 60 32s52 26 52 82Z" fill="#FFC94A"/><ellipse cx="38" cy="82" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><ellipse cx="82" cy="82" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><circle cx="45" cy="72" r="4.6" fill="#1E1B2E"/><circle cx="75" cy="72" r="4.6" fill="#1E1B2E"/><path d="M53 85 Q60 92 67 85" fill="none" stroke="#1E1B2E" stroke-width="3.6" stroke-linecap="round"/><circle cx="45" cy="72" r="10" fill="none" stroke="#1E1B2E" stroke-width="2.8"/><circle cx="75" cy="72" r="10" fill="none" stroke="#1E1B2E" stroke-width="2.8"/><path d="M55 72h10" stroke="#1E1B2E" stroke-width="2.8"/>',
-      rosa: '<path d="M60 24c-6-12 0-20 10-22 2 10-2 18-10 22Z" fill="#2E9E76"/><path d="M60 24c-4-10-14-12-22-8 4 8 12 11 22 8Z" fill="#5FD3A8"/><path d="M20 58c0-24 14-34 40-34s40 10 40 34v20c0 26-14 36-40 36S20 104 20 78Z" fill="#5FD3A8"/><ellipse cx="40" cy="76" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><ellipse cx="80" cy="76" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><circle cx="47" cy="66" r="4.6" fill="#1E1B2E"/><circle cx="73" cy="66" r="4.6" fill="#1E1B2E"/><path d="M53 79 Q60 86 67 79" fill="none" stroke="#1E1B2E" stroke-width="3.6" stroke-linecap="round"/>',
-      jo: '<g fill="#FF8FA3"><circle cx="38" cy="44" r="24"/><circle cx="82" cy="44" r="24"/><circle cx="60" cy="32" r="24"/><circle cx="30" cy="80" r="26"/><circle cx="90" cy="80" r="26"/><rect x="28" y="40" width="64" height="74" rx="30"/></g><ellipse cx="40" cy="76" rx="6" ry="3.6" fill="#FF7A45" opacity=".55"/><ellipse cx="80" cy="76" rx="6" ry="3.6" fill="#FF7A45" opacity=".55"/><path d="M42 68 Q47 61 52 68" fill="none" stroke="#1E1B2E" stroke-width="3.6" stroke-linecap="round"/><path d="M68 68 Q73 61 78 68" fill="none" stroke="#1E1B2E" stroke-width="3.6" stroke-linecap="round"/><path d="M53 79 Q60 86 67 79" fill="none" stroke="#1E1B2E" stroke-width="3.6" stroke-linecap="round"/>',
-      june: '<path d="M60 26c30 0 48 22 48 48s-18 40-48 40-48-14-48-40 18-48 48-48Z" fill="#FFF4E6" stroke="#1E1B2E" stroke-width="4"/><path d="M58 27c-8-10 0-20 10-16 6 3 2 10-3 8" fill="none" stroke="#1E1B2E" stroke-width="4" stroke-linecap="round"/><ellipse cx="39" cy="82" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><ellipse cx="81" cy="82" rx="6" ry="3.6" fill="#FF8FA3" opacity=".55"/><path d="M41 71 Q46 76 51 71" fill="none" stroke="#1E1B2E" stroke-width="3.2" stroke-linecap="round"/><path d="M69 71 Q74 76 79 71" fill="none" stroke="#1E1B2E" stroke-width="3.2" stroke-linecap="round"/><ellipse cx="60" cy="86" rx="3.2" ry="3.8" fill="#1E1B2E"/>'
-    };
-    function ch(n, s){ return '<svg viewBox="0 0 120 120" style="width:' + s + 'px;height:' + s + 'px;display:block;flex:none" aria-hidden="true">' + KC[n] + '</svg>'; }
-    var MARK = '<svg viewBox="0 0 64 64" style="width:15px;height:15px;display:block" aria-hidden="true"><path d="M32 4C50 4 60 18 60 34S50 60 32 60 4 50 4 34 14 4 32 4Z" fill="#FF7A45"/><path d="M38 16a14 14 0 1 0 12 22 11 11 0 1 1-12-22Z" fill="#FFF4E6"/><circle cx="24" cy="40" r="3" fill="#1E1B2E"/></svg>';
-    // unquoted on purpose: these go inside style="..." attributes
-    // "Baloo 2" must be quoted: an unquoted family name with a bare number is invalid CSS and drops the whole font shorthand
     var H = "'Baloo 2','Arial Rounded MT Bold',ui-rounded,sans-serif", B = 'Nunito Sans,system-ui,sans-serif';
-    var INK = '#1E1B2E', TAN = '#FF7A45', CREAM = '#FFF4E6', BUTTER = '#FFC94A', MINT = '#5FD3A8', SKY = '#6FA8FF', ROSE = '#FF8FA3';
-    var LOOP = 'https://cdn.jsdelivr.net/gh/AngelinoBarajas/ab-portfolio@v0.28.0/prototypes/img/';
-    // one log entry, as on the site: face, icon tint, what, who and when
-    function entry(who, name, tint, what, when, cls){
-      return '<div class="kxe' + (cls ? ' ' + cls : '') + '" style="display:flex;align-items:center;gap:8px;background:#fff;border:2px solid ' + INK + ';border-radius:14px;padding:6px 9px;margin-bottom:6px">' + ch(who, 26) +
-        '<span style="display:flex;flex-direction:column;min-width:0"><b style="font:800 10.5px/1.2 ' + B + ';color:' + INK + '"><i style="display:inline-block;width:8px;height:8px;border-radius:3px;background:' + tint + ';margin-right:5px"></i>' + what + '</b><span style="font:400 8.5px/1.3 ' + B + ';color:#4A4560">logged by <b>' + name + '</b> · ' + when + '</span></span></div>';
-    }
-    var LOG = entry('nana', 'Nana', MINT, 'Diaper · wet', '1:52 pm') + entry('rosa', 'Rosa', '#14204F', 'Nap · 1h 40m', '11:30 am') + entry('sam', 'Sam', TAN, 'Breast · L 12m, R 9m', '11:05 am') + entry('ari', 'Ari', ROSE, 'Vitamin D · as directed', '9:02 am');
+    var INK = '#1E1B2E', TAN = '#FF7A45', CREAM = '#FFF4E6', BUTTER = '#FFC94A', MINT = '#5FD3A8', ROSE = '#FF8FA3';
+    var REC = VENDOR.replace(/code\/vendor\/$/, 'prototypes/img/kip2-ch-');
+    function rec(id, still, mp4){ return still ? [REC + id + '.webp'] : [REC + id + '-anim.webp', REC + id + '.webp'].concat(mp4 ? [REC + id + '-anim.mp4'] : []); }
+    function ball(c){ return '<div style="position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 34% 30%,#fff 0,' + c + ' 38%,' + c + ' 70%,rgba(0,0,0,.08) 100%);opacity:.85"></div>'; }
     MOCKS.kip = {
       accent: TAN,
       fontCss: 'https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito+Sans:wght@400;700;800&display=swap',
-      img: {
-        story: [LOOP + 'kip-ch-story-anim.webp', LOOP + 'kip-ch-story.webp'],
-        roles: [LOOP + 'kip-ch-roles-anim.webp', LOOP + 'kip-ch-roles.webp'],
-        night: [LOOP + 'kip-ch-night-anim.webp', LOOP + 'kip-ch-night.webp'],
-        report: [LOOP + 'kip-ch-report-anim.webp', LOOP + 'kip-ch-report.webp'],
-        cast: [LOOP + 'kip-ch-cast-anim.webp', LOOP + 'kip-ch-cast.webp'],
-        'try': [LOOP + 'kip-ch-try-anim.webp', LOOP + 'kip-ch-try.webp']
-      },
-      file: 'kip — Product site', page: 'Home', frame: 'Desktop · Hero', url: 'kip (concept)',
-      bg: TAN, hover: 'cta',
-      comment: { on: 'phone', by: 'Review', text: 'A Tylenol dose for an 8-week-old in the sample log reads like dosing advice.', reply: 'Every example dose is now vitamin D, as directed. The site shows patterns, never doses.' },
+      // desktop loops play their MP4 (the camera never rests, so a WebP under 4 MB turns blocky); the phone loop's WebP is clean
+      img: { 'live-kip': rec('live', 1), house: rec('house', 0, 1), night: rec('night', 0, 1), dose: rec('dose', 0, 1), phone: rec('phone'), cast: rec('cast', 0, 1) },
+      live: { base: 'https://kipvillage.com/', probe: 'img/house-poster.jpg', pages: { 'live-kip': 'index.html' } },
+      plan: true,
+      file: 'kip — Product site', page: 'Home', frame: 'Desktop · Hero', url: 'kipvillage.com',
+      bg: CREAM, hover: 'cta',
+      comment: { on: 'house', by: 'Review', text: 'On my phone the full-screen house is tiny. I can’t tell the rooms apart.', reply: 'On phones the house is now a wide card with room buttons under it, and the app phone sits below.' },
       els: [
-        { id: 'blob', name: 'Shape / butter blob', icon: 'img', type: 'Vector', x: 590, y: 150, w: 360, h: 475, wire: 'img',
-          props: { fill: BUTTER },
-          html: '<div style="position:absolute;inset:0;background:' + BUTTER + ';border-radius:46% 54% 50% 50% / 55% 50% 50% 45%"></div>' },
+        { id: 'b1', name: 'Shape / butter ball', icon: 'img', type: 'Ellipse', x: 120, y: 400, w: 88, h: 88, wire: 'img', props: { fill: BUTTER }, html: ball(BUTTER) },
+        { id: 'b2', name: 'Shape / mint ball', icon: 'img', type: 'Ellipse', x: 803, y: 262, w: 57, h: 57, wire: 'img', props: { fill: MINT }, html: ball(MINT) },
+        { id: 'b3', name: 'Shape / rose ball', icon: 'img', type: 'Ellipse', x: 300, y: 75, w: 38, h: 38, wire: 'img', props: { fill: ROSE }, html: ball(ROSE) },
         { id: 'nav', name: 'Nav / header', icon: 'comp', type: 'Component', x: 0, y: 0, w: 1000, h: 46, wire: 'nav',
           props: { fill: CREAM },
-          html: '<div style="height:100%;background:' + CREAM + ';border-bottom:2px solid ' + INK + ';display:flex;align-items:center;gap:16px;padding:0 20px 0 26px;font:700 9px ' + B + ';color:' + INK + '">' + MARK + '<b style="font:800 15px ' + H + ';margin-left:-10px">kip</b><span style="margin-left:auto;background:' + BUTTER + ';border:2px solid ' + INK + ';border-radius:999px;padding:3px 9px">Home</span><span>Village</span><span>Insights</span><span>Try it</span><span>Pricing</span><span style="border:2px solid ' + INK + ';border-radius:999px;padding:3px 9px;font-weight:400">Search · Ctrl K</span><span style="background:' + INK + ';color:' + CREAM + ';border-radius:999px;padding:6px 11px">Try it yourself</span></div>' },
-        { id: 'heading', name: 'H1 / One little log', icon: 'text', type: 'Text', x: 48, y: 96, w: 500, h: 204, wire: 'lines:3:big',
-          props: { fill: INK, font: 'Baloo 2', weight: 'ExtraBold', size: '112', lh: '90%', ls: '-2.5%' },
-          html: '<div style="font:800 64px/.92 ' + H + ';letter-spacing:-.025em;color:' + INK + '"><div>One little log.</div><div>The whole village</div><div>in it.</div></div>' },
-        { id: 'lede', name: 'Lede / what kip does', icon: 'text', type: 'Text', x: 48, y: 320, w: 440, h: 74, wire: 'lines:4',
-          props: { fill: INK, font: 'Nunito Sans', weight: 'Regular', size: '21', lh: '150%' },
-          html: '<p style="margin:0;font:400 13px/1.5 ' + B + ';color:' + INK + '">kip keeps track of June’s feeds, naps, diapers and meds, with everyone who looks after her writing in the same place. So nobody has to text “did she eat?” at 2pm ever again.</p>' },
-        { id: 'cta', name: 'Buttons / hero', icon: 'comp', type: 'Component', x: 48, y: 414, w: 330, h: 42, wire: 'btn',
-          props: { fill: CREAM, font: 'Nunito Sans', weight: 'ExtraBold', size: '17' },
-          html: '<div style="display:flex;gap:10px;height:100%"><span class="hv" style="flex:1;border-radius:999px;background:' + CREAM + ';color:' + INK + ';border:2px solid ' + INK + ';box-shadow:0 4px 0 ' + INK + ';font:800 10.5px ' + B + ';display:flex;align-items:center;justify-content:center">▶ Try it yourself</span><span style="flex:1;border-radius:999px;background:' + INK + ';color:' + CREAM + ';font:800 10.5px ' + B + ';display:flex;align-items:center;justify-content:center">Join early access</span></div>' },
-        { id: 'note', name: 'Note / this is a concept', icon: 'text', type: 'Text', x: 48, y: 480, w: 440, h: 44, wire: 'lines:2',
-          props: { fill: INK, font: 'Nunito Sans', weight: 'Bold', size: '15' },
-          html: '<div style="display:flex;gap:9px;align-items:center;font:700 9.5px/1.4 ' + B + ';color:' + INK + '">' + ch('june', 30) + '<span>kip is a concept. There’s no app to download, just this site and a baby named June, who is 8 weeks old and made up.</span></div>' },
-        { id: 'phone', name: 'Phone / Today screen', icon: 'comp', type: 'Component', x: 646, y: 84, w: 248, h: 541, wire: 'img',
-          props: { fill: CREAM },
-          html: '<div style="position:absolute;inset:0;background:' + INK + ';border-radius:38px 38px 0 0;padding:9px 9px 0"><div style="height:100%;background:' + CREAM + ';border-radius:30px 30px 0 0;padding:26px 12px 0;overflow:hidden">' +
-            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">' + ch('june', 32) + '<span><b style="display:block;font:800 15px/1 ' + H + ';color:' + INK + '">June</b><span style="font:400 8.5px ' + B + ';color:#4A4560">8 weeks, 2 days</span></span><span style="margin-left:auto;display:flex">' + ch('ari', 20) + ch('sam', 20) + ch('rosa', 20) + '</span></div>' +
-            '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px">' + [[TAN, 'Feed'], ['#14204F', 'Sleep'], [MINT, 'Diaper'], [ROSE, 'Med']].map(function(q){ return '<span style="text-align:center;font:800 7.5px ' + B + ';color:' + INK + '"><i style="display:block;height:30px;border-radius:10px;border:2px solid ' + INK + ';background:' + q[0] + ';margin-bottom:3px"></i>' + q[1] + '</span>'; }).join('') + '</div>' +
-            '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><b style="font:800 12px ' + H + ';color:' + INK + '">Today</b><span style="font:400 8px ' + B + ';color:#4A4560">9 entries from 4 people</span></div>' +
-            entry('nana', 'Nana', TAN, 'Bottle · 4 oz', '2:14 pm') + LOG + '</div></div>' }
-      ],
-      mobile: {
-        bg: CREAM, statusFg: INK,
-        html: '<style>' +
-          '.kxm .kxe.kx-in{max-height:0;margin:0;padding-top:0;padding-bottom:0;border-width:0;opacity:0;overflow:hidden;transition:max-height .5s,margin .5s,padding .5s,opacity .4s}' +
-          '.ph.kx-new .kxm .kxe.kx-in{max-height:60px;margin-bottom:6px;padding:6px 9px;border-width:2px;opacity:1}' +
-          '.kxm .kx-ban{position:absolute;left:10px;right:10px;top:44px;z-index:5;transform:translateY(-140%);transition:transform .45s cubic-bezier(.3,1.4,.5,1)}' +
-          '.ph.kx-banner .kxm .kx-ban{transform:none}' +
-          '.kxm .kx-ho{position:absolute;inset:0;z-index:6;background:' + CREAM + ';padding:62px 16px 0;transform:translateY(100%);transition:transform .55s cubic-bezier(.2,.8,.2,1)}' +
-          '.ph.kx-ho .kxm .kx-ho{transform:none}' +
-          '</style>' +
-          '<div class="kxm" style="padding:56px 14px 30px;font-family:' + B + ';color:' + INK + '">' +
-            '<div style="display:flex;align-items:center;gap:9px;margin-bottom:12px">' + ch('june', 40) + '<span><b style="display:block;font:800 19px/1 ' + H + '">June</b><span style="font:400 10px ' + B + ';color:#4A4560">8 weeks, 2 days</span></span><span style="margin-left:auto;display:flex">' + ch('ari', 24) + ch('sam', 24) + ch('rosa', 24) + '</span></div>' +
-            '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">' + [[TAN, 'Feed'], ['#14204F', 'Sleep'], [MINT, 'Diaper'], [ROSE, 'Med']].map(function(q){ return '<span style="text-align:center;font:800 9px ' + B + '"><i style="display:block;height:44px;border-radius:14px;border:2px solid ' + INK + ';background:' + q[0] + ';margin-bottom:4px"></i>' + q[1] + '</span>'; }).join('') + '</div>' +
-            '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px"><b style="font:800 15px ' + H + '">Today</b><span style="font:400 9.5px ' + B + ';color:#4A4560">entries from 4 people</span></div>' +
-            entry('nana', 'Nana', TAN, 'Bottle · 4 oz', '2:14 pm', 'kx-in') + LOG +
-          '</div>',
-        nav: '<div class="kxm"><div class="kx-ban" style="background:' + INK + ';color:' + CREAM + ';border-radius:16px;padding:9px 11px;display:flex;align-items:center;gap:9px;box-shadow:0 10px 24px rgba(30,27,46,.35);font-family:' + B + '">' + ch('rosa', 28) + '<span><b style="display:block;font:800 11px ' + B + '">Rosa started her shift</b><span style="font:400 9px ' + B + ';opacity:.8">Here’s what you missed. Tap to hand over.</span></span></div>' +
-          '<div class="kx-ho">' +
-            '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">' + ch('rosa', 44) + '<b style="font:800 19px/1.1 ' + H + ';color:' + INK + '">Hi Rosa. Since you left:</b></div>' +
-            '<p style="margin:0 0 12px;font:400 10px ' + B + ';color:#4A4560">Monday 6:10 pm to now, logged by Ari, Sam and Jo</p>' +
-            '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">' + [['2', 'feeds', TAN], ['1', 'nap', SKY], ['3', 'diapers', MINT]].map(function(s){ return '<div style="border:2px solid ' + INK + ';border-radius:14px;background:' + s[2] + ';padding:10px 8px;text-align:center;color:' + INK + '"><b style="display:block;font:800 24px/1 ' + H + '">' + s[0] + '</b><span style="font:700 9.5px ' + B + '">' + s[1] + '</span></div>'; }).join('') + '</div>' +
-            '<div style="border:2px solid ' + INK + ';border-radius:14px;background:#fff;padding:10px 12px;margin-bottom:16px;font:400 10px ' + B + ';color:' + INK + '"><b style="display:block;font:800 11px ' + B + '">Last feed</b>11:05 by Sam</div>' +
-            '<div class="kx-go" style="background:' + INK + ';color:' + CREAM + ';border-radius:999px;padding:13px;text-align:center;font:800 12px ' + B + '">Start my shift</div>' +
-          '</div></div>',
-        notes: [
-          { t: 'One shared log', d: 'Every feed, nap and diaper carries the face of whoever logged it.' },
-          { t: 'Someone else logged it', d: 'Nana’s bottle lands at the top of the same list everyone sees.' },
-          { t: 'The handoff', d: 'When Rosa starts her shift, one tap shows everything since she left.' },
-          { t: 'Start informed', d: 'She taps Start my shift and she’s caught up, with no phone call.' }
-        ],
-        steps: [
-          { note: 0, hold: 1.8 },
-          { note: 1, add: 'kx-new', hold: 2 },
-          { note: 2, add: 'kx-banner', hold: 1.1 }, { tap: '.kx-ban', add: 'kx-ho', hold: 2.6 },
-          { note: 3, tap: '.kx-go', remove: 'kx-ho', hold: .3 }, { remove: 'kx-banner', hold: 1.6 },
-          { note: -1, remove: 'kx-new', hold: .6 }
-        ]
-      }
+          html: '<div style="height:100%;display:flex;align-items:center;gap:18px;padding:0 34px;font:700 11px ' + B + ';color:' + INK + '"><b style="font:800 21px/1 ' + H + ';letter-spacing:-.02em">kip<sup style="color:' + TAN + ';font-size:9px">z</sup></b><span style="margin-left:auto">The house</span><span>How it works</span><span>Promises</span><span style="background:' + INK + ';color:' + CREAM + ';border-radius:999px;padding:7px 13px;font-weight:800">Get kip</span></div>' },
+        { id: 'eyebrow', name: 'Eyebrow / a concept baby log', icon: 'text', type: 'Text', x: 420, y: 59, w: 160, h: 18, wire: 'lines:1',
+          props: { fill: INK, font: 'Nunito Sans', weight: 'ExtraBold', size: '15', ls: '10%' },
+          html: '<div style="display:flex;gap:7px;align-items:center;justify-content:center;font:800 9px ' + B + ';letter-spacing:.1em;color:' + INK + '"><i style="width:8px;height:8px;border-radius:50%;background:' + TAN + ';box-shadow:0 0 0 3px #FFD9C6"></i>A CONCEPT BABY LOG</div>' },
+        { id: 'heading', name: 'H1 / One little log', icon: 'text', type: 'Text', x: 70, y: 80, w: 860, h: 60, wire: 'lines:1:big',
+          props: { fill: INK, font: 'Baloo 2', weight: 'ExtraBold', size: '84', lh: '100%', ls: '-1%' },
+          html: '<div style="font:800 53px/1.05 ' + H + ';letter-spacing:-.01em;color:' + INK + ';text-align:center;white-space:nowrap">One little log. The whole village in it.</div>' },
+        { id: 'lede', name: 'Lede / what kip does', icon: 'text', type: 'Text', x: 290, y: 147, w: 420, h: 40, wire: 'lines:2',
+          props: { fill: '#4A4560', font: 'Nunito Sans', weight: 'Regular', size: '20', lh: '150%' },
+          html: '<p style="margin:0;font:400 12.5px/1.5 ' + B + ';color:#4A4560;text-align:center">Feeds, naps, diapers and meds in one shared log, with everyone who looks after June writing in the same place.</p>' },
+        { id: 'cta', name: 'Buttons / hero', icon: 'comp', type: 'Component', x: 386, y: 202, w: 228, h: 33, wire: 'btn',
+          props: { fill: TAN, font: 'Nunito Sans', weight: 'ExtraBold', size: '17' },
+          html: '<div style="display:flex;gap:10px;height:100%"><span class="hv" style="flex:1.6;border-radius:999px;background:' + TAN + ';color:' + CREAM + ';box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 4px 10px rgba(255,122,69,.35);font:800 10.5px ' + B + ';display:flex;align-items:center;justify-content:center;white-space:nowrap">▶&nbsp; Step inside the house</span><span style="flex:1;border-radius:999px;background:#fff;color:' + INK + ';box-shadow:0 4px 10px rgba(30,27,46,.12);font:800 10.5px ' + B + ';display:flex;align-items:center;justify-content:center">Get kip</span></div>' },
+        { id: 'house', name: 'Spline / the house', icon: 'img', type: 'Embed', x: 282, y: 294, w: 438, h: 268, wire: 'img',
+          props: { fill: '#BFE6FF' },
+          html: '<img src="' + VENDOR + 'kip/hero-house.webp" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:20px;display:block">' }
+      ]
     };
   })();
   MOCKS['daniel-aguirre-law'].cms = {
@@ -3000,6 +2939,180 @@ window.Webflow.push(function(){
     });
   })();
 
+  /* ===== mission/25-kip-plan.js ===== */
+  /* =========================================================
+     KIP · SITE PLAN (channel kip-plan)
+     The plan behind kipvillage.com, drawn as a blueprint: the cutaway house goes down in chalk lines, then the cursor
+     visits each room, the room fills with its feature color and its card types in with the real 3D cast (the site's
+     own portraits, vendor/kip/cast/), lit with its room on hover. The house rules from the build land last,
+     then the rooms light up one by one. Hover a card (or a room) to trace it; click a card to hold it.
+     Room bounds are the Spline scene's own (kip3d handoff: Entry −1200..−500, Living −500..400, Kitchen 400..1200
+     downstairs; Nursery −1200..0, Study 0..1200 upstairs; floors 0 / 735 / 1460, ridge ~2110).
+     Styles are injected from here, so the scene ships with the script alone (the Missions template head is Designer-only).
+     ========================================================= */
+  (function(){
+    var K = SCENE.kit; if (!K || !K.ks) return;
+    var X = K.ks, q = K.q, qa = K.qa, esc = K.esc;
+    var pth = X.path, hide = X.hide, draw = X.draw, type = X.type, move = X.move, run = X.run, end = X.end, cursor = X.cursor;
+    var NS = 'http://www.w3.org/2000/svg';
+    function tap(el, fn){ el.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); fn(e); }); }
+
+    var CREAM = '#FFF4E6', NIGHT = '#14204F', H = "'Baloo 2','Arial Rounded MT Bold',ui-rounded,sans-serif", B = "'Nunito Sans',system-ui,sans-serif";
+    // [room, x0, x1, y0, y1, fill, feature, what happens there, cast]
+    var ROOMS = [
+      ['Entry', -1200, -500, 0, 735, '#6FA8FF', 'Roles + shift handoff', 'Ari hands June to Grandpa. He sees everything since he left.', ['ari', 'grandpa']],
+      ['Living', -500, 400, 0, 735, '#FFC94A', 'Milestones', 'Nana caught the first smile. Saved for the whole village.', ['nana']],
+      ['Kitchen', 400, 1200, 0, 735, '#FF7A45', 'Shared log', 'Rosa goes to log vitamin D. Ari already did, so kip asks first.', ['rosa']],
+      ['Nursery', -1200, 0, 735, 1460, '#2D3E8C', '3am mode', 'Opening it turns the whole scene to night. Jo logs the 3:07 bottle.', ['jo', 'june']],
+      ['Study', 0, 1200, 735, 1460, '#5FD3A8', 'Pediatrician report', 'Sam builds a read-only report. Dr. Patel reads the patterns.', ['sam', 'patel']]
+    ];
+    var RULES = ['Characters always fully visible', 'Nothing between a room and the camera', 'Tap a room, poke anything'];
+
+    if (!document.getElementById('kp-css')){
+      var css = document.createElement('style'); css.id = 'kp-css';
+      css.textContent =
+        '.stg-kip-plan{background:' + NIGHT + ';font-family:' + B + ';color:' + CREAM + ';overflow:hidden}' +
+        '.stg-kip-plan .kp-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,244,230,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,244,230,.07) 1px,transparent 1px),linear-gradient(rgba(255,244,230,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,244,230,.035) 1px,transparent 1px);background-size:100px 100px,100px 100px,20px 20px,20px 20px}' +
+        '.stg-kip-plan .kp-file{position:absolute;left:24px;top:18px;display:flex;align-items:center;gap:10px;font:700 13px ' + B + '}' +
+        '.stg-kip-plan .kp-file i{width:22px;height:22px;border-radius:7px;background:#FF7A45;display:grid;place-items:center;font:800 13px/1 ' + H + ';color:' + CREAM + ';font-style:normal}' +
+        '.stg-kip-plan .kp-file em{font:600 10px ' + B + ';letter-spacing:.1em;text-transform:uppercase;opacity:.55;font-style:normal;border:1px solid rgba(255,244,230,.3);border-radius:999px;padding:3px 8px}' +
+        '.stg-kip-plan .kp-cap{position:absolute;font:800 22px/1.1 ' + H + ';color:' + CREAM + '}' +
+        '.stg-kip-plan svg{position:absolute;left:0;top:0;overflow:visible}' +
+        '.stg-kip-plan .kp-ln{fill:none;stroke:' + CREAM + ';stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}' +
+        '.stg-kip-plan .kp-ln.thin{stroke-width:1.4;opacity:.6}' +
+        '.stg-kip-plan .kp-room{transition:opacity .25s}' +
+        '.stg-kip-plan .kp-rl{position:absolute;font:800 16px/1 ' + H + ';color:#1E1B2E;white-space:nowrap}.stg-kip-plan .kp-rl.dk{color:' + CREAM + '}' +
+        '.stg-kip-plan .kp-moon{position:absolute;color:#FFC94A;font:16px/1 sans-serif}' +
+        '.stg-kip-plan .kp-card{position:absolute;display:flex;gap:12px;align-items:center;background:' + CREAM + ';color:#1E1B2E;border-radius:16px;padding:10px 14px 10px 12px;box-shadow:inset 0 2px 0 rgba(255,255,255,.8),inset 0 -3px 0 rgba(30,27,46,.08),0 8px 18px rgba(0,0,0,.28);transition:transform .25s,box-shadow .25s;cursor:pointer}' +
+        '.stg-kip-plan .kp-card .bar{position:absolute;left:0;top:12px;bottom:12px;width:5px;border-radius:0 4px 4px 0;background:var(--c)}' +
+        '.stg-kip-plan .kp-card .tx{flex:1;min-width:0}' +
+        '.stg-kip-plan .kp-card b{display:block;font:800 17px/1.15 ' + H + '}' +
+        '.stg-kip-plan .kp-card b span{color:var(--d);font-weight:800}' +
+        '.stg-kip-plan .kp-card p{margin:3px 0 0;font:400 12.5px/1.35 ' + B + ';color:#4A4560}' +
+        '.stg-kip-plan .kp-card .who{display:flex;flex:none}' +
+        '.stg-kip-plan .kp-card .who img{width:44px;height:44px;border-radius:50%;display:block;margin-left:-10px;filter:drop-shadow(0 2px 3px rgba(30,27,46,.25))}' +
+        '.stg-kip-plan .kp-card .who img:first-child{margin-left:0}' +
+        '.stg-kip-plan .kp-rule{position:absolute;display:flex;align-items:center;gap:8px;font:700 12.5px ' + B + ';color:' + CREAM + ';border:1.5px solid rgba(255,244,230,.4);border-radius:999px;padding:7px 14px 7px 10px;white-space:nowrap}' +
+        '.stg-kip-plan .kp-rule i{width:8px;height:8px;border-radius:50%;background:#FF7A45}' +
+        '.stg-kip-plan.kp-hl .kp-card:not(.hl){opacity:.45}.stg-kip-plan.kp-hl .kp-room:not(.hl){opacity:.25}' +
+        '.stg-kip-plan .kp-card.hl{transform:translateX(-6px) scale(1.02);box-shadow:inset 0 2px 0 rgba(255,255,255,.8),0 12px 26px rgba(0,0,0,.4)}' +
+        '.stg-kip-plan.is-p .kp-card{padding:7px 10px 7px 10px;gap:9px;border-radius:13px}.stg-kip-plan.is-p .kp-card b{font-size:14px}.stg-kip-plan.is-p .kp-card p{font-size:10.5px;margin-top:1px}' +
+        '.stg-kip-plan.is-p .kp-card .who img{width:34px;height:34px;margin-left:-8px}.stg-kip-plan.is-p .kp-rl{font-size:12px}.stg-kip-plan.is-p .kp-rule{font-size:10.5px;padding:5px 10px 5px 8px}' +
+        '.stg-kip-plan .fg-fade{background:' + NIGHT + '}' +
+        '.stg-kip-plan .cur.a path{fill:#FF7A45}.stg-kip-plan .cur.a .nm{background:#FF7A45;color:' + CREAM + '}';
+      document.head.appendChild(css);
+    }
+
+    SCENE.add('kip-plan', function(sc){
+      var P = sc.portrait, st = sc.stg;
+      // house units → stage px: s = scale, (OX, GY) = house center at ground level
+      // the monitor's own controls cover the bottom ~70px of the stage, so everything sits above that
+      var L = P ? { s: .19, OX: 320, GY: 448, cx: 22, cy: 464, cw: 596, ch: 50, cg: 6, cap: null }
+                : { s: .2, OX: 330, GY: 610, cx: 680, cy: 104, cw: 492, ch: 88, cg: 12, cap: [680, 60] };
+      function X_(x){ return L.OX + x * L.s; } function Y_(y){ return L.GY - y * L.s; }
+      var html = '<div class="kp-grid"></div><div class="kp-file"><i>k</i><b>kip — Site plan</b><em>FigJam</em></div>' +
+        '<svg class="kp-fill" width="' + sc.SW + '" height="' + sc.SH + '" aria-hidden="true"></svg>' +
+        '<svg class="kp-draw" width="' + sc.SW + '" height="' + sc.SH + '" aria-hidden="true"></svg>';
+      ROOMS.forEach(function(r, i){
+        var lx = X_(r[1]) + 10, ly = Y_(r[4]) + 10;
+        html += '<div class="kp-rl' + (r[0] === 'Nursery' ? ' dk' : '') + '" data-r="' + i + '" style="left:' + lx + 'px;top:' + ly + 'px" data-t="' + esc(r[0]) + '"></div>';
+        var y = L.cy + i * (L.ch + L.cg), dark = r[0] === 'Nursery' ? '#2D3E8C' : r[0] === 'Living' ? '#86610E' : r[0] === 'Kitchen' ? '#A8461F' : r[0] === 'Entry' ? '#2D55A3' : '#1E6F55';
+        html += '<div class="kp-card" data-r="' + i + '" style="left:' + L.cx + 'px;top:' + y + 'px;width:' + L.cw + 'px;height:' + L.ch + 'px;--c:' + (r[0] === 'Nursery' ? '#6F86E8' : r[5]) + ';--d:' + dark + '"><i class="bar"></i>' +
+          '<div class="tx"><b><span>' + esc(r[0]) + '</span> · <em class="ft" style="font-style:normal" data-t="' + esc(r[6]) + '"></em></b>' + (P ? '' : '<p>' + esc(r[7]) + '</p>') + '</div>' +
+          '<span class="who">' + r[8].map(function(n){ return '<img alt="" data-src="' + n + '">'; }).join('') + '</span></div>';
+      });
+      // the nursery's night sky
+      var nm = ROOMS[3];
+      html += '<div class="kp-moon" style="left:' + (X_(nm[2]) - 46) + 'px;top:' + (Y_(nm[4]) + 12) + 'px">☾</div>';
+            RULES.forEach(function(t, i){ html += '<div class="kp-rule" data-k="' + i + '"><i></i>' + esc(t) + '</div>'; });
+      if (L.cap) html += '<div class="kp-cap" style="left:' + L.cap[0] + 'px;top:' + L.cap[1] + 'px">Every room demonstrates one feature.</div>';
+      html += cursor('a', 'Angelino') + '<div class="fg-fade"></div>';
+      st.innerHTML = html;
+
+      var fill = q(st, '.kp-fill'), dr = q(st, '.kp-draw'), cards = qa(st, '.kp-card'), labels = qa(st, '.kp-rl'), rules = qa(st, '.kp-rule'),
+        cur = q(st, '.cur.a'), moon = q(st, '.kp-moon'), cap = q(st, '.kp-cap'), file = q(st, '.kp-file');
+      // rules: stacked top left, beside the roof (portrait: one row under the file bar)
+      var rxp = 22;
+      rules.forEach(function(r, i){ if (P){ r.style.left = rxp + 'px'; r.style.top = '52px'; rxp += r.offsetWidth + 6; } else { r.style.left = '28px'; r.style.top = (64 + i * 38) + 'px'; } });
+      // portraits load on first play
+      var loaded = false;
+      function loadImgs(){ if (loaded) return; loaded = true; qa(st, '.who img').forEach(function(im){ im.src = VENDOR + 'kip/cast/' + im.getAttribute('data-src') + '.webp'; }); }
+
+      // room fills (under the chalk); hovering a card lights its room
+      var rooms = [];
+      ROOMS.forEach(function(r, i){
+        var re = document.createElementNS(NS, 'rect');
+        re.setAttribute('x', X_(r[1])); re.setAttribute('y', Y_(r[4])); re.setAttribute('width', (r[2] - r[1]) * L.s); re.setAttribute('height', (r[4] - r[3]) * L.s);
+        re.setAttribute('fill', r[5]); re.setAttribute('fill-opacity', '.92'); re.setAttribute('class', 'kp-room'); re.setAttribute('data-r', i);
+        fill.appendChild(re); rooms.push(re);
+      });
+      // the chalk drawing: walls, floors, partitions, roof, chimney, attic window, ground, two trees
+      var gx0 = X_(-1200), gx1 = X_(1200);
+      var lines = [
+        'M' + gx0 + ' ' + Y_(0) + 'L' + gx0 + ' ' + Y_(1460) + 'L' + gx1 + ' ' + Y_(1460) + 'L' + gx1 + ' ' + Y_(0),
+        'M' + gx0 + ' ' + Y_(735) + 'L' + gx1 + ' ' + Y_(735),
+        'M' + X_(-500) + ' ' + Y_(0) + 'L' + X_(-500) + ' ' + Y_(735) + 'M' + X_(400) + ' ' + Y_(0) + 'L' + X_(400) + ' ' + Y_(735) + 'M' + X_(0) + ' ' + Y_(735) + 'L' + X_(0) + ' ' + Y_(1460),
+        'M' + X_(-1330) + ' ' + Y_(1430) + 'L' + X_(0) + ' ' + Y_(2110) + 'L' + X_(1330) + ' ' + Y_(1430),
+        'M' + X_(700) + ' ' + Y_(1800) + 'L' + X_(700) + ' ' + Y_(2050) + 'L' + X_(860) + ' ' + Y_(2050) + 'L' + X_(860) + ' ' + Y_(1720),
+        'M' + (X_(0) + 60 * L.s) + ' ' + Y_(1720) + 'A' + 60 * L.s + ' ' + 60 * L.s + ' 0 1 1 ' + (X_(0) + 60 * L.s - .1) + ' ' + Y_(1720)
+      ];
+      var chalk = lines.map(function(d){ return pth(dr, d, 'kp-ln'); });
+      var ground = pth(dr, 'M' + X_(-1550) + ' ' + Y_(0) + 'L' + X_(1550) + ' ' + Y_(0), 'kp-ln');
+      var trees = [[-1430, 1], [1430, -1]].map(function(t){ var x = X_(t[0]), r = 150 * L.s; return pth(dr, 'M' + x + ' ' + Y_(0) + 'L' + x + ' ' + Y_(380) + 'M' + (x + r) + ' ' + (Y_(380) - r) + 'A' + r + ' ' + r + ' 0 1 1 ' + (x + r - .1) + ' ' + (Y_(380) - r - .1), 'kp-ln thin'); });
+      var marks = qa(st, '[data-r]');
+      function light(k){
+        st.classList.toggle('kp-hl', k != null);
+        marks.forEach(function(e){ e.classList.toggle('hl', k != null && e.getAttribute('data-r') === String(k)); });
+      }
+      cards.forEach(function(c){
+        var k = +c.getAttribute('data-r');
+        c.addEventListener('pointerenter', function(){ light(k); });
+        c.addEventListener('pointerleave', function(){ if (!sc.paused) light(null); });
+        tap(c, function(){ if (sc.hold) sc.hold(); light(k); });
+      });
+      rooms.forEach(function(re){ var k = +re.getAttribute('data-r'); re.style.pointerEvents = 'auto'; re.addEventListener('pointerenter', function(){ light(k); }); re.addEventListener('pointerleave', function(){ if (!sc.paused) light(null); }); });
+      fill.style.pointerEvents = 'none';
+
+      var R = run(sc, function(){ light(null); loadImgs(); }), tl = R.tl;
+      tl.set(q(st, '.fg-fade'), { autoAlpha: 0 }, 0).set(cur, { autoAlpha: 0, x: sc.SW * .5, y: sc.SH + 30 }, 0)
+        .set(rooms.concat(cards, labels, rules, [moon]), { autoAlpha: 0 }, 0);
+      if (cap) tl.set(cap, { autoAlpha: 0 }, 0);
+      chalk.concat([ground], trees).forEach(function(p){ hide(R, p); });
+      // 1 · the house goes down in chalk
+      tl.addLabel('house', .2);
+      tl.fromTo(file, { autoAlpha: 0, y: -6 }, { autoAlpha: 1, y: 0, duration: .35, immediateRender: false }, .15);
+      draw(R, ground, .3, .7);
+      chalk.forEach(function(p, i){ draw(R, p, .5 + i * .28, .7); });
+      trees.forEach(function(p, i){ draw(R, p, 1.6 + i * .2, .6); });
+      tl.to(cur, { autoAlpha: 1, duration: .2 }, 2.1);
+      // 2 · room by room: fill, label, card
+      var t = 2.3;
+      tl.addLabel('rooms', t);
+      ROOMS.forEach(function(r, i){
+        var cx2 = (X_(r[1]) + X_(r[2])) / 2, cy2 = (Y_(r[3]) + Y_(r[4])) / 2;
+        move(R, cur, { x: cx2, y: cy2 }, t, .45);
+        tl.fromTo(rooms[i], { autoAlpha: 0 }, { autoAlpha: 1, duration: .35, immediateRender: false }, t + .4);
+        tl.fromTo(labels[i], { autoAlpha: 0 }, { autoAlpha: 1, duration: .01, immediateRender: false }, t + .45);
+        type(R, labels[i], r[0], t + .45, .3);
+        if (i === 3) tl.fromTo(moon, { autoAlpha: 0, rotation: -30 }, { autoAlpha: 1, rotation: 0, duration: .5, ease: 'back.out(2)', immediateRender: false }, t + .55);
+        tl.fromTo(cards[i], { autoAlpha: 0, x: P ? 0 : 24, y: P ? 12 : 0, scale: .96 }, { autoAlpha: 1, x: 0, y: 0, scale: 1, duration: .4, ease: 'back.out(1.6)', immediateRender: false }, t + .6);
+        var ft = q(cards[i], '.ft'); type(R, ft, r[6], t + .75, .4);
+        t += P ? 1 : 1.1;
+      });
+      tl.to(cur, { autoAlpha: 0, duration: .3 }, t);
+      // 3 · the house rules
+      t += .2; tl.addLabel('rules', t);
+      if (cap) tl.fromTo(cap, { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: .4, immediateRender: false }, t);
+      rules.forEach(function(r, i){ tl.fromTo(r, { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: .35, immediateRender: false }, t + .3 + i * .25); });
+      t += 1.4;
+      // 4 · each room lights up in turn
+      tl.addLabel('tour', t);
+      [0, 1, 2, 3, 4].forEach(function(k, i){ R.at(t + i * 1, function(){ light(k); }); });
+      R.at(t + 5.1, function(){ light(null); });
+      end(sc, R, t + 6.2, t - .4, [{ t: 'House', at: 'house' }, { t: 'Rooms', at: 'rooms' }, { t: 'Rules', at: 'rules' }, { t: 'Tour', at: 'tour' }]);
+    });
+  })();
+
   /* ===== mission/30-mission.js ===== */
   /* =========================================================
      MISSION DEBRIEF · read the CMS item + its Collection Lists, then fill and animate the template
@@ -3055,16 +3168,16 @@ window.Webflow.push(function(){
     var it = $('[data-channel]', item) || item;
     var imgs = $$('img', it).filter(function(im){ return !im.classList.contains('w-dyn-bind-empty'); }).map(function(im){ return im.getAttribute('src') || ''; }).filter(function(s){ return s && !/placeholder/i.test(s); });
     var cid = it.getAttribute('data-id') || ('ch' + i);
-    // coded scenes are picked by channel id (the CMS Kind option can't gain values via the API); tw-* ids are their own kind
-    return { id: cid, kind: (/^tw-/.test(cid) ? cid : ({ sketch: 'sketch', vector: 'vector', graph: 'graph', library: 'library', voice: 'voice', setup: 'setup', video: 'video', schema: 'schema', portable: 'portable' })[cid]) || (it.getAttribute('data-kind') || 'img').toLowerCase(), mode: (it.getAttribute('data-mode') || '').toLowerCase(),
+    // coded scenes are picked by channel id (the CMS Kind option can't gain values via the API); tw-* and kip-* ids are their own kind
+    return { id: cid, kind: (/^(tw|kip)-/.test(cid) ? cid : ({ sketch: 'sketch', vector: 'vector', graph: 'graph', library: 'library', voice: 'voice', setup: 'setup', video: 'video', schema: 'schema', portable: 'portable' })[cid]) || (it.getAttribute('data-kind') || 'img').toLowerCase(), mode: (it.getAttribute('data-mode') || '').toLowerCase(),
       label: it.getAttribute('data-label') || ('Channel ' + (i + 1)), caption: it.getAttribute('data-caption') || '', src: imgs[0] || '', before: imgs[0] || '', after: imgs[1] || imgs[0] || '' };
   });
-  // image channels whose loops live in the repo (MOCKS[slug].img: id → [loop, still], on jsDelivr, so Webflow can't flatten
+  // image channels whose loops live in the repo ([still] alone = a screenshot, not a loop; a third entry = an MP4 of the loop, played instead of the WebP) (MOCKS[slug].img: id → [loop, still], on jsDelivr, so Webflow can't flatten
   // an animated WebP); reduced motion or Save-Data shows the still. A CMS image, when set, still wins.
   (function(){
     var MI = MOCKS[SLUG] && MOCKS[SLUG].img; if (!MI) return;
     var still = reduce || !!(navigator.connection && navigator.connection.saveData);
-    CH.forEach(function(c){ var L = MI[c.id]; if (!L || c.src) return; c.src = still ? (L[1] || L[0]) : L[0]; c.before = c.src; c.after = L[1] || L[0]; c.loop = !still; });
+    CH.forEach(function(c){ var L = MI[c.id]; if (!L || c.src) return; c.src = still ? (L[1] || L[0]) : L[0]; c.before = c.src; c.after = L[1] || L[0]; c.loop = !still && !!L[1]; c.vid = !still && L[2] || ''; });
   })();
   var PINS = $$('[data-pins-source] .w-dyn-item').map(function(item){
     var it = $('[data-pin]', item) || item;
@@ -3307,7 +3420,7 @@ window.Webflow.push(function(){
   /* ---------- stack orbit (Tools the mission ran on) ---------- */
   (function(){
     var orbit = $('#stkOrbit'); if (!orbit) return;
-    var TOOLC = { 'webflow': '#146EF5', 'client-first': '#4353FF', 'gsap': '#0AE448', 'three.js': '#FFFFFF', 'lenis': '#FF98A2', 'unicorn studio': '#7C5CFF', 'github': '#F0F6FC', 'd3': '#F9A03C', 'figma': '#A259FF', 'webflow cms': '#146EF5', 'finsweet': '#161616', 'claude': '#D97757', 'pen + paper': '#F2F0EA', 'photoshop': '#31A8FF', 'illustrator': '#FF9A00', 'vercel': '#FFFFFF', 'supabase': '#3ECF8E', 'resend': '#F2F0EA', 'hostinger': '#673DE6' };
+    var TOOLC = { 'webflow': '#146EF5', 'client-first': '#4353FF', 'gsap': '#0AE448', 'three.js': '#FFFFFF', 'lenis': '#FF98A2', 'unicorn studio': '#7C5CFF', 'github': '#F0F6FC', 'd3': '#F9A03C', 'figma': '#A259FF', 'webflow cms': '#146EF5', 'finsweet': '#161616', 'claude': '#D97757', 'pen + paper': '#F2F0EA', 'photoshop': '#31A8FF', 'illustrator': '#FF9A00', 'vercel': '#FFFFFF', 'supabase': '#3ECF8E', 'resend': '#F2F0EA', 'hostinger': '#673DE6', 'spline': '#A26CFF' };
     // color fallback when the chip's hidden color node isn't bound in the Designer
     $$('.ab_stack_chip', orbit).forEach(function(c){
       var cn = $('[data-field="color"]', c), nm = (c.getAttribute('data-name') || c.textContent).trim().toLowerCase();
@@ -3627,6 +3740,83 @@ window.Webflow.push(function(){
       };
     })();
 
+    /* ---- kip: baby June's head, with the crib mobile turning around her ---- */
+    // Angelino 2026-10-06: June's head is the planet and the rings are the nursery mobile spinning. The head is the real 3D
+    // character (shot on the live kipvillage.com scene against its green booth: vendor/kip/june-head.webp); the rings are the
+    // mobile's wire arms, its butter stars and mint/rose balls hanging on short strings, the half behind her head dimmer.
+    SIG.kip = (function(){
+      var img = null, ok = false, waits = [];
+      function load(){
+        if (img) return; img = new Image(); img.decoding = 'async';
+        img.onload = function(){ ok = true; waits.forEach(function(f){ f(); }); waits = []; };
+        img.src = VENDOR + 'kip/june-head.webp';
+      }
+      // the cut-out is 373 × 357: the skull is ~290 px wide, centered at (186, 206); the curl rises above it
+      var IW = 373, IH = 357, SKULL = 290, SCX = 186, SCY = 206;
+      var STAR = '#FFC94A', MINT = '#5FD3A8', ROSE = '#FF8FA3', WIRE = '#FFF4E6';
+      // two arms of the mobile: radius (× R), tilt, turn speed, and what hangs from each
+      var ARMS = [
+        { r: 1.36, open: .3, tilt: -.16, sp: .32, items: ['star', 'mint', 'star', 'rose', 'star', 'mint', 'rose'] },
+        { r: 1.68, open: .24, tilt: .12, sp: -.22, items: ['rose', 'star', 'mint', 'star', 'rose', 'star'] }
+      ];
+      function star(ctx, x, y, s, hi){
+        ctx.beginPath();
+        for (var i = 0; i < 10; i++){ var a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? s * .48 : s; ctx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); }
+        ctx.closePath();
+        var g = ctx.createRadialGradient(x - s * .3, y - s * .35, s * .1, x, y, s * 1.1);
+        g.addColorStop(0, hi ? '#FFF1BF' : '#FFE38A'); g.addColorStop(.55, STAR); g.addColorStop(1, '#E2A21C');
+        ctx.fillStyle = g; ctx.lineJoin = 'round'; ctx.lineWidth = s * .28; ctx.strokeStyle = g; ctx.stroke(); ctx.fill();
+      }
+      function ball(ctx, x, y, s, col, hi){
+        var g = ctx.createRadialGradient(x - s * .35, y - s * .4, s * .08, x, y, s);
+        g.addColorStop(0, hi ? '#ffffff' : 'rgba(255,255,255,.9)'); g.addColorStop(.35, col); g.addColorStop(1, col === MINT ? '#2E9E76' : '#D9607A');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, s, 0, Math.PI * 2); ctx.fill();
+      }
+      return function(R){
+        load();
+        var small = R < 26;
+        function arms(ctx, cx, cy, t, front, en){
+          ARMS.forEach(function(A, ai){
+            if (small && ai) return;
+            // the ring plane sits at her chin, so the pieces cross below her eyes
+            var ca = Math.cos(A.tilt), sa = Math.sin(A.tilt), so = Math.sin(A.open), rr = A.r * R;
+            function pt(u){ var ex = rr * Math.cos(u), ey = rr * so * Math.sin(u); return [cx + ex * ca - ey * sa, cy + R * .24 + ex * sa + ey * ca, Math.sin(u)]; }
+            // the wire: the far half first (behind her head), the near half after it
+            ctx.lineWidth = Math.max(.8, R / 110); ctx.strokeStyle = WIRE; ctx.lineCap = 'round';
+            var prev = null, n = 72;
+            for (var k = 0; k <= n; k++){
+              var p = pt(k / n * Math.PI * 2);
+              if (prev && ((p[2] + prev[2]) > 0) === front){ ctx.globalAlpha = front ? .7 + .25 * en : .28; ctx.beginPath(); ctx.moveTo(prev[0], prev[1]); ctx.lineTo(p[0], p[1]); ctx.stroke(); }
+              prev = p;
+            }
+            // the hanging pieces turn with the arm; each swings a little on its string
+            var N = A.items.length, rot = t * A.sp * (1 + 1.6 * en);
+            A.items.forEach(function(kind, i){
+              var u = rot + i / N * Math.PI * 2, p = pt(u);
+              if ((p[2] > 0) !== front) return;
+              var depth = .82 + .18 * p[2], s = Math.max(1.6, R * (small ? .2 : .13)) * depth, len = R * (small ? .12 : .17) * depth;
+              var sw = Math.sin(t * 1.7 + i * 1.9 + ai) * .16 * (1 + en), hx = p[0] + Math.sin(sw) * len, hy = p[1] + Math.cos(sw) * len;
+              ctx.globalAlpha = front ? 1 : .55;
+              if (!small){ ctx.lineWidth = Math.max(.6, R / 160); ctx.strokeStyle = WIRE; ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(hx, hy); ctx.stroke(); }
+              if (kind === 'star') star(ctx, hx, hy + s * .8, s * 1.1, en > .3); else ball(ctx, hx, hy + s * .8, s * .82, kind === 'mint' ? MINT : ROSE, en > .3);
+            });
+          });
+          ctx.globalAlpha = 1;
+        }
+        return { pad: small ? 1.75 : 1.95, pulse: '255,201,74', ready: function(f){ if (ok) f(); else waits.push(f); }, draw: function(ctx, cx, cy, t, en){
+          en = en || 0;
+          arms(ctx, cx, cy, t, false, en);
+          if (ok){
+            // her head: the skull fills 80% of the planet circle, so the mobile stays inside the planet's reach; a slow sway, a happy bob when charged
+            var sc = R * 1.6 / SKULL * (1 + .035 * en * Math.sin(t * 9)), w = IW * sc, h = IH * sc;
+            ctx.save(); ctx.translate(cx, cy + Math.sin(t * .9) * R * .025); ctx.rotate(Math.sin(t * .55) * .07);
+            ctx.drawImage(img, -SCX * sc, -SCY * sc, w, h); ctx.restore();
+          }
+          arms(ctx, cx, cy, t, true, en);
+        } };
+      };
+    })();
+
     // styles injected from here, so they ship with the script alone (no stylesheet release)
     var css = document.createElement('style'); css.id = 'sig-planets';
     css.textContent = '.ab_planet.is-sig .sphere,.ab_planet.is-sig .pring,.ab_planet.is-sig .tex{opacity:0!important}' +
@@ -3670,6 +3860,8 @@ window.Webflow.push(function(){
       }
       if (!size()) return;
       frame(performance.now());
+      // a planet drawn from an image (kip) paints again once its picture arrives (one still frame under reduced motion)
+      if (P.ready) P.ready(function(){ frame(performance.now()); });
       var lw = innerWidth; addEventListener('resize', function(){ if (innerWidth !== lw){ lw = innerWidth; if (size()) frame(performance.now()); } });
       if (window.IntersectionObserver) new IntersectionObserver(function(es){
         on = es[0].isIntersecting; if (on && !raf && !reduce){ last = 0; raf = requestAnimationFrame(frame); }
@@ -3706,7 +3898,9 @@ window.Webflow.push(function(){
     function channelView(c){
       // (a mobile still/loop centers its phone inline too, so it doesn't wait on a stylesheet release)
       var v = '<div class="view ' + c.kind + (c.mode === 'light' ? ' light' : '') + '" data-ch="' + esc(c.id) + '" data-kind="' + c.kind + '" role="tabpanel" aria-label="' + esc(c.label) + '"' + (c.kind === 'mobile' ? ' style="display:grid;place-items:center"' : '') + '>';
-      if (c.kind === 'img') v += c.src ? '<img class="full" src="' + esc(c.src) + '" alt="' + esc(c.caption) + '" loading="lazy">' : '';
+      // a recorded loop with an MP4 plays as a muted video (sharper than the size-capped WebP), loaded and played only while its channel is on screen
+      if (c.kind === 'img') v += c.vid ? '<video class="full" muted loop playsinline preload="none" poster="' + esc(c.after) + '" data-src="' + esc(c.vid) + '" aria-label="' + esc(c.caption) + '" style="width:100%;height:100%;object-fit:cover;display:block"></video>'
+        : c.src ? '<img class="full" src="' + esc(c.src) + '" alt="' + esc(c.caption) + '" loading="lazy">' : '';
       else if (c.kind === 'mobile') v += '<div class="phone-f"><div><img src="' + esc(c.src) + '" alt="' + esc(c.caption) + '" loading="lazy"></div></div>';
       else if (c.kind === 'wipe') v += '<div class="wipe"><img src="' + esc(c.before) + '" alt="Design file"><img class="aft" src="' + esc(c.after) + '" alt="Built site"><span class="hdl"><i>⇆</i></span><span class="lab l">Design</span><span class="lab r">Build</span></div>';
       else if (c.kind === 'live-globe') v += '<div class="boot">Booting globe…</div>';
@@ -3719,9 +3913,9 @@ window.Webflow.push(function(){
       return v + '</div>';
     }
     var TYPE = { 'live-globe': 'Live', 'live-map': 'Live', 'wipe': 'Compare', 'mobile': 'Phone', 'img': 'Still', 'logo': 'Vector', 'apps': 'Mockups', 'figma': 'Build', 'phone': 'Phone', 'flow': 'Plan', 'exploded': 'Layers', 'cms': 'CMS', 'sketch': 'Sketch', 'vector': 'Vector', 'graph': 'Graph', 'library': 'Library', 'voice': 'AI + you', 'setup': 'CMS', 'video': 'Video', 'schema': 'Schema', 'portable': 'Model',
-      'tw-loom': 'Play', 'tw-plan': 'Plan', 'tw-app': 'Explore', 'tw-capture': 'Phone', 'tw-cms': 'Try it', 'tw-roadmap': 'Phases' };
+      'tw-loom': 'Play', 'tw-plan': 'Plan', 'tw-app': 'Explore', 'tw-capture': 'Phone', 'tw-cms': 'Try it', 'tw-roadmap': 'Phases', 'kip-plan': 'Plan' };
     var KIND = { 'live-globe': 'LIVE · three.js r128', 'live-map': 'LIVE · d3 v7', 'wipe': 'COMPARE · figma ↔ webflow', 'figma': 'MOCKUP · figma → webflow', 'phone': 'MOCKUP · mobile', 'flow': 'MOCKUP · figjam → build', 'exploded': 'BREAKDOWN · layers', 'cms': 'MOCKUP · cms → site', 'mobile': 'STILL · mobile', 'img': 'STILL', 'logo': 'VECTOR · svg', 'apps': 'MOCKUPS', 'sketch': 'SKETCH · pen + paper', 'vector': 'MOCKUP · illustrator', 'graph': 'MOCKUP · knowledge graph', 'library': 'MOCKUP · insights library', 'voice': 'MOCKUP · voice kit → review', 'setup': 'MOCKUP · cms → site', 'video': 'MOCKUP · video + chapters', 'schema': 'MOCKUP · json-ld → search + ai', 'portable': 'MOCKUP · content model',
-      'tw-loom': 'DEMO · the loom, canvas', 'tw-plan': 'FIGJAM · ideation → wireframes → build', 'tw-app': 'DEMO · dashboard prototype', 'tw-capture': 'DEMO · voice kit, phone app', 'tw-cms': 'DEMO · cms → site + json-ld', 'tw-roadmap': 'ROADMAP · five phases' };
+      'tw-loom': 'DEMO · the loom, canvas', 'tw-plan': 'FIGJAM · ideation → wireframes → build', 'tw-app': 'DEMO · dashboard prototype', 'tw-capture': 'DEMO · voice kit, phone app', 'tw-cms': 'DEMO · cms → site + json-ld', 'tw-roadmap': 'ROADMAP · five phases', 'kip-plan': 'FIGJAM · wireframe → rooms → build' };
     screen.innerHTML = CH.map(channelView).join('') + '<div class="scan"></div><div class="roll"></div><div class="vig"></div><canvas class="noise" id="noise" width="160" height="100"></canvas>' +
       '<i class="brk tl"></i><i class="brk tr"></i><i class="brk bl"></i><i class="brk br"></i><div class="osd" id="osd">CH 1</div>';
     // a recorded loop of the real site (MOCKS[slug].img) is labeled as a recording, not a still
@@ -3732,7 +3926,7 @@ window.Webflow.push(function(){
     var views = $$('.view', screen), chBtns = $$('button', chans), osd = $('#osd'), monLabel = $('#monLabel'), monCap = $('#monCap'), monKind = $('#monKind');
     // coded scenes need this mission's mockup spec for that kind; one broken scene never stops the monitor
     var NEED = { figma: 'els', phone: 'mobile', flow: 'flow', exploded: 'explode', cms: 'cms', sketch: 'sketch', vector: 'vector', graph: 'graph', library: 'library', voice: 'voice', setup: 'setup', video: 'video', schema: 'schema', portable: 'portable',
-      'tw-loom': 'tw', 'tw-plan': 'tw', 'tw-app': 'tw', 'tw-capture': 'tw', 'tw-cms': 'tw', 'tw-roadmap': 'tw' };
+      'tw-loom': 'tw', 'tw-plan': 'tw', 'tw-app': 'tw', 'tw-capture': 'tw', 'tw-cms': 'tw', 'tw-roadmap': 'tw', 'kip-plan': 'plan' };
     views.forEach(function(v, k){
       var c = CH[k], key = NEED[c.kind]; if (!key) return;
       if (!(M.mock && M.mock[key])){ v.innerHTML = '<div class="boot">Mockup coming soon</div>'; return; }
@@ -3756,13 +3950,13 @@ window.Webflow.push(function(){
       seenCh[i] = true; if (CH.length > 1 && Object.keys(seenCh).length >= CH.length && AB.quest) AB.quest('channels');
       // Topicweave: the site's thread cloth knits over the screen from the tab you pressed, then unravels onto the new channel
       var woven = !silent && TWV && !reduce;
-      function show(){ views.forEach(function(v, k){ v.classList.toggle('on', k === i); }); }
+      function show(){ views.forEach(function(v, k){ v.classList.toggle('on', k === i); }); vids(); }
       if (woven){ var sr = screen.getBoundingClientRect(), pt = lastPt && lastPt.t > Date.now() - 800 ? [lastPt.x - sr.left, lastPt.y - sr.top] : [sr.width / 2, sr.height / 2]; TWV(true, pt, function(){ if (curCh === i) show(); TWV(false); }); }
       else show();
       chBtns.forEach(function(b, k){ b.setAttribute('aria-selected', k === i ? 'true' : 'false'); });
       monLabel.textContent = c.label; monCap.textContent = c.caption; monKind.textContent = KIND[tk(c)] || '';
       $('#tCh').textContent = (i + 1) + ' / ' + CH.length;
-      $('#tSrc').textContent = c.kind.indexOf('live') === 0 ? 'Live code' : liveOn(c) ? 'Live site' : c.loop ? 'Recording' : /^tw-/.test(c.kind) ? 'Coded demo' : c.kind === 'wipe' ? 'Figma + site' : /^(figma|phone|flow|exploded|cms|sketch|vector|graph|library|voice|setup|video|schema|portable)$/.test(c.kind) ? 'Mockup' : c.kind === 'logo' || c.kind === 'apps' ? 'Vector' : 'Screenshot';
+      $('#tSrc').textContent = c.kind.indexOf('live') === 0 ? 'Live code' : liveOn(c) ? 'Live site' : c.loop ? 'Recording' : /^(tw|kip)-/.test(c.kind) ? 'Coded demo' : c.kind === 'wipe' ? 'Figma + site' : /^(figma|phone|flow|exploded|cms|sketch|vector|graph|library|voice|setup|video|schema|portable)$/.test(c.kind) ? 'Mockup' : c.kind === 'logo' || c.kind === 'apps' ? 'Vector' : 'Screenshot';
       if (liveOn(c)){ monKind.textContent = 'LIVE · ' + LIVE.host; chBtns[i].querySelector('.t').textContent = 'Live'; }
       osd.textContent = 'CH ' + (i + 1) + ' · ' + c.label;
       if (!silent){ if (!woven) staticBurst(); if (!reduce && hasGsap) gsap.fromTo(osd, { opacity: 0 }, { opacity: 1, duration: .1, repeat: 3, yoyo: true }); }
@@ -3779,7 +3973,15 @@ window.Webflow.push(function(){
       var go = function(){ setCh(i); }, mon = $('#monitor');
       if (AB.lenis && AB.lenis.scrollTo) AB.lenis.scrollTo(mon, { offset: -80, duration: 1.2, onComplete: go }); else { mon.scrollIntoView({ behavior: 'smooth' }); setTimeout(go, 600); }
     });
-    new IntersectionObserver(function(es){ monVisible = es[0].isIntersecting; if (monVisible) boot(CH[curCh], views[curCh]); }, { rootMargin: '200px' }).observe(screen);
+    new IntersectionObserver(function(es){ monVisible = es[0].isIntersecting; vids(); if (monVisible) boot(CH[curCh], views[curCh]); }, { rootMargin: '200px' }).observe(screen);
+    // loop videos: only the showing channel's plays, and only while the monitor is on screen
+    function vids(){
+      views.forEach(function(v, k){
+        var vd = v.querySelector('video.full'); if (!vd) return;
+        if (k === curCh && monVisible){ if (!vd.getAttribute('src')) vd.setAttribute('src', vd.getAttribute('data-src')); var pr = vd.play(); if (pr && pr.catch) pr.catch(function(){}); }
+        else if (!vd.paused) vd.pause();
+      });
+    }
     document.addEventListener('keydown', function(e){
       if (!monVisible || /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) || e.metaKey || e.ctrlKey || e.altKey) return;
       var n = parseInt(e.key, 10); if (n >= 1 && n <= CH.length && n - 1 !== curCh) setCh(n - 1);
@@ -3857,19 +4059,19 @@ window.Webflow.push(function(){
     function liveOn(c){ return !!(LIVE && LIVE.ok && LIVE.pages[c.id]); }
     function liveSite(c, view){
       if (view.__live) return; view.__live = true;
-      var url = LIVE.base + LIVE.pages[c.id], sc = SCENE.get(c.id);
+      var url = LIVE.base + LIVE.pages[c.id], sc = SCENE.get(c.id), ALT = sc ? 'Show the coded demo' : 'Show the screenshot'; // kip's live channel falls back to a still
       if (coarse){ view.insertAdjacentHTML('beforeend', '<a class="cx-open" href="' + esc(url) + '" target="_blank" rel="noopener">Open the live site ↗</a>'); return; }
       var box = document.createElement('div'); box.className = 'cx-live';
       box.innerHTML = '<iframe title="' + esc(c.label) + ', live on ' + esc(LIVE.host) + '" src="' + esc(url) + '" loading="lazy" referrerpolicy="no-referrer"></iframe>';
       var bar = document.createElement('div'); bar.className = 'cx-live-bar';
-      bar.innerHTML = '<a href="' + esc(url) + '" target="_blank" rel="noopener"><i></i>Live · ' + esc(LIVE.host) + ' ↗</a><button type="button">Show the coded demo</button>';
+      bar.innerHTML = '<a href="' + esc(url) + '" target="_blank" rel="noopener"><i></i>Live · ' + esc(LIVE.host) + ' ↗</a><button type="button">' + ALT + '</button>';
       view.appendChild(box); view.appendChild(bar);
       var fr = $('iframe', box), btn = $('button', bar);
       // the page renders at desktop width, scaled down to the screen
       function fit(){ var W = view.clientWidth, H = view.clientHeight; if (!W) return; var k = Math.min(1, W / 1280); fr.style.width = W / k + 'px'; fr.style.height = H / k + 'px'; fr.style.transform = 'scale(' + k + ')'; }
       fit(); if (window.ResizeObserver) new ResizeObserver(fit).observe(view);
       // one class flips between the real page and the coded demo (which pauses while hidden)
-      function show(live){ view.classList.toggle('is-live', live); btn.textContent = live ? 'Show the coded demo' : 'Show the live site'; if (sc){ if (live && sc.hold) sc.hold(); if (!live && sc.resume) sc.resume(); } }
+      function show(live){ view.classList.toggle('is-live', live); btn.textContent = live ? ALT : 'Show the live site'; if (sc){ if (live && sc.hold) sc.hold(); if (!live && sc.resume) sc.resume(); } }
       btn.addEventListener('click', function(){ show(!view.classList.contains('is-live')); });
       show(true);
     }

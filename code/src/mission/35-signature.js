@@ -122,6 +122,83 @@
       };
     })();
 
+    /* ---- kip: baby June's head, with the crib mobile turning around her ---- */
+    // Angelino 2026-10-06: June's head is the planet and the rings are the nursery mobile spinning. The head is the real 3D
+    // character (shot on the live kipvillage.com scene against its green booth: vendor/kip/june-head.webp); the rings are the
+    // mobile's wire arms, its butter stars and mint/rose balls hanging on short strings, the half behind her head dimmer.
+    SIG.kip = (function(){
+      var img = null, ok = false, waits = [];
+      function load(){
+        if (img) return; img = new Image(); img.decoding = 'async';
+        img.onload = function(){ ok = true; waits.forEach(function(f){ f(); }); waits = []; };
+        img.src = VENDOR + 'kip/june-head.webp';
+      }
+      // the cut-out is 373 × 357: the skull is ~290 px wide, centered at (186, 206); the curl rises above it
+      var IW = 373, IH = 357, SKULL = 290, SCX = 186, SCY = 206;
+      var STAR = '#FFC94A', MINT = '#5FD3A8', ROSE = '#FF8FA3', WIRE = '#FFF4E6';
+      // two arms of the mobile: radius (× R), tilt, turn speed, and what hangs from each
+      var ARMS = [
+        { r: 1.36, open: .3, tilt: -.16, sp: .32, items: ['star', 'mint', 'star', 'rose', 'star', 'mint', 'rose'] },
+        { r: 1.68, open: .24, tilt: .12, sp: -.22, items: ['rose', 'star', 'mint', 'star', 'rose', 'star'] }
+      ];
+      function star(ctx, x, y, s, hi){
+        ctx.beginPath();
+        for (var i = 0; i < 10; i++){ var a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? s * .48 : s; ctx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); }
+        ctx.closePath();
+        var g = ctx.createRadialGradient(x - s * .3, y - s * .35, s * .1, x, y, s * 1.1);
+        g.addColorStop(0, hi ? '#FFF1BF' : '#FFE38A'); g.addColorStop(.55, STAR); g.addColorStop(1, '#E2A21C');
+        ctx.fillStyle = g; ctx.lineJoin = 'round'; ctx.lineWidth = s * .28; ctx.strokeStyle = g; ctx.stroke(); ctx.fill();
+      }
+      function ball(ctx, x, y, s, col, hi){
+        var g = ctx.createRadialGradient(x - s * .35, y - s * .4, s * .08, x, y, s);
+        g.addColorStop(0, hi ? '#ffffff' : 'rgba(255,255,255,.9)'); g.addColorStop(.35, col); g.addColorStop(1, col === MINT ? '#2E9E76' : '#D9607A');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, s, 0, Math.PI * 2); ctx.fill();
+      }
+      return function(R){
+        load();
+        var small = R < 26;
+        function arms(ctx, cx, cy, t, front, en){
+          ARMS.forEach(function(A, ai){
+            if (small && ai) return;
+            // the ring plane sits at her chin, so the pieces cross below her eyes
+            var ca = Math.cos(A.tilt), sa = Math.sin(A.tilt), so = Math.sin(A.open), rr = A.r * R;
+            function pt(u){ var ex = rr * Math.cos(u), ey = rr * so * Math.sin(u); return [cx + ex * ca - ey * sa, cy + R * .24 + ex * sa + ey * ca, Math.sin(u)]; }
+            // the wire: the far half first (behind her head), the near half after it
+            ctx.lineWidth = Math.max(.8, R / 110); ctx.strokeStyle = WIRE; ctx.lineCap = 'round';
+            var prev = null, n = 72;
+            for (var k = 0; k <= n; k++){
+              var p = pt(k / n * Math.PI * 2);
+              if (prev && ((p[2] + prev[2]) > 0) === front){ ctx.globalAlpha = front ? .7 + .25 * en : .28; ctx.beginPath(); ctx.moveTo(prev[0], prev[1]); ctx.lineTo(p[0], p[1]); ctx.stroke(); }
+              prev = p;
+            }
+            // the hanging pieces turn with the arm; each swings a little on its string
+            var N = A.items.length, rot = t * A.sp * (1 + 1.6 * en);
+            A.items.forEach(function(kind, i){
+              var u = rot + i / N * Math.PI * 2, p = pt(u);
+              if ((p[2] > 0) !== front) return;
+              var depth = .82 + .18 * p[2], s = Math.max(1.6, R * (small ? .2 : .13)) * depth, len = R * (small ? .12 : .17) * depth;
+              var sw = Math.sin(t * 1.7 + i * 1.9 + ai) * .16 * (1 + en), hx = p[0] + Math.sin(sw) * len, hy = p[1] + Math.cos(sw) * len;
+              ctx.globalAlpha = front ? 1 : .55;
+              if (!small){ ctx.lineWidth = Math.max(.6, R / 160); ctx.strokeStyle = WIRE; ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(hx, hy); ctx.stroke(); }
+              if (kind === 'star') star(ctx, hx, hy + s * .8, s * 1.1, en > .3); else ball(ctx, hx, hy + s * .8, s * .82, kind === 'mint' ? MINT : ROSE, en > .3);
+            });
+          });
+          ctx.globalAlpha = 1;
+        }
+        return { pad: small ? 1.75 : 1.95, pulse: '255,201,74', ready: function(f){ if (ok) f(); else waits.push(f); }, draw: function(ctx, cx, cy, t, en){
+          en = en || 0;
+          arms(ctx, cx, cy, t, false, en);
+          if (ok){
+            // her head: the skull fills 80% of the planet circle, so the mobile stays inside the planet's reach; a slow sway, a happy bob when charged
+            var sc = R * 1.6 / SKULL * (1 + .035 * en * Math.sin(t * 9)), w = IW * sc, h = IH * sc;
+            ctx.save(); ctx.translate(cx, cy + Math.sin(t * .9) * R * .025); ctx.rotate(Math.sin(t * .55) * .07);
+            ctx.drawImage(img, -SCX * sc, -SCY * sc, w, h); ctx.restore();
+          }
+          arms(ctx, cx, cy, t, true, en);
+        } };
+      };
+    })();
+
     // styles injected from here, so they ship with the script alone (no stylesheet release)
     var css = document.createElement('style'); css.id = 'sig-planets';
     css.textContent = '.ab_planet.is-sig .sphere,.ab_planet.is-sig .pring,.ab_planet.is-sig .tex{opacity:0!important}' +
@@ -165,6 +242,8 @@
       }
       if (!size()) return;
       frame(performance.now());
+      // a planet drawn from an image (kip) paints again once its picture arrives (one still frame under reduced motion)
+      if (P.ready) P.ready(function(){ frame(performance.now()); });
       var lw = innerWidth; addEventListener('resize', function(){ if (innerWidth !== lw){ lw = innerWidth; if (size()) frame(performance.now()); } });
       if (window.IntersectionObserver) new IntersectionObserver(function(es){
         on = es[0].isIntersecting; if (on && !raf && !reduce){ last = 0; raf = requestAnimationFrame(frame); }

@@ -9,7 +9,9 @@
     function channelView(c){
       // (a mobile still/loop centers its phone inline too, so it doesn't wait on a stylesheet release)
       var v = '<div class="view ' + c.kind + (c.mode === 'light' ? ' light' : '') + '" data-ch="' + esc(c.id) + '" data-kind="' + c.kind + '" role="tabpanel" aria-label="' + esc(c.label) + '"' + (c.kind === 'mobile' ? ' style="display:grid;place-items:center"' : '') + '>';
-      if (c.kind === 'img') v += c.src ? '<img class="full" src="' + esc(c.src) + '" alt="' + esc(c.caption) + '" loading="lazy">' : '';
+      // a recorded loop with an MP4 plays as a muted video (sharper than the size-capped WebP), loaded and played only while its channel is on screen
+      if (c.kind === 'img') v += c.vid ? '<video class="full" muted loop playsinline preload="none" poster="' + esc(c.after) + '" data-src="' + esc(c.vid) + '" aria-label="' + esc(c.caption) + '" style="width:100%;height:100%;object-fit:cover;display:block"></video>'
+        : c.src ? '<img class="full" src="' + esc(c.src) + '" alt="' + esc(c.caption) + '" loading="lazy">' : '';
       else if (c.kind === 'mobile') v += '<div class="phone-f"><div><img src="' + esc(c.src) + '" alt="' + esc(c.caption) + '" loading="lazy"></div></div>';
       else if (c.kind === 'wipe') v += '<div class="wipe"><img src="' + esc(c.before) + '" alt="Design file"><img class="aft" src="' + esc(c.after) + '" alt="Built site"><span class="hdl"><i>⇆</i></span><span class="lab l">Design</span><span class="lab r">Build</span></div>';
       else if (c.kind === 'live-globe') v += '<div class="boot">Booting globe…</div>';
@@ -22,9 +24,9 @@
       return v + '</div>';
     }
     var TYPE = { 'live-globe': 'Live', 'live-map': 'Live', 'wipe': 'Compare', 'mobile': 'Phone', 'img': 'Still', 'logo': 'Vector', 'apps': 'Mockups', 'figma': 'Build', 'phone': 'Phone', 'flow': 'Plan', 'exploded': 'Layers', 'cms': 'CMS', 'sketch': 'Sketch', 'vector': 'Vector', 'graph': 'Graph', 'library': 'Library', 'voice': 'AI + you', 'setup': 'CMS', 'video': 'Video', 'schema': 'Schema', 'portable': 'Model',
-      'tw-loom': 'Play', 'tw-plan': 'Plan', 'tw-app': 'Explore', 'tw-capture': 'Phone', 'tw-cms': 'Try it', 'tw-roadmap': 'Phases' };
+      'tw-loom': 'Play', 'tw-plan': 'Plan', 'tw-app': 'Explore', 'tw-capture': 'Phone', 'tw-cms': 'Try it', 'tw-roadmap': 'Phases', 'kip-plan': 'Plan' };
     var KIND = { 'live-globe': 'LIVE · three.js r128', 'live-map': 'LIVE · d3 v7', 'wipe': 'COMPARE · figma ↔ webflow', 'figma': 'MOCKUP · figma → webflow', 'phone': 'MOCKUP · mobile', 'flow': 'MOCKUP · figjam → build', 'exploded': 'BREAKDOWN · layers', 'cms': 'MOCKUP · cms → site', 'mobile': 'STILL · mobile', 'img': 'STILL', 'logo': 'VECTOR · svg', 'apps': 'MOCKUPS', 'sketch': 'SKETCH · pen + paper', 'vector': 'MOCKUP · illustrator', 'graph': 'MOCKUP · knowledge graph', 'library': 'MOCKUP · insights library', 'voice': 'MOCKUP · voice kit → review', 'setup': 'MOCKUP · cms → site', 'video': 'MOCKUP · video + chapters', 'schema': 'MOCKUP · json-ld → search + ai', 'portable': 'MOCKUP · content model',
-      'tw-loom': 'DEMO · the loom, canvas', 'tw-plan': 'FIGJAM · ideation → wireframes → build', 'tw-app': 'DEMO · dashboard prototype', 'tw-capture': 'DEMO · voice kit, phone app', 'tw-cms': 'DEMO · cms → site + json-ld', 'tw-roadmap': 'ROADMAP · five phases' };
+      'tw-loom': 'DEMO · the loom, canvas', 'tw-plan': 'FIGJAM · ideation → wireframes → build', 'tw-app': 'DEMO · dashboard prototype', 'tw-capture': 'DEMO · voice kit, phone app', 'tw-cms': 'DEMO · cms → site + json-ld', 'tw-roadmap': 'ROADMAP · five phases', 'kip-plan': 'FIGJAM · wireframe → rooms → build' };
     screen.innerHTML = CH.map(channelView).join('') + '<div class="scan"></div><div class="roll"></div><div class="vig"></div><canvas class="noise" id="noise" width="160" height="100"></canvas>' +
       '<i class="brk tl"></i><i class="brk tr"></i><i class="brk bl"></i><i class="brk br"></i><div class="osd" id="osd">CH 1</div>';
     // a recorded loop of the real site (MOCKS[slug].img) is labeled as a recording, not a still
@@ -35,7 +37,7 @@
     var views = $$('.view', screen), chBtns = $$('button', chans), osd = $('#osd'), monLabel = $('#monLabel'), monCap = $('#monCap'), monKind = $('#monKind');
     // coded scenes need this mission's mockup spec for that kind; one broken scene never stops the monitor
     var NEED = { figma: 'els', phone: 'mobile', flow: 'flow', exploded: 'explode', cms: 'cms', sketch: 'sketch', vector: 'vector', graph: 'graph', library: 'library', voice: 'voice', setup: 'setup', video: 'video', schema: 'schema', portable: 'portable',
-      'tw-loom': 'tw', 'tw-plan': 'tw', 'tw-app': 'tw', 'tw-capture': 'tw', 'tw-cms': 'tw', 'tw-roadmap': 'tw' };
+      'tw-loom': 'tw', 'tw-plan': 'tw', 'tw-app': 'tw', 'tw-capture': 'tw', 'tw-cms': 'tw', 'tw-roadmap': 'tw', 'kip-plan': 'plan' };
     views.forEach(function(v, k){
       var c = CH[k], key = NEED[c.kind]; if (!key) return;
       if (!(M.mock && M.mock[key])){ v.innerHTML = '<div class="boot">Mockup coming soon</div>'; return; }
@@ -59,13 +61,13 @@
       seenCh[i] = true; if (CH.length > 1 && Object.keys(seenCh).length >= CH.length && AB.quest) AB.quest('channels');
       // Topicweave: the site's thread cloth knits over the screen from the tab you pressed, then unravels onto the new channel
       var woven = !silent && TWV && !reduce;
-      function show(){ views.forEach(function(v, k){ v.classList.toggle('on', k === i); }); }
+      function show(){ views.forEach(function(v, k){ v.classList.toggle('on', k === i); }); vids(); }
       if (woven){ var sr = screen.getBoundingClientRect(), pt = lastPt && lastPt.t > Date.now() - 800 ? [lastPt.x - sr.left, lastPt.y - sr.top] : [sr.width / 2, sr.height / 2]; TWV(true, pt, function(){ if (curCh === i) show(); TWV(false); }); }
       else show();
       chBtns.forEach(function(b, k){ b.setAttribute('aria-selected', k === i ? 'true' : 'false'); });
       monLabel.textContent = c.label; monCap.textContent = c.caption; monKind.textContent = KIND[tk(c)] || '';
       $('#tCh').textContent = (i + 1) + ' / ' + CH.length;
-      $('#tSrc').textContent = c.kind.indexOf('live') === 0 ? 'Live code' : liveOn(c) ? 'Live site' : c.loop ? 'Recording' : /^tw-/.test(c.kind) ? 'Coded demo' : c.kind === 'wipe' ? 'Figma + site' : /^(figma|phone|flow|exploded|cms|sketch|vector|graph|library|voice|setup|video|schema|portable)$/.test(c.kind) ? 'Mockup' : c.kind === 'logo' || c.kind === 'apps' ? 'Vector' : 'Screenshot';
+      $('#tSrc').textContent = c.kind.indexOf('live') === 0 ? 'Live code' : liveOn(c) ? 'Live site' : c.loop ? 'Recording' : /^(tw|kip)-/.test(c.kind) ? 'Coded demo' : c.kind === 'wipe' ? 'Figma + site' : /^(figma|phone|flow|exploded|cms|sketch|vector|graph|library|voice|setup|video|schema|portable)$/.test(c.kind) ? 'Mockup' : c.kind === 'logo' || c.kind === 'apps' ? 'Vector' : 'Screenshot';
       if (liveOn(c)){ monKind.textContent = 'LIVE · ' + LIVE.host; chBtns[i].querySelector('.t').textContent = 'Live'; }
       osd.textContent = 'CH ' + (i + 1) + ' · ' + c.label;
       if (!silent){ if (!woven) staticBurst(); if (!reduce && hasGsap) gsap.fromTo(osd, { opacity: 0 }, { opacity: 1, duration: .1, repeat: 3, yoyo: true }); }
@@ -82,7 +84,15 @@
       var go = function(){ setCh(i); }, mon = $('#monitor');
       if (AB.lenis && AB.lenis.scrollTo) AB.lenis.scrollTo(mon, { offset: -80, duration: 1.2, onComplete: go }); else { mon.scrollIntoView({ behavior: 'smooth' }); setTimeout(go, 600); }
     });
-    new IntersectionObserver(function(es){ monVisible = es[0].isIntersecting; if (monVisible) boot(CH[curCh], views[curCh]); }, { rootMargin: '200px' }).observe(screen);
+    new IntersectionObserver(function(es){ monVisible = es[0].isIntersecting; vids(); if (monVisible) boot(CH[curCh], views[curCh]); }, { rootMargin: '200px' }).observe(screen);
+    // loop videos: only the showing channel's plays, and only while the monitor is on screen
+    function vids(){
+      views.forEach(function(v, k){
+        var vd = v.querySelector('video.full'); if (!vd) return;
+        if (k === curCh && monVisible){ if (!vd.getAttribute('src')) vd.setAttribute('src', vd.getAttribute('data-src')); var pr = vd.play(); if (pr && pr.catch) pr.catch(function(){}); }
+        else if (!vd.paused) vd.pause();
+      });
+    }
     document.addEventListener('keydown', function(e){
       if (!monVisible || /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) || e.metaKey || e.ctrlKey || e.altKey) return;
       var n = parseInt(e.key, 10); if (n >= 1 && n <= CH.length && n - 1 !== curCh) setCh(n - 1);
@@ -160,19 +170,19 @@
     function liveOn(c){ return !!(LIVE && LIVE.ok && LIVE.pages[c.id]); }
     function liveSite(c, view){
       if (view.__live) return; view.__live = true;
-      var url = LIVE.base + LIVE.pages[c.id], sc = SCENE.get(c.id);
+      var url = LIVE.base + LIVE.pages[c.id], sc = SCENE.get(c.id), ALT = sc ? 'Show the coded demo' : 'Show the screenshot'; // kip's live channel falls back to a still
       if (coarse){ view.insertAdjacentHTML('beforeend', '<a class="cx-open" href="' + esc(url) + '" target="_blank" rel="noopener">Open the live site ↗</a>'); return; }
       var box = document.createElement('div'); box.className = 'cx-live';
       box.innerHTML = '<iframe title="' + esc(c.label) + ', live on ' + esc(LIVE.host) + '" src="' + esc(url) + '" loading="lazy" referrerpolicy="no-referrer"></iframe>';
       var bar = document.createElement('div'); bar.className = 'cx-live-bar';
-      bar.innerHTML = '<a href="' + esc(url) + '" target="_blank" rel="noopener"><i></i>Live · ' + esc(LIVE.host) + ' ↗</a><button type="button">Show the coded demo</button>';
+      bar.innerHTML = '<a href="' + esc(url) + '" target="_blank" rel="noopener"><i></i>Live · ' + esc(LIVE.host) + ' ↗</a><button type="button">' + ALT + '</button>';
       view.appendChild(box); view.appendChild(bar);
       var fr = $('iframe', box), btn = $('button', bar);
       // the page renders at desktop width, scaled down to the screen
       function fit(){ var W = view.clientWidth, H = view.clientHeight; if (!W) return; var k = Math.min(1, W / 1280); fr.style.width = W / k + 'px'; fr.style.height = H / k + 'px'; fr.style.transform = 'scale(' + k + ')'; }
       fit(); if (window.ResizeObserver) new ResizeObserver(fit).observe(view);
       // one class flips between the real page and the coded demo (which pauses while hidden)
-      function show(live){ view.classList.toggle('is-live', live); btn.textContent = live ? 'Show the coded demo' : 'Show the live site'; if (sc){ if (live && sc.hold) sc.hold(); if (!live && sc.resume) sc.resume(); } }
+      function show(live){ view.classList.toggle('is-live', live); btn.textContent = live ? ALT : 'Show the live site'; if (sc){ if (live && sc.hold) sc.hold(); if (!live && sc.resume) sc.resume(); } }
       btn.addEventListener('click', function(){ show(!view.classList.contains('is-live')); });
       show(true);
     }
