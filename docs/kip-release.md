@@ -1,4 +1,4 @@
-# kip mission relaunch (kipvillage.com) · v0.33.62 + v0.33.64 · STAGED 2026-10-06, not yet published
+# kip mission relaunch (kipvillage.com) · v0.33.62 + v0.33.64 · LIVE 2026-10-07
 
 The `/work/kip` debrief (#03) rewritten for the new one-page kip site with the interactive 3D house (kipvillage.com, launched
 2026-10-06, repo AngelinoBarajas/kip-one). Story, numbers and renders: `X:/Claude-Skills/kip-site/debrief-kit/README.md`.
@@ -37,7 +37,11 @@ Pattern: `docs/topicweave-release.md`. CMS copy as applied: `cms/kip/release.jso
 - Verified locally (`.kip-test/harness.py`, git-excluded): all 8 channels at 1440, phone channel at 390, reduced
   motion (stills, no video), live iframe; Home card at 1440 + 390; Topicweave Solved cards 0px jolt with 0.33.62.
 
-## Publish (waits on Angelino's OK)
+## Published 2026-10-07 (screen-hopping chat's site publish with Angelino's OK, together with his Home → About move)
+Verified live on barajasdsgn.com at 1440 + 390: ab-mission v0.33.62 + ab-core v0.33.63, kip signature planet (3 mounts), 8 channels (LIVE / LOOP / BUILD / PLAN), live link kipvillage.com, stats 1/5/9/88, new summary, house loop video plays; Home ab-home v0.33.64 with the 3 portraits; no console errors. Flight manual: changelog v0.33.62 + v0.33.64, histories (kip debrief, Home work board), feature card mission-kip rewritten.
+Phone note: at 390 June's planet overlaps the switcher's next chip a little (hero planet position on phones).
+
+### Publish checklist (as planned)
 The other chats have staged work too (v0.33.63 Home edits; his Home → About Designer move must land first). One publish
 for all, barajasdsgn.com + www + webflow.io. After: verify /work/kip live (8 channels, planet, live link), Home card,
 /work cards, /services pages listing kip; then add v0.33.62 + v0.33.64 to the Flight manual changelog + histories
