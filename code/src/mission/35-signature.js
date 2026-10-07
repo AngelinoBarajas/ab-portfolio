@@ -136,10 +136,10 @@
       // the cut-out is 373 × 357: the skull is ~290 px wide, centered at (186, 206); the curl rises above it
       var IW = 373, IH = 357, SKULL = 290, SCX = 186, SCY = 206;
       var STAR = '#FFC94A', MINT = '#5FD3A8', ROSE = '#FF8FA3', WIRE = '#FFF4E6';
-      // two arms of the mobile: radius (× R), tilt, turn speed, and what hangs from each
+      // the mobile's arm: radius (× R), tilt, turn speed, and what hangs from it
+      // one ring (Angelino 2026-10-07: one mobile, not two)
       var ARMS = [
-        { r: 1.36, open: .3, tilt: -.16, sp: .32, items: ['star', 'mint', 'star', 'rose', 'star', 'mint', 'rose'] },
-        { r: 1.68, open: .24, tilt: .12, sp: -.22, items: ['rose', 'star', 'mint', 'star', 'rose', 'star'] }
+        { r: 1.5, open: .28, tilt: -.14, sp: .32, items: ['star', 'mint', 'star', 'rose', 'star', 'mint', 'star', 'rose'] }
       ];
       function star(ctx, x, y, s, hi){
         ctx.beginPath();
@@ -154,8 +154,38 @@
         g.addColorStop(0, hi ? '#ffffff' : 'rgba(255,255,255,.9)'); g.addColorStop(.35, col); g.addColorStop(1, col === MINT ? '#2E9E76' : '#D9607A');
         ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, s, 0, Math.PI * 2); ctx.fill();
       }
-      return function(R){
+      // when the hero planet sits on the mission switcher row (phones, tablets, ~1024), June's curl and mobile reach past
+      // her planet box. Measure the page and move her into the bigger clear strip, above the switcher (under the fixed
+      // header) or below it (above the summary), sized to fit. Her drawing spans ~1.15R up, ~0.95R down, ~1.62R across.
+      function fit(el, R0){
+        var out = { R: R0, dy: 0, dx: 0 };
+        if (!el || !el.closest || !el.closest('#hero')) return out;
+        var sw = document.getElementById('mswitch'), nav = document.querySelector('.ab_nav_component'), sum = document.querySelector('.ab_dbh_sum');
+        if (!sw) return out;
+        var y0 = window.pageYOffset || 0, pr = el.getBoundingClientRect(), s = sw.getBoundingClientRect();
+        var cx = pr.left + pr.width / 2, cy = pr.top + pr.height / 2 + y0, sTop = s.top + y0, sBot = s.bottom + y0;
+        if (cx + 1.62 * R0 < s.left || cx - 1.62 * R0 > s.right || cy - 1.15 * R0 > sBot || cy + .95 * R0 < sTop) return out;
+        var hb = nav ? nav.getBoundingClientRect().bottom : 0, lim = sum ? sum.getBoundingClientRect().top + y0 : sBot + 4 * R0;
+        var up = (sTop - 8 - (hb + 8)) / 2.1, dn = (lim - 8 - (sBot + 8)) / 2.1;
+        var R = Math.max(R0 * .4, Math.min(R0, Math.max(up, dn)));
+        var top = up >= dn ? hb + 8 : sBot + 8;
+        // below the switcher, the eyebrow line ("Mission debrief · 03 / 05") can still run under her: then start below it
+        var eb = up < dn && document.querySelector('.ab_dbh_eyebrow');
+        if (eb && document.createRange){
+          var rg = document.createRange(); rg.selectNodeContents(eb); var er = rg.getBoundingClientRect();
+          if (er.width && cx - 1.62 * R < er.right && cx + 1.62 * R > er.left && top + 2.1 * R > er.top + y0){
+            top = er.bottom + y0 + 8; R = Math.max(R0 * .4, Math.min(R0, (lim - 8 - top) / 2.1));
+          }
+        }
+        out.R = R; out.dy = top + 1.15 * R - cy;
+        // and keep the mobile on screen sideways
+        var W = document.documentElement.clientWidth;
+        if (cx + 1.62 * R > W - 6) out.dx = W - 6 - 1.62 * R - cx; else if (cx - 1.62 * R < 6) out.dx = 6 + 1.62 * R - cx;
+        return out;
+      }
+      return function(R0, el){
         load();
+        var F = fit(el, R0), R = F.R, DY = F.dy, DX = F.dx;
         var small = R < 26;
         function arms(ctx, cx, cy, t, front, en){
           ARMS.forEach(function(A, ai){
@@ -172,7 +202,7 @@
               prev = p;
             }
             // the hanging pieces turn with the arm; each swings a little on its string
-            var N = A.items.length, rot = t * A.sp * (1 + 1.6 * en);
+            var N = A.items.length, rot = t * A.sp;
             A.items.forEach(function(kind, i){
               var u = rot + i / N * Math.PI * 2, p = pt(u);
               if ((p[2] > 0) !== front) return;
@@ -185,13 +215,14 @@
           });
           ctx.globalAlpha = 1;
         }
-        return { pad: small ? 1.75 : 1.95, pulse: '255,201,74', ready: function(f){ if (ok) f(); else waits.push(f); }, draw: function(ctx, cx, cy, t, en){
-          en = en || 0;
+        return { pad: Math.max(small ? 1.75 : 1.85, (Math.max(Math.abs(DY), Math.abs(DX)) + 1.7 * R) / R0), boost: .5, pulse: '255,201,74', ready: function(f){ if (ok) f(); else waits.push(f); }, draw: function(ctx, cx, cy, t, en){
+          en = en || 0; cx += DX; cy += DY;
           arms(ctx, cx, cy, t, false, en);
           if (ok){
-            // her head: the skull fills 80% of the planet circle, so the mobile stays inside the planet's reach; a slow sway, a happy bob when charged
-            var sc = R * 1.6 / SKULL * (1 + .035 * en * Math.sin(t * 9)), w = IW * sc, h = IH * sc;
-            ctx.save(); ctx.translate(cx, cy + Math.sin(t * .9) * R * .025); ctx.rotate(Math.sin(t * .55) * .07);
+            // her head: the skull fills 80% of the planet circle, so the mobile stays inside the planet's reach; a slow sway
+            // charged: a slow, soft bounce (Angelino 2026-10-07: much slower than the first wobble)
+            var sc = R * 1.6 / SKULL, w = IW * sc, h = IH * sc, hop = en * Math.abs(Math.sin(t * 1.4)) * R * .08;
+            ctx.save(); ctx.translate(cx, cy + Math.sin(t * .9) * R * .025 - hop); ctx.rotate(Math.sin(t * .55) * .07);
             ctx.drawImage(img, -SCX * sc, -SCY * sc, w, h); ctx.restore();
           }
           arms(ctx, cx, cy, t, true, en);
@@ -214,7 +245,7 @@
       var ctx = cv.getContext('2d'), P = null, W = 0, H = 0, raf = 0, on = false, last = 0, T = 6, EN = 0, until = 0, pulseT = -9, ptr = null;
       function size(){
         var r = el.getBoundingClientRect(), R = r.width / 2; if (!R) return false;
-        P = make(R); var s = R * 2 * P.pad, dpr = Math.min(2, window.devicePixelRatio || 1);
+        P = make(R, el); var s = R * 2 * P.pad, dpr = Math.min(2, window.devicePixelRatio || 1);
         cv.style.width = cv.style.height = s + 'px'; cv.style.marginLeft = cv.style.marginTop = (-s / 2) + 'px';
         W = H = s; cv.width = cv.height = Math.round(s * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         P.R = R; return true;
@@ -226,7 +257,7 @@
         // a resting pointer keeps it charged (also when the page scrolls the planet under a still pointer)
         if (ptr && !reduce){ var br = el.getBoundingClientRect(), qx = ptr[0] - (br.left + br.width / 2), qy = ptr[1] - (br.top + br.height / 2), qr = br.width / 2 * 1.15; if (qx * qx + qy * qy < qr * qr){ if (now >= until) pulseT = now / 1000; until = now + 300; } }
         var want = now < until ? 1 : 0; EN += (want - EN) * Math.min(1, dt * (want ? 4 : 2.5)); if (EN < .002) EN = 0;
-        if (!reduce) T += dt * (1 + 2.4 * EN);
+        if (!reduce) T += dt * (1 + (P.boost != null ? P.boost : 2.4) * EN); // kip: hover only nudges the mobile faster
         ctx.clearRect(0, 0, W, H); P.draw(ctx, W / 2, H / 2, T, EN);
         var pa = (now / 1000 - pulseT) / 1.1;
         if (pa >= 0 && pa < 1){
