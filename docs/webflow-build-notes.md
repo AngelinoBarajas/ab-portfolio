@@ -883,3 +883,23 @@ Carousel chat. Verified live on barajasdsgn.com, www and webflow.io after each p
 - **Launch carousel (not deployed, outside the repo):** `X:/Claude-Skills/carousels/ab-launch/`. `build.py` = 7 slides, 1080×1350, all MP4 (logo intro hook, warp, debriefs, field notes, Matrix rabbit, boss fight, CTA), every slide after the first opens with the site's real warp-in; `story.py` = 9:16 story (logo + 7 drifting planets from the site's planet code + planetLook). Footage = CDP screencasts of the live site (`cap/*.py`). Phone preview: claude.ai artifact L1DPu4YJM98dibG8Ajtz1x. Rendering planets offline now needs `window.Worker=undefined` and an `AB.near` stub (perf pass moved textures to a worker and lazy-paints via `AB.near`), otherwise they render as flat gradients. **`og/build.py` slices the same builder and probably has this problem now: check before the next OG render.**
 - Angelino's phone got DNS_PROBE_FINISHED_NXDOMAIN on home Wi-Fi only: his router cached "not found" from the 2026-10-04 nameserver move. Public resolvers + GoDaddy NS all answered correctly.
 - **make.py retired (2026-10-05):** the page has been edited in Webflow since (hover, one-line title, ocean planet + clamp column); the generator is a record only, never re-run it.
+
+## kip relaunch + signature planets + tools cleanup (2026-10-06 → 10-08): v0.33.62, .64–.68, LIVE
+
+Kip chat. `/work/kip` rewritten for kipvillage.com, then follow-ups Angelino asked for one at a time. Release record + CMS copy of record: `docs/kip-release.md`, `cms/kip/release.json`. Each release was claimed/announced to the parallel AB chats first and published only with Angelino's OK.
+
+**What shipped (all verified live 2026-10-08):** v0.33.62 kip mission (8 channels, `mission/25-kip-plan.js`, MOCKS.kip, live iframe, MP4 loops) · v0.33.64/.66 Home kip card (house image + 3D portraits) · v0.33.65 June planet one ring + `heroFit` · v0.33.66 AB Identity + Knowledge System signature planets · v0.33.67 AB Identity ring fix + KS phone fit · v0.33.68 About badge kip patch + kip OG · Webflow: `.ab_planet.is-card` hidden, kip ↔ Interactive 3D, Spline tool, 8 Tools removed.
+
+**Root causes / non-obvious findings**
+- **Recorded loops vs the 3.9 MB WebP cap:** the Spline camera never rests (idle sway + pointer lean), so 15–30% of every frame changes and desktop WebP loops only fit at quality 6–12 (blocky). Desktop loops now play their H.264 MP4 (`MOCKS[slug].img` third entry → `c.vid`, `40-monitor.js vids()` loads/plays only the showing channel while on screen); reduced motion still gets the still.
+- **Live channel needed a non-empty page path:** `liveOn()` tests `LIVE.pages[c.id]`, so `''` (site root) read as "no live page"; kip uses `index.html`.
+- **June's high-res head:** the Spline runtime can't move the play camera (the page drives it); open the Nursery via `emitEvent('mouseDown','House Back Nursery')`, show the hidden `Booth June`, set `booth.color = '#00ff00'`, shoot at DSF 4 → 373 px cut-out.
+- **Hero planets over the mission switcher:** on phones/tablets the hero planet box sits on `#mswitch`. `heroFit(el, R0, up, down, side)` measures header / switcher / eyebrow / summary and moves + scales the drawing into the bigger clear strip; canvas `pad` grows to cover the offset. Used by kip, AB Identity, Knowledge System.
+- **AB Identity rings "cutting through" the planet:** clipping the near ring half to `AB.MARK.planet` leaves only the swoosh's thin strip over the sphere; draw the near half twice: clipped to the mark path (outside) and to the sphere disc (inside).
+- **Title outline wiped by hero toys:** core `39-herodrag.js` re-splits `#heroTitle` into `.w` spans after the bundles run; mark the last `.w` after the split (retry loop), not by wrapping first.
+- **About was on ab-about 0.33.47:** confirmed `git log v0.33.47..` touched nothing else in `about/` before shipping 0.33.68.
+- **OG template:** short placeholders (`SAM`) matched inside base64 and corrupted the house image; use `@@TOKEN@@` markers ([[lesson_base64-placeholder-collision]]).
+- **jsDelivr:** v0.33.64 first served a cached 404 (requested seconds after the tag); purge fixed it ([[lesson_jsdelivr-caches-404-before-tag]]).
+- **10-07 18:25 UTC lastUpdated bump:** no chat wrote then (transcript search + both chats); Designer bookkeeping, published through.
+
+**Testing kit (git-excluded `.kip-test/`):** `harness.py` (mission page + planned channels + local bundle/vendor/recordings), `home.py`, `badge.py`, `abid.py`, `ks.py`, `solved.py` (Solved-card jolt), `live*.py`.
