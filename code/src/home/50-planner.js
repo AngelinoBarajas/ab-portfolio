@@ -23,7 +23,14 @@
     var BUD = ['Under $6.5k', '$6.5–12k', '$12–22k', '$22–40k', '$40k+'], MAXB = BUD.length - 1, WIN = ['ASAP', '1–2 months', '3+ months', 'Flexible'];
     // the budget scale lives here (the Designer embed may carry an older one): slider range, ticks, default
     bud.max = MAXB; bud.value = 2;
-    var ticks = $('.ab_planner_ticks', form); if (ticks) ticks.innerHTML = BUD.map(function(b){ return '<span>' + esc(b) + '</span>'; }).join('');
+    var ticks = $('.ab_planner_ticks', form); if (ticks) ticks.innerHTML = BUD.map(function(b){ return '<span style="white-space:nowrap">' + esc(b.replace('Under ', '<')) + '</span>'; }).join('');
+    // line the labels up under the slider stops: one equal column per band, and the range inset so its 18px
+    // square thumb stops at each column's center (space-between drifted, worst at the ends)
+    if (ticks){
+      var nB = BUD.length, half = (50 / nB) + '%';
+      ticks.style.display = 'grid'; ticks.style.gridTemplateColumns = 'repeat(' + nB + ',1fr)'; ticks.style.textAlign = 'center';
+      bud.style.width = 'calc(' + (100 - 100 / nB) + '% + 18px)'; bud.style.marginLeft = 'calc(' + half + ' - 9px)';
+    }
     if (ticks && !$('.ab_planner_est', form)){ var est = document.createElement('p'); est.className = 'ab_planner_est text-style-mono'; est.style.cssText = 'margin:10px 0 0;font-size:11px;letter-spacing:.08em;color:var(--dust)'; est.textContent = 'Estimates only. Your quote is fixed once we scope the project together.'; ticks.parentNode.insertBefore(est, ticks.nextSibling); }
     // budget: "not sure yet" overrides the slider (people still scouting what to spend); moving the slider turns it off
     var UNSURE = 'Not sure yet · still scouting', unsureBtn = $('.ab_planner_chip.is-unsure', form);
