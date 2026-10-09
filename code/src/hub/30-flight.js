@@ -174,7 +174,7 @@
   (function(){
     var q = location.search.match(/[?&]fly=([\d,]+)/); if (!q || !fsec) return;
     var ids = q[1].split(',').map(Number).filter(function(j){ return HUB[j]; }); if (!ids.length) return;
-    main = ids[0]; stops = ids.slice(1, 3); drawPlan(false);
+    main = ids[0]; stops = ids.slice(1); drawPlan(false);
     fsel = sel(); fill(fsel); fsec.classList.add('is-open');
     var pm = location.search.match(/[?&]p=([\d.]+)/), pr = pm ? +pm[1] : 0;
     setTimeout(function(){ fbuild(); if (window.ScrollTrigger) ScrollTrigger.refresh(); if (fst && fwide){ gsap.set(track, { x: -(track.scrollWidth - innerWidth + 40) * pr }); ffly(pr * 1.02); } }, 400);

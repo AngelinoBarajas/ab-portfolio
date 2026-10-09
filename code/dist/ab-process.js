@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-process v0.33.69 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-process v0.33.71 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abProcessInit) return;
@@ -38,8 +38,9 @@ window.Webflow.push(function(){
     };
   }).filter(function(d){ return d.slug; });
 
-  // the mission: sel[0] = main destination, sel[1..] = extra stops (3 at most; more goes in the form's "More than three")
-  var MAX_STOPS = 3, sel = [0], adding = false, KEY = 'ab:dest';
+  // the mission: sel[0] = main destination, sel[1..] = extra stops (any number since 2026-10-09; the estimate below
+  // turns the route into a tier + starting price, core/46-pricing.js)
+  var MAX_STOPS = DEST.length, sel = [0], adding = false, KEY = 'ab:dest';
   try {
     var saved = (localStorage.getItem(KEY) || '').split(','), got = [];
     saved.forEach(function(sl){ DEST.forEach(function(d, i){ if (d.slug === sl && got.indexOf(i) < 0 && got.length < MAX_STOPS) got.push(i); }); });
@@ -561,9 +562,10 @@ window.Webflow.push(function(){
     }
   }
   var chips = $('[data-chips]'), moreBox = $('[data-more]'), moreChip = null;
+  var chipsL = $('#abpChipsL'); if (chipsL) chipsL.textContent = 'Destinations · add as many stops as you need';
   if (chips && DEST.length){
     chips.innerHTML = DEST.map(function(d, i){ return '<button type="button" class="abp-chip" data-i="' + i + '" aria-pressed="false" style="--c:' + d.c + '"><i aria-hidden="true"></i>' + esc(d.short) + '<span class="abp-chip-main">Main</span></button>'; }).join('') +
-      (moreBox ? '<button type="button" class="abp-chip is-more" aria-pressed="false" aria-controls="abpMore">+ More than three</button>' : '');
+      '';
     $$('.abp-chip[data-i]', chips).forEach(function(b){ b.addEventListener('click', function(){
       var i = +b.getAttribute('data-i'), at = sel.indexOf(i);
       if (at > -1){
@@ -598,7 +600,9 @@ window.Webflow.push(function(){
     syncKs();
     var field = $('[data-dest-field]');
     if (field) field.value = sel.map(function(k, n){ return DEST[k].name + (n === 0 && sel.length > 1 ? ' (main)' : ''); }).join(', ');
+    if (updEst) updEst();
   }
+  var updEst = null;
   var form = $('.ab_launch_form form');
   // budget bands = the pricing tiers (same list as the Home planner in home/50-planner.js). The Designer embed
   // (webflow/build/process/form-fields.embed.html) carries the same options; this keeps an older embed in line.
@@ -609,6 +613,16 @@ window.Webflow.push(function(){
       bs.innerHTML = B.map(function(b, i){ return '<option' + (i === 2 ? ' selected' : '') + '>' + esc(b) + '</option>'; }).join('');
     }
     if (!$('.abp-est', form)){ var n = document.createElement('span'); n.className = 'abp-fl abp-est'; n.style.cssText = 'margin:8px 0 0;text-transform:none;letter-spacing:.04em'; n.textContent = 'Estimates only. Your quote is fixed once we scope the project together.'; bs.parentNode.appendChild(n); }
+    // the route's estimate sits above the budget and preselects the matching band until the visitor picks one
+    if (!AB.estimate) return;
+    var lab = bs.closest('label') || bs, box = document.createElement('div'); box.setAttribute('data-est', ''); lab.parentNode.insertBefore(box, lab);
+    var picked = false; bs.addEventListener('change', function(){ picked = true; });
+    updEst = function(){
+      var r = AB.estimate(sel.map(function(k){ return DEST[k].slug; }));
+      box.innerHTML = AB.estimateHTML(r, { note: false });
+      if (r && !picked) bs.selectedIndex = r.band;
+    };
+    updEst();
   })();
   if (form){
     var panel = $('.ab_launch_form'), rk = document.createElement('div'); rk.className = 'abp-rocket'; rk.setAttribute('aria-hidden', 'true');

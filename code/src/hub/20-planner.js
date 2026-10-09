@@ -1,5 +1,5 @@
   /* =========================================================
-     PLOT A TRAJECTORY · main destination → up to 2 stops → launch (map + one planner panel that walks the steps)
+     PLOT A TRAJECTORY · main destination → any number of stops → launch (estimate from core/46-pricing.js) (map + one planner panel that walks the steps)
      ========================================================= */
   var map = $('[data-hub-map]'), panel = $('[data-hub-planner]'), main = -1, stops = [];
   var EARTH = [5, 48], NS = 'http://www.w3.org/2000/svg';
@@ -65,14 +65,13 @@
   function flownAll(list){ return FLIGHTS.filter(function(f){ return list.every(function(j){ return HUB[j].flown.indexOf(f.slug) > -1; }); }); }
   function why(a, b){ return WHY[pairKey(HUB[a].slug, HUB[b].slug)]; }
   function flownLinks(list){ return list.map(function(f){ return '<a href="' + misHref(f.slug) + '">' + esc(f.name) + '</a>'; }).join(' '); }
-  function pickBtn(j){ var s = HUB[j]; return '<button type="button" data-pick="' + j + '" style="--c:' + s.c + '"' + (stops.length >= 2 && main > -1 ? ' disabled' : '') + '><i></i>' + esc(s.short) + ' <b>' + esc(s.code) + '</b></button>'; }
+  function pickBtn(j){ var s = HUB[j]; return '<button type="button" data-pick="' + j + '" style="--c:' + s.c + '"><i></i>' + esc(s.short) + ' <b>' + esc(s.code) + '</b></button>'; }
 
   function clickPort(i){
     if (main < 0){ main = i; }
     else if (i === main){ main = stops.length ? stops.shift() : -1; }
     else if (stops.indexOf(i) > -1){ stops.splice(stops.indexOf(i), 1); }
-    else if (stops.length < 2){ stops.push(i); }
-    else { toast('Two stops max · remove one first'); return; }
+    else { stops.push(i); }
     drawPlan(true);
   }
   function drawPlan(animate){
@@ -83,7 +82,7 @@
     map.classList.toggle('has-main', main > -1);
     var side = innerWidth > 991, arr = side ? ' →' : ' ↓';
     // phones keep the reader on the map (no scroll to the panel), so the hint says stops can be tapped right here too
-    hint.textContent = step === 1 ? 'Tap a planet, or pick in the panel' + arr : stops.length < 2 ? (side ? 'Next: add stops in the panel' + arr : 'Next: tap a planet to add a stop') : 'Ready: launch from the panel' + arr;
+    hint.textContent = step === 1 ? 'Tap a planet, or pick in the panel' + arr : stops.length ? 'Add more stops, or launch from the panel' + arr : (side ? 'Next: add stops in the panel' + arr : 'Next: tap a planet to add a stop');
     ports.forEach(function(p, j){
       var k = stops.indexOf(j), isRec = s && j !== main && k < 0 && rec.indexOf(j) > -1;
       p.classList.toggle('is-main', j === main); p.classList.toggle('is-stop', k > -1); p.classList.toggle('is-rec', !!isRec);
@@ -110,10 +109,10 @@
         '<div class="hb-pl-pick">' + HUB.map(function(x){ return pickBtn(x.i); }).join('') + '</div></div>';
     } else {
       h += '<div class="hb-pl-b"><div class="hb-pl-k"><span>Main destination</span><span>AB-' + s.no + '</span></div><div class="hb-pl-main"><b>' + esc(s.code) + '</b><span>' + esc(s.t1 + ' ' + s.t2) + '<small>' + esc(s.best) + '</small></span></div></div>';
-      h += '<div class="hb-pl-b' + (step === 2 ? ' is-next' : '') + '">' + (step === 2 ? '<span class="hb-pl-tag">Next</span>' : '') + '<div class="hb-pl-k"><span>Recommended stops · pair well with ' + esc(s.code) + '</span><span>' + stops.length + ' / 2</span></div><ul class="hb-pl-rec">' + rec.map(function(j){
+      h += '<div class="hb-pl-b' + (step === 2 ? ' is-next' : '') + '">' + (step === 2 ? '<span class="hb-pl-tag">Next</span>' : '') + '<div class="hb-pl-k"><span>Recommended stops · pair well with ' + esc(s.code) + '</span><span>' + stops.length + ' added</span></div><ul class="hb-pl-rec">' + rec.map(function(j){
           var o = HUB[j], inn = stops.indexOf(j) > -1, t = flownAll([main, j]);
           return '<li class="' + (inn ? 'is-in' : '') + '"><p><b>' + esc(o.short) + '.</b> ' + esc(why(main, j) || '') + '</p>' +
-            '<button type="button" data-stop="' + j + '"' + (!inn && stops.length >= 2 ? ' disabled' : '') + '>' + (inn ? 'Remove' : '+ Add stop') + '</button>' +
+            '<button type="button" data-stop="' + j + '">' + (inn ? 'Remove' : '+ Add stop') + '</button>' +
             '<div class="hb-flown">' + (t.length ? 'Flown together · ' + flownLinks(t) : 'Not flown together yet') + '</div></li>';
         }).join('') + '</ul>';
       var others = HUB.filter(function(x){ return x.i !== main && rec.indexOf(x.i) < 0 && stops.indexOf(x.i) < 0; });
@@ -128,7 +127,7 @@
       });
       var all = flownAll(chosen);
       var ksChip = '<div class="hb-pl-k" style="margin-top:14px"><span>Add-on</span></div><div class="hb-pl-pick"><button type="button" class="is-addon" data-ks-chip="" aria-pressed="' + ks + '" style="--c:#E0A458">' + KS_ICO + 'KNS · Knowledge system</button></div>';
-      h += '<div class="hb-pl-b"><div class="hb-pl-k"><span>Your trajectory</span><span>' + chosen.length + ' destination' + (chosen.length > 1 ? 's' : '') + '</span></div><ol class="hb-legs">' + legs + '</ol>' +
+      h += '<div class="hb-pl-b"><div class="hb-pl-k"><span>Your trajectory</span><span>' + chosen.length + ' destination' + (chosen.length > 1 ? 's' : '') + '</span></div><ol class="hb-legs">' + legs + '</ol>' + AB.estimateHTML(AB.estimate(chosen.map(function(j){ return HUB[j].slug; }))) +
         '<div class="hb-flown" style="margin-top:14px">' + (all.length ? 'Flown before · ' + flownLinks(all) : 'No mission has flown this exact trajectory yet · yours could be first') + '</div>' + ksChip + '</div>';
       h += '<div class="hb-pl-b' + (step === 3 ? ' is-next' : '') + '">' + (step === 3 ? '<span class="hb-pl-tag">Next</span>' : '') + '<div class="hb-pl-go">' +
         btnHTML('is-primary', '#flight', flightOpen() && fsel.join() === chosen.join() ? 'Fly it again' : 'Launch the flight plan', '→', ' data-launch') + '</div>' +

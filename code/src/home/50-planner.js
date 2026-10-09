@@ -65,7 +65,20 @@
     function arc(cx, cy, rx, ry, top){ return 'M' + (cx - rx).toFixed(1) + ' ' + cy.toFixed(1) + ' A' + rx.toFixed(1) + ' ' + ry.toFixed(1) + ' 0 0 ' + (top ? 1 : 0) + ' ' + (cx + rx).toFixed(1) + ' ' + cy.toFixed(1); }
     function brief(){ var st = state(); return 'Mission brief\nName: ' + ($('#plName').value || '-') + '\nEmail: ' + ($('#plEmail').value || '-') + '\nMission type: ' + (st.types.join(', ') || '-') + '\nLaunch window: ' + WIN[st.w] + '\nBudget: ' + st.bl + '\nAdd-ons: ' + (st.add.join(', ') || '-') + '\nAbout: ' + ($('#plMsg').value || '-'); }
     function fillHidden(){ var st = state(); if (fType) fType.value = st.types.join(', '); if (fBud) fBud.value = st.bl; if (fAdd) fAdd.value = st.add.join(', '); if (fBrief) fBrief.value = brief(); }
+    // pricing estimate under the mission types (core/46-pricing.js): chip label → Services slug; it also moves the
+    // budget slider to the matching band until the visitor sets the budget themselves
+    var SLUGS = { 'Website': 'webflow-development', 'Branding + logo': 'branding', 'Motion + interaction': 'motion', 'WebGL + 3D': 'webgl-data', 'CMS + integrations': 'cms-integrations', 'Web app': 'custom-deploys' };
+    var estBox = null, budPicked = false;
+    if (AB.estimate && typesRow){ estBox = document.createElement('div'); estBox.setAttribute('data-est', ''); var after = $('.ab_planner_addons', form) || typesRow; after.parentNode.insertBefore(estBox, after.nextSibling); }
+    function syncEst(){
+      if (!estBox) return;
+      var types = chips.filter(function(c){ return c.getAttribute('aria-pressed') === 'true'; }).map(function(c){ return SLUGS[c.textContent.trim()]; }).filter(Boolean);
+      var r = AB.estimate(types), un = !!(unsureBtn && unsureBtn.getAttribute('aria-pressed') === 'true');
+      estBox.innerHTML = AB.estimateHTML(r, { note: false });
+      if (r && !budPicked && !un) bud.value = Math.min(r.band, MAXB);
+    }
     function draw(anim){
+      syncEst();
       var st = state(), n = st.sel.length; st0 = st;
       // window = distance, types = planet (first pick) + moons (the rest), budget = rings
       // Earth sits at (110,138) and the destinations reach x 450, so the route is centered in the 560 frame (was 56 → 462)
@@ -112,7 +125,7 @@
     function parkRocket(){ var L = path.getTotalLength(), p0 = path.getPointAtLength(0), p1 = path.getPointAtLength(6); rocket.setAttribute('transform', 'translate(' + p0.x.toFixed(1) + ' ' + p0.y.toFixed(1) + ') rotate(' + (Math.atan2(p1.y - p0.y, p1.x - p0.x) * 180 / Math.PI).toFixed(1) + ')'); done.style.strokeDasharray = L + ' ' + (L + 20); done.style.strokeDashoffset = L; done.style.opacity = 0; }
     chips.concat(addons).forEach(function(c){ c.style.setProperty('--c', c.getAttribute('data-c')); c.addEventListener('click', function(){ c.setAttribute('aria-pressed', c.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); draw(true); if (hasGsap && !reduce) gsap.fromTo(c, { scale: .95 }, { scale: 1, duration: .45, ease: 'elastic.out(1,.4)' }); }); });
     radios().forEach(function(r){ r.addEventListener('change', function(){ draw(true); }); });
-    bud.addEventListener('input', function(){ if (unsureBtn) unsureBtn.setAttribute('aria-pressed', 'false'); draw(true); });
+    bud.addEventListener('input', function(){ budPicked = true; if (unsureBtn) unsureBtn.setAttribute('aria-pressed', 'false'); draw(true); });
     if (unsureBtn) unsureBtn.addEventListener('click', function(){ unsureBtn.setAttribute('aria-pressed', unsureBtn.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); draw(true); });
     $$('#plName, #plEmail, #plMsg').forEach(function(inp){ inp.addEventListener('input', fillHidden); });
     var copyBtn = $('#plCopy');
@@ -161,7 +174,7 @@
     // "Plot another mission" brings the form back
     var resetBtn = $('#plReset');
     if (resetBtn) resetBtn.addEventListener('click', function(){
-      form.reset(); if (fchk) fchk.reset(); chips.concat(addons).forEach(function(c){ c.setAttribute('aria-pressed', 'false'); }); ensureWindow(); bud.value = 1;
+      form.reset(); if (fchk) fchk.reset(); chips.concat(addons).forEach(function(c){ c.setAttribute('aria-pressed', 'false'); }); ensureWindow(); bud.value = 2; budPicked = false;
       if (doneEl) doneEl.style.display = 'none';
       form.style.display = '';
       var id = $('#plId'); if (id) id.textContent = 'MSN-07 · unassigned';

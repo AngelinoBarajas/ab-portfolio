@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-core.css v0.33.63 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-core.css v0.33.71 · github.com/AngelinoBarajas/ab-portfolio */
 /* body font fallback sized to Geist (Arial measured against it: 102.47% wide), so text keeps its line breaks when Geist
    swaps in and the heroes don't jump (About CLS 0.24 on desktop). Re-declares the Webflow variable: if the body font is
    changed in the Designer, change it here too. Android (no Arial) falls through to plain sans-serif. */
@@ -1255,3 +1255,19 @@ div.abx-bad,fieldset.abx-bad{outline:1px dashed color-mix(in srgb,var(--_color--
   .ab_mswitch .w-dyn-items.is-end{-webkit-mask-image:none;mask-image:none}
   .ab_mswitch_link{flex:none;white-space:nowrap;scroll-snap-align:start}
 }
+
+/* ---------- pricing estimate (core/46-pricing.js): Services hub trajectory, /process request, Home planner ----------
+   colors come from the panel it sits in (light hub panel, dark forms): inherit + opacity, no fixed background */
+.ab_est{display:grid;gap:6px;margin-top:14px;padding:14px 16px;border:1px solid currentColor;border-color:color-mix(in srgb,currentColor 22%,transparent);font-size:14px;line-height:1.45;color:inherit}
+.ab_est_k{font-family:var(--_typography---font--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;opacity:.65}
+.ab_est p{margin:0}
+.ab_est_tier b{color:var(--_color---brand--signal);font-weight:600}
+.ab_est_line{font-size:13px;opacity:.75}
+.ab_est_adds{list-style:none;margin:2px 0 0;padding:0;display:grid;gap:3px;font-size:13px}
+.ab_est_adds li{display:flex;justify-content:space-between;gap:12px}
+.ab_est_adds li span:first-child{opacity:.75}
+.ab_est_adds li span:last-child{font-family:var(--_typography---font--mono);font-variant-numeric:tabular-nums}
+.ab_est_total{padding-top:6px;border-top:1px dashed currentColor;border-top-color:color-mix(in srgb,currentColor 25%,transparent)}
+.ab_est_total b{font-family:var(--_typography---font--mono);font-variant-numeric:tabular-nums}
+.ab_est_note{font-family:var(--_typography---font--mono);font-size:10.5px;letter-spacing:.04em;opacity:.65}
+.ab_est.is-empty{gap:4px}
