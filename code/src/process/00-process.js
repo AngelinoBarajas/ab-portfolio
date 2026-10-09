@@ -594,6 +594,16 @@
     if (field) field.value = sel.map(function(k, n){ return DEST[k].name + (n === 0 && sel.length > 1 ? ' (main)' : ''); }).join(', ');
   }
   var form = $('.ab_launch_form form');
+  // budget bands = the pricing tiers (same list as the Home planner in home/50-planner.js). The Designer embed
+  // (webflow/build/process/form-fields.embed.html) carries the same options; this keeps an older embed in line.
+  (function(){
+    var bs = form && $('select[name="Budget"]', form); if (!bs) return;
+    var B = ['Under $6.5k', '$6.5–12k', '$12–22k', '$22–40k', '$40k+', 'Not sure yet · still scouting'];
+    if ([].map.call(bs.options, function(o){ return o.text; }).join('|') !== B.join('|')){
+      bs.innerHTML = B.map(function(b, i){ return '<option' + (i === 2 ? ' selected' : '') + '>' + esc(b) + '</option>'; }).join('');
+    }
+    if (!$('.abp-est', form)){ var n = document.createElement('span'); n.className = 'abp-fl abp-est'; n.style.cssText = 'margin:8px 0 0;text-transform:none;letter-spacing:.04em'; n.textContent = 'Estimates only. Your quote is fixed once we scope the project together.'; bs.parentNode.appendChild(n); }
+  })();
   if (form){
     var panel = $('.ab_launch_form'), rk = document.createElement('div'); rk.className = 'abp-rocket'; rk.setAttribute('aria-hidden', 'true');
     rk.innerHTML = '<svg viewBox="0 0 40 80"><path d="M20 2 C30 14 32 34 30 52 H10 C8 34 10 14 20 2 Z" fill="#F2F0EA"/><circle cx="20" cy="26" r="5" fill="#4C8DFF"/><path d="M10 44 L2 60 L10 56 Z M30 44 L38 60 L30 56 Z" fill="#8A8FA3"/><path d="M13 54 L20 78 L27 54 Z" fill="#FF6A3D"/></svg>';

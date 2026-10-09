@@ -18,10 +18,13 @@
     var viz = $('.ab_planner_viz', form);
     if (read && viz && viz.contains(read)){ viz.parentNode.insertBefore(read, viz.nextSibling); read.classList.add('is-below'); read.setAttribute('aria-live', 'polite'); }
     var bud = $('#plBud'), budOut = $('#plBudOut');
-    var BUD = ['<$20k', '$20–40k', '$40–60k', '$60–80k', '$80–100k'], MAXB = BUD.length - 1, WIN = ['ASAP', '1–2 months', '3+ months', 'Flexible'];
+    // budget bands follow the pricing tiers (Launch from $6.5k, Orbit $12k, Deep space $22k); keep the same count,
+    // the rings are drawn from the band's position. Same list in the /process form (process/00-process.js + embed).
+    var BUD = ['Under $6.5k', '$6.5–12k', '$12–22k', '$22–40k', '$40k+'], MAXB = BUD.length - 1, WIN = ['ASAP', '1–2 months', '3+ months', 'Flexible'];
     // the budget scale lives here (the Designer embed may carry an older one): slider range, ticks, default
-    bud.max = MAXB; bud.value = 1;
+    bud.max = MAXB; bud.value = 2;
     var ticks = $('.ab_planner_ticks', form); if (ticks) ticks.innerHTML = BUD.map(function(b){ return '<span>' + esc(b) + '</span>'; }).join('');
+    if (ticks && !$('.ab_planner_est', form)){ var est = document.createElement('p'); est.className = 'ab_planner_est text-style-mono'; est.style.cssText = 'margin:10px 0 0;font-size:11px;letter-spacing:.08em;color:var(--dust)'; est.textContent = 'Estimates only. Your quote is fixed once we scope the project together.'; ticks.parentNode.insertBefore(est, ticks.nextSibling); }
     // budget: "not sure yet" overrides the slider (people still scouting what to spend); moving the slider turns it off
     var UNSURE = 'Not sure yet · still scouting', unsureBtn = $('.ab_planner_chip.is-unsure', form);
     if (!unsureBtn && ticks){ unsureBtn = document.createElement('button'); unsureBtn.type = 'button'; unsureBtn.className = 'ab_planner_chip is-unsure'; unsureBtn.setAttribute('aria-pressed', 'false'); unsureBtn.textContent = UNSURE; ticks.parentNode.insertBefore(unsureBtn, ticks.nextSibling); }

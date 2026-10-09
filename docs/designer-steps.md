@@ -6,6 +6,8 @@ How to run it: one step at a time. Claude gives the exact Navigator path + click
 
 Already done (don't redo): Home color bindings, Work card tags + brand colors, the 5 Mission template "Mission = Current Mission" filters, Services rail = all services, Mission Planner form rename (ID kept `planner`).
 
+## ▶ Start here (2026-10-09): section **Q** at the bottom (Q1–Q10, humanizer + AEO follow-ups). Hard-refresh the Designer first.
+
 ## Open items at a glance (updated 2026-09-30, after v0.33.29)
 
 **Before any of these: reload the Designer.** On 2026-09-30 the API rewrote the site head (Geist preload + ab-core CSS v0.33.29) and the heads of `/observatory`, `/topics`, the Topics template and the Observatory template (ab-knowledge CSS v0.33.29). A Page-settings Save from a tab opened earlier would put the old versions back.
@@ -141,3 +143,69 @@ Context: v0.33.29 removed the layout jumps on load (details in `docs/qa-report.m
   - Keep in mind: a new topic only shows missions if its **Missions** field is filled (the script's fallback that also matched missions tagging the topic won't be reached for a hidden section).
 - [x] **P2. (done 2026-10-03, verified: 24/27 render `#services`; Saying no, Science of time, Philosophy at work don't) Same for "Related services".** Topics template › `section#services` (`data-ks-sec="services"`) › Visibility › **Services is set**. The 3 topics without services (Saying no, Science of time, Philosophy at work) are the 3 that hide it. It sits further down the page, so it doesn't cause a visible jump today; this just makes the HTML match what visitors see.
 - Note, not a step: `ab-core.css` now re-declares the body and mono font variables (Geist / JetBrains Mono plus size-matched fallbacks). If you ever change the body or mono font in **Variables**, tell Claude so the fallback is updated too.
+
+## Q. Humanizer + AEO follow-ups (added 2026-10-09)
+Context: the humanizer copy reviews and the Webflow AEO Assessment (score 3 of 5). Everything the API could do is already **staged, not published**: approved copy on 13 pages + 2 templates, 29 field notes, new CMS fields (Missions › Show palette / Published / Last updated, Observatory › Published / Last updated, all filled). These steps are the parts only the Designer can do. Details: `docs/raw-html-fallbacks.md`, `docs/handoff.md` (top bullet).
+
+**Before you start: hard-refresh the Designer** (the API edited text on Home, About, Process, Contact, Work, Topics, Observatory, Site map, Services hub and both templates today; an older tab would save the old text back).
+
+Quickest wins first. Q1–Q6 are a minute or two each; Q7–Q10 are the AEO items.
+
+### Text fixes (the API can't edit text inside Div Blocks or the FAQ `<details>`)
+- [ ] **Q1. Services template: "Yours could be first".** Services Template › Navigator › `section_dbh` (hero) › … › `ab_meta.is-service` › the meta item labeled **Missions** › `ab_meta_value` (attribute `data-sv="missions-count"`).
+  1. Double-click the text "Yours could be first".
+  2. Replace it with **Missions logged**.
+  - Why: crawlers that don't run scripts read "Yours could be first" on all 8 service pages, even the ones with 4 missions. The script still writes "4 logged" or "Yours could be first" for visitors.
+- [ ] **Q2. Process FAQ answer.** Process › Navigator › FAQ section (`ab_faq_item` list) › item **"How many rounds of changes do I get?"** › `ab_faq_answer`.
+  1. Double-click the answer text.
+  2. Replace the last sentence so the whole answer reads: **Two rounds of feedback on the prototype, live or async, plus fixes during the build. A bigger change of direction gets its own place in the plan and the dates.**
+- [ ] **Q3. Contact hiring hint.** Contact › Navigator › the channel stations › station for **Hiring** › `ab_ct-station_hint` (attribute `data-hint`).
+  1. Double-click "Freelance, contract or full-time. A link to the listing helps."
+  2. Replace with **Freelance, contract or full-time all work for me.**
+- [ ] **Q4. Work counters.** Work › Navigator › archive filter bar:
+  1. `ab_arc_count` (`#arcCount`): "Showing 6 of 6" → **Showing 5 of 5**.
+  2. Hero meta row › `ab_meta_value` (`data-arc="years"`): "2025–2026" → **2026**.
+  - Why: same no-JS reason; the script shows the right numbers to visitors.
+
+### Bindings (auto mode blocked these API calls)
+- [ ] **Q5. Mission template: palette only on AB Identity.** Missions Template › Navigator › `section_palette` (frame label `▢ palette`, attribute `data-mission-palette`).
+  1. Settings (gear) › **Visibility** › Conditions › **+ Add condition**.
+  2. Field **Show palette** › **is on** › Save.
+  - Verify (Claude): raw HTML of `/work/kip` and `/work/510-visuals` has no `data-mission-palette`; `/work/ab-identity` still has it.
+- [ ] **Q6. Mission template: "For visitors" label from the CMS.** Missions Template › Navigator › `section_solved` › Problems list › item › `ab_anom` › `ab_anom_who` (Text Span, now "For visitors").
+  1. Select the span › Settings › **Get text from** › Problems Solved › **For**.
+  - Result in raw HTML: "client" / "visitors" per card (the script still turns it into "For the client" / "For visitors").
+  - Optional, same way: the two `data-mission="no"` spans (hero eyebrow "Mission debrief · 01 / 05" and the monitor) → **Mission number**.
+
+### AEO: dates, bylines, entity (the report's top 3)
+- [ ] **Q7. "Updated" line on field notes.** Observatory Template › Navigator › hero meta row › the item **By · Angelino Barajas** (`ab_ks-meta_i`).
+  1. Right-click it › **Duplicate**.
+  2. In the copy, double-click "By" → **Updated**.
+  3. Delete the copy's inner name block (`ab_ks-inl ab_ks-meta_b`).
+  4. Add a **Text Block** in its place › Style panel › selector `ab_ks-inl` then `ab_ks-meta_b` (🔗 COMBO, existing classes, add no properties).
+  5. Settings › **Get text from** › **Last updated** › date format **Oct 9, 2026** style.
+  - Verify (Claude): "Updated Oct 9, 2026" on a revised note; the 3 untouched build notes show their published date.
+- [ ] **Q8. Byline as a real author link.** Same template, the original **By** item › inner `ab_ks-inl ab_ks-meta_b` div holding "Angelino Barajas".
+  1. Delete the inner div and add a **Text Link** in its place with text **Angelino Barajas**, link **Page › About**.
+  2. Style panel › selector `ab_ks-inl` then `ab_ks-meta_b` (🔗 COMBO, existing; add no properties).
+  3. Settings › Custom attributes › **+** › name `rel`, value `author`.
+  - Why: the AEO scanner reported "No author byline" on every note. It looks for an author link, not plain text.
+- [ ] **Q9. Template JSON-LD dates.** Back up each field first (paste into `webflow/backup/`). Insert each `[Field]` with **+ Add field**.
+  1. **Observatory Template** › Page settings › Custom code › Inside `<head>` › in the `"@type": "Article"` block, after `"headline"`, add:
+     `"datePublished": "[Published]", "dateModified": "[Last updated]",`
+  2. **Missions Template** › same place › in the `CreativeWork` block, replace `"dateCreated": "[Year]"` with:
+     `"datePublished": "[Published]", "dateModified": "[Last updated]"`
+  - Why: the bare year `"2026"` is read as January 1, which is why the report said every mission was "last updated 281 days ago".
+  - ⚠️ The head date token printed "Oct 01, 2026" last time, not ISO. Publish to webflow.io and Claude checks the output. If it isn't ISO, Claude adds hidden ISO text fields and you swap the tokens.
+- [ ] **Q10. Author meta tag, site-wide.** Site settings › Custom code › **Head code** › add on a new line at the end (leave everything else as it is):
+  `<meta name="author" content="Angelino Barajas">`
+  - Save, then hard-refresh any open Designer tab before the next publish.
+
+### Not Designer (Claude, after your answers)
+- Homepage entity: `ProfessionalService` node for **Barajas Design** (legal name **Barajas Design, Inc.**), founder → Angelino Barajas, logo, sameAs; alternateName barajasdsgn. API write to the Home JSON-LD.
+- `dateModified` on the static pages' JSON-LD (API).
+- New FAQ answers for pricing, ownership, maintenance, Webflow vs other platforms, working with agencies (needs your pricing).
+- Bing Webmaster Tools + IndexNow, llms.txt, analytics with AI-referral sources (your accounts; Claude writes the steps).
+- Mobile LCP pass (code session).
+
+**Publish:** after Q1–Q10, tell Claude. Claude publishes to webflow.io first, checks the raw HTML of a note, a mission and a service, then asks before barajasdsgn.com + www.
