@@ -2,7 +2,7 @@
 
 Ideas Angelino has OK'd but not scheduled. Add the date and source chat. When you start an item, put your chat name next to it so parallel chats don't collide. When it ships, move it to `docs/handoff.md` with the tag.
 
-## Replace logo v2 with the new mark everywhere (added 2026-10-10, "Logo replacement estimate" chat; WAITING on Angelino's two answers)
+## Replace logo v2 with the new mark everywhere (added 2026-10-10, "Logo replacement estimate" chat) — SHELVED 2026-10-10: Angelino will pick it up himself later; don't start it unprompted
 
 New file: `logo/new/logo-AB.svg` (379.41×187.56 canvas, 3 paths). `logo/new/renders/` = 8 brand-sheet PNGs + webp (cover, primary mark, construction, colorways, lockups, system, applications, gravity) and 5 colorway SVGs (mono-ink, mono-star, on-signal, primary-dark, primary-light). The request desk already uses `logo-AB-primary-dark.svg`. Both `logo/new/` and `logo/ab-planet-rings.mp4` are untracked; the repo is public, so committing them is his call.
 - Estimate: ~2.5–3 h of Claude time + 10–15 min Designer (favicon, webclip, fallback image in Nav + Footer). Measure/scale paths 20 min, swap/remap 20, QA ~12 places 45–60, favicon/fallback 15, OG cards ~14 pages 30, deploy 25 (under the next free tag, not the v0.33.69 the estimate quoted).
