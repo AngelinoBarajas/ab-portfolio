@@ -1,5 +1,5 @@
 """kip mission social image (1200 x 630), made from the real kipvillage.com renders and cast portraits.
-Brand art rule: no look-alikes. Sources: X:/Claude-Skills/kip-site/debrief-kit/renders/desktop-02-house-full.png
+Brand art rule: no look-alikes. Sources: X:/projects/ab-portfolio/case-studies/kip/debrief-kit/renders/desktop-02-house-full.png
 (the live site's full-screen house) and code/vendor/kip/cast/*.webp (the site's 3D portraits).
 python og/kip_og.py  ->  og/out/og-kip-v2.jpg (+ .png)"""
 import base64, io, os
@@ -8,7 +8,7 @@ from playwright.sync_api import sync_playwright
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-RENDER = r'X:/Claude-Skills/kip-site/debrief-kit/renders/desktop-02-house-full.png'
+RENDER = r'X:/projects/ab-portfolio/case-studies/kip/debrief-kit/renders/desktop-02-house-full.png'
 OUT = os.path.join(HERE, 'out')
 os.makedirs(OUT, exist_ok=True)
 

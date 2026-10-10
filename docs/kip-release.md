@@ -1,7 +1,7 @@
 # kip mission relaunch (kipvillage.com) · v0.33.62 + v0.33.64 · LIVE 2026-10-07
 
 The `/work/kip` debrief (#03) rewritten for the new one-page kip site with the interactive 3D house (kipvillage.com, launched
-2026-10-06, repo AngelinoBarajas/kip-one). Story, numbers and renders: `X:/Claude-Skills/kip-site/debrief-kit/README.md`.
+2026-10-06, repo AngelinoBarajas/kip-one). Story, numbers and renders: `X:/projects/ab-portfolio/case-studies/kip/debrief-kit/README.md`.
 Pattern: `docs/topicweave-release.md`. CMS copy as applied: `cms/kip/release.json` (approved by Angelino 2026-10-06).
 
 ## Decisions (Angelino, 2026-10-06)
@@ -25,7 +25,7 @@ Pattern: `docs/topicweave-release.md`. CMS copy as applied: `cms/kip/release.jso
   color), `40-monitor.js` (MP4 loop videos play only on the showing channel while on screen; live toggle label).
   Assets: `code/vendor/kip/` (june-head, hero-house, cast/*.webp 112px), `prototypes/img/kip2-ch-*` + `kip2-cover.webp`.
 - v0.33.64 (ab-home JS): `home/10-work.js` kip frame → 3D portraits (built on v0.33.63; transmission stays in core).
-- Loops recorded from the live site by `X:/Claude-Skills/kip-site/debrief-kit/record/record_loops.py`. Desktop WebPs
+- Loops recorded from the live site by `X:/projects/ab-portfolio/case-studies/kip/debrief-kit/record/record_loops.py`. Desktop WebPs
   are size-capped and blocky (the camera never rests), so desktop loops play their MP4; WebP stays as the file of record.
 
 ## Staged in Webflow (2026-10-07 00:18–00:20 UTC), NOT published

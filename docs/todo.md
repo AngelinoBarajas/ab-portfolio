@@ -2,6 +2,14 @@
 
 Ideas Angelino has OK'd but not scheduled. Add the date and source chat. When you start an item, put your chat name next to it so parallel chats don't collide. When it ships, move it to `docs/handoff.md` with the tag.
 
+## Replace logo v2 with the new mark everywhere (added 2026-10-10, "Logo replacement estimate" chat; WAITING on Angelino's two answers)
+
+New file: `logo/new/logo-AB.svg` (379.41×187.56 canvas, 3 paths). `logo/new/renders/` = 8 brand-sheet PNGs + webp (cover, primary mark, construction, colorways, lockups, system, applications, gravity) and 5 colorway SVGs (mono-ink, mono-star, on-signal, primary-dark, primary-light). The request desk already uses `logo-AB-primary-dark.svg`. Both `logo/new/` and `logo/ab-planet-rings.mp4` are untracked; the repo is public, so committing them is his call.
+- Estimate: ~2.5–3 h of Claude time + 10–15 min Designer (favicon, webclip, fallback image in Nav + Footer). Measure/scale paths 20 min, swap/remap 20, QA ~12 places 45–60, favicon/fallback 15, OG cards ~14 pages 30, deploy 25 (under the next free tag, not the v0.33.69 the estimate quoted).
+- Breaks to handle: no separate leg path (draw-in order + `:not(.lg-planet)` color rules), hard-coded planet geometry (240,121 r98, 21.5°) needs re-measuring, file colors `#111215` / `#f05822` vs site white / `#f36c42`.
+- Open questions to him: (1) keep white + `#f36c42` or switch orange to `#f05822`? (2) also redo the launch carousel/story and reel (~30 min more), or the site only?
+- Related exploration: `X:/projects/510-visuals/figma/local sessions/ab-logo-grid/` ("Logo SVG grid alignment" chat): a 6 px-grid rebuild (3:8 and 2:1 tilts, he dropped the grid idea) and `ab-logo-clean.svg` = the original cleaned from 189 to 84 anchors (≤0.26 px off, 99.7% pixel overlap); scripts in its `tools/`. Not confirmed whether `logo/new/` came from it.
+
 ## Home page hierarchy pass (added 2026-10-06, Portfolio feedback responses chat) — DONE, live in v0.33.63
 
 Why: two designers said the home page has "a message everywhere." Keep the style, the motion and the concept, and cut how many things talk at once. The audience is clients, not minimalist designers. Revised after looking at the live page at 1440 + 390 (the first list came from the page text and overstated some items).

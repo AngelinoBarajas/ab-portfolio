@@ -1,5 +1,5 @@
 {
-  "_about": "kip mission relaunch (kipvillage.com, 2026-10-06), DRAFT for Angelino's review, nothing applied yet. Apply with the Webflow MCP (update_collection_items by id, then publish only with his OK). Source of truth for the story: X:/Claude-Skills/kip-site/debrief-kit/README.md. Pattern: cms/topicweave/release.json + docs/topicweave-release.md.",
+  "_about": "kip mission relaunch (kipvillage.com, 2026-10-06), DRAFT for Angelino's review, nothing applied yet. Apply with the Webflow MCP (update_collection_items by id, then publish only with his OK). Source of truth for the story: X:/projects/ab-portfolio/case-studies/kip/debrief-kit/README.md. Pattern: cms/topicweave/release.json + docs/topicweave-release.md.",
   "missions": {
     "collection": "6ab602e38e2fa6779570a302",
     "items": [

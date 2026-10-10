@@ -1,6 +1,6 @@
 # Topicweave mission release (was CKS) · LIVE 2026-10-04 (v0.33.45)
 
-The CKS mission becomes **Topicweave** (renamed 2026-10-01, v3 site in `X:/Claude-Skills/case-study-sites/cks-v3`).
+The CKS mission becomes **Topicweave** (renamed 2026-10-01, v3 site in `X:/projects/ab-portfolio/case-studies/cks/cks-v3`).
 **Released 2026-10-04:** v0.33.45 (commit 8d384fe) live on barajasdsgn.com + www + webflow.io. ABMission 0.33.45 on the Missions template (abknowledge 0.25.5 after it), template head CSS bumped to v0.33.45 by Angelino in the Designer, 301 /work/cks → /work/topicweave added by him. CMS applied (cover asset 6ac24632e2e34b79144ddb37, OG 6ac24632e2e34b79144ddb3a), live-url empty. Verified live at 1440 + 390: 8 channels, 8 seams, no console errors. Note: his redirect went live before the slug change; /work/cks 404'd for a few minutes until the item's slug was published on its own.
 **Done in v0.33.46 (perf chat, 14:14 UTC):** Home card loom matches 'topicweave', About badge sticker says Topicweave.
 **v0.33.48 (2026-10-04, live):** signature planets on mission pages (`mission/35-signature.js`: Topicweave = v3 tiers thread globe, 510 Visuals = its dotted continent globe; hero, manifest card, next-mission card only; styles injected by the script), section seams removed, range stats (30–60, 10–15) on one line. CMS planet = `woven` (core v0.33.47) elsewhere. Stats replaced with Angelino's four picks.
@@ -8,7 +8,7 @@ The CKS mission becomes **Topicweave** (renamed 2026-10-01, v3 site in `X:/Claud
 **v0.33.50 (live):** Topicweave planet gets four # rings (lilac/cobalt vertical, coral/teal horizontal, woven like the logo).
 **v0.33.51 (live):** Topicweave rings changed to four regular concentric rings in the weave colors; supercharge on hover (v3 energize) on both signature planets.
 **v0.33.52 (live 2026-10-05):** monitor scene controls at least 24 × 24 (Lighthouse target-size). Flight manual card + changelog updated (v0.33.48–52).
-**Still open:** ~~new planet~~ done (`after_pass` in release.json), live link once topicweave.com is deployed.
+**Still open:** ~~new planet~~ done (`after_pass` in release.json), ~~live link~~ done 2026-10-10 (https://topicweave.com, platform Custom code · Vercel).
 Release only after Angelino's OK and after the perf chat's release (v0.33.44 tagged 2026-10-04, commit 5d55fc7, not yet in Webflow). Ours: v0.33.45 (fetch tags first to confirm).
 
 ## What changed (code/src, mission bundle only)

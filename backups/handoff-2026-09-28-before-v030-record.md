@@ -319,7 +319,7 @@ Knowledge System status: **live on staging at ab-knowledge v0.25.5** (all 7 page
 Angelino wants the complete Knowledge System integrated into the AB Portfolio and styled on brand. Start by reading:
 
 1. `docs/knowledge-system-plan.md` (the model: Topics vocabulary in 6 categories, Insights library, Related Topics on existing collections, FAQs, video-first entries, JSON-LD from the same fields, Voice Kit + approval gate).
-2. `X:/Claude-Skills/cks-site/` (the hand-coded Knowledge System product site: index, how-it-works, voice-kit, pricing, styles) for the pieces to carry over, and `docs/kip-cks-mission-plan.md` (another session's draft for the kip + CKS missions, still waiting on Angelino's OK; don't clash with it).
+2. `X:/projects/ab-portfolio/case-studies/cks/cks-site/` (the hand-coded Knowledge System product site: index, how-it-works, voice-kit, pricing, styles) for the pieces to carry over, and `docs/kip-cks-mission-plan.md` (another session's draft for the kip + CKS missions, still waiting on Angelino's OK; don't clash with it).
 3. `content/insights/drafts/` (10 articles waiting for his review; import only the ones marked `approved`).
 
 Constraints to plan around: Services is at the 60-field cap (Related Topics on Services may need the Hub-manifest trick: a side collection); Webflow Components can't hold Collection Lists; every CMS-driven link must be a real `href` (Current page / reference), not script-only; noindex/sitemap flags need the paid plan; follow the page-pipeline stages (prototype first, his OK, then Webflow), design in the site's language (void/deep panels, Figma-canvas frame labels, one orange accent, planets).

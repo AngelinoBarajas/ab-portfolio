@@ -2,7 +2,7 @@
 (cks-v3 served locally, loom intro settled, cookie notice dismissed). Output: og/out/topicweave-cover.webp, og/out/og-topicweave.jpg"""
 import subprocess, time, sys, os
 from playwright.sync_api import sync_playwright
-V3 = r'X:/Claude-Skills/case-study-sites/cks-v3'
+V3 = r'X:/projects/ab-portfolio/case-studies/cks/cks-v3'
 port = 8771
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'out')
 os.makedirs(OUT, exist_ok=True)
