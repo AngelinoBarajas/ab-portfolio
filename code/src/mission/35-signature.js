@@ -483,6 +483,16 @@
     // this page's own planet: the hero + the manifest status card
     if (SIG[SLUG]){
       var hp = $('#hero .ab_planet[data-slug]'); if (hp) mount(hp, SLUG);
+      // where each hero planet rests on desktop, as a share of its own width (Angelino 2026-10-09, from where he dragged them):
+      // a CSS `translate`, so GSAP's drag/spring-back transform still returns to this spot. Phones and tablets keep heroFit.
+      var REST = { '510-visuals': [.03, .45], topicweave: [-.08, .76], kip: [-.2, .38], 'knowledge-system': [-.05, 1.08] };
+      if (hp && REST[SLUG]){
+        var place = function(){
+          if (innerWidth < 992){ hp.style.translate = ''; return; }
+          var w = hp.offsetWidth; hp.style.translate = (REST[SLUG][0] * w).toFixed(1) + 'px ' + (REST[SLUG][1] * w).toFixed(1) + 'px';
+        };
+        place(); addEventListener('resize', place);
+      }
       $$('.ab_planet.is-mf, .ab_planet.is-orbit').forEach(function(p){ mount(p, SLUG); });
     }
     // the next-mission card, when the next mission has a signature planet
