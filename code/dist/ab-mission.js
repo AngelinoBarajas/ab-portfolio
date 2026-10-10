@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-mission v0.33.67 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-mission v0.33.72 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abMissionInit) return;
@@ -4043,11 +4043,14 @@ window.Webflow.push(function(){
       // `all:unset` on `.scn-ctl button`. Also in ab-mission.css for its next release; injected here so it ships now.
       '.scn-ctl button{min-width:24px;min-height:24px;box-sizing:border-box}.scn-ctl .scn-pp{width:24px;height:24px}';
     document.head.appendChild(css);
+    // where each planet starts its spin (seconds into its own clock), picked by Angelino 2026-10-09 from screenshots:
+    // 510 with the Americas facing us, June's mobile with a star at each front corner and the mint ball under her chin
+    var T0 = { '510-visuals': 21, kip: 2.46 };
     function mount(el, slug){
       var make = SIG[slug]; if (!make || el.__sig) return; el.__sig = true;
       el.classList.add('is-sig', 'is-sig-' + slug);
       var cv = document.createElement('canvas'); cv.className = 'sig-cv'; cv.setAttribute('aria-hidden', 'true'); el.appendChild(cv);
-      var ctx = cv.getContext('2d'), P = null, W = 0, H = 0, raf = 0, on = false, last = 0, T = 6, EN = 0, until = 0, pulseT = -9, ptr = null;
+      var ctx = cv.getContext('2d'), P = null, W = 0, H = 0, raf = 0, on = false, last = 0, T = T0[slug] != null ? T0[slug] : 6, EN = 0, until = 0, pulseT = -9, ptr = null;
       function size(){
         var r = el.getBoundingClientRect(), R = r.width / 2; if (!R) return false;
         P = make(R, el); var s = R * 2 * P.pad, dpr = Math.min(2, window.devicePixelRatio || 1);
