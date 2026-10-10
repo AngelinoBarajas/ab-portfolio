@@ -1,4 +1,4 @@
-/*! AB Portfolio · ab-services v0.33.36 · github.com/AngelinoBarajas/ab-portfolio */
+/*! AB Portfolio · ab-services v0.33.74 · github.com/AngelinoBarajas/ab-portfolio */
 window.Webflow = window.Webflow || [];
 window.Webflow.push(function(){
   if (window.__abServicesInit) return;
@@ -111,6 +111,16 @@ window.Webflow.push(function(){
         onDragEnd: schedule, onThrowComplete: schedule });
       if (nudge) nudge(el, schedule);
     });
+    // where some hero planets rest on desktop, as a share of their own width (Angelino 2026-10-09, from where he dragged
+    // them): a CSS `translate`, so the drag spring-back (a GSAP transform) still returns here. Phones and tablets unchanged.
+    var REST = { 'webgl-data': [0, 1.02], 'cms-integrations': [-.31, 1.04], performance: [-.27, .96] };
+    if (REST[SLUG]){
+      var place = function(){
+        if (innerWidth < 992){ HERO_PLANET.style.translate = ''; return; }
+        var w = HERO_PLANET.offsetWidth; HERO_PLANET.style.translate = (REST[SLUG][0] * w).toFixed(1) + 'px ' + (REST[SLUG][1] * w).toFixed(1) + 'px';
+      };
+      place(); addEventListener('resize', place);
+    }
     if (hasGsap && !reduce){
       gsap.from('#heroTitle .ab_dbh_word', { yPercent: 40, opacity: 0, duration: 1.1, stagger: .08, ease: 'expo.out', delay: .15 });
       gsap.from('.ab_dbh_eyebrow, .ab_dbh_sum, .ab_sv_cta, .ab_meta, .ab_sv_rail', { opacity: 0, y: 20, duration: .9, stagger: .06, delay: .4, ease: 'power3.out' });
